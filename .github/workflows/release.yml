@@ -21,6 +21,23 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: '24'
+          cache: true
+
+      - name: Install Dependencies
+        run: vp install
+
+      - name: Build dist/
+        run: rm -rf dist && vp pack
+
+      - name: Commit dist/
+        run: |
+          git add dist/
+          git diff --cached --quiet || git commit -m "chore: rebuild dist for release"
+
       - name: Install Knope
         uses: knope-dev/action@v2.1.0
         with:
