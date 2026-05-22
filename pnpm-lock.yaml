@@ -12,7 +12,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1
       '@lumeweb/pinner':
-        specifier: ^0.1.4
+        specifier: ^0.1.3
         version: 0.1.4(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.11(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     devDependencies:
       '@faker-js/faker':
@@ -29,25 +29,25 @@ importers:
         version: 25.9.1
       '@voidzero-dev/vite-plus-core':
         specifier: ^0.1.22
-        version: 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(yaml@2.9.0)
+        version: 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(yaml@2.9.0)
       msw:
         specifier: ^2.4.0
-        version: 2.14.6(@types/node@25.9.1)(typescript@5.9.3)
+        version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
       nanoevents:
         specifier: ^9.1.0
         version: 9.1.0
       orval:
         specifier: ^8.2.0
-        version: 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+        version: 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
+        specifier: ^6.0.3
+        version: 6.0.3
       vite-plus:
         specifier: ^0.1.22
-        version: 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@types/node@25.9.1)(msw@2.14.6(@types/node@25.9.1)(typescript@5.9.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        version: 4.1.7(@types/node@25.9.1)(msw@2.14.6(@types/node@25.9.1)(typescript@6.0.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
 
 packages:
 
@@ -3245,6 +3245,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
 
@@ -4714,23 +4719,23 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@orval/angular@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/angular@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/axios@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/axios@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/core@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/core@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
       '@scalar/openapi-types': 0.8.0
       acorn: 8.16.0
@@ -4742,26 +4747,26 @@ snapshots:
       jiti: 2.7.0
       remeda: 2.34.1
       tinyglobby: 0.2.16
-      typedoc: 0.28.19(typescript@5.9.3)
+      typedoc: 0.28.19(typescript@6.0.3)
     optionalDependencies:
       '@faker-js/faker': 10.4.0
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  '@orval/fetch@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/fetch@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       '@scalar/openapi-types': 0.8.0
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/hono@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/hono@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/zod': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/zod': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       fs-extra: 11.3.5
       remeda: 2.34.1
     transitivePeerDependencies:
@@ -4769,56 +4774,56 @@ snapshots:
       - supports-color
       - typescript
 
-  '@orval/mcp@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/mcp@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/zod': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/zod': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/mock@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/mock@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       remeda: 2.34.1
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/query@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/query@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       remeda: 2.34.1
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/solid-start@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/solid-start@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       '@scalar/openapi-types': 0.8.0
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/swr@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/swr@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
       - typescript
 
-  '@orval/zod@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)':
+  '@orval/zod@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)':
     dependencies:
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       remeda: 2.34.1
     transitivePeerDependencies:
       - '@faker-js/faker'
@@ -5243,13 +5248,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.7(msw@2.14.6(@types/node@25.9.1)(typescript@5.9.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.7(msw@2.14.6(@types/node@25.9.1)(typescript@6.0.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.7
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      msw: 2.14.6(@types/node@25.9.1)(typescript@5.9.3)
+      msw: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
       vite: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.7':
@@ -5276,7 +5281,7 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
-  '@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(yaml@2.9.0)':
+  '@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
       '@oxc-project/runtime': 0.129.0
       '@oxc-project/types': 0.129.0
@@ -5288,7 +5293,7 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.7.0
       tsx: 4.22.3
-      typescript: 5.9.3
+      typescript: 6.0.3
       yaml: 2.9.0
 
   '@voidzero-dev/vite-plus-darwin-arm64@0.1.22':
@@ -5309,11 +5314,11 @@ snapshots:
   '@voidzero-dev/vite-plus-linux-x64-musl@0.1.22':
     optional: true
 
-  '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)':
+  '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)':
     dependencies:
       '@standard-schema/spec': 1.1.0
       '@types/chai': 5.2.3
-      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(yaml@2.9.0)
+      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(yaml@2.9.0)
       es-module-lexer: 1.7.0
       obug: 2.1.1
       pixelmatch: 7.2.0
@@ -6438,7 +6443,7 @@ snapshots:
 
   ms@3.0.0-canary.202508261828: {}
 
-  msw@2.14.6(@types/node@25.9.1)(typescript@5.9.3):
+  msw@2.14.6(@types/node@25.9.1)(typescript@6.0.3):
     dependencies:
       '@inquirer/confirm': 6.0.13(@types/node@25.9.1)
       '@mswjs/interceptors': 0.41.9
@@ -6459,7 +6464,7 @@ snapshots:
       until-async: 3.0.2
       yargs: 17.7.2
     optionalDependencies:
-      typescript: 5.9.3
+      typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/node'
 
@@ -6508,20 +6513,20 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  orval@8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3):
+  orval@8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3):
     dependencies:
       '@commander-js/extra-typings': 14.0.0(commander@14.0.3)
-      '@orval/angular': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/axios': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/hono': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/mcp': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/mock': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/query': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/solid-start': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/swr': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
-      '@orval/zod': 8.12.1(@faker-js/faker@10.4.0)(typescript@5.9.3)
+      '@orval/angular': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/axios': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/core': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/fetch': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/hono': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/mcp': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/mock': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/query': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/solid-start': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/swr': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
+      '@orval/zod': 8.12.1(@faker-js/faker@10.4.0)(typescript@6.0.3)
       '@scalar/json-magic': 0.12.14
       '@scalar/openapi-parser': 0.25.12
       '@scalar/openapi-types': 0.8.0
@@ -6536,9 +6541,9 @@ snapshots:
       js-yaml: 4.1.1
       remeda: 2.34.1
       string-argv: 0.3.2
-      typedoc: 0.28.19(typescript@5.9.3)
-      typedoc-plugin-coverage: 4.0.3(typedoc@0.28.19(typescript@5.9.3))
-      typedoc-plugin-markdown: 4.11.0(typedoc@0.28.19(typescript@5.9.3))
+      typedoc: 0.28.19(typescript@6.0.3)
+      typedoc-plugin-coverage: 4.0.3(typedoc@0.28.19(typescript@6.0.3))
+      typedoc-plugin-markdown: 4.11.0(typedoc@0.28.19(typescript@6.0.3))
     transitivePeerDependencies:
       - '@faker-js/faker'
       - supports-color
@@ -7060,21 +7065,21 @@ snapshots:
     dependencies:
       tagged-tag: 1.0.0
 
-  typedoc-plugin-coverage@4.0.3(typedoc@0.28.19(typescript@5.9.3)):
+  typedoc-plugin-coverage@4.0.3(typedoc@0.28.19(typescript@6.0.3)):
     dependencies:
-      typedoc: 0.28.19(typescript@5.9.3)
+      typedoc: 0.28.19(typescript@6.0.3)
 
-  typedoc-plugin-markdown@4.11.0(typedoc@0.28.19(typescript@5.9.3)):
+  typedoc-plugin-markdown@4.11.0(typedoc@0.28.19(typescript@6.0.3)):
     dependencies:
-      typedoc: 0.28.19(typescript@5.9.3)
+      typedoc: 0.28.19(typescript@6.0.3)
 
-  typedoc@0.28.19(typescript@5.9.3):
+  typedoc@0.28.19(typescript@6.0.3):
     dependencies:
       '@gerrit0/mini-shiki': 3.23.0
       lunr: 2.3.9
       markdown-it: 14.1.1
       minimatch: 10.2.5
-      typescript: 5.9.3
+      typescript: 6.0.3
       yaml: 2.9.0
 
   typescript@3.9.10: {}
@@ -7082,6 +7087,8 @@ snapshots:
   typescript@5.4.5: {}
 
   typescript@5.9.3: {}
+
+  typescript@6.0.3: {}
 
   uc.micro@2.1.0: {}
 
@@ -7167,12 +7174,12 @@ snapshots:
 
   varint@6.0.0: {}
 
-  vite-plus@0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0):
+  vite-plus@0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0):
     dependencies:
       '@oxc-project/types': 0.129.0
       '@oxlint/plugins': 1.61.0
-      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(yaml@2.9.0)
-      '@voidzero-dev/vite-plus-test': 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
+      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(yaml@2.9.0)
+      '@voidzero-dev/vite-plus-test': 0.1.22(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@6.0.3)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
       oxfmt: 0.48.0
       oxlint: 1.63.0(oxlint-tsgolint@0.22.1)
       oxlint-tsgolint: 0.22.1
@@ -7231,10 +7238,10 @@ snapshots:
       tsx: 4.22.3
       yaml: 2.9.0
 
-  vitest@4.1.7(@types/node@25.9.1)(msw@2.14.6(@types/node@25.9.1)(typescript@5.9.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)):
+  vitest@4.1.7(@types/node@25.9.1)(msw@2.14.6(@types/node@25.9.1)(typescript@6.0.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.7
-      '@vitest/mocker': 4.1.7(msw@2.14.6(@types/node@25.9.1)(typescript@5.9.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.7(msw@2.14.6(@types/node@25.9.1)(typescript@6.0.3))(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.7
       '@vitest/runner': 4.1.7
       '@vitest/snapshot': 4.1.7
