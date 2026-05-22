@@ -30,12 +30,12 @@ jobs:
         id: checkout
         uses: actions/checkout@v6
 
-      - name: Setup Node.js
-        id: setup-node
-        uses: actions/setup-node@v6
+      - name: Setup Vite+
+        id: setup-vp
+        uses: voidzero-dev/setup-vp@v1
         with:
-          node-version-file: .node-version
-          cache: npm
+          node-version: '24'
+          cache: true
 
       - name: Remove dist/ Directory
         id: remove-dist
@@ -43,11 +43,11 @@ jobs:
 
       - name: Install Dependencies
         id: install
-        run: npm ci
+        run: vp install
 
       - name: Build dist/ Directory
         id: build
-        run: npm run bundle
+        run: vp pack
 
       # This will fail the workflow if the `dist/` directory is different than
       # expected.
