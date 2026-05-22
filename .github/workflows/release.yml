@@ -30,13 +30,12 @@ jobs:
       - name: Install Dependencies
         run: vp install
 
-      - name: Build dist/
-        run: rm -rf dist && vp pack
-
-      - name: Commit dist/
+      - name: Rebuild dist/
         run: |
+          rm -rf dist
+          vp pack
           git add dist/
-          git diff --cached --quiet || git commit -m "chore: rebuild dist for release"
+          git diff --cached --quiet || git commit -m "chore: rebuild dist"
 
       - name: Install Knope
         uses: knope-dev/action@v2.1.0
