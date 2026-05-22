@@ -38,7 +38,7 @@
     "msw": "^2.4.0",
     "nanoevents": "^9.1.0",
     "orval": "^8.2.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vite-plus": "^0.1.22",
     "vitest": "^4.1.7"
   },
