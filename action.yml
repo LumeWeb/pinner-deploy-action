@@ -1,24 +1,38 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
-
-# Add your action's branding here. This will appear on the GitHub Marketplace.
-branding:
-  icon: heart
-  color: red
-
-# Define your inputs here.
+name: 'Pinner Deploy Action'
+description: 'Deploy content to IPFS via Pinner'
 inputs:
-  milliseconds:
-    description: Your input description here
+  api-key:
+    description: 'Pinner API key'
     required: true
-    default: '1000'
-
-# Define your outputs here.
+  path:
+    description: 'Local directory or file to upload to IPFS'
+    required: false
+  cid:
+    description: 'Existing CID to pin (skip upload)'
+    required: false
+  endpoint:
+    description: 'Pinner API endpoint'
+    required: false
+    default: 'https://ipfs.pinner.xyz'
+  ipns-key:
+    description: 'IPNS key name or ID to publish under'
+    required: false
+  domain:
+    description: 'Domain for gateway website setup'
+    required: false
+  remove-previous:
+    description: 'Remove previous pin after successful deploy'
+    required: false
+    default: 'false'
 outputs:
-  time:
-    description: Your output description here
-
+  cid:
+    description: 'CID of the uploaded/pinned content'
+  gateway-url:
+    description: 'Gateway URL for the content'
+  ipns-name:
+    description: 'IPNS name if published'
+  website-id:
+    description: 'Website ID if domain was configured'
 runs:
-  using: node24
-  main: dist/index.js
+  using: 'node20'
+  main: 'dist/index.js'
