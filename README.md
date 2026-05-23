@@ -36,6 +36,17 @@ workflows.
     remove-previous: true
 ```
 
+### Upload + domain + cleanup (no IPNS)
+
+```yaml
+- uses: lumeweb/pinner-deploy-action@v0
+  with:
+    api-key: ${{ secrets.PINNER_API_KEY }}
+    path: ./build
+    domain: myapp.example.com
+    remove-previous: true
+```
+
 ### Pin an existing CID
 
 ```yaml
@@ -47,15 +58,15 @@ workflows.
 
 ## Inputs
 
-| Input             | Required | Default                   | Description                                 |
-| ----------------- | -------- | ------------------------- | ------------------------------------------- |
-| `api-key`         | Yes      | —                         | Pinner API key                              |
-| `path`            | No       | —                         | Local directory or file to upload to IPFS   |
-| `cid`             | No       | —                         | Existing CID to pin (skip upload)           |
-| `endpoint`        | No       | `https://ipfs.pinner.xyz` | Pinner API endpoint                         |
-| `ipns-key`        | No       | —                         | IPNS key name or ID to publish under        |
-| `domain`          | No       | —                         | Domain for gateway website setup            |
-| `remove-previous` | No       | `false`                   | Remove previous pin after successful deploy |
+| Input             | Required | Default                   | Description                                                       |
+| ----------------- | -------- | ------------------------- | ----------------------------------------------------------------- |
+| `api-key`         | Yes      | —                         | Pinner API key                                                    |
+| `path`            | No       | —                         | Local directory or file to upload to IPFS                         |
+| `cid`             | No       | —                         | Existing CID to pin (skip upload)                                 |
+| `endpoint`        | No       | `https://ipfs.pinner.xyz` | Pinner API endpoint                                               |
+| `ipns-key`        | No       | —                         | IPNS key name or ID to publish under                              |
+| `domain`          | No       | —                         | Domain for gateway website setup                                  |
+| `remove-previous` | No       | `false`                   | Remove previous pin after deploy. Requires "ipns-key" or "domain" |
 
 > Either `path` or `cid` must be provided.
 

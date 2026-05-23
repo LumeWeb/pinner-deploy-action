@@ -26,13 +26,7 @@ export default defineConfig({
       es2023: true,
       node: true
     },
-    ignorePatterns: [
-      '**/coverage',
-      '**/dist',
-      '**/linter',
-      '**/node_modules',
-      'src/test-msw/'
-    ],
+    ignorePatterns: ['**/coverage', '**/dist', '**/linter', '**/node_modules'],
     rules: {
       'constructor-super': 'error',
       'for-direction': 'error',

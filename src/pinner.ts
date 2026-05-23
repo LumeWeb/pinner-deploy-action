@@ -119,18 +119,73 @@ export async function setupWebsite(
   return String(website.id)
 }
 
+export interface RemovePreviousOptions {
+  ipnsKey?: string
+  domain?: string
+}
+
 export async function removePrevious(
   pinner: Pinner,
-  keyInput: string
+  newCid: string,
+  options: RemovePreviousOptions
 ): Promise<void> {
-  try {
-    const resolved = await pinner.ipns.resolve(keyInput)
-    if (resolved?.value) {
-      const cid = resolved.value.replace(/^\/ipfs\//, '')
-      await pinner.unpin(cid)
+  if (options.domain) {
+    try {
+      const response = await pinner.websites.listWebsites()
+      const items = Array.isArray(response.data)
+        ? response.data
+        : [response.data]
+      const existing = items.find(
+        (w: { domain: string }) => w.domain === options.domain
+      )
+
+      if (existing) {
+        const activeCid = existing.active_cid
+        if (activeCid && activeCid !== newCid) {
+          await pinner.unpin(activeCid)
+        }
+
+        if (existing.ipns_key_id != null && !options.ipnsKey) {
+          try {
+            const key = await pinner.ipns.getKey(existing.ipns_key_id)
+            const resolved = await pinner.ipns.resolve(key.ipns_name)
+            if (resolved?.value) {
+              const resolvedCid = resolved.value.replace(/^\/ipfs\//, '')
+              if (resolvedCid !== newCid) {
+                await pinner.unpin(resolvedCid)
+              }
+            }
+          } catch (err) {
+            console.warn(
+              'Failed to resolve IPNS key for domain cleanup:',
+              err instanceof Error ? err.message : String(err)
+            )
+          }
+        }
+      }
+    } catch (err) {
+      console.warn(
+        'Failed to lookup website for domain cleanup:',
+        err instanceof Error ? err.message : String(err)
+      )
     }
-  } catch {
-    // No previous record to remove
+  }
+
+  if (options.ipnsKey) {
+    try {
+      const resolved = await pinner.ipns.resolve(options.ipnsKey)
+      if (resolved?.value) {
+        const cid = resolved.value.replace(/^\/ipfs\//, '')
+        if (cid !== newCid) {
+          await pinner.unpin(cid)
+        }
+      }
+    } catch (err) {
+      console.warn(
+        'Failed to resolve IPNS for cleanup:',
+        err instanceof Error ? err.message : String(err)
+      )
+    }
   }
 }
 

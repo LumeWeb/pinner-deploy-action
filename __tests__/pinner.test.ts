@@ -58,10 +58,32 @@ function createMockPinner() {
       resolve: vi.fn().mockResolvedValue({ value: '/ipfs/QmOldCID' }),
       listKeys: vi
         .fn()
-        .mockResolvedValue({ data: [{ id: 1, name: 'test-key' }] })
+        .mockResolvedValue({ data: [{ id: 1, name: 'test-key' }] }),
+      getKey: vi.fn().mockResolvedValue({
+        id: 1,
+        name: 'test-key',
+        ipns_name: 'k51qzi5qu...test',
+        peer_id: '12D3Koo...test',
+        created: '2025-01-01T00:00:00Z'
+      })
     },
     websites: {
       listWebsites: vi.fn().mockResolvedValue({ data: [] }),
+      getWebsite: vi.fn().mockResolvedValue({
+        id: 1,
+        domain: 'test.example.com',
+        active_cid: 'QmOldCID',
+        ipns_key_id: 1,
+        target_hash: 'QmOldCID',
+        target_type: 'ipfs',
+        status: 'active',
+        created: '2025-01-01T00:00:00Z',
+        updated: '2025-01-01T00:00:00Z',
+        expired: false,
+        dns_hosting_enabled: false,
+        is_subdomain: false,
+        validation_token: 'tok123'
+      }),
       createWebsite: vi
         .fn()
         .mockResolvedValue({ id: 'ws-1', domain: 'test.example.com' }),
@@ -248,27 +270,190 @@ describe('pinner wrapper', () => {
   })
 
   describe('removePrevious', () => {
-    it('should resolve IPNS and unpin old CID', async () => {
+    it('should resolve IPNS and unpin old CID when ipnsKey provided', async () => {
       mockPinner.ipns.resolve.mockResolvedValue({ value: '/ipfs/QmOldCID' })
 
-      await removePrevious(mockPinner as any, 'test-key')
+      await removePrevious(mockPinner as any, 'QmNewCID', {
+        ipnsKey: 'test-key'
+      })
       expect(mockPinner.ipns.resolve).toHaveBeenCalledWith('test-key')
       expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
     })
 
-    it('should not fail if no previous record exists', async () => {
+    it('should not unpin if resolved CID matches newCid', async () => {
+      mockPinner.ipns.resolve.mockResolvedValue({
+        value: '/ipfs/QmNewCID'
+      })
+
+      await removePrevious(mockPinner as any, 'QmNewCID', {
+        ipnsKey: 'test-key'
+      })
+      expect(mockPinner.unpin).not.toHaveBeenCalled()
+    })
+
+    it('should not fail if no previous IPNS record exists', async () => {
       mockPinner.ipns.resolve.mockRejectedValue(new Error('not found'))
 
       await expect(
-        removePrevious(mockPinner as any, 'test-key')
+        removePrevious(mockPinner as any, 'QmNewCID', {
+          ipnsKey: 'test-key'
+        })
       ).resolves.toBeUndefined()
     })
 
-    it('should not unpin if resolve returns no value', async () => {
+    it('should not unpin if IPNS resolve returns no value', async () => {
       mockPinner.ipns.resolve.mockResolvedValue({ value: null })
 
-      await removePrevious(mockPinner as any, 'test-key')
+      await removePrevious(mockPinner as any, 'QmNewCID', {
+        ipnsKey: 'test-key'
+      })
       expect(mockPinner.unpin).not.toHaveBeenCalled()
+    })
+
+    it('should lookup website by domain and unpin active_cid', async () => {
+      mockPinner.websites.listWebsites.mockResolvedValue({
+        data: [
+          {
+            id: 1,
+            domain: 'app.example.com',
+            active_cid: 'QmOldCID',
+            ipns_key_id: undefined,
+            target_hash: 'QmOldCID',
+            target_type: 'ipfs',
+            status: 'active',
+            created: '2025-01-01T00:00:00Z',
+            updated: '2025-01-01T00:00:00Z',
+            expired: false,
+            dns_hosting_enabled: false,
+            is_subdomain: false,
+            validation_token: 'tok123'
+          }
+        ]
+      })
+
+      await removePrevious(mockPinner as any, 'QmNewCID', {
+        domain: 'app.example.com'
+      })
+      expect(mockPinner.websites.listWebsites).toHaveBeenCalled()
+      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
+    })
+
+    it('should skip unpin if active_cid matches newCid', async () => {
+      mockPinner.websites.listWebsites.mockResolvedValue({
+        data: [
+          {
+            id: 1,
+            domain: 'app.example.com',
+            active_cid: 'QmNewCID',
+            ipns_key_id: undefined,
+            target_hash: 'QmNewCID',
+            target_type: 'ipfs',
+            status: 'active',
+            created: '2025-01-01T00:00:00Z',
+            updated: '2025-01-01T00:00:00Z',
+            expired: false,
+            dns_hosting_enabled: false,
+            is_subdomain: false,
+            validation_token: 'tok123'
+          }
+        ]
+      })
+
+      await removePrevious(mockPinner as any, 'QmNewCID', {
+        domain: 'app.example.com'
+      })
+      expect(mockPinner.unpin).not.toHaveBeenCalled()
+    })
+
+    it('should also unpin via IPNS if ipns_key_id present and no ipnsKey provided', async () => {
+      mockPinner.websites.listWebsites.mockResolvedValue({
+        data: [
+          {
+            id: 1,
+            domain: 'app.example.com',
+            active_cid: 'QmOldCID',
+            ipns_key_id: 5,
+            target_hash: 'QmOldCID',
+            target_type: 'ipfs',
+            status: 'active',
+            created: '2025-01-01T00:00:00Z',
+            updated: '2025-01-01T00:00:00Z',
+            expired: false,
+            dns_hosting_enabled: false,
+            is_subdomain: false,
+            validation_token: 'tok123'
+          }
+        ]
+      })
+      mockPinner.ipns.getKey.mockResolvedValue({
+        id: 5,
+        name: 'app-key',
+        ipns_name: 'k51qzi5qu...app',
+        peer_id: '12D3Koo...app',
+        created: '2025-01-01T00:00:00Z'
+      })
+      mockPinner.ipns.resolve.mockResolvedValue({
+        value: '/ipfs/QmOldIPNSCID'
+      })
+
+      await removePrevious(mockPinner as any, 'QmNewCID', {
+        domain: 'app.example.com'
+      })
+      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
+      expect(mockPinner.ipns.getKey).toHaveBeenCalledWith(5)
+      expect(mockPinner.ipns.resolve).toHaveBeenCalledWith('k51qzi5qu...app')
+      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldIPNSCID')
+    })
+
+    it('should not resolve IPNS if ipnsKey is also provided', async () => {
+      mockPinner.websites.listWebsites.mockResolvedValue({
+        data: [
+          {
+            id: 1,
+            domain: 'app.example.com',
+            active_cid: 'QmOldCID',
+            ipns_key_id: 5,
+            target_hash: 'QmOldCID',
+            target_type: 'ipfs',
+            status: 'active',
+            created: '2025-01-01T00:00:00Z',
+            updated: '2025-01-01T00:00:00Z',
+            expired: false,
+            dns_hosting_enabled: false,
+            is_subdomain: false,
+            validation_token: 'tok123'
+          }
+        ]
+      })
+
+      await removePrevious(mockPinner as any, 'QmNewCID', {
+        domain: 'app.example.com',
+        ipnsKey: 'my-key'
+      })
+      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
+      expect(mockPinner.ipns.getKey).not.toHaveBeenCalled()
+    })
+
+    it('should do nothing when no domain and no ipnsKey provided', async () => {
+      await removePrevious(mockPinner as any, 'QmNewCID', {})
+      expect(mockPinner.unpin).not.toHaveBeenCalled()
+      expect(mockPinner.ipns.resolve).not.toHaveBeenCalled()
+      expect(mockPinner.websites.listWebsites).not.toHaveBeenCalled()
+    })
+
+    it('should warn on domain lookup failure instead of throwing', async () => {
+      mockPinner.websites.listWebsites.mockRejectedValue(
+        new Error('network error')
+      )
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      await expect(
+        removePrevious(mockPinner as any, 'QmNewCID', {
+          domain: 'app.example.com'
+        })
+      ).resolves.toBeUndefined()
+      expect(warnSpy).toHaveBeenCalled()
+      warnSpy.mockRestore()
     })
   })
 })

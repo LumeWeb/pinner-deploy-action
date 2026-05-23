@@ -57,7 +57,7 @@ describe('main action', () => {
     )
   })
 
-  it('should fail if remove-previous is set without ipns-key', async () => {
+  it('should fail if remove-previous is set without ipns-key or domain', async () => {
     mockInputs({
       'api-key': 'test-key',
       path: './dist',
@@ -71,7 +71,7 @@ describe('main action', () => {
 
     await run()
     expect(core.setFailed).toHaveBeenCalledWith(
-      '"remove-previous" requires "ipns-key" to identify the old pin'
+      '"remove-previous" requires "ipns-key" or "domain" to identify the old pin'
     )
   })
 
@@ -137,7 +137,11 @@ describe('main action', () => {
 
     await run()
 
-    expect(mockPinnerFns.removePrevious).toHaveBeenCalled()
+    expect(mockPinnerFns.removePrevious).toHaveBeenCalledWith(
+      expect.anything(),
+      'QmTestCID',
+      { ipnsKey: 'my-app-key', domain: 'app.example.com' }
+    )
     expect(mockPinnerFns.uploadPath).toHaveBeenCalled()
     expect(mockPinnerFns.publishIpns).toHaveBeenCalledWith(
       expect.anything(),
@@ -152,6 +156,29 @@ describe('main action', () => {
     expect(core.setOutput).toHaveBeenCalledWith('cid', 'QmTestCID')
     expect(core.setOutput).toHaveBeenCalledWith('ipns-name', 'k51qzi5qu...test')
     expect(core.setOutput).toHaveBeenCalledWith('website-id', 'ws-1')
+  })
+
+  it('should call removePrevious with domain only when no ipns-key', async () => {
+    mockInputs({
+      'api-key': 'test-key',
+      path: './build',
+      cid: '',
+      endpoint: 'https://ipfs.pinner.xyz',
+      'ipns-key': '',
+      domain: 'app.example.com',
+      'remove-previous': 'true'
+    })
+    mockPinnerFns.initClient.mockReturnValue({})
+    mockPinnerFns.uploadPath.mockResolvedValue('QmTestCID')
+    mockPinnerFns.setupWebsite.mockResolvedValue('ws-1')
+
+    await run()
+
+    expect(mockPinnerFns.removePrevious).toHaveBeenCalledWith(
+      expect.anything(),
+      'QmTestCID',
+      { ipnsKey: '', domain: 'app.example.com' }
+    )
   })
 
   it('should use custom endpoint when provided', async () => {

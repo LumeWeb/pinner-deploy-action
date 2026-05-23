@@ -23,9 +23,9 @@ export async function run(): Promise<void> {
       throw new Error('Either "path" or "cid" input must be provided')
     }
 
-    if (removePrev && !ipnsKey) {
+    if (removePrev && !ipnsKey && !domain) {
       throw new Error(
-        '"remove-previous" requires "ipns-key" to identify the old pin'
+        '"remove-previous" requires "ipns-key" or "domain" to identify the old pin'
       )
     }
 
@@ -54,9 +54,9 @@ export async function run(): Promise<void> {
       core.setOutput('website-id', websiteId)
     }
 
-    if (removePrev && ipnsKey) {
+    if (removePrev && (ipnsKey || domain)) {
       core.info('Removing previous pin...')
-      await removePrevious(pinner, ipnsKey)
+      await removePrevious(pinner, resultCid, { ipnsKey, domain })
     }
 
     const gatewayUrl = `https://dweb.link/ipfs/${resultCid}`
