@@ -169,7 +169,9 @@ export async function removePrevious(
         err instanceof Error ? err.message : String(err)
       )
     }
-  } else if (options.ipnsKey) {
+  }
+
+  if (options.ipnsKey) {
     try {
       const resolved = await pinner.ipns.resolve(options.ipnsKey)
       if (resolved?.value) {
