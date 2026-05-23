@@ -1,8 +1,10 @@
 import { setupServer } from 'msw/node'
-import { getIpnsMock } from '@/test-msw/generated/ipns.js'
-import { getWebsitesMock } from '@/test-msw/generated/websites.js'
-import { getPinningMock } from '@/test-msw/generated/pinning.js'
-import { getContentMock } from '@/test-msw/generated/content.js'
+import {
+  getIpnsMock,
+  getWebsitesMock,
+  getPinningMock,
+  getContentMock
+} from '@lumeweb/pinner/mocks'
 
 const handlers = [
   ...getIpnsMock(),

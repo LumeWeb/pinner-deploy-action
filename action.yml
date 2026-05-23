@@ -21,7 +21,9 @@ inputs:
     description: 'Domain for gateway website setup'
     required: false
   remove-previous:
-    description: 'Remove previous pin after successful deploy'
+    description:
+      'Remove previous pin after successful deploy. Requires "ipns-key" or
+      "domain".'
     required: false
     default: 'false'
 outputs:

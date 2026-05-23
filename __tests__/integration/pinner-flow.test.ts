@@ -12,17 +12,18 @@ import { HttpResponse, http } from 'msw'
 import {
   getGetApiIpnsKeysMockHandler,
   getPostApiIpnsPublishMockHandler,
-  getGetApiIpnsResolveNameMockHandler
-} from '@/test-msw/generated/ipns.js'
+  getGetApiIpnsResolveNameMockHandler,
+  getGetApiIpnsKeysIdMockHandler
+} from '@lumeweb/pinner/mocks'
 import {
   getGetApiWebsitesMockHandler,
   getPostApiWebsitesMockHandler,
   getPutApiWebsitesIdMockHandler
-} from '@/test-msw/generated/websites.js'
+} from '@lumeweb/pinner/mocks'
 import {
   getGetPinsMockHandler,
   getDeletePinsRequestidMockHandler
-} from '@/test-msw/generated/pinning.js'
+} from '@lumeweb/pinner/mocks'
 import {
   initClient,
   resolveIpnsKey,
@@ -74,6 +75,10 @@ vi.mock('@lumeweb/pinner', () => {
 
     async listKeys() {
       return apiFetch(this.endpoint, 'api/ipns/keys', this.jwt)
+    }
+
+    async getKey(id: number) {
+      return apiFetch(this.endpoint, `api/ipns/keys/${id}`, this.jwt)
     }
 
     async publish(request: { cid: string; key_id: number }) {
@@ -251,6 +256,7 @@ describe('Pinner wrapper integration', () => {
           updated: '2025-01-01T00:00:00Z',
           expired: false,
           dns_hosting_enabled: false,
+          is_subdomain: false,
           validation_token: 'tok_new123'
         })
       )
@@ -274,6 +280,7 @@ describe('Pinner wrapper integration', () => {
               updated: '2025-01-01T00:00:00Z',
               expired: false,
               dns_hosting_enabled: false,
+              is_subdomain: false,
               validation_token: 'tok_exist123'
             }
           ],
@@ -289,6 +296,7 @@ describe('Pinner wrapper integration', () => {
           updated: '2025-06-01T00:00:00Z',
           expired: false,
           dns_hosting_enabled: false,
+          is_subdomain: false,
           validation_token: 'tok_exist123'
         })
       )
@@ -330,7 +338,9 @@ describe('Pinner wrapper integration', () => {
       )
 
       const pinner = createPinner()
-      await expect(removePrevious(pinner, 'my-app')).resolves.toBeUndefined()
+      await expect(
+        removePrevious(pinner, 'QmNewCID', { ipnsKey: 'my-app' })
+      ).resolves.toBeUndefined()
     })
 
     it('should complete without error when no previous record exists', async () => {
@@ -345,7 +355,110 @@ describe('Pinner wrapper integration', () => {
       )
 
       const pinner = createPinner()
-      await expect(removePrevious(pinner, 'new-key')).resolves.toBeUndefined()
+      await expect(
+        removePrevious(pinner, 'QmNewCID', { ipnsKey: 'new-key' })
+      ).resolves.toBeUndefined()
+    })
+
+    it('should lookup website by domain and unpin active_cid', async () => {
+      server.use(
+        getGetApiWebsitesMockHandler({
+          data: [
+            {
+              id: 42,
+              domain: 'app.example.com',
+              active_cid: 'QmOldCID',
+              ipns_key_id: undefined,
+              target_hash: 'QmOldCID',
+              target_type: 'ipfs',
+              status: 'active',
+              created: '2025-01-01T00:00:00Z',
+              updated: '2025-01-01T00:00:00Z',
+              expired: false,
+              dns_hosting_enabled: false,
+              is_subdomain: false,
+              validation_token: 'tok123'
+            }
+          ],
+          total: 1
+        }),
+        getGetPinsMockHandler({
+          count: 1,
+          results: [
+            {
+              requestid: 'pin-old-1',
+              status: 'pinned',
+              created: '2025-01-01T00:00:00Z',
+              delegates: [],
+              pin: { cid: 'QmOldCID' }
+            }
+          ]
+        }),
+        getDeletePinsRequestidMockHandler(undefined)
+      )
+
+      const pinner = createPinner()
+      await expect(
+        removePrevious(pinner, 'QmNewCID', { domain: 'app.example.com' })
+      ).resolves.toBeUndefined()
+    })
+
+    it('should also resolve IPNS when website has ipns_key_id', async () => {
+      server.use(
+        getGetApiWebsitesMockHandler({
+          data: [
+            {
+              id: 42,
+              domain: 'app.example.com',
+              active_cid: 'QmOldCID',
+              ipns_key_id: 5,
+              target_hash: 'QmOldCID',
+              target_type: 'ipfs',
+              status: 'active',
+              created: '2025-01-01T00:00:00Z',
+              updated: '2025-01-01T00:00:00Z',
+              expired: false,
+              dns_hosting_enabled: false,
+              is_subdomain: false,
+              validation_token: 'tok123'
+            }
+          ],
+          total: 1
+        }),
+        getGetApiIpnsKeysIdMockHandler({
+          id: 5,
+          name: 'app-key',
+          ipns_name: 'k51qzi5qu...app',
+          peer_id: '12D3Koo...app',
+          created: '2025-01-01T00:00:00Z'
+        }),
+        getGetApiIpnsResolveNameMockHandler({
+          name: 'k51qzi5qu...app',
+          value: '/ipfs/QmOldIPNSCID',
+          path: '/ipfs/QmOldIPNSCID',
+          sequence: 2,
+          expired: false,
+          expires: '2026-01-01T00:00:00Z'
+        }),
+        getGetPinsMockHandler({
+          count: 1,
+          results: [
+            {
+              requestid: 'pin-old-1',
+              status: 'pinned',
+              created: '2025-01-01T00:00:00Z',
+              delegates: [],
+              pin: { cid: 'QmOldCID' }
+            }
+          ]
+        }),
+        getDeletePinsRequestidMockHandler(undefined)
+      )
+
+      const pinner = createPinner()
+      await expect(
+        removePrevious(pinner, 'QmNewCID', { domain: 'app.example.com' })
+      ).resolves.toBeUndefined()
     })
   })
 })
