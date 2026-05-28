@@ -38,7 +38,7 @@ jobs:
           git diff --cached --quiet || git commit -m "chore: rebuild dist"
 
       - name: Install Knope
-        uses: knope-dev/action@v2.1.0
+        uses: knope-dev/action@v2.1.2
         with:
           version: 0.21.7
 
