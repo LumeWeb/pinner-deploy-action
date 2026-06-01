@@ -1,3 +1,10 @@
+## 0.1.7 (2026-06-01)
+
+### Fixes
+
+- resolve action hang, double execution, and [object Response] error
+- preserve exit code set by core.setFailed() in process.exit()
+
 ## 0.1.6 (2026-06-01)
 
 ### Fixes
