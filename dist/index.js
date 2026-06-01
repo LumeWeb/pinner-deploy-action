@@ -79398,20 +79398,20 @@ async function pinByCid(pinner, cid) {
 	console.warn(`pinByHash yielded no results for CID ${cid}, returning input CID as fallback`);
 	return cid;
 }
-async function resolveIpnsKey(pinner, keyInput) {
+async function resolveIpnsKey(pinner, keyInput, signal) {
 	const parsed = parseInt(keyInput, 10);
 	if (!isNaN(parsed) && String(parsed) === keyInput) return parsed;
-	const response = await pinner.ipns.listKeys();
+	const response = await pinner.ipns.listKeys({ signal });
 	const match = (Array.isArray(response.data) ? response.data : [response.data]).find((k) => k.name === keyInput);
 	if (!match) throw new Error(`IPNS key not found for name "${keyInput}"`);
 	return match.id;
 }
-async function publishIpns(pinner, cid, keyInput) {
-	const keyId = await resolveIpnsKey(pinner, keyInput);
+async function publishIpns(pinner, cid, keyInput, signal) {
+	const keyId = await resolveIpnsKey(pinner, keyInput, signal);
 	return (await pinner.ipns.publish({
 		cid,
 		key_id: keyId
-	})).name || keyInput;
+	}, { signal })).name || keyInput;
 }
 async function setupWebsite(pinner, cid, domain) {
 	const response = await pinner.websites.listWebsites();
@@ -79431,35 +79431,42 @@ async function setupWebsite(pinner, cid, domain) {
 	});
 	return String(website.id);
 }
+const CLEANUP_TIMEOUT_MS = 3e4;
+function cleanupAbortSignal(external) {
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), CLEANUP_TIMEOUT_MS);
+	if (external) {
+		if (external.aborted) {
+			clearTimeout(timeoutId);
+			controller.abort();
+			return controller.signal;
+		}
+		external.addEventListener("abort", () => {
+			clearTimeout(timeoutId);
+			controller.abort();
+		}, { once: true });
+	}
+	controller.signal.addEventListener("abort", () => clearTimeout(timeoutId), { once: true });
+	return controller.signal;
+}
 async function removePrevious(pinner, newCid, options) {
+	const signal = cleanupAbortSignal(options.signal);
 	if (options.domain) try {
-		const response = await pinner.websites.listWebsites();
+		const response = await pinner.websites.listWebsites({ signal });
 		const existing = (Array.isArray(response.data) ? response.data : [response.data]).find((w) => w.domain === options.domain);
 		if (existing) {
 			const activeCid = existing.active_cid;
-			if (activeCid && activeCid !== newCid) await pinner.unpin(activeCid);
-			if (existing.ipns_key_id != null && !options.ipnsKey) try {
-				const key = await pinner.ipns.getKey(existing.ipns_key_id);
-				const resolved = await pinner.ipns.resolve(key.ipns_name);
-				if (resolved?.value) {
-					const resolvedCid = resolved.value.replace(/^\/ipfs\//, "");
-					if (resolvedCid !== newCid) await pinner.unpin(resolvedCid);
-				}
-			} catch (err) {
-				console.warn("Failed to resolve IPNS key for domain cleanup:", err instanceof Error ? err.message : String(err));
-			}
+			if (activeCid && activeCid !== newCid) await pinner.unpin(activeCid, { signal });
 		}
 	} catch (err) {
-		console.warn("Failed to lookup website for domain cleanup:", err instanceof Error ? err.message : String(err));
+		console.warn("Failed to remove previous pin for domain:", err instanceof Error ? err.message : String(err));
 	}
 	if (options.ipnsKey) try {
-		const resolved = await pinner.ipns.resolve(options.ipnsKey);
-		if (resolved?.value) {
-			const cid = resolved.value.replace(/^\/ipfs\//, "");
-			if (cid !== newCid) await pinner.unpin(cid);
-		}
+		const keyId = await resolveIpnsKey(pinner, options.ipnsKey, signal);
+		const key = await pinner.ipns.getKey(keyId, { signal });
+		if (key.value && key.value !== newCid) await pinner.unpin(key.value, { signal });
 	} catch (err) {
-		console.warn("Failed to resolve IPNS for cleanup:", err instanceof Error ? err.message : String(err));
+		console.warn("Failed to remove previous pin for IPNS key:", err instanceof Error ? err.message : String(err));
 	}
 }
 function readDirAsFiles(rootDir, currentDir) {
