@@ -87,6 +87,6 @@ export async function run(): Promise<void> {
       core.setFailed('An unexpected error occurred')
     }
   } finally {
-    process.exit(0)
+    process.exit(process.exitCode ?? 0)
   }
 }
