@@ -36,5 +36,5 @@ outputs:
   website-id:
     description: 'Website ID if domain was configured'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'

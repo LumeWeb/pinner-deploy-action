@@ -46,3 +46,13 @@ jobs:
         run: knope release --verbose
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync SemVer Tags
+        uses: jessehouwing/actions-semver-checker@v2
+        with:
+          auto-fix: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          check-minor-version: error
+          check-releases: error
+          check-release-immutability: error
+          check-marketplace: none
