@@ -1,3 +1,9 @@
+## 0.1.4 (2026-06-01)
+
+### Fixes
+
+- upgrade to node24, pinner 0.1.9, add semver tag sync
+
 ## 0.1.3 (2026-05-23)
 
 ### Features
