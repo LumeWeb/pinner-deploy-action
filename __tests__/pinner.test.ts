@@ -55,7 +55,6 @@ function createMockPinner() {
     pinByHash: vi.fn(),
     ipns: {
       publish: vi.fn().mockResolvedValue({ name: 'k51qzi5qu...test' }),
-      resolve: vi.fn().mockResolvedValue({ value: '/ipfs/QmOldCID' }),
       listKeys: vi
         .fn()
         .mockResolvedValue({ data: [{ id: 1, name: 'test-key' }] }),
@@ -64,6 +63,7 @@ function createMockPinner() {
         name: 'test-key',
         ipns_name: 'k51qzi5qu...test',
         peer_id: '12D3Koo...test',
+        value: 'QmOldCID',
         created: '2025-01-01T00:00:00Z'
       })
     },
@@ -204,10 +204,10 @@ describe('pinner wrapper', () => {
         'test-key-id'
       )
       expect(name).toBe('k51qzi5qu...test')
-      expect(mockPinner.ipns.publish).toHaveBeenCalledWith({
-        cid: 'QmTestCID',
-        key_id: 1
-      })
+      expect(mockPinner.ipns.publish).toHaveBeenCalledWith(
+        { cid: 'QmTestCID', key_id: 1 },
+        { signal: undefined }
+      )
     })
 
     it('should return keyInput when publish returns no name', async () => {
@@ -270,19 +270,35 @@ describe('pinner wrapper', () => {
   })
 
   describe('removePrevious', () => {
-    it('should resolve IPNS and unpin old CID when ipnsKey provided', async () => {
-      mockPinner.ipns.resolve.mockResolvedValue({ value: '/ipfs/QmOldCID' })
+    it('should unpin old CID via IPNS key record when ipnsKey provided', async () => {
+      mockPinner.ipns.getKey.mockResolvedValue({
+        id: 1,
+        name: 'test-key',
+        ipns_name: 'k51qzi5qu...test',
+        peer_id: '12D3Koo...test',
+        value: 'QmOldCID',
+        created: '2025-01-01T00:00:00Z'
+      })
 
       await removePrevious(mockPinner as any, 'QmNewCID', {
         ipnsKey: 'test-key'
       })
-      expect(mockPinner.ipns.resolve).toHaveBeenCalledWith('test-key')
-      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
+      expect(mockPinner.ipns.getKey).toHaveBeenCalledWith(1, {
+        signal: expect.any(AbortSignal)
+      })
+      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID', {
+        signal: expect.any(AbortSignal)
+      })
     })
 
-    it('should not unpin if resolved CID matches newCid', async () => {
-      mockPinner.ipns.resolve.mockResolvedValue({
-        value: '/ipfs/QmNewCID'
+    it('should not unpin if key value matches newCid', async () => {
+      mockPinner.ipns.getKey.mockResolvedValue({
+        id: 1,
+        name: 'test-key',
+        ipns_name: 'k51qzi5qu...test',
+        peer_id: '12D3Koo...test',
+        value: 'QmNewCID',
+        created: '2025-01-01T00:00:00Z'
       })
 
       await removePrevious(mockPinner as any, 'QmNewCID', {
@@ -291,23 +307,35 @@ describe('pinner wrapper', () => {
       expect(mockPinner.unpin).not.toHaveBeenCalled()
     })
 
-    it('should not fail if no previous IPNS record exists', async () => {
-      mockPinner.ipns.resolve.mockRejectedValue(new Error('not found'))
+    it('should not fail if getKey returns no value', async () => {
+      mockPinner.ipns.getKey.mockResolvedValue({
+        id: 1,
+        name: 'test-key',
+        ipns_name: 'k51qzi5qu...test',
+        peer_id: '12D3Koo...test',
+        value: undefined,
+        created: '2025-01-01T00:00:00Z'
+      })
 
       await expect(
         removePrevious(mockPinner as any, 'QmNewCID', {
           ipnsKey: 'test-key'
         })
       ).resolves.toBeUndefined()
+      expect(mockPinner.unpin).not.toHaveBeenCalled()
     })
 
-    it('should not unpin if IPNS resolve returns no value', async () => {
-      mockPinner.ipns.resolve.mockResolvedValue({ value: null })
+    it('should warn on IPNS key lookup failure instead of throwing', async () => {
+      mockPinner.ipns.getKey.mockRejectedValue(new Error('not found'))
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-      await removePrevious(mockPinner as any, 'QmNewCID', {
-        ipnsKey: 'test-key'
-      })
-      expect(mockPinner.unpin).not.toHaveBeenCalled()
+      await expect(
+        removePrevious(mockPinner as any, 'QmNewCID', {
+          ipnsKey: 'test-key'
+        })
+      ).resolves.toBeUndefined()
+      expect(warnSpy).toHaveBeenCalled()
+      warnSpy.mockRestore()
     })
 
     it('should lookup website by domain and unpin active_cid', async () => {
@@ -334,8 +362,12 @@ describe('pinner wrapper', () => {
       await removePrevious(mockPinner as any, 'QmNewCID', {
         domain: 'app.example.com'
       })
-      expect(mockPinner.websites.listWebsites).toHaveBeenCalled()
-      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
+      expect(mockPinner.websites.listWebsites).toHaveBeenCalledWith({
+        signal: expect.any(AbortSignal)
+      })
+      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID', {
+        signal: expect.any(AbortSignal)
+      })
     })
 
     it('should skip unpin if active_cid matches newCid', async () => {
@@ -365,7 +397,7 @@ describe('pinner wrapper', () => {
       expect(mockPinner.unpin).not.toHaveBeenCalled()
     })
 
-    it('should also unpin via IPNS if ipns_key_id present and no ipnsKey provided', async () => {
+    it('should use active_cid from website record (no separate IPNS resolution)', async () => {
       mockPinner.websites.listWebsites.mockResolvedValue({
         data: [
           {
@@ -384,60 +416,21 @@ describe('pinner wrapper', () => {
             validation_token: 'tok123'
           }
         ]
-      })
-      mockPinner.ipns.getKey.mockResolvedValue({
-        id: 5,
-        name: 'app-key',
-        ipns_name: 'k51qzi5qu...app',
-        peer_id: '12D3Koo...app',
-        created: '2025-01-01T00:00:00Z'
-      })
-      mockPinner.ipns.resolve.mockResolvedValue({
-        value: '/ipfs/QmOldIPNSCID'
       })
 
       await removePrevious(mockPinner as any, 'QmNewCID', {
         domain: 'app.example.com'
       })
-      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
-      expect(mockPinner.ipns.getKey).toHaveBeenCalledWith(5)
-      expect(mockPinner.ipns.resolve).toHaveBeenCalledWith('k51qzi5qu...app')
-      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldIPNSCID')
-    })
-
-    it('should not resolve IPNS if ipnsKey is also provided', async () => {
-      mockPinner.websites.listWebsites.mockResolvedValue({
-        data: [
-          {
-            id: 1,
-            domain: 'app.example.com',
-            active_cid: 'QmOldCID',
-            ipns_key_id: 5,
-            target_hash: 'QmOldCID',
-            target_type: 'ipfs',
-            status: 'active',
-            created: '2025-01-01T00:00:00Z',
-            updated: '2025-01-01T00:00:00Z',
-            expired: false,
-            dns_hosting_enabled: false,
-            is_subdomain: false,
-            validation_token: 'tok123'
-          }
-        ]
+      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID', {
+        signal: expect.any(AbortSignal)
       })
-
-      await removePrevious(mockPinner as any, 'QmNewCID', {
-        domain: 'app.example.com',
-        ipnsKey: 'my-key'
-      })
-      expect(mockPinner.unpin).toHaveBeenCalledWith('QmOldCID')
+      // active_cid already has the IPNS-published CID — no need for separate IPNS resolution
       expect(mockPinner.ipns.getKey).not.toHaveBeenCalled()
     })
 
     it('should do nothing when no domain and no ipnsKey provided', async () => {
       await removePrevious(mockPinner as any, 'QmNewCID', {})
       expect(mockPinner.unpin).not.toHaveBeenCalled()
-      expect(mockPinner.ipns.resolve).not.toHaveBeenCalled()
       expect(mockPinner.websites.listWebsites).not.toHaveBeenCalled()
     })
 
