@@ -16321,6 +16321,14 @@ function error(message, properties = {}) {
 	issueCommand("error", toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 /**
+* Adds a warning issue
+* @param message warning issue message. Errors will be converted to string via toString()
+* @param properties optional properties to add to the annotation.
+*/
+function warning(message, properties = {}) {
+	issueCommand("warning", toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+}
+/**
 * Writes info to log with console.log.
 * @param message info message
 */
@@ -79432,41 +79440,51 @@ async function setupWebsite(pinner, cid, domain) {
 	return String(website.id);
 }
 const CLEANUP_TIMEOUT_MS = 3e4;
+function extractErrorMessage(err) {
+	if (err instanceof Error) return err.message;
+	if (typeof err === "object" && err !== null && "status" in err) {
+		const resp = err;
+		return `HTTP ${resp.status ?? "unknown"}${resp.statusText ? `: ${resp.statusText}` : ""}`;
+	}
+	return String(err);
+}
 function cleanupAbortSignal(external) {
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), CLEANUP_TIMEOUT_MS);
-	if (external) {
-		if (external.aborted) {
-			clearTimeout(timeoutId);
-			controller.abort();
-			return controller.signal;
-		}
-		external.addEventListener("abort", () => {
-			clearTimeout(timeoutId);
-			controller.abort();
-		}, { once: true });
-	}
-	controller.signal.addEventListener("abort", () => clearTimeout(timeoutId), { once: true });
-	return controller.signal;
+	if (external) if (external.aborted) {
+		clearTimeout(timeoutId);
+		controller.abort();
+	} else external.addEventListener("abort", () => {
+		clearTimeout(timeoutId);
+		controller.abort();
+	}, { once: true });
+	return {
+		signal: controller.signal,
+		clear: () => clearTimeout(timeoutId)
+	};
 }
 async function removePrevious(pinner, newCid, options) {
-	const signal = cleanupAbortSignal(options.signal);
-	if (options.domain) try {
-		const response = await pinner.websites.listWebsites({ signal });
-		const existing = (Array.isArray(response.data) ? response.data : [response.data]).find((w) => w.domain === options.domain);
-		if (existing) {
-			const activeCid = existing.active_cid;
-			if (activeCid && activeCid !== newCid) await pinner.unpin(activeCid, { signal });
+	const { signal, clear } = cleanupAbortSignal(options.signal);
+	try {
+		if (options.domain) try {
+			const response = await pinner.websites.listWebsites({ signal });
+			const existing = (Array.isArray(response.data) ? response.data : [response.data]).find((w) => w.domain === options.domain);
+			if (existing) {
+				const activeCid = existing.active_cid;
+				if (activeCid && activeCid !== newCid) await pinner.unpin(activeCid, { signal });
+			}
+		} catch (err) {
+			warning(`Failed to remove previous pin for domain: ${extractErrorMessage(err)}`);
 		}
-	} catch (err) {
-		console.warn("Failed to remove previous pin for domain:", err instanceof Error ? err.message : String(err));
-	}
-	if (options.ipnsKey) try {
-		const keyId = await resolveIpnsKey(pinner, options.ipnsKey, signal);
-		const key = await pinner.ipns.getKey(keyId, { signal });
-		if (key.value && key.value !== newCid) await pinner.unpin(key.value, { signal });
-	} catch (err) {
-		console.warn("Failed to remove previous pin for IPNS key:", err instanceof Error ? err.message : String(err));
+		if (options.ipnsKey) try {
+			const keyId = await resolveIpnsKey(pinner, options.ipnsKey, signal);
+			const key = await pinner.ipns.getKey(keyId, { signal });
+			if (key.value && key.value !== newCid) await pinner.unpin(key.value, { signal });
+		} catch (err) {
+			warning(`Failed to remove previous pin for IPNS key: ${extractErrorMessage(err)}`);
+		}
+	} finally {
+		clear();
 	}
 }
 function readDirAsFiles(rootDir, currentDir) {
@@ -79517,10 +79535,14 @@ async function run() {
 		}
 		if (removePrev && (ipnsKey || domain)) {
 			info("Removing previous pin...");
-			await removePrevious(pinner, resultCid, {
-				ipnsKey,
-				domain
-			});
+			try {
+				await removePrevious(pinner, resultCid, {
+					ipnsKey,
+					domain
+				});
+			} catch (err) {
+				warning(`Failed to remove previous pin: ${err instanceof Error ? err.message : String(err)}`);
+			}
 		}
 		const gatewayUrl = `https://dweb.link/ipfs/${resultCid}`;
 		setOutput("cid", resultCid);
@@ -79535,9 +79557,10 @@ async function run() {
 	} catch (error) {
 		if (error instanceof Error) setFailed(error.message);
 		else setFailed("An unexpected error occurred");
+	} finally {
+		process.exit(process.exitCode ?? 0);
 	}
 }
-if (import.meta.url === `file://${process.argv[1]}`) run();
 //#endregion
 //#region src/index.ts
 /**
