@@ -1,3 +1,10 @@
+## 0.1.6 (2026-06-01)
+
+### Fixes
+
+- remove ipns.resolve() and add 30s abort timeout to cleanup
+- pass abort signal to resolveIpnsKey in ipnsKey cleanup path
+
 ## 0.1.5 (2026-06-01)
 
 ### Fixes
