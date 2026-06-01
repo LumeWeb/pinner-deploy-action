@@ -1,5 +1,8 @@
 import { vi, describe, it, expect, beforeEach } from 'vite-plus/test'
 import type { Mock } from 'vite-plus/test'
+import * as core from '../__fixtures__/core.js'
+
+vi.mock('@actions/core', () => core)
 
 vi.mock('node:fs', () => ({
   statSync: vi.fn(),
@@ -327,7 +330,7 @@ describe('pinner wrapper', () => {
 
     it('should warn on IPNS key lookup failure instead of throwing', async () => {
       mockPinner.ipns.getKey.mockRejectedValue(new Error('not found'))
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const warnSpy = vi.spyOn(core, 'warning').mockImplementation(() => {})
 
       await expect(
         removePrevious(mockPinner as any, 'QmNewCID', {
@@ -438,7 +441,7 @@ describe('pinner wrapper', () => {
       mockPinner.websites.listWebsites.mockRejectedValue(
         new Error('network error')
       )
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const warnSpy = vi.spyOn(core, 'warning').mockImplementation(() => {})
 
       await expect(
         removePrevious(mockPinner as any, 'QmNewCID', {

@@ -3,6 +3,8 @@ import * as core from '../__fixtures__/core.js'
 
 vi.mock('@actions/core', () => core)
 
+const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => {})
+
 const mockPinnerFns = {
   initClient: vi.fn(),
   uploadPath: vi.fn(),
