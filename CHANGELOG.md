@@ -1,3 +1,9 @@
+## 0.1.8 (2026-06-01)
+
+### Fixes
+
+- upgrade @lumeweb/pinner to 0.1.11 for correct directory upload root CID
+
 ## 0.1.7 (2026-06-01)
 
 ### Fixes
