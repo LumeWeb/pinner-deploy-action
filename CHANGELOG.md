@@ -1,3 +1,9 @@
+## 0.1.5 (2026-06-01)
+
+### Fixes
+
+- bump @lumeweb/pinner to 0.1.10 for upload response parsing fix
+
 ## 0.1.4 (2026-06-01)
 
 ### Fixes
