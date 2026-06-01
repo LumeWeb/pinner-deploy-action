@@ -56,7 +56,13 @@ export async function run(): Promise<void> {
 
     if (removePrev && (ipnsKey || domain)) {
       core.info('Removing previous pin...')
-      await removePrevious(pinner, resultCid, { ipnsKey, domain })
+      try {
+        await removePrevious(pinner, resultCid, { ipnsKey, domain })
+      } catch (err) {
+        core.warning(
+          `Failed to remove previous pin: ${err instanceof Error ? err.message : String(err)}`
+        )
+      }
     }
 
     const gatewayUrl = `https://dweb.link/ipfs/${resultCid}`
@@ -80,9 +86,7 @@ export async function run(): Promise<void> {
     } else {
       core.setFailed('An unexpected error occurred')
     }
+  } finally {
+    process.exit(process.exitCode ?? 0)
   }
-}
-
-if (import.meta.url === `file://${process.argv[1]}`) {
-  void run()
 }

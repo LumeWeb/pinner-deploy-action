@@ -3,6 +3,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { Pinner } from '@lumeweb/pinner'
 import type { UploadResult } from '@lumeweb/pinner'
+import * as core from '@actions/core'
 
 export interface DeployOptions {
   apiKey: string
@@ -129,7 +130,19 @@ export interface RemovePreviousOptions {
 
 const CLEANUP_TIMEOUT_MS = 30_000
 
-function cleanupAbortSignal(external?: AbortSignal): AbortSignal {
+function extractErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message
+  if (typeof err === 'object' && err !== null && 'status' in err) {
+    const resp = err as { status?: number; statusText?: string }
+    return `HTTP ${resp.status ?? 'unknown'}${resp.statusText ? `: ${resp.statusText}` : ''}`
+  }
+  return String(err)
+}
+
+function cleanupAbortSignal(external?: AbortSignal): {
+  signal: AbortSignal
+  clear: () => void
+} {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), CLEANUP_TIMEOUT_MS)
 
@@ -137,23 +150,22 @@ function cleanupAbortSignal(external?: AbortSignal): AbortSignal {
     if (external.aborted) {
       clearTimeout(timeoutId)
       controller.abort()
-      return controller.signal
+    } else {
+      external.addEventListener(
+        'abort',
+        () => {
+          clearTimeout(timeoutId)
+          controller.abort()
+        },
+        { once: true }
+      )
     }
-    external.addEventListener(
-      'abort',
-      () => {
-        clearTimeout(timeoutId)
-        controller.abort()
-      },
-      { once: true }
-    )
   }
 
-  controller.signal.addEventListener('abort', () => clearTimeout(timeoutId), {
-    once: true
-  })
-
-  return controller.signal
+  return {
+    signal: controller.signal,
+    clear: () => clearTimeout(timeoutId)
+  }
 }
 
 export async function removePrevious(
@@ -161,51 +173,47 @@ export async function removePrevious(
   newCid: string,
   options: RemovePreviousOptions
 ): Promise<void> {
-  const signal = cleanupAbortSignal(options.signal)
+  const { signal, clear } = cleanupAbortSignal(options.signal)
 
-  if (options.domain) {
-    try {
-      const response = await pinner.websites.listWebsites({ signal })
-      const items = Array.isArray(response.data)
-        ? response.data
-        : [response.data]
-      const existing = items.find(
-        (w: { domain: string }) => w.domain === options.domain
-      )
+  try {
+    if (options.domain) {
+      try {
+        const response = await pinner.websites.listWebsites({ signal })
+        const items = Array.isArray(response.data)
+          ? response.data
+          : [response.data]
+        const existing = items.find(
+          (w: { domain: string }) => w.domain === options.domain
+        )
 
-      if (existing) {
-        // active_cid is the IPNS-published CID (populated from the key's
-        // LastPublishedCID by the backend). ipns.resolve() just returns the
-        // same value through a more expensive datastore/DHT code path.
-        const activeCid = existing.active_cid
-        if (activeCid && activeCid !== newCid) {
-          await pinner.unpin(activeCid, { signal })
+        if (existing) {
+          const activeCid = existing.active_cid
+          if (activeCid && activeCid !== newCid) {
+            await pinner.unpin(activeCid, { signal })
+          }
         }
+      } catch (err) {
+        core.warning(
+          `Failed to remove previous pin for domain: ${extractErrorMessage(err)}`
+        )
       }
-    } catch (err) {
-      console.warn(
-        'Failed to remove previous pin for domain:',
-        err instanceof Error ? err.message : String(err)
-      )
     }
-  }
 
-  if (options.ipnsKey) {
-    try {
-      // Read the key's stored value instead of calling ipns.resolve().
-      // resolve() hits the datastore or DHT and can hang; the key's
-      // value field is updated synchronously on every publish.
-      const keyId = await resolveIpnsKey(pinner, options.ipnsKey, signal)
-      const key = await pinner.ipns.getKey(keyId, { signal })
-      if (key.value && key.value !== newCid) {
-        await pinner.unpin(key.value, { signal })
+    if (options.ipnsKey) {
+      try {
+        const keyId = await resolveIpnsKey(pinner, options.ipnsKey, signal)
+        const key = await pinner.ipns.getKey(keyId, { signal })
+        if (key.value && key.value !== newCid) {
+          await pinner.unpin(key.value, { signal })
+        }
+      } catch (err) {
+        core.warning(
+          `Failed to remove previous pin for IPNS key: ${extractErrorMessage(err)}`
+        )
       }
-    } catch (err) {
-      console.warn(
-        'Failed to remove previous pin for IPNS key:',
-        err instanceof Error ? err.message : String(err)
-      )
     }
+  } finally {
+    clear()
   }
 }
 
