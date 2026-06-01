@@ -12,8 +12,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1
       '@lumeweb/pinner':
-        specifier: ^0.1.9
-        version: 0.1.9(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.10
+        version: 0.1.10(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -469,11 +469,11 @@ packages:
   '@libp2p/utils@7.2.2':
     resolution: {integrity: sha512-EEF/S3nYnR6+Ii0o2XL8RATEb8d+IhPCUNVVZ46u9L0wB+8cxL856pPi5tlzz+vK+Aix0ARGK4tbpROyXQst5Q==}
 
-  '@lumeweb/pinner@0.1.9':
-    resolution: {integrity: sha512-Oo611op2emjsgCZswcJAJQoyfcCcA7vLQGuzxfyTVHWY49s74S31X5f4jHh6zphawMKCKiCSh33byow1YZmH9g==}
+  '@lumeweb/pinner@0.1.10':
+    resolution: {integrity: sha512-r4w2fmSkmH+bb2qXB/zcmlneb1FMgZ8EX4N/CYP2wkMeNnaUYnvXa0/iCLfEczuaV5blfNrYkSBGm9n9m5jnxw==}
 
-  '@lumeweb/portal-sdk@0.1.4':
-    resolution: {integrity: sha512-a2BImA79FHK0xFrrnHMYACtkHlN7jeSwcqw19m3NF+D4MD0FNuTv9MElvWcCjIHof0/5Co5Pht16kby+hT7Rqw==}
+  '@lumeweb/portal-sdk@0.1.5':
+    resolution: {integrity: sha512-gQJgQ6a3rJ6Zwz1Xal75Y+JDr30EH49eet/kTLkd2Lnpnw7IBBwnDKAMP/paCS2IkMy7+6rVw40ysl3VjugRAw==}
 
   '@lumeweb/query-builder@0.1.1':
     resolution: {integrity: sha512-S7HqE+nIHBSm0TNhZx09a8kR3GMkWbaRMYnCC/dB/8Bg9H2UOSZ+em7be2Mo0cFugm7FHWqJZTnZgGyuRlcgNQ==}
@@ -3797,14 +3797,14 @@ snapshots:
       uint8arraylist: 2.4.9
       uint8arrays: 6.1.1
 
-  '@lumeweb/pinner@0.1.9(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@lumeweb/pinner@0.1.10(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@helia/car': 5.4.2
       '@helia/http': 3.1.4
       '@helia/unixfs': 7.2.1
       '@ipfs-shipyard/pinning-service-client': 3.0.0
       '@ipld/car': 5.4.6
-      '@lumeweb/portal-sdk': 0.1.4(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@lumeweb/portal-sdk': 0.1.5(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/query-builder': 0.1.1(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/uppy-post-upload': 0.1.1(@uppy/core@5.2.0)
       '@uppy/core': 5.2.0
@@ -3851,7 +3851,7 @@ snapshots:
       - supports-color
       - uploadthing
 
-  '@lumeweb/portal-sdk@0.1.4(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@lumeweb/portal-sdk@0.1.5(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@lumeweb/query-builder': 0.1.1(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
