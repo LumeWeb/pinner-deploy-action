@@ -195,7 +195,7 @@ export async function removePrevious(
       // Read the key's stored value instead of calling ipns.resolve().
       // resolve() hits the datastore or DHT and can hang; the key's
       // value field is updated synchronously on every publish.
-      const keyId = await resolveIpnsKey(pinner, options.ipnsKey)
+      const keyId = await resolveIpnsKey(pinner, options.ipnsKey, signal)
       const key = await pinner.ipns.getKey(keyId, { signal })
       if (key.value && key.value !== newCid) {
         await pinner.unpin(key.value, { signal })
