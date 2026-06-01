@@ -65,14 +65,15 @@ export async function pinByCid(pinner: Pinner, cid: string): Promise<string> {
 
 export async function resolveIpnsKey(
   pinner: Pinner,
-  keyInput: string
+  keyInput: string,
+  signal?: AbortSignal
 ): Promise<number> {
   const parsed = parseInt(keyInput, 10)
   if (!isNaN(parsed) && String(parsed) === keyInput) {
     return parsed
   }
 
-  const response = await pinner.ipns.listKeys()
+  const response = await pinner.ipns.listKeys({ signal })
   const keys = Array.isArray(response.data) ? response.data : [response.data]
   const match = keys.find(
     (k: { id: number; name: string }) => k.name === keyInput
@@ -86,10 +87,11 @@ export async function resolveIpnsKey(
 export async function publishIpns(
   pinner: Pinner,
   cid: string,
-  keyInput: string
+  keyInput: string,
+  signal?: AbortSignal
 ): Promise<string> {
-  const keyId = await resolveIpnsKey(pinner, keyInput)
-  const result = await pinner.ipns.publish({ cid, key_id: keyId })
+  const keyId = await resolveIpnsKey(pinner, keyInput, signal)
+  const result = await pinner.ipns.publish({ cid, key_id: keyId }, { signal })
   return result.name || keyInput
 }
 
@@ -122,6 +124,36 @@ export async function setupWebsite(
 export interface RemovePreviousOptions {
   ipnsKey?: string
   domain?: string
+  signal?: AbortSignal
+}
+
+const CLEANUP_TIMEOUT_MS = 30_000
+
+function cleanupAbortSignal(external?: AbortSignal): AbortSignal {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), CLEANUP_TIMEOUT_MS)
+
+  if (external) {
+    if (external.aborted) {
+      clearTimeout(timeoutId)
+      controller.abort()
+      return controller.signal
+    }
+    external.addEventListener(
+      'abort',
+      () => {
+        clearTimeout(timeoutId)
+        controller.abort()
+      },
+      { once: true }
+    )
+  }
+
+  controller.signal.addEventListener('abort', () => clearTimeout(timeoutId), {
+    once: true
+  })
+
+  return controller.signal
 }
 
 export async function removePrevious(
@@ -129,9 +161,11 @@ export async function removePrevious(
   newCid: string,
   options: RemovePreviousOptions
 ): Promise<void> {
+  const signal = cleanupAbortSignal(options.signal)
+
   if (options.domain) {
     try {
-      const response = await pinner.websites.listWebsites()
+      const response = await pinner.websites.listWebsites({ signal })
       const items = Array.isArray(response.data)
         ? response.data
         : [response.data]
@@ -140,32 +174,17 @@ export async function removePrevious(
       )
 
       if (existing) {
+        // active_cid is the IPNS-published CID (populated from the key's
+        // LastPublishedCID by the backend). ipns.resolve() just returns the
+        // same value through a more expensive datastore/DHT code path.
         const activeCid = existing.active_cid
         if (activeCid && activeCid !== newCid) {
-          await pinner.unpin(activeCid)
-        }
-
-        if (existing.ipns_key_id != null && !options.ipnsKey) {
-          try {
-            const key = await pinner.ipns.getKey(existing.ipns_key_id)
-            const resolved = await pinner.ipns.resolve(key.ipns_name)
-            if (resolved?.value) {
-              const resolvedCid = resolved.value.replace(/^\/ipfs\//, '')
-              if (resolvedCid !== newCid) {
-                await pinner.unpin(resolvedCid)
-              }
-            }
-          } catch (err) {
-            console.warn(
-              'Failed to resolve IPNS key for domain cleanup:',
-              err instanceof Error ? err.message : String(err)
-            )
-          }
+          await pinner.unpin(activeCid, { signal })
         }
       }
     } catch (err) {
       console.warn(
-        'Failed to lookup website for domain cleanup:',
+        'Failed to remove previous pin for domain:',
         err instanceof Error ? err.message : String(err)
       )
     }
@@ -173,16 +192,17 @@ export async function removePrevious(
 
   if (options.ipnsKey) {
     try {
-      const resolved = await pinner.ipns.resolve(options.ipnsKey)
-      if (resolved?.value) {
-        const cid = resolved.value.replace(/^\/ipfs\//, '')
-        if (cid !== newCid) {
-          await pinner.unpin(cid)
-        }
+      // Read the key's stored value instead of calling ipns.resolve().
+      // resolve() hits the datastore or DHT and can hang; the key's
+      // value field is updated synchronously on every publish.
+      const keyId = await resolveIpnsKey(pinner, options.ipnsKey, signal)
+      const key = await pinner.ipns.getKey(keyId, { signal })
+      if (key.value && key.value !== newCid) {
+        await pinner.unpin(key.value, { signal })
       }
     } catch (err) {
       console.warn(
-        'Failed to resolve IPNS for cleanup:',
+        'Failed to remove previous pin for IPNS key:',
         err instanceof Error ? err.message : String(err)
       )
     }
