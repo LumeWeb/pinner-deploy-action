@@ -1,3 +1,9 @@
+## 0.1.9 (2026-06-10)
+
+### Fixes
+
+- upgrade @lumeweb/pinner to 0.1.13
+
 ## 0.1.8 (2026-06-01)
 
 ### Fixes
