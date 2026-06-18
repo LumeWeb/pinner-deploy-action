@@ -30,14 +30,14 @@
     "@lumeweb/pinner": "^0.1.13"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "@github/local-action": "^7.0.1",
     "@types/node": "^25.9.3",
-    "@voidzero-dev/vite-plus-core": "^0.1.22",
+    "@voidzero-dev/vite-plus-core": "^0.2.1",
     "msw": "^2.4.0",
     "typescript": "^6.0.3",
-    "vite-plus": "^0.1.22",
-    "vitest": "^4.1.7"
+    "vite-plus": "^0.2.1",
+    "vitest": "^4.1.9"
   },
   "overrides": {
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
