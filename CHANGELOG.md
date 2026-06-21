@@ -1,3 +1,9 @@
+## 0.1.10 (2026-06-21)
+
+### Fixes
+
+- wait for pin operation to settle before returning CID
+
 ## 0.1.9 (2026-06-10)
 
 ### Fixes
