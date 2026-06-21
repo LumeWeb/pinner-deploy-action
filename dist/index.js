@@ -25739,24 +25739,277 @@ function dns(init = {}) {
 	return new DNS$1(init);
 }
 //#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/identity.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base10.js
+var base10_exports = /* @__PURE__ */ __exportAll({ base10: () => base10 });
+const base10 = baseX({
+	prefix: "9",
+	name: "base10",
+	alphabet: "0123456789"
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base16.js
+var base16_exports = /* @__PURE__ */ __exportAll({
+	base16: () => base16,
+	base16upper: () => base16upper
+});
+const base16 = rfc4648({
+	prefix: "f",
+	name: "base16",
+	alphabet: "0123456789abcdef",
+	bitsPerChar: 4
+});
+const base16upper = rfc4648({
+	prefix: "F",
+	name: "base16upper",
+	alphabet: "0123456789ABCDEF",
+	bitsPerChar: 4
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base2.js
+var base2_exports = /* @__PURE__ */ __exportAll({ base2: () => base2 });
+const base2 = rfc4648({
+	prefix: "0",
+	name: "base2",
+	alphabet: "01",
+	bitsPerChar: 1
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base256emoji.js
+var base256emoji_exports = /* @__PURE__ */ __exportAll({ base256emoji: () => base256emoji });
+const alphabet = Array.from("🚀🪐☄🛰🌌🌑🌒🌓🌔🌕🌖🌗🌘🌍🌏🌎🐉☀💻🖥💾💿😂❤😍🤣😊🙏💕😭😘👍😅👏😁🔥🥰💔💖💙😢🤔😆🙄💪😉☺👌🤗💜😔😎😇🌹🤦🎉💞✌✨🤷😱😌🌸🙌😋💗💚😏💛🙂💓🤩😄😀🖤😃💯🙈👇🎶😒🤭❣😜💋👀😪😑💥🙋😞😩😡🤪👊🥳😥🤤👉💃😳✋😚😝😴🌟😬🙃🍀🌷😻😓⭐✅🥺🌈😈🤘💦✔😣🏃💐☹🎊💘😠☝😕🌺🎂🌻😐🖕💝🙊😹🗣💫💀👑🎵🤞😛🔴😤🌼😫⚽🤙☕🏆🤫👈😮🙆🍻🍃🐶💁😲🌿🧡🎁⚡🌞🎈❌✊👋😰🤨😶🤝🚶💰🍓💢🤟🙁🚨💨🤬✈🎀🍺🤓😙💟🌱😖👶🥴▶➡❓💎💸⬇😨🌚🦋😷🕺⚠🙅😟😵👎🤲🤠🤧📌🔵💅🧐🐾🍒😗🤑🌊🤯🐷☎💧😯💆👆🎤🙇🍑❄🌴💣🐸💌📍🥀🤢👅💡💩👐📸👻🤐🤮🎼🥵🚩🍎🍊👼💍📣🥂");
+const alphabetBytesToChars = alphabet.reduce((p, c, i) => {
+	p[i] = c;
+	return p;
+}, []);
+const alphabetCharsToBytes = alphabet.reduce((p, c, i) => {
+	const codePoint = c.codePointAt(0);
+	if (codePoint == null) throw new Error(`Invalid character: ${c}`);
+	p[codePoint] = i;
+	return p;
+}, []);
+function encode$7(data) {
+	return data.reduce((p, c) => {
+		p += alphabetBytesToChars[c];
+		return p;
+	}, "");
+}
+function decode$7(str) {
+	const byts = [];
+	for (const char of str) {
+		const codePoint = char.codePointAt(0);
+		if (codePoint == null) throw new Error(`Invalid character: ${char}`);
+		const byt = alphabetCharsToBytes[codePoint];
+		if (byt == null) throw new Error(`Non-base256emoji character: ${char}`);
+		byts.push(byt);
+	}
+	return new Uint8Array(byts);
+}
+const base256emoji = from$2({
+	prefix: "🚀",
+	name: "base256emoji",
+	encode: encode$7,
+	decode: decode$7
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base8.js
+var base8_exports = /* @__PURE__ */ __exportAll({ base8: () => base8 });
+const base8 = rfc4648({
+	prefix: "7",
+	name: "base8",
+	alphabet: "01234567",
+	bitsPerChar: 3
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/identity.js
 var identity_exports$1 = /* @__PURE__ */ __exportAll({ identity: () => identity$1 });
+const identity$1 = from$2({
+	prefix: "\0",
+	name: "identity",
+	encode: (buf) => toString$3(buf),
+	decode: (str) => fromString$3(str)
+});
+new TextEncoder();
+new TextDecoder();
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/identity.js
+var identity_exports = /* @__PURE__ */ __exportAll({ identity: () => identity });
 const code$4 = 0;
 const name$4 = "identity";
-const encode$7 = coerce;
+const encode$6 = coerce;
 function digest(input, options) {
 	if (options?.truncate != null && options.truncate !== input.byteLength) {
 		if (options.truncate < 0 || options.truncate > input.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${input.byteLength}`);
 		input = input.subarray(0, options.truncate);
 	}
-	return create$2(code$4, encode$7(input));
+	return create$2(code$4, encode$6(input));
 }
-const identity$1 = {
+const identity = {
 	code: code$4,
 	name: name$4,
-	encode: encode$7,
+	encode: encode$6,
 	digest
 };
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/hasher.js
+const DEFAULT_MIN_DIGEST_LENGTH = 20;
+function from({ name, code, encode, minDigestLength, maxDigestLength }) {
+	return new Hasher(name, code, encode, minDigestLength, maxDigestLength);
+}
+/**
+* Hasher represents a hashing algorithm implementation that produces as
+* `MultihashDigest`.
+*/
+var Hasher = class {
+	name;
+	code;
+	encode;
+	minDigestLength;
+	maxDigestLength;
+	constructor(name, code, encode, minDigestLength, maxDigestLength) {
+		this.name = name;
+		this.code = code;
+		this.encode = encode;
+		this.minDigestLength = minDigestLength ?? DEFAULT_MIN_DIGEST_LENGTH;
+		this.maxDigestLength = maxDigestLength;
+	}
+	digest(input, options) {
+		if (options?.truncate != null) {
+			if (options.truncate < this.minDigestLength) throw new Error(`Invalid truncate option, must be greater than or equal to ${this.minDigestLength}`);
+			if (this.maxDigestLength != null && options.truncate > this.maxDigestLength) throw new Error(`Invalid truncate option, must be less than or equal to ${this.maxDigestLength}`);
+		}
+		if (input instanceof Uint8Array) {
+			const result = this.encode(input);
+			if (result instanceof Uint8Array) return createDigest(result, this.code, options?.truncate);
+			return result.then((digest) => createDigest(digest, this.code, options?.truncate));
+		} else throw Error("Unknown type, must be binary type");
+	}
+};
+/**
+* Create a Digest from the passed uint8array and code, optionally truncating it
+* first.
+*/
+function createDigest(digest, code, truncate) {
+	if (truncate != null && truncate !== digest.byteLength) {
+		if (truncate > digest.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${digest.byteLength}`);
+		digest = digest.subarray(0, truncate);
+	}
+	return create$2(code, digest);
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/sha2.js
+var sha2_exports = /* @__PURE__ */ __exportAll({
+	sha256: () => sha256$1,
+	sha512: () => sha512$1
+});
+const sha256$1 = from({
+	name: "sha2-256",
+	code: 18,
+	encode: (input) => coerce(crypto$2.createHash("sha256").update(input).digest())
+});
+const sha512$1 = from({
+	name: "sha2-512",
+	code: 19,
+	encode: (input) => coerce(crypto$2.createHash("sha512").update(input).digest())
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/basics.js
+const bases = {
+	...identity_exports$1,
+	...base2_exports,
+	...base8_exports,
+	...base10_exports,
+	...base16_exports,
+	...base32_exports,
+	...base36_exports,
+	...base58_exports,
+	...base64_exports$1,
+	...base256emoji_exports
+};
+({
+	...sha2_exports,
+	...identity_exports
+});
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/as-uint8array.node.js
+/**
+* To guarantee Uint8Array semantics, convert nodejs Buffers
+* into vanilla Uint8Arrays
+*/
+function asUint8Array(buf) {
+	if (buf.buffer instanceof ArrayBuffer) return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+	const b = buf.slice();
+	return new Uint8Array(b.buffer, 0, b.byteLength);
+}
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/alloc.node.js
+/**
+* Returns a `Uint8Array` of the requested size. Referenced memory will
+* be initialized to 0.
+*/
+function alloc$1(size = 0) {
+	return asUint8Array(Buffer$1.alloc(size));
+}
+/**
+* Where possible returns a Uint8Array of the requested size that references
+* uninitialized memory. Only use if you are certain you will immediately
+* overwrite every value in the returned `Uint8Array`.
+*/
+function allocUnsafe(size = 0) {
+	return asUint8Array(Buffer$1.allocUnsafe(size));
+}
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/bases.js
+function createCodec$1(name, prefix, encode, decode) {
+	return {
+		name,
+		prefix,
+		encoder: {
+			name,
+			prefix,
+			encode
+		},
+		decoder: { decode }
+	};
+}
+const string = createCodec$1("utf8", "u", (buf) => {
+	return "u" + new TextDecoder("utf8").decode(buf);
+}, (str) => {
+	return new TextEncoder().encode(str.substring(1));
+});
+const ascii = createCodec$1("ascii", "a", (buf) => {
+	let string = "a";
+	for (let i = 0; i < buf.length; i++) string += String.fromCharCode(buf[i]);
+	return string;
+}, (str) => {
+	str = str.substring(1);
+	const buf = allocUnsafe(str.length);
+	for (let i = 0; i < str.length; i++) buf[i] = str.charCodeAt(i);
+	return buf;
+});
+const BASES = {
+	utf8: string,
+	"utf-8": string,
+	hex: bases.base16,
+	latin1: ascii,
+	ascii,
+	binary: ascii,
+	...bases
+};
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/from-string.node.js
+/**
+* Create a `Uint8Array` from the passed string
+*
+* Supports `utf8`, `utf-8`, `hex`, and any encoding supported by the multiformats module.
+*
+* Also `ascii` which is similar to node's 'binary' encoding.
+*/
+function fromString(string, encoding = "utf8") {
+	const base = BASES[encoding];
+	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
+	if (encoding === "utf8" || encoding === "utf-8") return asUint8Array(Buffer$1.from(string, "utf-8"));
+	return base.decoder.decode(`${base.prefix}${string}`);
+}
 //#endregion
 //#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/equals.js
 /**
@@ -25767,6 +26020,930 @@ function equals$1(a, b) {
 	if (a.byteLength !== b.byteLength) return false;
 	for (let i = 0; i < a.byteLength; i++) if (a[i] !== b[i]) return false;
 	return true;
+}
+var Fingerprint = class {
+	fp;
+	h;
+	seed;
+	constructor(buf, hash, seed, fingerprintSize = 2) {
+		if (fingerprintSize > 64) throw new TypeError("Invalid Fingerprint Size");
+		const fnv = hash.hashV(buf, seed);
+		const fp = alloc$1(fingerprintSize);
+		for (let i = 0; i < fp.length; i++) fp[i] = fnv[i];
+		if (fp.length === 0) fp[0] = 7;
+		this.fp = fp;
+		this.h = hash;
+		this.seed = seed;
+	}
+	hash() {
+		return this.h.hash(this.fp, this.seed);
+	}
+	equals(other) {
+		if (!(other?.fp instanceof Uint8Array)) return false;
+		return equals$1(this.fp, other.fp);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/utils.js
+function getRandomInt(min, max) {
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/bucket.js
+var Bucket$1 = class {
+	contents;
+	constructor(size) {
+		this.contents = new Array(size).fill(null);
+	}
+	has(fingerprint) {
+		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
+		return this.contents.some((fp) => {
+			return fingerprint.equals(fp);
+		});
+	}
+	add(fingerprint) {
+		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
+		for (let i = 0; i < this.contents.length; i++) if (this.contents[i] == null) {
+			this.contents[i] = fingerprint;
+			return true;
+		}
+		return true;
+	}
+	swap(fingerprint) {
+		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
+		const i = getRandomInt(0, this.contents.length - 1);
+		const current = this.contents[i];
+		this.contents[i] = fingerprint;
+		return current;
+	}
+	remove(fingerprint) {
+		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
+		const found = this.contents.findIndex((fp) => {
+			return fingerprint.equals(fp);
+		});
+		if (found > -1) {
+			this.contents[found] = null;
+			return true;
+		} else return false;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@sindresorhus+fnv1a@3.1.0/node_modules/@sindresorhus/fnv1a/index.js
+const FNV_PRIMES = {
+	32: 16777619n,
+	64: 1099511628211n,
+	128: 309485009821345068724781371n,
+	256: 374144419156711147060143317175368453031918731002211n,
+	512: 35835915874844867368919076489095108449946327955754392558399825615420669938882575126094039892345713852759n,
+	1024: 5016456510113118655434598811035278955030765345404790744303017523831112055108147451509157692220295382716162651878526895249385292291816524375083746691371804094271873160484737966720260389217684476157468082573n
+};
+const FNV_OFFSETS = {
+	32: 2166136261n,
+	64: 14695981039346656037n,
+	128: 144066263297769815596495629667062367629n,
+	256: 100029257958052580907070968620625704837092796014241193945225284501741471925557n,
+	512: 9659303129496669498009435400716310466090418745672637896108374329434462657994582932197716438449813051892206539805784495328239340083876191928701583869517785n,
+	1024: 14197795064947621068722070641403218320880622795441933960878474914617582723252296732303717722150864096521202355549365628174669108571814760471015076148029755969804077320157692458563003215304957150157403644460363550505412711285966361610267868082893823963790439336411086884584107735010676915n
+};
+const cachedEncoder = new globalThis.TextEncoder();
+function fnv1aUint8Array(uint8Array, size) {
+	const fnvPrime = FNV_PRIMES[size];
+	let hash = FNV_OFFSETS[size];
+	for (let index = 0; index < uint8Array.length; index++) {
+		hash ^= BigInt(uint8Array[index]);
+		hash = BigInt.asUintN(size, hash * fnvPrime);
+	}
+	return hash;
+}
+function fnv1aEncodeInto(string, size, utf8Buffer) {
+	if (utf8Buffer.length === 0) throw new Error("The `utf8Buffer` option must have a length greater than zero");
+	const fnvPrime = FNV_PRIMES[size];
+	let hash = FNV_OFFSETS[size];
+	let remaining = string;
+	while (remaining.length > 0) {
+		const result = cachedEncoder.encodeInto(remaining, utf8Buffer);
+		remaining = remaining.slice(result.read);
+		for (let index = 0; index < result.written; index++) {
+			hash ^= BigInt(utf8Buffer[index]);
+			hash = BigInt.asUintN(size, hash * fnvPrime);
+		}
+	}
+	return hash;
+}
+function fnv1a$1(value, { size = 32, utf8Buffer } = {}) {
+	if (!FNV_PRIMES[size]) throw new Error("The `size` option must be one of 32, 64, 128, 256, 512, or 1024");
+	if (typeof value === "string") {
+		if (utf8Buffer) return fnv1aEncodeInto(value, size, utf8Buffer);
+		value = cachedEncoder.encode(value);
+	}
+	return fnv1aUint8Array(value, size);
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/hashes.js
+const fnv1a = {
+	hash: (input) => {
+		return Number(fnv1a$1(input, { size: 32 }));
+	},
+	hashV: (input, seed) => {
+		return numberToBuffer(fnv1a.hash(input, seed));
+	}
+};
+function numberToBuffer(num) {
+	let hex = num.toString(16);
+	if (hex.length % 2 === 1) hex = `0${hex}`;
+	return fromString(hex, "base16");
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/cuckoo-filter.js
+const maxCuckooCount = 500;
+var CuckooFilter = class {
+	bucketSize;
+	filterSize;
+	fingerprintSize;
+	buckets;
+	count;
+	hash;
+	seed;
+	constructor(init) {
+		this.filterSize = init.filterSize;
+		this.bucketSize = init.bucketSize ?? 4;
+		this.fingerprintSize = init.fingerprintSize ?? 2;
+		this.count = 0;
+		this.buckets = [];
+		this.hash = init.hash ?? fnv1a;
+		this.seed = init.seed ?? getRandomInt(0, Math.pow(2, 10));
+	}
+	add(item) {
+		if (typeof item === "string") item = fromString(item);
+		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
+		const j = this.hash.hash(item, this.seed) % this.filterSize;
+		const k = (j ^ fingerprint.hash()) % this.filterSize;
+		if (this.buckets[j] == null) this.buckets[j] = new Bucket$1(this.bucketSize);
+		if (this.buckets[k] == null) this.buckets[k] = new Bucket$1(this.bucketSize);
+		if (this.buckets[j].add(fingerprint) || this.buckets[k].add(fingerprint)) {
+			this.count++;
+			return true;
+		}
+		const rand = [j, k];
+		let i = rand[getRandomInt(0, rand.length - 1)];
+		if (this.buckets[i] == null) this.buckets[i] = new Bucket$1(this.bucketSize);
+		for (let n = 0; n < maxCuckooCount; n++) {
+			const swapped = this.buckets[i].swap(fingerprint);
+			if (swapped == null) continue;
+			i = (i ^ swapped.hash()) % this.filterSize;
+			if (this.buckets[i] == null) this.buckets[i] = new Bucket$1(this.bucketSize);
+			if (this.buckets[i].add(swapped)) {
+				this.count++;
+				return true;
+			} else continue;
+		}
+		return false;
+	}
+	has(item) {
+		if (typeof item === "string") item = fromString(item);
+		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
+		const j = this.hash.hash(item, this.seed) % this.filterSize;
+		const inJ = this.buckets[j]?.has(fingerprint) ?? false;
+		if (inJ) return inJ;
+		const k = (j ^ fingerprint.hash()) % this.filterSize;
+		return this.buckets[k]?.has(fingerprint) ?? false;
+	}
+	remove(item) {
+		if (typeof item === "string") item = fromString(item);
+		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
+		const j = this.hash.hash(item, this.seed) % this.filterSize;
+		const inJ = this.buckets[j]?.remove(fingerprint) ?? false;
+		if (inJ) {
+			this.count--;
+			return inJ;
+		}
+		const k = (j ^ fingerprint.hash()) % this.filterSize;
+		const inK = this.buckets[k]?.remove(fingerprint) ?? false;
+		if (inK) this.count--;
+		return inK;
+	}
+	get reliable() {
+		return Math.floor(100 * (this.count / this.filterSize)) <= 90;
+	}
+};
+const MAX_LOAD = {
+	1: .5,
+	2: .84,
+	4: .95,
+	8: .98
+};
+function calculateBucketSize(errorRate = .001) {
+	if (errorRate > .002) return 2;
+	if (errorRate > 1e-5) return 4;
+	return 8;
+}
+function optimize(maxItems, errorRate = .001) {
+	const bucketSize = calculateBucketSize(errorRate);
+	const load = MAX_LOAD[bucketSize];
+	return {
+		filterSize: Math.round(maxItems / load),
+		bucketSize,
+		fingerprintSize: Math.min(Math.ceil(Math.log2(1 / errorRate) + Math.log2(2 * bucketSize)), 64)
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/scalable-cuckoo-filter.js
+var ScalableCuckooFilter = class {
+	filterSize;
+	bucketSize;
+	fingerprintSize;
+	scale;
+	filterSeries;
+	hash;
+	seed;
+	constructor(init) {
+		this.bucketSize = init.bucketSize ?? 4;
+		this.filterSize = init.filterSize ?? (1 << 18) / this.bucketSize;
+		this.fingerprintSize = init.fingerprintSize ?? 2;
+		this.scale = init.scale ?? 2;
+		this.hash = init.hash ?? fnv1a;
+		this.seed = init.seed ?? getRandomInt(0, Math.pow(2, 10));
+		this.filterSeries = [new CuckooFilter({
+			filterSize: this.filterSize,
+			bucketSize: this.bucketSize,
+			fingerprintSize: this.fingerprintSize,
+			hash: this.hash,
+			seed: this.seed
+		})];
+	}
+	add(item) {
+		if (typeof item === "string") item = fromString(item);
+		if (this.has(item)) return true;
+		let current = this.filterSeries.find((cuckoo) => {
+			return cuckoo.reliable;
+		});
+		if (current == null) {
+			current = new CuckooFilter({
+				filterSize: this.filterSize * Math.pow(this.scale, this.filterSeries.length),
+				bucketSize: this.bucketSize,
+				fingerprintSize: this.fingerprintSize,
+				hash: this.hash,
+				seed: this.seed
+			});
+			this.filterSeries.push(current);
+		}
+		return current.add(item);
+	}
+	has(item) {
+		if (typeof item === "string") item = fromString(item);
+		for (let i = 0; i < this.filterSeries.length; i++) if (this.filterSeries[i].has(item)) return true;
+		return false;
+	}
+	remove(item) {
+		if (typeof item === "string") item = fromString(item);
+		for (let i = 0; i < this.filterSeries.length; i++) if (this.filterSeries[i].remove(item)) return true;
+		return false;
+	}
+	get count() {
+		return this.filterSeries.reduce((acc, curr) => {
+			return acc + curr.count;
+		}, 0);
+	}
+};
+function createScalableCuckooFilter(maxItems, errorRate = .001, options) {
+	return new ScalableCuckooFilter({
+		...optimize(maxItems, errorRate),
+		...options ?? {}
+	});
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/get-net-config.js
+/**
+* Returns host/port/etc information for a multiaddr if it starts with a
+* network address (IPv4, IPv6, DNS, DNS4, DNS6 or DNSADDR), or null otherwise.
+*/
+function tryGetNetConfig(ma) {
+	const components = ma.getComponents();
+	const config = {};
+	let index = 0;
+	if (components[index]?.name === "ip6zone") {
+		config.zone = `${components[index].value}`;
+		index++;
+	}
+	if (components[index]?.name === "ip4" || components[index]?.name === "ip6") {
+		config.type = components[index].name;
+		config.host = components[index].value;
+		index++;
+	} else if (components[index]?.name === "dns" || components[index]?.name === "dns4" || components[index]?.name === "dns6") {
+		config.type = components[index].name;
+		config.host = components[index].value;
+		index++;
+	} else if (components[index]?.name === "dnsaddr") {
+		config.type = components[index].name;
+		config.host = `_dnsaddr.${components[index].value}`;
+		index++;
+	}
+	if (components[index]?.name === "tcp" || components[index]?.name === "udp") {
+		config.protocol = components[index].name === "tcp" ? "tcp" : "udp";
+		config.port = parseInt(`${components[index].value}`);
+		index++;
+	}
+	if (components[index]?.name === "ipcidr") {
+		if (config.type === "ip4") config.cidr = parseInt(`${components[index].value}`);
+		else if (config.type === "ip6") config.cidr = `${components[index].value}`;
+		index++;
+	}
+	if (config.type == null || config.host == null) return null;
+	if (components[index]?.name === "tls" && components[index + 1]?.name === "sni") {
+		config.sni = components[index + 1].value;
+		index += 2;
+	}
+	return config;
+}
+/**
+* Like `tryGetNetConfig` but throws `InvalidParametersError` when the multiaddr
+* does not start with a network address.
+*/
+function getNetConfig(ma) {
+	const config = tryGetNetConfig(ma);
+	if (config == null) throw new InvalidParametersError$4(`Multiaddr ${ma} was not an IPv4, IPv6, DNS, DNS4, DNS6 or DNSADDR address`);
+	return config;
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-link-local.js
+/**
+* Check if a given multiaddr is a link-local address
+*/
+function isLinkLocal(ma) {
+	try {
+		const config = getNetConfig(ma);
+		switch (config.type) {
+			case "ip4": return config.host.startsWith("169.254.");
+			case "ip6": return config.host.toLowerCase().startsWith("fe80");
+			default: return false;
+		}
+	} catch (err) {
+		return false;
+	}
+}
+//#endregion
+//#region node_modules/.pnpm/is-loopback-addr@2.0.2/node_modules/is-loopback-addr/dist/src/index.js
+/**
+* Check if a given ip address is a loopback address
+*/
+function isLoopbackAddr(ip) {
+	return /^127\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(ip) || /^::1$/.test(ip);
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-loopback.js
+/**
+* Check if a given multiaddr is a loopback address.
+*/
+function isLoopback(ma) {
+	try {
+		const config = getNetConfig(ma);
+		switch (config.type) {
+			case "ip4":
+			case "ip6": return isLoopbackAddr(config.host);
+			default: return false;
+		}
+	} catch {
+		return false;
+	}
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-network-address.js
+/**
+* Check if a given multiaddr is a network address
+*/
+function isNetworkAddress(ma) {
+	return tryGetNetConfig(ma) !== null;
+}
+//#endregion
+//#region node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask4.js
+var require_netmask4 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Netmask4Impl = void 0;
+	exports.ip2long = ip2long;
+	exports.long2ip = long2ip;
+	function long2ip(long) {
+		return [
+			(long & 255 << 24) >>> 24,
+			(long & 255 << 16) >>> 16,
+			(long & 65280) >>> 8,
+			long & 255
+		].join(".");
+	}
+	const chr0 = "0".charCodeAt(0);
+	const chra = "a".charCodeAt(0);
+	const chrA = "A".charCodeAt(0);
+	function parseNum(s) {
+		let n = 0;
+		let base = 10;
+		let dmax = "9";
+		let i = 0;
+		if (s.length > 1 && s[i] === "0") {
+			if (s[i + 1] === "x" || s[i + 1] === "X") {
+				i += 2;
+				base = 16;
+			} else if ("0" <= s[i + 1] && s[i + 1] <= "9") {
+				i++;
+				base = 8;
+				dmax = "7";
+			}
+		}
+		const start = i;
+		while (i < s.length) {
+			if ("0" <= s[i] && s[i] <= dmax) n = n * base + (s.charCodeAt(i) - chr0) >>> 0;
+			else if (base === 16) if ("a" <= s[i] && s[i] <= "f") n = n * base + (10 + s.charCodeAt(i) - chra) >>> 0;
+			else if ("A" <= s[i] && s[i] <= "F") n = n * base + (10 + s.charCodeAt(i) - chrA) >>> 0;
+			else break;
+			else break;
+			if (n > 4294967295) throw new Error("too large");
+			i++;
+		}
+		if (i === start) throw new Error("empty octet");
+		return [n, i];
+	}
+	function ip2long(ip) {
+		const b = [];
+		for (let i = 0; i <= 3; i++) {
+			if (ip.length === 0) break;
+			if (i > 0) {
+				if (ip[0] !== ".") throw new Error("Invalid IP");
+				ip = ip.substring(1);
+			}
+			const [n, c] = parseNum(ip);
+			ip = ip.substring(c);
+			b.push(n);
+		}
+		if (ip.length !== 0) throw new Error("Invalid IP");
+		switch (b.length) {
+			case 1:
+				if (b[0] > 4294967295) throw new Error("Invalid IP");
+				return b[0] >>> 0;
+			case 2:
+				if (b[0] > 255 || b[1] > 16777215) throw new Error("Invalid IP");
+				return (b[0] << 24 | b[1]) >>> 0;
+			case 3:
+				if (b[0] > 255 || b[1] > 255 || b[2] > 65535) throw new Error("Invalid IP");
+				return (b[0] << 24 | b[1] << 16 | b[2]) >>> 0;
+			case 4:
+				if (b[0] > 255 || b[1] > 255 || b[2] > 255 || b[3] > 255) throw new Error("Invalid IP");
+				return (b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]) >>> 0;
+			default: throw new Error("Invalid IP");
+		}
+	}
+	exports.Netmask4Impl = class Netmask4Impl {
+		constructor(net, mask) {
+			if (typeof net !== "string") throw new Error("Missing `net' parameter");
+			let maskStr = mask;
+			if (!maskStr) {
+				const parts = net.split("/", 2);
+				net = parts[0];
+				maskStr = parts[1];
+			}
+			if (!maskStr) maskStr = 32;
+			if (typeof maskStr === "string" && maskStr.indexOf(".") > -1) {
+				try {
+					this.maskLong = ip2long(maskStr);
+				} catch (error) {
+					throw new Error("Invalid mask: " + maskStr);
+				}
+				this.bitmask = NaN;
+				for (let i = 32; i >= 0; i--) if (this.maskLong === 4294967295 << 32 - i >>> 0) {
+					this.bitmask = i;
+					break;
+				}
+			} else if (maskStr || maskStr === 0) {
+				this.bitmask = parseInt(maskStr, 10);
+				this.maskLong = 0;
+				if (this.bitmask > 0) this.maskLong = 4294967295 << 32 - this.bitmask >>> 0;
+			} else throw new Error("Invalid mask: empty");
+			try {
+				this.netLong = (ip2long(net) & this.maskLong) >>> 0;
+			} catch (error) {
+				throw new Error("Invalid net address: " + net);
+			}
+			if (!(this.bitmask <= 32)) throw new Error("Invalid mask for ip4: " + maskStr);
+			this.size = Math.pow(2, 32 - this.bitmask);
+			this.base = long2ip(this.netLong);
+			this.mask = long2ip(this.maskLong);
+			this.hostmask = long2ip(~this.maskLong);
+			this.first = this.bitmask <= 30 ? long2ip(this.netLong + 1) : this.base;
+			this.last = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 2) : long2ip(this.netLong + this.size - 1);
+			this.broadcast = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 1) : void 0;
+		}
+		contains(ip) {
+			if (typeof ip === "string" && (ip.indexOf("/") > 0 || ip.split(".").length !== 4)) ip = new Netmask4Impl(ip);
+			if (ip instanceof Netmask4Impl) return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+			else return (ip2long(ip) & this.maskLong) >>> 0 === (this.netLong & this.maskLong) >>> 0;
+		}
+		next(count = 1) {
+			return new Netmask4Impl(long2ip(this.netLong + this.size * count), this.mask);
+		}
+		forEach(fn) {
+			let long = ip2long(this.first);
+			const lastLong = ip2long(this.last);
+			let index = 0;
+			while (long <= lastLong) {
+				fn(long2ip(long), long, index);
+				index++;
+				long++;
+			}
+		}
+		toString() {
+			return this.base + "/" + this.bitmask;
+		}
+	};
+}));
+//#endregion
+//#region node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask6.js
+var require_netmask6 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Netmask6Impl = void 0;
+	exports.ip6bigint = ip6bigint;
+	exports.bigint2ip6 = bigint2ip6;
+	const netmask4_1 = require_netmask4();
+	const MAX_IPV6 = (1n << 128n) - 1n;
+	function ip6bigint(ip) {
+		const zoneIdx = ip.indexOf("%");
+		if (zoneIdx !== -1) ip = ip.substring(0, zoneIdx);
+		const lastColon = ip.lastIndexOf(":");
+		if (lastColon !== -1 && ip.indexOf(".", lastColon) !== -1) {
+			const ipv4Part = ip.substring(lastColon + 1);
+			const ipv4Long = (0, netmask4_1.ip2long)(ipv4Part);
+			return parseIPv6Pure(ip.substring(0, lastColon + 1) + "0:0") & -4294967296n | BigInt(ipv4Long);
+		}
+		return parseIPv6Pure(ip);
+	}
+	function parseIPv6Pure(ip) {
+		const doubleColonIdx = ip.indexOf("::");
+		let groups;
+		if (doubleColonIdx !== -1) {
+			const left = ip.substring(0, doubleColonIdx);
+			const right = ip.substring(doubleColonIdx + 2);
+			const leftGroups = left === "" ? [] : left.split(":");
+			const rightGroups = right === "" ? [] : right.split(":");
+			const missing = 8 - leftGroups.length - rightGroups.length;
+			if (missing < 0) throw new Error("Invalid IPv6: too many groups");
+			groups = [
+				...leftGroups,
+				...Array(missing).fill("0"),
+				...rightGroups
+			];
+		} else groups = ip.split(":");
+		if (groups.length !== 8) throw new Error("Invalid IPv6: expected 8 groups, got " + groups.length);
+		let result = 0n;
+		for (let i = 0; i < 8; i++) {
+			const g = groups[i];
+			if (g.length === 0 || g.length > 4) throw new Error("Invalid IPv6: bad group \"" + g + "\"");
+			const val = parseInt(g, 16);
+			if (isNaN(val) || val < 0 || val > 65535) throw new Error("Invalid IPv6: bad group \"" + g + "\"");
+			result = result << 16n | BigInt(val);
+		}
+		return result;
+	}
+	function bigint2ip6(n) {
+		if (n < 0n || n > MAX_IPV6) throw new Error("Invalid IPv6 address value");
+		const groups = [];
+		for (let i = 0; i < 8; i++) {
+			groups.unshift(Number(n & 65535n));
+			n >>= 16n;
+		}
+		let bestStart = -1;
+		let bestLen = 0;
+		let curStart = -1;
+		let curLen = 0;
+		for (let i = 0; i < 8; i++) if (groups[i] === 0) if (curStart === -1) {
+			curStart = i;
+			curLen = 1;
+		} else curLen++;
+		else {
+			if (curLen > bestLen && curLen >= 2) {
+				bestStart = curStart;
+				bestLen = curLen;
+			}
+			curStart = -1;
+			curLen = 0;
+		}
+		if (curLen > bestLen && curLen >= 2) {
+			bestStart = curStart;
+			bestLen = curLen;
+		}
+		if (bestStart !== -1 && bestStart + bestLen === 8 && bestStart > 0) return groups.slice(0, bestStart).map((g) => g.toString(16)).join(":") + "::";
+		else if (bestStart === 0) return "::" + groups.slice(bestLen).map((g) => g.toString(16)).join(":");
+		else if (bestStart > 0) {
+			const before = groups.slice(0, bestStart).map((g) => g.toString(16));
+			const after = groups.slice(bestStart + bestLen).map((g) => g.toString(16));
+			return before.join(":") + "::" + after.join(":");
+		} else return groups.map((g) => g.toString(16)).join(":");
+	}
+	exports.Netmask6Impl = class Netmask6Impl {
+		constructor(net, mask) {
+			if (typeof net !== "string") throw new Error("Missing `net' parameter");
+			let prefixLen = mask;
+			if (prefixLen === void 0 || prefixLen === null) {
+				const slashIdx = net.indexOf("/");
+				if (slashIdx !== -1) {
+					prefixLen = parseInt(net.substring(slashIdx + 1), 10);
+					net = net.substring(0, slashIdx);
+				} else prefixLen = 128;
+			}
+			if (isNaN(prefixLen) || prefixLen < 0 || prefixLen > 128) throw new Error("Invalid mask for IPv6: " + prefixLen);
+			this.bitmask = prefixLen;
+			if (this.bitmask === 0) this.maskBigint = 0n;
+			else this.maskBigint = MAX_IPV6 >> BigInt(128 - this.bitmask) << BigInt(128 - this.bitmask);
+			try {
+				this.netBigint = ip6bigint(net) & this.maskBigint;
+			} catch (error) {
+				throw new Error("Invalid IPv6 net address: " + net);
+			}
+			this.size = Number(1n << BigInt(128 - this.bitmask));
+			this.base = bigint2ip6(this.netBigint);
+			this.mask = bigint2ip6(this.maskBigint);
+			this.hostmask = bigint2ip6(~this.maskBigint & MAX_IPV6);
+			this.first = this.base;
+			this.last = bigint2ip6(this.netBigint + (1n << BigInt(128 - this.bitmask)) - 1n);
+			this.broadcast = void 0;
+		}
+		contains(ip) {
+			if (typeof ip === "string") {
+				if (ip.indexOf("/") > 0) ip = new Netmask6Impl(ip);
+			}
+			if (ip instanceof Netmask6Impl) return this.contains(ip.base) && this.contains(ip.last);
+			else return (ip6bigint(ip) & this.maskBigint) === this.netBigint;
+		}
+		next(count = 1) {
+			const sizeBig = 1n << BigInt(128 - this.bitmask);
+			return new Netmask6Impl(bigint2ip6(this.netBigint + sizeBig * BigInt(count)), this.bitmask);
+		}
+		forEach(fn) {
+			let addr = this.netBigint;
+			const sizeBig = 1n << BigInt(128 - this.bitmask);
+			const lastAddr = this.netBigint + sizeBig - 1n;
+			let index = 0;
+			while (addr <= lastAddr) {
+				fn(bigint2ip6(addr), Number(addr), index);
+				index++;
+				addr++;
+			}
+		}
+		toString() {
+			return this.base + "/" + this.bitmask;
+		}
+	};
+}));
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/private-ip.js
+var import_netmask = (/* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.long2ip = exports.ip2long = exports.Netmask = void 0;
+	const netmask4_1 = require_netmask4();
+	Object.defineProperty(exports, "ip2long", {
+		enumerable: true,
+		get: function() {
+			return netmask4_1.ip2long;
+		}
+	});
+	Object.defineProperty(exports, "long2ip", {
+		enumerable: true,
+		get: function() {
+			return netmask4_1.long2ip;
+		}
+	});
+	const netmask6_1 = require_netmask6();
+	exports.Netmask = class Netmask {
+		constructor(net, mask) {
+			if (typeof net !== "string") throw new Error("Missing `net' parameter");
+			if ((net.indexOf("/") !== -1 ? net.substring(0, net.indexOf("/")) : net).indexOf(":") !== -1) this._impl = new netmask6_1.Netmask6Impl(net, mask);
+			else this._impl = new netmask4_1.Netmask4Impl(net, mask);
+			this.base = this._impl.base;
+			this.mask = this._impl.mask;
+			this.hostmask = this._impl.hostmask;
+			this.bitmask = this._impl.bitmask;
+			this.size = this._impl.size;
+			this.first = this._impl.first;
+			this.last = this._impl.last;
+			this.broadcast = this._impl.broadcast;
+			if (this._impl instanceof netmask4_1.Netmask4Impl) {
+				this.maskLong = this._impl.maskLong;
+				this.netLong = this._impl.netLong;
+			} else {
+				this.maskLong = 0;
+				this.netLong = 0;
+			}
+		}
+		contains(ip) {
+			if (typeof ip === "string") {
+				if (ip.indexOf("/") > 0) ip = new Netmask(ip);
+				else if (ip.indexOf(":") === -1 && ip.split(".").length !== 4) ip = new Netmask(ip);
+			}
+			if (ip instanceof Netmask) return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+			return this._impl.contains(ip);
+		}
+		next(count = 1) {
+			const nextImpl = this._impl.next(count);
+			return new Netmask(nextImpl.base, nextImpl.bitmask);
+		}
+		/** @deprecated */
+		forEach(fn) {
+			this._impl.forEach(fn);
+		}
+		toString() {
+			return this._impl.toString();
+		}
+	};
+})))();
+const NETMASK_RANGES = [
+	"0.0.0.0/8",
+	"10.0.0.0/8",
+	"100.64.0.0/10",
+	"127.0.0.0/8",
+	"169.254.0.0/16",
+	"172.16.0.0/12",
+	"192.0.0.0/24",
+	"192.0.0.0/29",
+	"192.0.0.8/32",
+	"192.0.0.9/32",
+	"192.0.0.10/32",
+	"192.0.0.170/32",
+	"192.0.0.171/32",
+	"192.0.2.0/24",
+	"192.31.196.0/24",
+	"192.52.193.0/24",
+	"192.88.99.0/24",
+	"192.168.0.0/16",
+	"192.175.48.0/24",
+	"198.18.0.0/15",
+	"198.51.100.0/24",
+	"203.0.113.0/24",
+	"240.0.0.0/4",
+	"255.255.255.255/32"
+].map((ipRange) => new import_netmask.Netmask(ipRange));
+function ipv4Check(ipAddr) {
+	for (const r of NETMASK_RANGES) if (r.contains(ipAddr)) return true;
+	return false;
+}
+function isIpv4MappedIpv6(ipAddr) {
+	return /^::ffff:([0-9a-fA-F]{1,4}):([0-9a-fA-F]{1,4})$/.test(ipAddr);
+}
+/**
+* @see https://datatracker.ietf.org/doc/html/rfc4291#section-2.5.5.2
+*/
+function ipv4MappedIpv6Check(ipAddr) {
+	const parts = ipAddr.split(":");
+	if (parts.length < 2) return false;
+	const octet34 = parts[parts.length - 1].padStart(4, "0");
+	const octet12 = parts[parts.length - 2].padStart(4, "0");
+	return ipv4Check(`${parseInt(octet12.substring(0, 2), 16)}.${parseInt(octet12.substring(2), 16)}.${parseInt(octet34.substring(0, 2), 16)}.${parseInt(octet34.substring(2), 16)}`);
+}
+/**
+* @see https://datatracker.ietf.org/doc/html/rfc4291#section-2.2 example 3
+*/
+function isIpv4EmbeddedIpv6(ipAddr) {
+	return /^::ffff:([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/.test(ipAddr);
+}
+function ipv4EmbeddedIpv6Check(ipAddr) {
+	const parts = ipAddr.split(":");
+	const ip4 = parts[parts.length - 1];
+	return ipv4Check(ip4);
+}
+function ipv6Check(ipAddr) {
+	return /^::$/.test(ipAddr) || /^::1$/.test(ipAddr) || /^64:ff9b::([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/.test(ipAddr) || /^100::([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2001::([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2001:2[0-9a-fA-F]:([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2001:db8:([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2002:([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^f[c-d]([0-9a-fA-F]{2,2}):/i.test(ipAddr) || /^fe[8-9a-bA-B][0-9a-fA-F]:/i.test(ipAddr) || /^ff([0-9a-fA-F]{2,2}):/i.test(ipAddr);
+}
+function isPrivateIp(ip) {
+	if (isIPv4$1(ip)) return ipv4Check(ip);
+	if (isIpv4MappedIpv6(ip)) return ipv4MappedIpv6Check(ip);
+	if (isIpv4EmbeddedIpv6(ip)) return ipv4EmbeddedIpv6Check(ip);
+	if (isIPv6$1(ip)) return ipv6Check(ip);
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-private.js
+/**
+* Check if a given multiaddr starts with a private address
+*/
+function isPrivate(ma) {
+	try {
+		const config = getNetConfig(ma);
+		switch (config.type) {
+			case "ip4":
+			case "ip6": return isPrivateIp(config.host) ?? false;
+			default: return config.host === "localhost";
+		}
+	} catch {
+		return false;
+	}
+}
+//#endregion
+//#region node_modules/.pnpm/uint8-varint@3.0.0/node_modules/uint8-varint/dist/src/index.js
+const N1$1 = Math.pow(2, 7);
+const N2$1 = Math.pow(2, 14);
+const N3$1 = Math.pow(2, 21);
+const N4$1 = Math.pow(2, 28);
+const N5$1 = Math.pow(2, 35);
+const N6$1 = Math.pow(2, 42);
+const N7$1 = Math.pow(2, 49);
+/** Most significant bit of a byte */
+const MSB$1 = 128;
+/** Rest of the bits in a byte */
+const REST$1 = 127;
+function encodingLength$1(value) {
+	if (value < N1$1) return 1;
+	if (value < N2$1) return 2;
+	if (value < N3$1) return 3;
+	if (value < N4$1) return 4;
+	if (value < N5$1) return 5;
+	if (value < N6$1) return 6;
+	if (value < N7$1) return 7;
+	if (Number.MAX_SAFE_INTEGER != null && value > Number.MAX_SAFE_INTEGER) throw new RangeError("Could not encode varint");
+	return 8;
+}
+function encodeUint8Array$1(value, buf, offset = 0) {
+	switch (encodingLength$1(value)) {
+		case 8:
+			buf[offset++] = value & 255 | MSB$1;
+			value /= 128;
+		case 7:
+			buf[offset++] = value & 255 | MSB$1;
+			value /= 128;
+		case 6:
+			buf[offset++] = value & 255 | MSB$1;
+			value /= 128;
+		case 5:
+			buf[offset++] = value & 255 | MSB$1;
+			value /= 128;
+		case 4:
+			buf[offset++] = value & 255 | MSB$1;
+			value >>>= 7;
+		case 3:
+			buf[offset++] = value & 255 | MSB$1;
+			value >>>= 7;
+		case 2:
+			buf[offset++] = value & 255 | MSB$1;
+			value >>>= 7;
+		case 1:
+			buf[offset++] = value & 255;
+			value >>>= 7;
+			break;
+		default: throw new Error("unreachable");
+	}
+	return buf;
+}
+function decodeUint8Array$1(buf, offset) {
+	let b = buf[offset];
+	let res = 0;
+	res += b & REST$1;
+	if (b < MSB$1) return res;
+	b = buf[offset + 1];
+	res += (b & REST$1) << 7;
+	if (b < MSB$1) return res;
+	b = buf[offset + 2];
+	res += (b & REST$1) << 14;
+	if (b < MSB$1) return res;
+	b = buf[offset + 3];
+	res += (b & REST$1) << 21;
+	if (b < MSB$1) return res;
+	b = buf[offset + 4];
+	res += (b & REST$1) * N4$1;
+	if (b < MSB$1) return res;
+	b = buf[offset + 5];
+	res += (b & REST$1) * N5$1;
+	if (b < MSB$1) return res;
+	b = buf[offset + 6];
+	res += (b & REST$1) * N6$1;
+	if (b < MSB$1) return res;
+	b = buf[offset + 7];
+	res += (b & REST$1) * N7$1;
+	if (b < MSB$1) return res;
+	throw new RangeError("Could not decode varint");
+}
+function decodeUint8ArrayList$1(buf, offset) {
+	let b = buf.get(offset);
+	let res = 0;
+	res += b & REST$1;
+	if (b < MSB$1) return res;
+	b = buf.get(offset + 1);
+	res += (b & REST$1) << 7;
+	if (b < MSB$1) return res;
+	b = buf.get(offset + 2);
+	res += (b & REST$1) << 14;
+	if (b < MSB$1) return res;
+	b = buf.get(offset + 3);
+	res += (b & REST$1) << 21;
+	if (b < MSB$1) return res;
+	b = buf.get(offset + 4);
+	res += (b & REST$1) * N4$1;
+	if (b < MSB$1) return res;
+	b = buf.get(offset + 5);
+	res += (b & REST$1) * N5$1;
+	if (b < MSB$1) return res;
+	b = buf.get(offset + 6);
+	res += (b & REST$1) * N6$1;
+	if (b < MSB$1) return res;
+	b = buf.get(offset + 7);
+	res += (b & REST$1) * N7$1;
+	if (b < MSB$1) return res;
+	throw new RangeError("Could not decode varint");
+}
+function decode$6(buf, offset = 0) {
+	if (buf instanceof Uint8Array) return decodeUint8Array$1(buf, offset);
+	else return decodeUint8ArrayList$1(buf, offset);
 }
 //#endregion
 //#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/with-array-buffer.js
@@ -25782,48 +26959,2503 @@ function withArrayBuffer(arr) {
 	if (isArrayBufferBacked(arr)) return arr;
 	return arr.slice();
 }
-async function generateECDSAKey(curve = "P-256") {
-	const keyPair = await crypto.subtle.generateKey({
-		name: "ECDSA",
-		namedCurve: curve
-	}, true, ["sign", "verify"]);
-	return {
-		publicKey: await crypto.subtle.exportKey("jwk", keyPair.publicKey),
-		privateKey: await crypto.subtle.exportKey("jwk", keyPair.privateKey)
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/concat.node.js
+/**
+* Returns a new Uint8Array created by concatenating the passed Uint8Arrays
+*/
+function concat$1(arrays, length) {
+	return asUint8Array(Buffer$1.concat(arrays, length));
+}
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/to-string.node.js
+/**
+* Turns a `Uint8Array` into a string.
+*
+* Supports `utf8`, `utf-8` and any encoding supported by the multibase module.
+*
+* Also `ascii` which is similar to node's 'binary' encoding.
+*/
+function toString$1(array, encoding = "utf8") {
+	const base = BASES[encoding];
+	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
+	if (encoding === "utf8" || encoding === "utf-8") return Buffer$1.from(array.buffer, array.byteOffset, array.byteLength).toString("utf8");
+	return base.encoder.encode(array).substring(1);
+}
+//#endregion
+//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/errors.js
+/**
+* Thrown when an invalid multiaddr is encountered
+*/
+var InvalidMultiaddrError = class extends Error {
+	static name = "InvalidMultiaddrError";
+	name = "InvalidMultiaddrError";
+};
+var ValidationError$1 = class extends Error {
+	static name = "ValidationError";
+	name = "ValidationError";
+};
+var InvalidParametersError$3 = class extends Error {
+	static name = "InvalidParametersError";
+	name = "InvalidParametersError";
+};
+var UnknownProtocolError = class extends Error {
+	static name = "UnknownProtocolError";
+	name = "UnknownProtocolError";
+};
+//#endregion
+//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/utils.js
+function bytesToString(base) {
+	return (buf) => {
+		return toString$1(buf, base);
 	};
 }
-async function hashAndSign$3(key, msg, options) {
-	const privateKey = await crypto.subtle.importKey("jwk", key, {
-		name: "ECDSA",
-		namedCurve: key.crv ?? "P-256"
-	}, false, ["sign"]);
-	options?.signal?.throwIfAborted();
-	const signature = await crypto.subtle.sign({
-		name: "ECDSA",
-		hash: { name: "SHA-256" }
-	}, privateKey, withArrayBuffer(msg.subarray()));
-	options?.signal?.throwIfAborted();
-	return new Uint8Array(signature, 0, signature.byteLength);
+function stringToBytes(base) {
+	return (buf) => {
+		return fromString(buf, base);
+	};
 }
-async function hashAndVerify$3(key, sig, msg, options) {
-	const publicKey = await crypto.subtle.importKey("jwk", key, {
-		name: "ECDSA",
-		namedCurve: key.crv ?? "P-256"
-	}, false, ["verify"]);
-	options?.signal?.throwIfAborted();
-	const result = await crypto.subtle.verify({
-		name: "ECDSA",
-		hash: { name: "SHA-256" }
-	}, publicKey, withArrayBuffer(sig), withArrayBuffer(msg.subarray()));
-	options?.signal?.throwIfAborted();
-	return result;
+function bytes2port(buf) {
+	return new DataView(buf.buffer).getUint16(buf.byteOffset).toString();
+}
+function port2bytes(port) {
+	const buf = /* @__PURE__ */ new ArrayBuffer(2);
+	new DataView(buf).setUint16(0, typeof port === "string" ? parseInt(port) : port);
+	return new Uint8Array(buf);
+}
+function onion2bytes(str) {
+	const addr = str.split(":");
+	if (addr.length !== 2) throw new Error(`failed to parse onion addr: ["'${addr.join("\", \"")}'"]' does not contain a port number`);
+	if (addr[0].length !== 16) throw new Error(`failed to parse onion addr: ${addr[0]} not a Tor onion address.`);
+	const buf = fromString(addr[0], "base32");
+	const port = parseInt(addr[1], 10);
+	if (port < 1 || port > 65536) throw new Error("Port number is not in range(1, 65536)");
+	const portBuf = port2bytes(port);
+	return concat$1([buf, portBuf], buf.length + portBuf.length);
+}
+function onion32bytes(str) {
+	const addr = str.split(":");
+	if (addr.length !== 2) throw new Error(`failed to parse onion addr: ["'${addr.join("\", \"")}'"]' does not contain a port number`);
+	if (addr[0].length !== 56) throw new Error(`failed to parse onion addr: ${addr[0]} not a Tor onion3 address.`);
+	const buf = base32.decode(`b${addr[0]}`);
+	const port = parseInt(addr[1], 10);
+	if (port < 1 || port > 65536) throw new Error("Port number is not in range(1, 65536)");
+	const portBuf = port2bytes(port);
+	return concat$1([buf, portBuf], buf.length + portBuf.length);
+}
+function bytes2onion(buf) {
+	const addrBytes = buf.subarray(0, buf.length - 2);
+	const portBytes = buf.subarray(buf.length - 2);
+	return `${toString$1(addrBytes, "base32")}:${bytes2port(portBytes)}`;
+}
+const ip4ToBytes = function(ip) {
+	ip = ip.toString().trim();
+	const bytes = new Uint8Array(4);
+	ip.split(/\./g).forEach((byte, index) => {
+		const value = parseInt(byte, 10);
+		if (isNaN(value) || value < 0 || value > 255) throw new InvalidMultiaddrError("Invalid byte value in IP address");
+		bytes[index] = value;
+	});
+	return bytes;
+};
+const ip6ToBytes = function(ip) {
+	let offset = 0;
+	ip = ip.toString().trim();
+	const sections = ip.split(":", 8);
+	let i;
+	for (i = 0; i < sections.length; i++) {
+		const isv4 = isIPv4$1(sections[i]);
+		let v4Buffer;
+		if (isv4) {
+			v4Buffer = ip4ToBytes(sections[i]);
+			sections[i] = toString$1(v4Buffer.subarray(0, 2), "base16");
+		}
+		if (v4Buffer != null && ++i < 8) sections.splice(i, 0, toString$1(v4Buffer.subarray(2, 4), "base16"));
+	}
+	if (sections[0] === "") while (sections.length < 8) sections.unshift("0");
+	else if (sections[sections.length - 1] === "") while (sections.length < 8) sections.push("0");
+	else if (sections.length < 8) {
+		for (i = 0; i < sections.length && sections[i] !== ""; i++);
+		const argv = [i, 1];
+		for (i = 9 - sections.length; i > 0; i--) argv.push("0");
+		sections.splice.apply(sections, argv);
+	}
+	const bytes = new Uint8Array(offset + 16);
+	for (i = 0; i < sections.length; i++) {
+		if (sections[i] === "") sections[i] = "0";
+		const word = parseInt(sections[i], 16);
+		if (isNaN(word) || word < 0 || word > 65535) throw new InvalidMultiaddrError("Invalid byte value in IP address");
+		bytes[offset++] = word >> 8 & 255;
+		bytes[offset++] = word & 255;
+	}
+	return bytes;
+};
+const ip4ToString = function(buf) {
+	if (buf.byteLength !== 4) throw new InvalidMultiaddrError("IPv4 address was incorrect length");
+	const result = [];
+	for (let i = 0; i < buf.byteLength; i++) result.push(buf[i]);
+	return result.join(".");
+};
+const ip6ToString = function(buf) {
+	if (buf.byteLength !== 16) throw new InvalidMultiaddrError("IPv6 address was incorrect length");
+	const result = [];
+	for (let i = 0; i < buf.byteLength; i += 2) {
+		const byte1 = buf[i];
+		const byte2 = buf[i + 1];
+		const tuple = `${byte1.toString(16).padStart(2, "0")}${byte2.toString(16).padStart(2, "0")}`;
+		result.push(tuple);
+	}
+	const ip = result.join(":");
+	try {
+		const url = new URL(`http://[${ip}]`);
+		return url.hostname.substring(1, url.hostname.length - 1);
+	} catch {
+		throw new InvalidMultiaddrError(`Invalid IPv6 address "${ip}"`);
+	}
+};
+function ip6StringToValue(str) {
+	try {
+		const url = new URL(`http://[${str}]`);
+		return url.hostname.substring(1, url.hostname.length - 1);
+	} catch {
+		throw new InvalidMultiaddrError(`Invalid IPv6 address "${str}"`);
+	}
+}
+const decoders$1 = Object.values(bases).map((c) => c.decoder);
+const anybaseDecoder = (function() {
+	let acc = decoders$1[0].or(decoders$1[1]);
+	decoders$1.slice(2).forEach((d) => acc = acc.or(d));
+	return acc;
+})();
+function mb2bytes(mbstr) {
+	return anybaseDecoder.decode(mbstr);
+}
+function bytes2mb(base) {
+	return (buf) => {
+		return base.encoder.encode(buf);
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/validation.js
+function integer(value) {
+	if (parseInt(value).toString() !== value) throw new ValidationError$1("Value must be an integer");
+}
+function positive(value) {
+	if (value < 0) throw new ValidationError$1("Value must be a positive integer, or zero");
+}
+function maxValue(max) {
+	return (value) => {
+		if (value > max) throw new ValidationError$1(`Value must be smaller than or equal to ${max}`);
+	};
+}
+function validate$3(...funcs) {
+	return (value) => {
+		for (const fn of funcs) fn(value);
+	};
+}
+const validatePort = validate$3(integer, positive, maxValue(65535));
+var Registry = class {
+	protocolsByCode = /* @__PURE__ */ new Map();
+	protocolsByName = /* @__PURE__ */ new Map();
+	getProtocol(key) {
+		let codec;
+		if (typeof key === "string") codec = this.protocolsByName.get(key);
+		else codec = this.protocolsByCode.get(key);
+		if (codec == null) throw new UnknownProtocolError(`Protocol ${key} was unknown`);
+		return codec;
+	}
+	addProtocol(codec) {
+		this.protocolsByCode.set(codec.code, codec);
+		this.protocolsByName.set(codec.name, codec);
+		codec.aliases?.forEach((alias) => {
+			this.protocolsByName.set(alias, codec);
+		});
+	}
+	removeProtocol(code) {
+		const codec = this.protocolsByCode.get(code);
+		if (codec == null) return;
+		this.protocolsByCode.delete(codec.code);
+		this.protocolsByName.delete(codec.name);
+		codec.aliases?.forEach((alias) => {
+			this.protocolsByName.delete(alias);
+		});
+	}
+};
+const registry = new Registry();
+[
+	{
+		code: 4,
+		name: "ip4",
+		size: 32,
+		valueToBytes: ip4ToBytes,
+		bytesToValue: ip4ToString,
+		validate: (value) => {
+			if (!isIPv4$1(value)) throw new ValidationError$1(`Invalid IPv4 address "${value}"`);
+		}
+	},
+	{
+		code: 6,
+		name: "tcp",
+		size: 16,
+		valueToBytes: port2bytes,
+		bytesToValue: bytes2port,
+		validate: validatePort
+	},
+	{
+		code: 273,
+		name: "udp",
+		size: 16,
+		valueToBytes: port2bytes,
+		bytesToValue: bytes2port,
+		validate: validatePort
+	},
+	{
+		code: 33,
+		name: "dccp",
+		size: 16,
+		valueToBytes: port2bytes,
+		bytesToValue: bytes2port,
+		validate: validatePort
+	},
+	{
+		code: 41,
+		name: "ip6",
+		size: 128,
+		valueToBytes: ip6ToBytes,
+		bytesToValue: ip6ToString,
+		stringToValue: ip6StringToValue,
+		validate: (value) => {
+			if (!isIPv6$1(value)) throw new ValidationError$1(`Invalid IPv6 address "${value}"`);
+		}
+	},
+	{
+		code: 42,
+		name: "ip6zone",
+		size: -1
+	},
+	{
+		code: 43,
+		name: "ipcidr",
+		size: 8,
+		bytesToValue: bytesToString("base10"),
+		valueToBytes: stringToBytes("base10")
+	},
+	{
+		code: 53,
+		name: "dns",
+		size: -1
+	},
+	{
+		code: 54,
+		name: "dns4",
+		size: -1
+	},
+	{
+		code: 55,
+		name: "dns6",
+		size: -1
+	},
+	{
+		code: 56,
+		name: "dnsaddr",
+		size: -1
+	},
+	{
+		code: 132,
+		name: "sctp",
+		size: 16,
+		valueToBytes: port2bytes,
+		bytesToValue: bytes2port,
+		validate: validatePort
+	},
+	{
+		code: 301,
+		name: "udt"
+	},
+	{
+		code: 302,
+		name: "utp"
+	},
+	{
+		code: 400,
+		name: "unix",
+		size: -1,
+		stringToValue: (str) => decodeURIComponent(str),
+		valueToString: (val) => encodeURIComponent(val)
+	},
+	{
+		code: 421,
+		name: "p2p",
+		aliases: ["ipfs"],
+		size: -1,
+		bytesToValue: bytesToString("base58btc"),
+		valueToBytes: (val) => {
+			if (val.startsWith("Q") || val.startsWith("1")) return stringToBytes("base58btc")(val);
+			return CID.parse(val).multihash.bytes;
+		}
+	},
+	{
+		code: 444,
+		name: "onion",
+		size: 96,
+		bytesToValue: bytes2onion,
+		valueToBytes: onion2bytes
+	},
+	{
+		code: 445,
+		name: "onion3",
+		size: 296,
+		bytesToValue: bytes2onion,
+		valueToBytes: onion32bytes
+	},
+	{
+		code: 446,
+		name: "garlic64",
+		size: -1
+	},
+	{
+		code: 447,
+		name: "garlic32",
+		size: -1
+	},
+	{
+		code: 448,
+		name: "tls"
+	},
+	{
+		code: 449,
+		name: "sni",
+		size: -1
+	},
+	{
+		code: 454,
+		name: "noise"
+	},
+	{
+		code: 460,
+		name: "quic"
+	},
+	{
+		code: 461,
+		name: "quic-v1"
+	},
+	{
+		code: 465,
+		name: "webtransport"
+	},
+	{
+		code: 466,
+		name: "certhash",
+		size: -1,
+		bytesToValue: bytes2mb(base64url$1),
+		valueToBytes: mb2bytes
+	},
+	{
+		code: 480,
+		name: "http"
+	},
+	{
+		code: 481,
+		name: "http-path",
+		size: -1,
+		stringToValue: (str) => `/${decodeURIComponent(str)}`,
+		valueToString: (val) => encodeURIComponent(val.substring(1))
+	},
+	{
+		code: 443,
+		name: "https"
+	},
+	{
+		code: 477,
+		name: "ws"
+	},
+	{
+		code: 478,
+		name: "wss"
+	},
+	{
+		code: 479,
+		name: "p2p-websocket-star"
+	},
+	{
+		code: 277,
+		name: "p2p-stardust"
+	},
+	{
+		code: 275,
+		name: "p2p-webrtc-star"
+	},
+	{
+		code: 276,
+		name: "p2p-webrtc-direct"
+	},
+	{
+		code: 280,
+		name: "webrtc-direct"
+	},
+	{
+		code: 281,
+		name: "webrtc"
+	},
+	{
+		code: 290,
+		name: "p2p-circuit"
+	},
+	{
+		code: 777,
+		name: "memory",
+		size: -1
+	}
+].forEach((codec) => {
+	registry.addProtocol(codec);
+});
+//#endregion
+//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/components.js
+function bytesToComponents(bytes) {
+	const components = [];
+	let i = 0;
+	while (i < bytes.length) {
+		const code = decode$6(bytes, i);
+		const codec = registry.getProtocol(code);
+		const codeLength = encodingLength$1(code);
+		const size = sizeForAddr(codec, bytes, i + codeLength);
+		let sizeLength = 0;
+		if (size > 0 && codec.size === -1) sizeLength = encodingLength$1(size);
+		const componentLength = codeLength + sizeLength + size;
+		const component = {
+			code,
+			name: codec.name,
+			bytes: withArrayBuffer(bytes.subarray(i, i + componentLength))
+		};
+		if (size > 0) {
+			const valueOffset = i + codeLength + sizeLength;
+			const valueBytes = bytes.subarray(valueOffset, valueOffset + size);
+			component.value = codec.bytesToValue?.(valueBytes) ?? toString$1(valueBytes);
+		}
+		components.push(component);
+		i += componentLength;
+	}
+	return components;
+}
+function componentsToBytes(components) {
+	let length = 0;
+	const bytes = [];
+	for (const component of components) {
+		if (component.bytes == null) {
+			const codec = registry.getProtocol(component.code);
+			const codecLength = encodingLength$1(component.code);
+			let valueBytes;
+			let valueLength = 0;
+			let valueLengthLength = 0;
+			if (component.value != null) {
+				valueBytes = codec.valueToBytes?.(component.value) ?? fromString(component.value);
+				valueLength = valueBytes.byteLength;
+				if (codec.size === -1) valueLengthLength = encodingLength$1(valueLength);
+			}
+			const bytes = new Uint8Array(codecLength + valueLengthLength + valueLength);
+			let offset = 0;
+			encodeUint8Array$1(component.code, bytes, offset);
+			offset += codecLength;
+			if (valueBytes != null) {
+				if (codec.size === -1) {
+					encodeUint8Array$1(valueLength, bytes, offset);
+					offset += valueLengthLength;
+				}
+				bytes.set(valueBytes, offset);
+			}
+			component.bytes = bytes;
+		}
+		bytes.push(component.bytes);
+		length += component.bytes.byteLength;
+	}
+	return concat$1(bytes, length);
+}
+function stringToComponents(string) {
+	if (string.charAt(0) !== "/") throw new InvalidMultiaddrError("String multiaddr must start with \"/\"");
+	const components = [];
+	let collecting = "protocol";
+	let value = "";
+	let protocol = "";
+	for (let i = 1; i < string.length; i++) {
+		const char = string.charAt(i);
+		if (char !== "/") if (collecting === "protocol") protocol += string.charAt(i);
+		else value += string.charAt(i);
+		const ended = i === string.length - 1;
+		if (char === "/" || ended) {
+			const codec = registry.getProtocol(protocol);
+			if (collecting === "protocol") {
+				if (codec.size == null || codec.size === 0) {
+					components.push({
+						code: codec.code,
+						name: codec.name
+					});
+					value = "";
+					protocol = "";
+					collecting = "protocol";
+					continue;
+				} else if (ended) throw new InvalidMultiaddrError(`Component ${protocol} was missing value`);
+				collecting = "value";
+			} else if (collecting === "value") {
+				const component = {
+					code: codec.code,
+					name: codec.name
+				};
+				if (codec.size != null && codec.size !== 0) {
+					if (value === "") throw new InvalidMultiaddrError(`Component ${protocol} was missing value`);
+					component.value = codec.stringToValue?.(value) ?? value;
+				}
+				components.push(component);
+				value = "";
+				protocol = "";
+				collecting = "protocol";
+			}
+		}
+	}
+	if (protocol !== "" && value !== "") throw new InvalidMultiaddrError("Incomplete multiaddr");
+	return components;
+}
+function componentsToString(components) {
+	return `/${components.flatMap((component) => {
+		if (component.value == null) return component.name;
+		const codec = registry.getProtocol(component.code);
+		if (codec == null) throw new InvalidMultiaddrError(`Unknown protocol code ${component.code}`);
+		return [component.name, codec.valueToString?.(component.value) ?? component.value];
+	}).join("/")}`;
+}
+/**
+* For the passed address, return the serialized size
+*/
+function sizeForAddr(codec, bytes, offset) {
+	if (codec.size == null || codec.size === 0) return 0;
+	if (codec.size > 0) return codec.size / 8;
+	return decode$6(bytes, offset);
+}
+//#endregion
+//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/multiaddr.js
+const inspect$1 = Symbol.for("nodejs.util.inspect.custom");
+const symbol$1 = Symbol.for("@multiformats/multiaddr");
+function toComponents(addr) {
+	if (addr == null) addr = "/";
+	if (isMultiaddr(addr)) return addr.getComponents();
+	if (addr instanceof Uint8Array) return bytesToComponents(addr);
+	if (typeof addr === "string") {
+		addr = addr.replace(/\/(\/)+/, "/").replace(/(\/)+$/, "");
+		if (addr === "") addr = "/";
+		return stringToComponents(addr);
+	}
+	if (Array.isArray(addr)) return addr;
+	throw new InvalidMultiaddrError("Must be a string, Uint8Array, Component[], or another Multiaddr");
+}
+/**
+* Creates a {@link Multiaddr} from a {@link MultiaddrInput}
+*/
+var Multiaddr = class Multiaddr {
+	[symbol$1] = true;
+	#components;
+	#string;
+	#bytes;
+	constructor(addr = "/", options = {}) {
+		this.#components = toComponents(addr);
+		if (options.validate !== false) validate$2(this);
+	}
+	get bytes() {
+		if (this.#bytes == null) this.#bytes = componentsToBytes(this.#components);
+		return this.#bytes;
+	}
+	toString() {
+		if (this.#string == null) this.#string = componentsToString(this.#components);
+		return this.#string;
+	}
+	toJSON() {
+		return this.toString();
+	}
+	getComponents() {
+		return [...this.#components.map((c) => ({ ...c }))];
+	}
+	encapsulate(addr) {
+		const ma = new Multiaddr(addr);
+		return new Multiaddr([...this.#components, ...ma.getComponents()], { validate: false });
+	}
+	decapsulate(addr) {
+		const addrString = addr.toString();
+		const s = this.toString();
+		const i = s.lastIndexOf(addrString);
+		if (i < 0) throw new InvalidParametersError$3(`Address ${this.toString()} does not contain subaddress: ${addrString}`);
+		return new Multiaddr(s.slice(0, i), { validate: false });
+	}
+	decapsulateCode(code) {
+		let index;
+		for (let i = this.#components.length - 1; i > -1; i--) if (this.#components[i].code === code) {
+			index = i;
+			break;
+		}
+		return new Multiaddr(this.#components.slice(0, index), { validate: false });
+	}
+	equals(addr) {
+		return equals$1(this.bytes, addr.bytes);
+	}
+	/**
+	* Returns Multiaddr as a human-readable string
+	* https://nodejs.org/api/util.html#utilinspectcustom
+	*
+	* @example
+	* ```js
+	* import { multiaddr } from '@multiformats/multiaddr'
+	*
+	* console.info(multiaddr('/ip4/127.0.0.1/tcp/4001'))
+	* // 'Multiaddr(/ip4/127.0.0.1/tcp/4001)'
+	* ```
+	*/
+	[inspect$1]() {
+		return `Multiaddr(${this.toString()})`;
+	}
+};
+/**
+* Ensures all multiaddr tuples are correct. Throws if any invalid protocols or
+* values are encountered.
+*/
+function validate$2(addr) {
+	addr.getComponents().forEach((component) => {
+		const codec = registry.getProtocol(component.code);
+		if (component.value == null) return;
+		codec.validate?.(component.value);
+	});
+}
+//#endregion
+//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* A standard way to represent addresses that
+*
+* - support any standard network protocol
+* - have a binary packed format
+* - have a nice string representation
+* - encapsulate well
+*
+* @example
+*
+* ```TypeScript
+* import { multiaddr } from '@multiformats/multiaddr'
+*
+* const addr = multiaddr('/ip4/127.0.0.1/udp/1234')
+* // Multiaddr(/ip4/127.0.0.1/udp/1234)
+*
+* addr.bytes
+* // <Uint8Array 04 7f 00 00 01 11 04 d2>
+*
+* addr.toString()
+* // '/ip4/127.0.0.1/udp/1234'
+*
+* addr.getComponents()
+* // [
+* //   { code: 4, name: 'ip4', value: '127.0.0.1' },
+* //   { code: 273, name: 'udp', value: '1234' }
+* // ]
+*
+* addr.encapsulate('/sctp/5678')
+* // Multiaddr(/ip4/127.0.0.1/udp/1234/sctp/5678)
+* ```
+*
+* @example Adding custom protocols
+*
+* To add application-specific or experimental protocols, add a protocol codec
+* to the protocol registry:
+*
+* ```ts
+* import { registry, V, multiaddr } from '@multiformats/multiaddr'
+* import type { ProtocolCodec } from '@multiformats/multiaddr'
+*
+* const maWithCustomTuple = '/custom-protocol/hello'
+*
+* // throws UnknownProtocolError
+* multiaddr(maWithCustomTuple)
+*
+* const protocol: ProtocolCodec = {
+*   code: 2059,
+*   name: 'custom-protocol',
+*   size: V
+*   // V means variable length, can also be 0, a positive integer (e.g. a fixed
+*   // length or omitted
+* }
+*
+* registry.addProtocol(protocol)
+*
+* // does not throw UnknownProtocolError
+* multiaddr(maWithCustomTuple)
+*
+* // protocols can also be removed
+* registry.removeProtocol(protocol.code)
+* ```
+*/
+/**
+* Check if object is a {@link Multiaddr} instance
+*
+* @example
+*
+* ```js
+* import { isMultiaddr, multiaddr } from '@multiformats/multiaddr'
+*
+* isMultiaddr(5)
+* // false
+* isMultiaddr(multiaddr('/ip4/127.0.0.1'))
+* // true
+* ```
+*/
+function isMultiaddr(value) {
+	return Boolean(value?.[symbol$1]);
+}
+/**
+* A function that takes a {@link MultiaddrInput} and returns a {@link Multiaddr}
+*
+* @example
+* ```js
+* import { multiaddr } from '@libp2p/multiaddr'
+*
+* multiaddr('/ip4/127.0.0.1/tcp/4001')
+* // Multiaddr(/ip4/127.0.0.1/tcp/4001)
+* ```
+*
+* @param {MultiaddrInput} [addr] - If String or Uint8Array, needs to adhere to the address format of a [multiaddr](https://github.com/multiformats/multiaddr#string-format)
+*/
+function multiaddr(addr) {
+	return new Multiaddr(addr);
+}
+//#endregion
+//#region node_modules/.pnpm/@multiformats+multiaddr-matcher@3.0.2/node_modules/@multiformats/multiaddr-matcher/dist/src/utils.js
+/**
+* Matches a multiaddr component with the specified code but no value
+*/
+const code$3 = (code) => {
+	return { match: (vals) => {
+		const component = vals[0];
+		if (component == null) return false;
+		if (component.code !== code) return false;
+		if (component.value != null) return false;
+		return vals.slice(1);
+	} };
+};
+/**
+* Matches a multiaddr component with the specified code and value. If the value
+* is omitted any non-undefined value is matched.
+*/
+const value = (code, value) => {
+	return { match: (vals) => {
+		const component = vals[0];
+		if (component?.code !== code) return false;
+		if (component.value == null) return false;
+		if (value != null && component.value !== value) return false;
+		return vals.slice(1);
+	} };
+};
+/**
+* Matches a multiaddr component with the specified code and value. If the value
+* is omitted any non-undefined value is matched.
+*/
+const not = (matcher) => {
+	return { match: (vals) => {
+		if (matcher.match(vals) === false) return vals;
+		return false;
+	} };
+};
+/**
+* An optional matcher
+*/
+const optional = (matcher) => {
+	return { match: (vals) => {
+		const result = matcher.match(vals);
+		if (result === false) return vals;
+		return result;
+	} };
+};
+/**
+* Matches any one of the passed matches
+*/
+const or = (...matchers) => {
+	return { match: (vals) => {
+		let matches;
+		for (const matcher of matchers) {
+			const result = matcher.match(vals);
+			if (result === false) continue;
+			if (matches == null || result.length < matches.length) matches = result;
+		}
+		if (matches == null) return false;
+		return matches;
+	} };
+};
+/**
+* Matches all of the passed matchers
+*/
+const and = (...matchers) => {
+	return { match: (vals) => {
+		for (const matcher of matchers) {
+			const result = matcher.match(vals);
+			if (result === false) return false;
+			vals = result;
+		}
+		return vals;
+	} };
+};
+/**
+* Create a multiaddr matcher from the passed component matchers
+*/
+function fmt(...matchers) {
+	function match(ma) {
+		if (ma == null) return false;
+		let parts = ma.getComponents();
+		for (const matcher of matchers) {
+			const result = matcher.match(parts);
+			if (result === false) return false;
+			parts = result;
+		}
+		return parts;
+	}
+	function matches(ma) {
+		return match(ma) !== false;
+	}
+	function exactMatch(ma) {
+		const result = match(ma);
+		if (result === false) return false;
+		return result.length === 0;
+	}
+	return {
+		matchers,
+		matches,
+		exactMatch
+	};
+}
+const PEER_ID = fmt(value(421));
+/**
+* DNS matchers
+*/
+const _DNS4 = value(54);
+const _DNS6 = value(55);
+const _DNSADDR = value(56);
+const _DNS = value(53);
+/**
+* Matches any dns address.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { DNS } from '@multiformats/multiaddr-matcher'
+*
+* DNS.matches(multiaddr('/dnsaddr/example.org')) // true
+* DNS.matches(multiaddr('/dns4/example.org')) // true
+* DNS.matches(multiaddr('/dns6/example.org')) // true
+* DNS.matches(multiaddr('/dns6/example.org/p2p/Qmfoo')) // true
+* ```
+*/
+const DNS = fmt(or(_DNS, _DNSADDR, _DNS4, _DNS6), optional(value(421)));
+const _IP4 = and(value(4), optional(value(43)));
+const _IP6 = and(optional(value(42)), value(41), optional(value(43)));
+const _IP_OR_DOMAIN = or(or(_IP4, _IP6), _DNS, _DNS4, _DNS6, _DNSADDR);
+/**
+* Matches ip4 addresses.
+*
+* Use {@link IP IP} instead to match any ip4/ip6 address.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { IP4 } from '@multiformats/multiaddr-matcher'
+*
+* const ma = multiaddr('/ip4/123.123.123.123')
+*
+* IP4.matches(ma) // true
+* ```
+*/
+const IP4 = fmt(_IP4);
+/**
+* Matches ip6 addresses.
+*
+* Use {@link IP IP} instead to match any ip4/ip6 address.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { IP6 } from '@multiformats/multiaddr-matcher'
+*
+* const ma = multiaddr('/ip6/fe80::1cc1:a3b8:322f:cf22')
+*
+* IP6.matches(ma) // true
+* ```
+*/
+const IP6 = fmt(_IP6);
+const _TCP = and(_IP_OR_DOMAIN, value(6));
+const _UDP = and(_IP_OR_DOMAIN, value(273));
+/**
+* Matches TCP addresses.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { TCP } from '@multiformats/multiaddr-matcher'
+*
+* TCP.matches(multiaddr('/ip4/123.123.123.123/tcp/1234')) // true
+* ```
+*/
+const TCP = fmt(and(_TCP, optional(value(421))));
+const _QUIC = and(_UDP, code$3(460), optional(value(421)));
+const _QUIC_V1 = and(_UDP, code$3(461), optional(value(421)));
+const QUIC_V0_OR_V1 = or(_QUIC, _QUIC_V1);
+/**
+* Matches QUICv1 addresses.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { QUIC_V1 } from '@multiformats/multiaddr-matcher'
+*
+* QUIC_V1.matches(multiaddr('/ip4/123.123.123.123/udp/1234/quic-v1')) // true
+* ```
+*/
+const QUIC_V1 = fmt(_QUIC_V1);
+const _WEB = or(_IP_OR_DOMAIN, _TCP, _UDP, _QUIC, _QUIC_V1);
+const _WebSockets = or(and(_WEB, code$3(477), optional(value(421))));
+/**
+* Matches WebSocket addresses.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { WebSockets } from '@multiformats/multiaddr-matcher'
+*
+* WebSockets.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/ws')) // true
+* ```
+*/
+const WebSockets = fmt(_WebSockets);
+const _WebSocketsSecure = or(and(_WEB, code$3(478), optional(value(421))), and(_WEB, code$3(448), optional(value(449)), code$3(477), optional(value(421))));
+/**
+* Matches secure WebSocket addresses.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { WebSocketsSecure } from '@multiformats/multiaddr-matcher'
+*
+* WebSocketsSecure.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/wss')) // true
+* ```
+*/
+const WebSocketsSecure = fmt(_WebSocketsSecure);
+const _WebRTCDirect = and(_UDP, code$3(280), optional(value(466)), optional(value(466)), optional(value(421)));
+/**
+* Matches WebRTC-direct addresses.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { WebRTCDirect } from '@multiformats/multiaddr-matcher'
+*
+* WebRTCDirect.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/p2p/QmFoo/webrtc-direct/certhash/u....')) // true
+* ```
+*/
+const WebRTCDirect = fmt(_WebRTCDirect);
+const _WebTransport = and(_QUIC_V1, code$3(465), optional(value(466)), optional(value(466)), optional(value(421)));
+/**
+* Matches WebTransport addresses.
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { WebRTCDirect } from '@multiformats/multiaddr-matcher'
+*
+* WebRTCDirect.matches(multiaddr('/ip4/123.123.123.123/udp/1234/quic-v1/webtransport/certhash/u..../certhash/u..../p2p/QmFoo')) // true
+* ```
+*/
+const WebTransport = fmt(_WebTransport);
+const _P2P = or(_WebSockets, _WebSocketsSecure, and(_TCP, optional(value(421))), and(QUIC_V0_OR_V1, optional(value(421))), and(_IP_OR_DOMAIN, optional(value(421))), _WebRTCDirect, _WebTransport, value(421));
+/**
+* Matches circuit relay addresses
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { Circuit } from '@multiformats/multiaddr-matcher'
+*
+* Circuit.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/p2p/QmRelay/p2p-circuit/p2p/QmTarget')) // true
+* ```
+*/
+const Circuit = fmt(and(optional(_P2P), code$3(290), not(code$3(281)), optional(value(421))));
+/**
+* Matches WebRTC addresses
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { WebRTC } from '@multiformats/multiaddr-matcher'
+*
+* WebRTC.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/p2p/QmRelay/p2p-circuit/webrtc/p2p/QmTarget')) // true
+* ```
+*/
+const WebRTC = fmt(or(and(_P2P, code$3(290), code$3(281), optional(value(421))), and(_P2P, code$3(281), optional(value(421))), and(code$3(281), optional(value(421)))));
+/**
+* Matches HTTP addresses
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { HTTP } from '@multiformats/multiaddr-matcher'
+*
+* HTTP.matches(multiaddr('/dns/example.org/http')) // true
+* ```
+*/
+const HTTP = fmt(and(_IP_OR_DOMAIN, or(and(value(6, "80")), and(value(6), code$3(480)), code$3(480)), optional(value(481)), optional(value(421))));
+/**
+* Matches HTTPS addresses
+*
+* @example
+*
+* ```ts
+* import { multiaddr } from '@multiformats/multiaddr'
+* import { HTTP } from '@multiformats/multiaddr-matcher'
+*
+* HTTP.matches(multiaddr('/dns/example.org/tls/http')) // true
+* ```
+*/
+const HTTPS = fmt(and(_IP_OR_DOMAIN, or(and(value(6, "443")), and(value(6, "443"), code$3(480)), and(value(6), code$3(443)), and(value(6), code$3(448), code$3(480)), and(code$3(448), code$3(480)), code$3(448), code$3(443)), optional(value(481)), optional(value(421))));
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/sorters.js
+/**
+* Sorts addresses by order of reliability, where they have presented the fewest
+* problems:
+*
+* TCP -> WebSockets/Secure -> WebRTC -> WebRTCDirect -> WebTransport
+*/
+function reliableTransportsFirst(a, b) {
+	const isATcp = TCP.exactMatch(a);
+	const isBTcp = TCP.exactMatch(b);
+	if (isATcp && !isBTcp) return -1;
+	if (!isATcp && isBTcp) return 1;
+	const isAWebSocketSecure = WebSocketsSecure.exactMatch(a);
+	const isBWebSocketSecure = WebSocketsSecure.exactMatch(b);
+	if (isAWebSocketSecure && !isBWebSocketSecure) return -1;
+	if (!isAWebSocketSecure && isBWebSocketSecure) return 1;
+	const isAWebSocket = WebSockets.exactMatch(a);
+	const isBWebSocket = WebSockets.exactMatch(b);
+	if (isAWebSocket && !isBWebSocket) return -1;
+	if (!isAWebSocket && isBWebSocket) return 1;
+	const isAWebRTC = WebRTC.exactMatch(a);
+	const isBWebRTC = WebRTC.exactMatch(b);
+	if (isAWebRTC && !isBWebRTC) return -1;
+	if (!isAWebRTC && isBWebRTC) return 1;
+	const isAWebRTCDirect = WebRTCDirect.exactMatch(a);
+	const isBWebRTCDirect = WebRTCDirect.exactMatch(b);
+	if (isAWebRTCDirect && !isBWebRTCDirect) return -1;
+	if (!isAWebRTCDirect && isBWebRTCDirect) return 1;
+	const isAWebTransport = WebTransport.exactMatch(a);
+	const isBWebTransport = WebTransport.exactMatch(b);
+	if (isAWebTransport && !isBWebTransport) return -1;
+	if (!isAWebTransport && isBWebTransport) return 1;
+	return 0;
+}
+/**
+* Compare function for array.sort() that moves loopback addresses to the end
+* of the array.
+*/
+function loopbackAddressLast(a, b) {
+	const isALoopback = isLoopback(a);
+	const isBLoopback = isLoopback(b);
+	if (isALoopback && !isBLoopback) return 1;
+	else if (!isALoopback && isBLoopback) return -1;
+	return 0;
+}
+/**
+* Compare function for array.sort() that moves public addresses to the start
+* of the array.
+*/
+function publicAddressesFirst(a, b) {
+	const isAPrivate = isPrivate(a);
+	const isBPrivate = isPrivate(b);
+	if (isAPrivate && !isBPrivate) return 1;
+	else if (!isAPrivate && isBPrivate) return -1;
+	return 0;
+}
+/**
+* Compare function for array.sort() that moves circuit relay addresses to the
+* end of the array.
+*/
+function circuitRelayAddressesLast(a, b) {
+	const isACircuit = Circuit.exactMatch(a);
+	const isBCircuit = Circuit.exactMatch(b);
+	if (isACircuit && !isBCircuit) return 1;
+	else if (!isACircuit && isBCircuit) return -1;
+	return 0;
+}
+//#endregion
+//#region node_modules/.pnpm/it-pushable@3.2.4/node_modules/it-pushable/dist/src/fifo.js
+var FixedFIFO = class {
+	buffer;
+	mask;
+	top;
+	btm;
+	next;
+	constructor(hwm) {
+		if (!(hwm > 0) || (hwm - 1 & hwm) !== 0) throw new Error("Max size for a FixedFIFO should be a power of two");
+		this.buffer = new Array(hwm);
+		this.mask = hwm - 1;
+		this.top = 0;
+		this.btm = 0;
+		this.next = null;
+	}
+	push(data) {
+		if (this.buffer[this.top] !== void 0) return false;
+		this.buffer[this.top] = data;
+		this.top = this.top + 1 & this.mask;
+		return true;
+	}
+	shift() {
+		const last = this.buffer[this.btm];
+		if (last === void 0) return;
+		this.buffer[this.btm] = void 0;
+		this.btm = this.btm + 1 & this.mask;
+		return last;
+	}
+	isEmpty() {
+		return this.buffer[this.btm] === void 0;
+	}
+};
+var FIFO = class {
+	size;
+	hwm;
+	head;
+	tail;
+	constructor(options = {}) {
+		this.hwm = options.splitLimit ?? 16;
+		this.head = new FixedFIFO(this.hwm);
+		this.tail = this.head;
+		this.size = 0;
+	}
+	calculateSize(obj) {
+		if (obj?.byteLength != null) return obj.byteLength;
+		return 1;
+	}
+	push(val) {
+		if (val?.value != null) this.size += this.calculateSize(val.value);
+		if (!this.head.push(val)) {
+			const prev = this.head;
+			this.head = prev.next = new FixedFIFO(2 * this.head.buffer.length);
+			this.head.push(val);
+		}
+	}
+	shift() {
+		let val = this.tail.shift();
+		if (val === void 0 && this.tail.next != null) {
+			const next = this.tail.next;
+			this.tail.next = null;
+			this.tail = next;
+			val = this.tail.shift();
+		}
+		if (val?.value != null) this.size -= this.calculateSize(val.value);
+		return val;
+	}
+	isEmpty() {
+		return this.head.isEmpty();
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/it-pushable@3.2.4/node_modules/it-pushable/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* An iterable that you can push values into.
+*
+* @example
+*
+* ```js
+* import { pushable } from 'it-pushable'
+*
+* const source = pushable()
+*
+* setTimeout(() => source.push('hello'), 100)
+* setTimeout(() => source.push('world'), 200)
+* setTimeout(() => source.end(), 300)
+*
+* const start = Date.now()
+*
+* for await (const value of source) {
+*   console.log(`got "${value}" after ${Date.now() - start}ms`)
+* }
+* console.log(`done after ${Date.now() - start}ms`)
+*
+* // Output:
+* // got "hello" after 105ms
+* // got "world" after 207ms
+* // done after 309ms
+* ```
+*
+* @example
+*
+* ```js
+* import { pushableV } from 'it-pushable'
+* import all from 'it-all'
+*
+* const source = pushableV()
+*
+* source.push(1)
+* source.push(2)
+* source.push(3)
+* source.end()
+*
+* console.info(await all(source))
+*
+* // Output:
+* // [ [1, 2, 3] ]
+* ```
+*/
+var AbortError$2 = class extends Error {
+	type;
+	code;
+	constructor(message, code) {
+		super(message ?? "The operation was aborted");
+		this.type = "aborted";
+		this.code = code ?? "ABORT_ERR";
+	}
+};
+function pushable(options = {}) {
+	const getNext = (buffer) => {
+		const next = buffer.shift();
+		if (next == null) return { done: true };
+		if (next.error != null) throw next.error;
+		return {
+			done: next.done === true,
+			value: next.value
+		};
+	};
+	return _pushable(getNext, options);
+}
+function _pushable(getNext, options) {
+	options = options ?? {};
+	let onEnd = options.onEnd;
+	let buffer = new FIFO();
+	let pushable;
+	let onNext;
+	let ended;
+	let drain = pDefer();
+	const waitNext = async () => {
+		try {
+			if (!buffer.isEmpty()) return getNext(buffer);
+			if (ended) return { done: true };
+			return await new Promise((resolve, reject) => {
+				onNext = (next) => {
+					onNext = null;
+					buffer.push(next);
+					try {
+						resolve(getNext(buffer));
+					} catch (err) {
+						reject(err);
+					}
+					return pushable;
+				};
+			});
+		} finally {
+			if (buffer.isEmpty()) queueMicrotask(() => {
+				drain.resolve();
+				drain = pDefer();
+			});
+		}
+	};
+	const bufferNext = (next) => {
+		if (onNext != null) return onNext(next);
+		buffer.push(next);
+		return pushable;
+	};
+	const bufferError = (err) => {
+		buffer = new FIFO();
+		if (onNext != null) return onNext({ error: err });
+		buffer.push({ error: err });
+		return pushable;
+	};
+	const push = (value) => {
+		if (ended) return pushable;
+		if (options?.objectMode !== true && value?.byteLength == null) throw new Error("objectMode was not true but tried to push non-Uint8Array value");
+		return bufferNext({
+			done: false,
+			value
+		});
+	};
+	const end = (err) => {
+		if (ended) return pushable;
+		ended = true;
+		return err != null ? bufferError(err) : bufferNext({ done: true });
+	};
+	const _return = () => {
+		buffer = new FIFO();
+		end();
+		return { done: true };
+	};
+	const _throw = (err) => {
+		end(err);
+		return { done: true };
+	};
+	pushable = {
+		[Symbol.asyncIterator]() {
+			return this;
+		},
+		next: waitNext,
+		return: _return,
+		throw: _throw,
+		push,
+		end,
+		get readableLength() {
+			return buffer.size;
+		},
+		onEmpty: async (options) => {
+			const signal = options?.signal;
+			signal?.throwIfAborted();
+			if (buffer.isEmpty()) return;
+			let cancel;
+			let listener;
+			if (signal != null) cancel = new Promise((resolve, reject) => {
+				listener = () => {
+					reject(new AbortError$2());
+				};
+				signal.addEventListener("abort", listener);
+			});
+			try {
+				await Promise.race([drain.promise, cancel]);
+			} finally {
+				if (listener != null && signal != null) signal?.removeEventListener("abort", listener);
+			}
+		}
+	};
+	if (onEnd == null) return pushable;
+	const _pushable = pushable;
+	pushable = {
+		[Symbol.asyncIterator]() {
+			return this;
+		},
+		next() {
+			return _pushable.next();
+		},
+		throw(err) {
+			_pushable.throw(err);
+			if (onEnd != null) {
+				onEnd(err);
+				onEnd = void 0;
+			}
+			return { done: true };
+		},
+		return() {
+			_pushable.return();
+			if (onEnd != null) {
+				onEnd();
+				onEnd = void 0;
+			}
+			return { done: true };
+		},
+		push,
+		end(err) {
+			_pushable.end(err);
+			if (onEnd != null) {
+				onEnd(err);
+				onEnd = void 0;
+			}
+			return pushable;
+		},
+		get readableLength() {
+			return _pushable.readableLength;
+		},
+		onEmpty: (opts) => {
+			return _pushable.onEmpty(opts);
+		}
+	};
+	return pushable;
+}
+//#endregion
+//#region node_modules/.pnpm/p-timeout@7.0.1/node_modules/p-timeout/index.js
+var TimeoutError$1 = class TimeoutError$1 extends Error {
+	name = "TimeoutError";
+	constructor(message, options) {
+		super(message, options);
+		Error.captureStackTrace?.(this, TimeoutError$1);
+	}
+};
+const getAbortedReason = (signal) => signal.reason ?? new DOMException("This operation was aborted.", "AbortError");
+function pTimeout(promise, options) {
+	const { milliseconds, fallback, message, customTimers = {
+		setTimeout,
+		clearTimeout
+	}, signal } = options;
+	let timer;
+	let abortHandler;
+	const cancelablePromise = new Promise((resolve, reject) => {
+		if (typeof milliseconds !== "number" || Math.sign(milliseconds) !== 1) throw new TypeError(`Expected \`milliseconds\` to be a positive number, got \`${milliseconds}\``);
+		if (signal?.aborted) {
+			reject(getAbortedReason(signal));
+			return;
+		}
+		if (signal) {
+			abortHandler = () => {
+				reject(getAbortedReason(signal));
+			};
+			signal.addEventListener("abort", abortHandler, { once: true });
+		}
+		promise.then(resolve, reject);
+		if (milliseconds === Number.POSITIVE_INFINITY) return;
+		const timeoutError = new TimeoutError$1();
+		timer = customTimers.setTimeout.call(void 0, () => {
+			if (fallback) {
+				try {
+					resolve(fallback());
+				} catch (error) {
+					reject(error);
+				}
+				return;
+			}
+			if (typeof promise.cancel === "function") promise.cancel();
+			if (message === false) resolve();
+			else if (message instanceof Error) reject(message);
+			else {
+				timeoutError.message = message ?? `Promise timed out after ${milliseconds} milliseconds`;
+				reject(timeoutError);
+			}
+		}, milliseconds);
+	}).finally(() => {
+		cancelablePromise.clear();
+		if (abortHandler && signal) signal.removeEventListener("abort", abortHandler);
+	});
+	cancelablePromise.clear = () => {
+		customTimers.clearTimeout.call(void 0, timer);
+		timer = void 0;
+	};
+	return cancelablePromise;
+}
+//#endregion
+//#region node_modules/.pnpm/p-event@7.1.0/node_modules/p-event/index.js
+const normalizeEmitter = (emitter) => {
+	const addListener = emitter.addEventListener || emitter.on || emitter.addListener;
+	const removeListener = emitter.removeEventListener || emitter.off || emitter.removeListener;
+	if (!addListener || !removeListener) throw new TypeError("Emitter is not compatible");
+	return {
+		addListener: addListener.bind(emitter),
+		removeListener: removeListener.bind(emitter)
+	};
+};
+function pEventMultiple(emitter, event, options) {
+	let cancel;
+	const returnValue = new Promise((resolve, reject) => {
+		options = {
+			rejectionEvents: ["error"],
+			multiArgs: false,
+			rejectionMultiArgs: false,
+			resolveImmediately: false,
+			...options
+		};
+		if (!(options.count >= 0 && (options.count === Number.POSITIVE_INFINITY || Number.isInteger(options.count)))) throw new TypeError("The `count` option should be at least 0 or more");
+		options.signal?.throwIfAborted();
+		const events = [event].flat();
+		const items = [];
+		const { addListener, removeListener } = normalizeEmitter(emitter);
+		const onItem = async (...arguments_) => {
+			const value = options.multiArgs ? arguments_ : arguments_[0];
+			if (options.filter) try {
+				if (!await options.filter(value)) return;
+			} catch (error) {
+				cancel();
+				reject(error);
+				return;
+			}
+			items.push(value);
+			if (options.count === items.length) {
+				cancel();
+				resolve(items);
+			}
+		};
+		const rejectHandler = (...arguments_) => {
+			cancel();
+			reject(options.rejectionMultiArgs ? arguments_ : arguments_[0]);
+		};
+		cancel = () => {
+			for (const event of events) removeListener(event, onItem);
+			for (const rejectionEvent of options.rejectionEvents) if (!events.includes(rejectionEvent)) removeListener(rejectionEvent, rejectHandler);
+		};
+		for (const event of events) addListener(event, onItem);
+		for (const rejectionEvent of options.rejectionEvents) if (!events.includes(rejectionEvent)) addListener(rejectionEvent, rejectHandler);
+		if (options.signal) options.signal.addEventListener("abort", () => {
+			rejectHandler(options.signal.reason);
+		}, { once: true });
+		if (options.resolveImmediately) resolve(items);
+	});
+	returnValue.cancel = cancel;
+	if (typeof options.timeout === "number") {
+		const timeout = pTimeout(returnValue, { milliseconds: options.timeout });
+		timeout.cancel = () => {
+			cancel();
+			timeout.clear();
+		};
+		return timeout;
+	}
+	return returnValue;
+}
+function pEvent(emitter, event, options) {
+	if (typeof options === "function") options = { filter: options };
+	options = {
+		...options,
+		count: 1,
+		resolveImmediately: false
+	};
+	const arrayPromise = pEventMultiple(emitter, event, options);
+	const promise = arrayPromise.then((array) => array[0]);
+	promise.cancel = arrayPromise.cancel;
+	return promise;
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/debounce.js
+/**
+* Returns a function wrapper that will only call the passed function once
+*
+* Important - the passed function should not throw or reject
+*/
+function debounce$1(func, wait) {
+	let timeout;
+	const output = function() {
+		const later = function() {
+			timeout = void 0;
+			func();
+		};
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+	};
+	output.start = () => {};
+	output.stop = () => {
+		clearTimeout(timeout);
+	};
+	return output;
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/errors.js
+/**
+* A rate limit was hit
+*/
+var RateLimitError = class extends Error {
+	remainingPoints;
+	msBeforeNext;
+	consumedPoints;
+	isFirstInDuration;
+	constructor(message = "Rate limit exceeded", props) {
+		super(message);
+		this.name = "RateLimitError";
+		this.remainingPoints = props.remainingPoints;
+		this.msBeforeNext = props.msBeforeNext;
+		this.consumedPoints = props.consumedPoints;
+		this.isFirstInDuration = props.isFirstInDuration;
+	}
+};
+var QueueFullError$1 = class extends Error {
+	static name = "QueueFullError";
+	constructor(message = "The queue was full") {
+		super(message);
+		this.name = "QueueFullError";
+	}
+};
+var UnexpectedEOFError$1 = class extends Error {
+	static name = "UnexpectedEOFError";
+	name = "UnexpectedEOFError";
+};
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/queue/recipient.js
+var JobRecipient$1 = class {
+	deferred;
+	signal;
+	onProgress;
+	constructor(options) {
+		this.signal = options?.signal;
+		this.onProgress = options?.onProgress;
+		this.deferred = pDefer();
+		this.onAbort = this.onAbort.bind(this);
+		this.signal?.addEventListener("abort", this.onAbort);
+	}
+	onAbort() {
+		this.deferred.reject(this.signal?.reason ?? new AbortError$3());
+	}
+	cleanup() {
+		this.signal?.removeEventListener("abort", this.onAbort);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/queue/job.js
+/**
+* Returns a random string
+*/
+function randomId$1() {
+	return `${parseInt(String(Math.random() * 1e9), 10).toString()}${Date.now()}`;
+}
+var Job$1 = class {
+	id;
+	fn;
+	options;
+	recipients;
+	status;
+	timeline;
+	controller;
+	dispatchingProgress;
+	constructor(fn, options) {
+		this.id = randomId$1();
+		this.status = "queued";
+		this.fn = fn;
+		this.options = options;
+		this.recipients = [];
+		this.timeline = { created: Date.now() };
+		this.controller = new AbortController();
+		setMaxListeners$1(Infinity, this.controller.signal);
+		this.dispatchingProgress = false;
+		this.onAbort = this.onAbort.bind(this);
+	}
+	abort(err) {
+		this.controller.abort(err);
+	}
+	onAbort() {
+		if (this.recipients.reduce((acc, curr) => {
+			return acc && curr.signal?.aborted === true;
+		}, true)) {
+			this.controller.abort(new AbortError$3());
+			this.cleanup();
+		}
+	}
+	async join(options) {
+		const recipient = new JobRecipient$1(options);
+		this.recipients.push(recipient);
+		options?.signal?.addEventListener("abort", this.onAbort);
+		return recipient.deferred.promise;
+	}
+	async run() {
+		this.status = "running";
+		this.timeline.started = Date.now();
+		try {
+			this.controller.signal.throwIfAborted();
+			const result = await raceSignal(this.fn({
+				...this.options ?? {},
+				signal: this.controller.signal,
+				onProgress: (evt) => {
+					if (this.dispatchingProgress) return;
+					this.dispatchingProgress = true;
+					try {
+						this.recipients.forEach((recipient) => {
+							recipient.onProgress?.(evt);
+						});
+					} finally {
+						this.dispatchingProgress = false;
+					}
+				}
+			}), this.controller.signal);
+			this.recipients.forEach((recipient) => {
+				recipient.deferred.resolve(result);
+			});
+			this.status = "complete";
+		} catch (err) {
+			this.recipients.forEach((recipient) => {
+				recipient.deferred.reject(err);
+			});
+			this.status = "errored";
+		} finally {
+			this.timeline.finished = Date.now();
+			this.cleanup();
+		}
+	}
+	cleanup() {
+		this.recipients.forEach((recipient) => {
+			recipient.cleanup();
+			recipient.signal?.removeEventListener("abort", this.onAbort);
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/queue/index.js
+/**
+* Heavily influence by `p-queue` with the following differences:
+*
+* 1. Items remain at the head of the queue while they are running so `queue.size` includes `queue.pending` items - this is so interested parties can join the results of a queue item while it is running
+* 2. The options for a job are stored separately to the job in order for them to be modified while they are still in the queue
+*/
+var Queue$1 = class extends TypedEventEmitter {
+	concurrency;
+	maxSize;
+	queue;
+	pending;
+	sort;
+	paused;
+	constructor(init = {}) {
+		super();
+		this.concurrency = init.concurrency ?? Number.POSITIVE_INFINITY;
+		this.maxSize = init.maxSize ?? Number.POSITIVE_INFINITY;
+		this.pending = 0;
+		this.paused = false;
+		if (init.metricName != null) init.metrics?.registerMetricGroup(init.metricName, { calculate: () => {
+			return {
+				size: this.queue.length,
+				running: this.pending,
+				queued: this.queue.length - this.pending
+			};
+		} });
+		this.sort = init.sort;
+		this.queue = [];
+		this.emitEmpty = debounce$1(this.emitEmpty.bind(this), 1);
+		this.emitIdle = debounce$1(this.emitIdle.bind(this), 1);
+	}
+	emitEmpty() {
+		if (this.size !== 0) return;
+		this.safeDispatchEvent("empty");
+	}
+	emitIdle() {
+		if (this.running !== 0) return;
+		this.safeDispatchEvent("idle");
+	}
+	pause() {
+		this.paused = true;
+	}
+	resume() {
+		if (!this.paused) return;
+		this.paused = false;
+		this.tryToStartAnother();
+	}
+	tryToStartAnother() {
+		if (this.paused) return false;
+		if (this.size === 0) {
+			this.emitEmpty();
+			if (this.running === 0) this.emitIdle();
+			return false;
+		}
+		if (this.pending < this.concurrency) {
+			let job;
+			for (const j of this.queue) if (j.status === "queued") {
+				job = j;
+				break;
+			}
+			if (job == null) return false;
+			this.safeDispatchEvent("active");
+			this.pending++;
+			job.run().finally(() => {
+				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
+					this.queue.splice(i, 1);
+					break;
+				}
+				this.pending--;
+				this.tryToStartAnother();
+				this.safeDispatchEvent("next");
+			});
+			return true;
+		}
+		return false;
+	}
+	enqueue(job) {
+		this.queue.push(job);
+		if (this.sort != null) this.queue.sort(this.sort);
+	}
+	/**
+	* Adds a sync or async task to the queue. Always returns a promise.
+	*/
+	async add(fn, options) {
+		options?.signal?.throwIfAborted();
+		if (this.size === this.maxSize) throw new QueueFullError$1();
+		const job = new Job$1(fn, options);
+		this.enqueue(job);
+		this.safeDispatchEvent("add");
+		const result = job.join(options).then((result) => {
+			this.safeDispatchEvent("completed", { detail: result });
+			this.safeDispatchEvent("success", { detail: {
+				job,
+				result
+			} });
+			return result;
+		}).catch((err) => {
+			if (job.status === "queued") {
+				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
+					this.queue.splice(i, 1);
+					break;
+				}
+			}
+			this.safeDispatchEvent("failure", { detail: {
+				job,
+				error: err
+			} });
+			throw err;
+		});
+		this.tryToStartAnother();
+		return result;
+	}
+	/**
+	* Clear the queue
+	*/
+	clear() {
+		this.queue.splice(0, this.queue.length);
+	}
+	/**
+	* Abort all jobs in the queue and clear it
+	*/
+	abort() {
+		this.queue.forEach((job) => {
+			job.abort(new AbortError$3());
+		});
+		this.clear();
+	}
+	/**
+	* Can be called multiple times. Useful if you for example add additional items at a later time.
+	*
+	* @returns A promise that settles when the queue becomes empty.
+	*/
+	async onEmpty(options) {
+		if (this.size === 0) return;
+		await pEvent(this, "empty", options);
+	}
+	/**
+	* @returns A promise that settles when the queue size is less than the given
+	* limit: `queue.size < limit`.
+	*
+	* If you want to avoid having the queue grow beyond a certain size you can
+	* `await queue.onSizeLessThan()` before adding a new item.
+	*
+	* Note that this only limits the number of items waiting to start. There
+	* could still be up to `concurrency` jobs already running that this call does
+	* not include in its calculation.
+	*/
+	async onSizeLessThan(limit, options) {
+		if (this.size < limit) return;
+		await pEvent(this, "next", {
+			...options,
+			filter: () => this.size < limit
+		});
+	}
+	/**
+	* The difference with `.onEmpty` is that `.onIdle` guarantees that all work
+	* from the queue has finished. `.onEmpty` merely signals that the queue is
+	* empty, but it could mean that some promises haven't completed yet.
+	*
+	* @returns A promise that settles when the queue becomes empty, and all
+	* promises have completed; `queue.size === 0 && queue.pending === 0`.
+	*/
+	async onIdle(options) {
+		if (this.pending === 0 && this.size === 0) return;
+		await pEvent(this, "idle", options);
+	}
+	/**
+	* Size of the queue including running items
+	*/
+	get size() {
+		return this.queue.length;
+	}
+	/**
+	* The number of queued items waiting to run.
+	*/
+	get queued() {
+		return this.queue.length - this.pending;
+	}
+	/**
+	* The number of items currently running.
+	*/
+	get running() {
+		return this.pending;
+	}
+	/**
+	* Returns an async generator that makes it easy to iterate over the results
+	* of jobs added to the queue.
+	*
+	* The generator will end when the queue becomes idle, that is there are no
+	* jobs running and no jobs that have yet to run.
+	*
+	* If you need to keep the queue open indefinitely, consider using it-pushable
+	* instead.
+	*/
+	async *toGenerator(options) {
+		options?.signal?.throwIfAborted();
+		const stream = pushable({ objectMode: true });
+		const cleanup = (err) => {
+			if (err != null) this.abort();
+			else this.clear();
+			stream.end(err);
+		};
+		const onQueueJobComplete = (evt) => {
+			if (evt.detail != null) stream.push(evt.detail);
+		};
+		const onQueueFailure = (evt) => {
+			cleanup(evt.detail.error);
+		};
+		const onQueueIdle = () => {
+			cleanup();
+		};
+		const onSignalAbort = () => {
+			cleanup(new AbortError$3("Queue aborted"));
+		};
+		this.addEventListener("completed", onQueueJobComplete);
+		this.addEventListener("failure", onQueueFailure);
+		this.addEventListener("idle", onQueueIdle);
+		options?.signal?.addEventListener("abort", onSignalAbort);
+		try {
+			yield* stream;
+		} finally {
+			this.removeEventListener("completed", onQueueJobComplete);
+			this.removeEventListener("failure", onQueueFailure);
+			this.removeEventListener("idle", onQueueIdle);
+			options?.signal?.removeEventListener("abort", onSignalAbort);
+			cleanup();
+		}
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/any-signal@4.2.0/node_modules/any-signal/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Similar to [AbortSignal.any](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/any_static)
+* except the returned promise has a `.clear` method that removes all event
+* listeners added to passed signals preventing memory leaks.
+*
+* At the time of writing at least, `AbortSignal.any` leaks memory in Node.js
+* and Deno environments:
+*
+* - https://github.com/nodejs/node/issues/54614
+* - https://github.com/denoland/deno/issues/24842
+*
+* @example
+*
+* ```js
+* import { anySignal } from 'any-signal'
+*
+* const userController = new AbortController()
+*
+* // Abort after 1 second
+* const timeoutSignal = AbortSignal.timeout(1000)
+*
+* const combinedSignal = anySignal([userController.signal, timeoutSignal])
+* combinedSignal.addEventListener('abort', () => console.log('Abort!'))
+*
+* try {
+*   // The user or the timeout can now abort the action
+*   await performSomeAction({ signal: combinedSignal })
+* } finally {
+*   // Clear will clean up internal event handlers
+*   combinedSignal.clear()
+* }
+* ```
+*/
+/**
+* Takes an array of AbortSignals and returns a single signal.
+* If any signals are aborted, the returned signal will be aborted.
+*/
+function anySignal(signals) {
+	const controller = new globalThis.AbortController();
+	function onAbort() {
+		const reason = signals.filter((s) => s?.aborted === true).map((s) => s?.reason).pop();
+		controller.abort(reason);
+		for (const signal of signals) if (signal?.removeEventListener != null) signal.removeEventListener("abort", onAbort);
+	}
+	for (const signal of signals) {
+		if (signal?.aborted === true) {
+			onAbort();
+			break;
+		}
+		if (signal?.addEventListener != null) signal.addEventListener("abort", onAbort);
+	}
+	function clear() {
+		for (const signal of signals) if (signal?.removeEventListener != null) signal.removeEventListener("abort", onAbort);
+	}
+	const signal = controller.signal;
+	signal.clear = clear;
+	return signal;
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/moving-average.js
+/**
+* Implements exponential moving average. Ported from `moving-average`.
+*
+* @see https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+* @see https://www.npmjs.com/package/moving-average
+*/
+var MovingAverage = class {
+	movingAverage;
+	variance;
+	deviation;
+	forecast;
+	timeSpan;
+	previousTime;
+	constructor(timeSpan) {
+		this.timeSpan = timeSpan;
+		this.movingAverage = 0;
+		this.variance = 0;
+		this.deviation = 0;
+		this.forecast = 0;
+	}
+	alpha(t, pt) {
+		return 1 - Math.exp(-(t - pt) / this.timeSpan);
+	}
+	push(value, time = Date.now()) {
+		if (this.previousTime != null) {
+			const a = this.alpha(time, this.previousTime);
+			const diff = value - this.movingAverage;
+			const incr = a * diff;
+			this.movingAverage = a * value + (1 - a) * this.movingAverage;
+			this.variance = (1 - a) * (this.variance + diff * incr);
+			this.deviation = Math.sqrt(this.variance);
+			this.forecast = this.movingAverage + a * diff;
+		} else this.movingAverage = value;
+		this.previousTime = time;
+	}
+};
+var AdaptiveTimeout = class {
+	success;
+	failure;
+	next;
+	metric;
+	timeoutMultiplier;
+	failureMultiplier;
+	minTimeout;
+	maxTimeout;
+	constructor(init = {}) {
+		const interval = init.interval ?? 5e3;
+		this.success = new MovingAverage(interval);
+		this.failure = new MovingAverage(interval);
+		this.next = new MovingAverage(interval);
+		this.failureMultiplier = init.failureMultiplier ?? 2;
+		this.timeoutMultiplier = init.timeoutMultiplier ?? 1.2;
+		this.minTimeout = init.minTimeout ?? 5e3;
+		this.maxTimeout = init.maxTimeout ?? 6e4;
+		if (init.metricName != null) this.metric = init.metrics?.registerMetricGroup(init.metricName);
+	}
+	getTimeoutSignal(options = {}) {
+		let timeout = Math.round(this.next.movingAverage * (options.timeoutFactor ?? this.timeoutMultiplier));
+		if (timeout < this.minTimeout) timeout = this.minTimeout;
+		if (timeout > this.maxTimeout) timeout = this.maxTimeout;
+		const sendTimeout = AbortSignal.timeout(timeout);
+		const timeoutSignal = anySignal([options.signal, sendTimeout]);
+		setMaxListeners$1(Infinity, timeoutSignal, sendTimeout);
+		timeoutSignal.start = Date.now();
+		timeoutSignal.timeout = timeout;
+		return timeoutSignal;
+	}
+	cleanUp(signal) {
+		signal.clear();
+		const time = Date.now() - signal.start;
+		if (signal.aborted) {
+			this.failure.push(time);
+			this.next.push(time * this.failureMultiplier);
+			this.metric?.update({
+				failureMovingAverage: this.failure.movingAverage,
+				failureDeviation: this.failure.deviation,
+				failureForecast: this.failure.forecast,
+				failureVariance: this.failure.variance,
+				failure: time
+			});
+		} else {
+			this.success.push(time);
+			this.next.push(time);
+			this.metric?.update({
+				successMovingAverage: this.success.movingAverage,
+				successDeviation: this.success.deviation,
+				successForecast: this.success.forecast,
+				successVariance: this.success.variance,
+				success: time
+			});
+		}
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/peer-queue.js
+/**
+* Extends Queue to add support for querying queued jobs by peer id
+*/
+var PeerQueue = class extends Queue$1 {
+	has(peerId) {
+		return this.find(peerId) != null;
+	}
+	find(peerId) {
+		return this.queue.find((job) => {
+			return peerId.equals(job.options.peerId);
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/priority-queue.js
+var PriorityQueue$1 = class extends Queue$1 {
+	constructor(init = {}) {
+		super({
+			...init,
+			sort: (a, b) => {
+				if (a.options.priority > b.options.priority) return -1;
+				if (a.options.priority < b.options.priority) return 1;
+				return 0;
+			}
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/rate-limiter.js
+var RateLimiter = class {
+	memoryStorage;
+	points;
+	duration;
+	blockDuration;
+	keyPrefix;
+	constructor(opts = {}) {
+		this.points = opts.points ?? 4;
+		this.duration = opts.duration ?? 1;
+		this.blockDuration = opts.blockDuration ?? 0;
+		this.keyPrefix = opts.keyPrefix ?? "rlflx";
+		this.memoryStorage = new MemoryStorage();
+	}
+	consume(key, pointsToConsume = 1, options = {}) {
+		const rlKey = this.getKey(key);
+		const secDuration = this._getKeySecDuration(options);
+		let res = this.memoryStorage.incrby(rlKey, pointsToConsume, secDuration);
+		res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
+		if (res.consumedPoints > this.points) {
+			if (this.blockDuration > 0 && res.consumedPoints <= this.points + pointsToConsume) res = this.memoryStorage.set(rlKey, res.consumedPoints, this.blockDuration);
+			throw new RateLimitError("Rate limit exceeded", res);
+		}
+		return res;
+	}
+	penalty(key, points = 1, options = {}) {
+		const rlKey = this.getKey(key);
+		const secDuration = this._getKeySecDuration(options);
+		const res = this.memoryStorage.incrby(rlKey, points, secDuration);
+		res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
+		return res;
+	}
+	reward(key, points = 1, options = {}) {
+		const rlKey = this.getKey(key);
+		const secDuration = this._getKeySecDuration(options);
+		const res = this.memoryStorage.incrby(rlKey, -points, secDuration);
+		res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
+		return res;
+	}
+	/**
+	* Block any key for secDuration seconds
+	*
+	* @param key
+	* @param secDuration
+	*/
+	block(key, secDuration) {
+		const msDuration = secDuration * 1e3;
+		const initPoints = this.points + 1;
+		this.memoryStorage.set(this.getKey(key), initPoints, secDuration);
+		return {
+			remainingPoints: 0,
+			msBeforeNext: msDuration === 0 ? -1 : msDuration,
+			consumedPoints: initPoints,
+			isFirstInDuration: false
+		};
+	}
+	set(key, points, secDuration = 0) {
+		const msDuration = (secDuration >= 0 ? secDuration : this.duration) * 1e3;
+		this.memoryStorage.set(this.getKey(key), points, secDuration);
+		return {
+			remainingPoints: 0,
+			msBeforeNext: msDuration === 0 ? -1 : msDuration,
+			consumedPoints: points,
+			isFirstInDuration: false
+		};
+	}
+	get(key) {
+		const res = this.memoryStorage.get(this.getKey(key));
+		if (res != null) res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
+		return res;
+	}
+	delete(key) {
+		this.memoryStorage.delete(this.getKey(key));
+	}
+	_getKeySecDuration(options) {
+		if (options?.customDuration != null && options.customDuration >= 0) return options.customDuration;
+		return this.duration;
+	}
+	getKey(key) {
+		return this.keyPrefix.length > 0 ? `${this.keyPrefix}:${key}` : key;
+	}
+	parseKey(rlKey) {
+		return rlKey.substring(this.keyPrefix.length);
+	}
+};
+var MemoryStorage = class {
+	storage;
+	constructor() {
+		this.storage = /* @__PURE__ */ new Map();
+	}
+	incrby(key, value, durationSec) {
+		const existing = this.storage.get(key);
+		if (existing != null) {
+			const msBeforeExpires = existing.expiresAt != null ? existing.expiresAt.getTime() - (/* @__PURE__ */ new Date()).getTime() : -1;
+			if (existing.expiresAt == null || msBeforeExpires > 0) {
+				existing.value += value;
+				return {
+					remainingPoints: 0,
+					msBeforeNext: msBeforeExpires,
+					consumedPoints: existing.value,
+					isFirstInDuration: false
+				};
+			}
+			return this.set(key, value, durationSec);
+		}
+		return this.set(key, value, durationSec);
+	}
+	set(key, value, durationSec) {
+		const durationMs = durationSec * 1e3;
+		const existing = this.storage.get(key);
+		if (existing != null) clearTimeout(existing.timeoutId);
+		const record = {
+			value,
+			expiresAt: durationMs > 0 ? new Date(Date.now() + durationMs) : void 0
+		};
+		this.storage.set(key, record);
+		if (durationMs > 0) {
+			record.timeoutId = setTimeout(() => {
+				this.storage.delete(key);
+			}, durationMs);
+			if (record.timeoutId.unref != null) record.timeoutId.unref();
+		}
+		return {
+			remainingPoints: 0,
+			msBeforeNext: durationMs === 0 ? -1 : durationMs,
+			consumedPoints: record.value,
+			isFirstInDuration: true
+		};
+	}
+	get(key) {
+		const existing = this.storage.get(key);
+		if (existing != null) return {
+			remainingPoints: 0,
+			msBeforeNext: existing.expiresAt != null ? existing.expiresAt.getTime() - (/* @__PURE__ */ new Date()).getTime() : -1,
+			consumedPoints: existing.value,
+			isFirstInDuration: false
+		};
+	}
+	delete(key) {
+		const record = this.storage.get(key);
+		if (record != null) {
+			if (record.timeoutId != null) clearTimeout(record.timeoutId);
+			this.storage.delete(key);
+			return true;
+		}
+		return false;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/it-pipe@3.0.1/node_modules/it-pipe/dist/src/index.js
+function pipe(first, ...rest) {
+	if (first == null) throw new Error("Empty pipeline");
+	if (isDuplex(first)) {
+		const duplex = first;
+		first = () => duplex.source;
+	} else if (isIterable$1(first) || isAsyncIterable$9(first)) {
+		const source = first;
+		first = () => source;
+	}
+	const fns = [first, ...rest];
+	if (fns.length > 1) {
+		if (isDuplex(fns[fns.length - 1])) fns[fns.length - 1] = fns[fns.length - 1].sink;
+	}
+	if (fns.length > 2) {
+		for (let i = 1; i < fns.length - 1; i++) if (isDuplex(fns[i])) fns[i] = duplexPipelineFn(fns[i]);
+	}
+	return rawPipe(...fns);
+}
+const rawPipe = (...fns) => {
+	let res;
+	while (fns.length > 0) res = fns.shift()(res);
+	return res;
+};
+const isAsyncIterable$9 = (obj) => {
+	return obj?.[Symbol.asyncIterator] != null;
+};
+const isIterable$1 = (obj) => {
+	return obj?.[Symbol.iterator] != null;
+};
+const isDuplex = (obj) => {
+	if (obj == null) return false;
+	return obj.sink != null && obj.source != null;
+};
+const duplexPipelineFn = (duplex) => {
+	return (source) => {
+		const p = duplex.sink(source);
+		if (p?.then != null) {
+			const stream = pushable({ objectMode: true });
+			p.then(() => {
+				stream.end();
+			}, (err) => {
+				stream.end(err);
+			});
+			let sourceWrap;
+			const source = duplex.source;
+			if (isAsyncIterable$9(source)) sourceWrap = async function* () {
+				yield* source;
+				stream.end();
+			};
+			else if (isIterable$1(source)) sourceWrap = function* () {
+				yield* source;
+				stream.end();
+			};
+			else throw new Error("Unknown duplex source type - must be Iterable or AsyncIterable");
+			return merge(stream, sourceWrap());
+		}
+		return duplex.source;
+	};
+};
+//#endregion
+//#region node_modules/.pnpm/uint8-varint@2.0.5/node_modules/uint8-varint/dist/src/index.js
+const N1 = Math.pow(2, 7);
+const N2 = Math.pow(2, 14);
+const N3 = Math.pow(2, 21);
+const N4 = Math.pow(2, 28);
+const N5 = Math.pow(2, 35);
+const N6 = Math.pow(2, 42);
+const N7 = Math.pow(2, 49);
+/** Most significant bit of a byte */
+const MSB = 128;
+/** Rest of the bits in a byte */
+const REST = 127;
+function encodingLength(value) {
+	if (value < N1) return 1;
+	if (value < N2) return 2;
+	if (value < N3) return 3;
+	if (value < N4) return 4;
+	if (value < N5) return 5;
+	if (value < N6) return 6;
+	if (value < N7) return 7;
+	if (Number.MAX_SAFE_INTEGER != null && value > Number.MAX_SAFE_INTEGER) throw new RangeError("Could not encode varint");
+	return 8;
+}
+function encodeUint8Array(value, buf, offset = 0) {
+	switch (encodingLength(value)) {
+		case 8:
+			buf[offset++] = value & 255 | MSB;
+			value /= 128;
+		case 7:
+			buf[offset++] = value & 255 | MSB;
+			value /= 128;
+		case 6:
+			buf[offset++] = value & 255 | MSB;
+			value /= 128;
+		case 5:
+			buf[offset++] = value & 255 | MSB;
+			value /= 128;
+		case 4:
+			buf[offset++] = value & 255 | MSB;
+			value >>>= 7;
+		case 3:
+			buf[offset++] = value & 255 | MSB;
+			value >>>= 7;
+		case 2:
+			buf[offset++] = value & 255 | MSB;
+			value >>>= 7;
+		case 1:
+			buf[offset++] = value & 255;
+			value >>>= 7;
+			break;
+		default: throw new Error("unreachable");
+	}
+	return buf;
+}
+function encodeUint8ArrayList(value, buf, offset = 0) {
+	switch (encodingLength(value)) {
+		case 8:
+			buf.set(offset++, value & 255 | MSB);
+			value /= 128;
+		case 7:
+			buf.set(offset++, value & 255 | MSB);
+			value /= 128;
+		case 6:
+			buf.set(offset++, value & 255 | MSB);
+			value /= 128;
+		case 5:
+			buf.set(offset++, value & 255 | MSB);
+			value /= 128;
+		case 4:
+			buf.set(offset++, value & 255 | MSB);
+			value >>>= 7;
+		case 3:
+			buf.set(offset++, value & 255 | MSB);
+			value >>>= 7;
+		case 2:
+			buf.set(offset++, value & 255 | MSB);
+			value >>>= 7;
+		case 1:
+			buf.set(offset++, value & 255);
+			value >>>= 7;
+			break;
+		default: throw new Error("unreachable");
+	}
+	return buf;
+}
+function decodeUint8Array(buf, offset) {
+	let b = buf[offset];
+	let res = 0;
+	res += b & REST;
+	if (b < MSB) return res;
+	b = buf[offset + 1];
+	res += (b & REST) << 7;
+	if (b < MSB) return res;
+	b = buf[offset + 2];
+	res += (b & REST) << 14;
+	if (b < MSB) return res;
+	b = buf[offset + 3];
+	res += (b & REST) << 21;
+	if (b < MSB) return res;
+	b = buf[offset + 4];
+	res += (b & REST) * N4;
+	if (b < MSB) return res;
+	b = buf[offset + 5];
+	res += (b & REST) * N5;
+	if (b < MSB) return res;
+	b = buf[offset + 6];
+	res += (b & REST) * N6;
+	if (b < MSB) return res;
+	b = buf[offset + 7];
+	res += (b & REST) * N7;
+	if (b < MSB) return res;
+	throw new RangeError("Could not decode varint");
+}
+function decodeUint8ArrayList(buf, offset) {
+	let b = buf.get(offset);
+	let res = 0;
+	res += b & REST;
+	if (b < MSB) return res;
+	b = buf.get(offset + 1);
+	res += (b & REST) << 7;
+	if (b < MSB) return res;
+	b = buf.get(offset + 2);
+	res += (b & REST) << 14;
+	if (b < MSB) return res;
+	b = buf.get(offset + 3);
+	res += (b & REST) << 21;
+	if (b < MSB) return res;
+	b = buf.get(offset + 4);
+	res += (b & REST) * N4;
+	if (b < MSB) return res;
+	b = buf.get(offset + 5);
+	res += (b & REST) * N5;
+	if (b < MSB) return res;
+	b = buf.get(offset + 6);
+	res += (b & REST) * N6;
+	if (b < MSB) return res;
+	b = buf.get(offset + 7);
+	res += (b & REST) * N7;
+	if (b < MSB) return res;
+	throw new RangeError("Could not decode varint");
+}
+function encode$5(value, buf, offset = 0) {
+	if (buf == null) buf = allocUnsafe$1(encodingLength(value));
+	if (buf instanceof Uint8Array) return encodeUint8Array(value, buf, offset);
+	else return encodeUint8ArrayList(value, buf, offset);
+}
+function decode$5(buf, offset = 0) {
+	if (buf instanceof Uint8Array) return decodeUint8Array(buf, offset);
+	else return decodeUint8ArrayList(buf, offset);
 }
 //#endregion
 //#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/concat.node.js
 /**
 * Returns a new Uint8Array created by concatenating the passed Uint8Arrays
 */
-function concat$1(arrays, length) {
+function concat(arrays, length) {
 	return asUint8Array$1(Buffer$1.concat(arrays, length));
 }
 //#endregion
@@ -25921,7 +29553,7 @@ function equals(a, b) {
 *
 * Borrows liberally from [bl](https://www.npmjs.com/package/bl) but only uses native JS types.
 */
-const symbol$1 = Symbol.for("@achingbrain/uint8arraylist");
+const symbol = Symbol.for("@achingbrain/uint8arraylist");
 function findBufAndOffset(bufs, index) {
 	if (index == null || index < 0) throw new RangeError("index is out of bounds");
 	let offset = 0;
@@ -25949,12 +29581,12 @@ function findBufAndOffset(bufs, index) {
 * ```
 */
 function isUint8ArrayList(value) {
-	return Boolean(value?.[symbol$1]);
+	return Boolean(value?.[symbol]);
 }
 var Uint8ArrayList = class Uint8ArrayList {
 	bufs;
 	length;
-	[symbol$1] = true;
+	[symbol] = true;
 	constructor(...data) {
 		this.bufs = [];
 		this.length = 0;
@@ -26057,7 +29689,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 	*/
 	slice(beginInclusive, endExclusive) {
 		const { bufs, length } = this._subList(beginInclusive, endExclusive);
-		return concat$1(bufs, length);
+		return concat(bufs, length);
 	}
 	/**
 	* Returns a alloc from the given start and end element index.
@@ -26068,7 +29700,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 	subarray(beginInclusive, endExclusive) {
 		const { bufs, length } = this._subList(beginInclusive, endExclusive);
 		if (bufs.length === 1) return bufs[0];
-		return concat$1(bufs, length);
+		return concat(bufs, length);
 	}
 	/**
 	* Returns a new Uint8ArrayList from the given start and end element index.
@@ -26279,279 +29911,6808 @@ var Uint8ArrayList = class Uint8ArrayList {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base10.js
-var base10_exports = /* @__PURE__ */ __exportAll({ base10: () => base10 });
-const base10 = baseX({
-	prefix: "9",
-	name: "base10",
-	alphabet: "0123456789"
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base16.js
-var base16_exports = /* @__PURE__ */ __exportAll({
-	base16: () => base16,
-	base16upper: () => base16upper
-});
-const base16 = rfc4648({
-	prefix: "f",
-	name: "base16",
-	alphabet: "0123456789abcdef",
-	bitsPerChar: 4
-});
-const base16upper = rfc4648({
-	prefix: "F",
-	name: "base16upper",
-	alphabet: "0123456789ABCDEF",
-	bitsPerChar: 4
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base2.js
-var base2_exports = /* @__PURE__ */ __exportAll({ base2: () => base2 });
-const base2 = rfc4648({
-	prefix: "0",
-	name: "base2",
-	alphabet: "01",
-	bitsPerChar: 1
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base256emoji.js
-var base256emoji_exports = /* @__PURE__ */ __exportAll({ base256emoji: () => base256emoji });
-const alphabet = Array.from("🚀🪐☄🛰🌌🌑🌒🌓🌔🌕🌖🌗🌘🌍🌏🌎🐉☀💻🖥💾💿😂❤😍🤣😊🙏💕😭😘👍😅👏😁🔥🥰💔💖💙😢🤔😆🙄💪😉☺👌🤗💜😔😎😇🌹🤦🎉💞✌✨🤷😱😌🌸🙌😋💗💚😏💛🙂💓🤩😄😀🖤😃💯🙈👇🎶😒🤭❣😜💋👀😪😑💥🙋😞😩😡🤪👊🥳😥🤤👉💃😳✋😚😝😴🌟😬🙃🍀🌷😻😓⭐✅🥺🌈😈🤘💦✔😣🏃💐☹🎊💘😠☝😕🌺🎂🌻😐🖕💝🙊😹🗣💫💀👑🎵🤞😛🔴😤🌼😫⚽🤙☕🏆🤫👈😮🙆🍻🍃🐶💁😲🌿🧡🎁⚡🌞🎈❌✊👋😰🤨😶🤝🚶💰🍓💢🤟🙁🚨💨🤬✈🎀🍺🤓😙💟🌱😖👶🥴▶➡❓💎💸⬇😨🌚🦋😷🕺⚠🙅😟😵👎🤲🤠🤧📌🔵💅🧐🐾🍒😗🤑🌊🤯🐷☎💧😯💆👆🎤🙇🍑❄🌴💣🐸💌📍🥀🤢👅💡💩👐📸👻🤐🤮🎼🥵🚩🍎🍊👼💍📣🥂");
-const alphabetBytesToChars = alphabet.reduce((p, c, i) => {
-	p[i] = c;
-	return p;
-}, []);
-const alphabetCharsToBytes = alphabet.reduce((p, c, i) => {
-	const codePoint = c.codePointAt(0);
-	if (codePoint == null) throw new Error(`Invalid character: ${c}`);
-	p[codePoint] = i;
-	return p;
-}, []);
-function encode$6(data) {
-	return data.reduce((p, c) => {
-		p += alphabetBytesToChars[c];
-		return p;
-	}, "");
-}
-function decode$7(str) {
-	const byts = [];
-	for (const char of str) {
-		const codePoint = char.codePointAt(0);
-		if (codePoint == null) throw new Error(`Invalid character: ${char}`);
-		const byt = alphabetCharsToBytes[codePoint];
-		if (byt == null) throw new Error(`Non-base256emoji character: ${char}`);
-		byts.push(byt);
-	}
-	return new Uint8Array(byts);
-}
-const base256emoji = from$2({
-	prefix: "🚀",
-	name: "base256emoji",
-	encode: encode$6,
-	decode: decode$7
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base8.js
-var base8_exports = /* @__PURE__ */ __exportAll({ base8: () => base8 });
-const base8 = rfc4648({
-	prefix: "7",
-	name: "base8",
-	alphabet: "01234567",
-	bitsPerChar: 3
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/identity.js
-var identity_exports = /* @__PURE__ */ __exportAll({ identity: () => identity });
-const identity = from$2({
-	prefix: "\0",
-	name: "identity",
-	encode: (buf) => toString$3(buf),
-	decode: (str) => fromString$3(str)
-});
-new TextEncoder();
-new TextDecoder();
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/hasher.js
-const DEFAULT_MIN_DIGEST_LENGTH = 20;
-function from({ name, code, encode, minDigestLength, maxDigestLength }) {
-	return new Hasher(name, code, encode, minDigestLength, maxDigestLength);
-}
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/stream-utils.js
+const DEFAULT_MAX_BUFFER_SIZE = 4194304;
+var UnwrappedError = class extends Error {
+	static name = "UnwrappedError";
+	name = "UnwrappedError";
+};
 /**
-* Hasher represents a hashing algorithm implementation that produces as
-* `MultihashDigest`.
+* The reported length of the next data message was not a positive integer
 */
-var Hasher = class {
-	name;
-	code;
-	encode;
-	minDigestLength;
-	maxDigestLength;
-	constructor(name, code, encode, minDigestLength, maxDigestLength) {
-		this.name = name;
-		this.code = code;
-		this.encode = encode;
-		this.minDigestLength = minDigestLength ?? DEFAULT_MIN_DIGEST_LENGTH;
-		this.maxDigestLength = maxDigestLength;
-	}
-	digest(input, options) {
-		if (options?.truncate != null) {
-			if (options.truncate < this.minDigestLength) throw new Error(`Invalid truncate option, must be greater than or equal to ${this.minDigestLength}`);
-			if (this.maxDigestLength != null && options.truncate > this.maxDigestLength) throw new Error(`Invalid truncate option, must be less than or equal to ${this.maxDigestLength}`);
+var InvalidMessageLengthError$2 = class extends Error {
+	name = "InvalidMessageLengthError";
+	code = "ERR_INVALID_MSG_LENGTH";
+};
+/**
+* The reported length of the next data message was larger than the configured
+* max allowable value
+*/
+var InvalidDataLengthError$1 = class extends Error {
+	name = "InvalidDataLengthError";
+	code = "ERR_MSG_DATA_TOO_LONG";
+};
+/**
+* The varint used to specify the length of the next data message contained more
+* bytes than the configured max allowable value
+*/
+var InvalidDataLengthLengthError$1 = class extends Error {
+	name = "InvalidDataLengthLengthError";
+	code = "ERR_MSG_LENGTH_TOO_LONG";
+};
+function isStream(obj) {
+	return typeof obj?.closeRead === "function";
+}
+function isMultiaddrConnection(obj) {
+	return typeof obj?.close === "function";
+}
+function isEOF(obj) {
+	if (isStream(obj)) return obj.remoteWriteStatus !== "writable" && obj.readBufferLength === 0;
+	if (isMultiaddrConnection(obj)) return obj.status !== "open";
+	return false;
+}
+function isValid(obj) {
+	return obj?.addEventListener != null && obj?.removeEventListener != null && obj?.send != null && obj?.push != null && obj?.log != null;
+}
+function byteStream(stream, opts) {
+	const maxBufferSize = opts?.maxBufferSize ?? DEFAULT_MAX_BUFFER_SIZE;
+	const readBuffer = new Uint8ArrayList();
+	let hasBytes;
+	let unwrapped = false;
+	if (!isValid(stream)) throw new InvalidParametersError$4("Argument should be a Stream or a Multiaddr");
+	const byteStreamOnMessageListener = (evt) => {
+		readBuffer.append(evt.data);
+		if (readBuffer.byteLength > maxBufferSize) {
+			const readBufferSize = readBuffer.byteLength;
+			readBuffer.consume(readBuffer.byteLength);
+			hasBytes?.reject(/* @__PURE__ */ new Error(`Read buffer overflow - ${readBufferSize} > ${maxBufferSize}`));
 		}
-		if (input instanceof Uint8Array) {
-			const result = this.encode(input);
-			if (result instanceof Uint8Array) return createDigest(result, this.code, options?.truncate);
-			return result.then((digest) => createDigest(digest, this.code, options?.truncate));
-		} else throw Error("Unknown type, must be binary type");
-	}
-};
-/**
-* Create a Digest from the passed uint8array and code, optionally truncating it
-* first.
-*/
-function createDigest(digest, code, truncate) {
-	if (truncate != null && truncate !== digest.byteLength) {
-		if (truncate > digest.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${digest.byteLength}`);
-		digest = digest.subarray(0, truncate);
-	}
-	return create$2(code, digest);
-}
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/sha2.js
-var sha2_exports = /* @__PURE__ */ __exportAll({
-	sha256: () => sha256$1,
-	sha512: () => sha512$1
-});
-const sha256$1 = from({
-	name: "sha2-256",
-	code: 18,
-	encode: (input) => coerce(crypto$2.createHash("sha256").update(input).digest())
-});
-const sha512$1 = from({
-	name: "sha2-512",
-	code: 19,
-	encode: (input) => coerce(crypto$2.createHash("sha512").update(input).digest())
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/basics.js
-const bases = {
-	...identity_exports,
-	...base2_exports,
-	...base8_exports,
-	...base10_exports,
-	...base16_exports,
-	...base32_exports,
-	...base36_exports,
-	...base58_exports,
-	...base64_exports$1,
-	...base256emoji_exports
-};
-({
-	...sha2_exports,
-	...identity_exports$1
-});
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/as-uint8array.node.js
-/**
-* To guarantee Uint8Array semantics, convert nodejs Buffers
-* into vanilla Uint8Arrays
-*/
-function asUint8Array(buf) {
-	if (buf.buffer instanceof ArrayBuffer) return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
-	const b = buf.slice();
-	return new Uint8Array(b.buffer, 0, b.byteLength);
-}
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/alloc.node.js
-/**
-* Returns a `Uint8Array` of the requested size. Referenced memory will
-* be initialized to 0.
-*/
-function alloc$1(size = 0) {
-	return asUint8Array(Buffer$1.alloc(size));
-}
-/**
-* Where possible returns a Uint8Array of the requested size that references
-* uninitialized memory. Only use if you are certain you will immediately
-* overwrite every value in the returned `Uint8Array`.
-*/
-function allocUnsafe(size = 0) {
-	return asUint8Array(Buffer$1.allocUnsafe(size));
-}
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/bases.js
-function createCodec$1(name, prefix, encode, decode) {
-	return {
-		name,
-		prefix,
-		encoder: {
-			name,
-			prefix,
-			encode
+		hasBytes?.resolve();
+	};
+	stream.addEventListener("message", byteStreamOnMessageListener);
+	const byteStreamOnCloseListener = (evt) => {
+		if (evt.error != null) hasBytes?.reject(evt.error);
+		else hasBytes?.resolve();
+	};
+	stream.addEventListener("close", byteStreamOnCloseListener);
+	const byteStreamOnRemoteCloseWrite = () => {
+		hasBytes?.resolve();
+	};
+	stream.addEventListener("remoteCloseWrite", byteStreamOnRemoteCloseWrite);
+	const byteStream = {
+		readBuffer,
+		async read(options) {
+			if (unwrapped === true) throw new UnwrappedError("Stream was unwrapped");
+			if (isEOF(stream)) {
+				if (readBuffer.byteLength === 0 && options?.bytes == null) return null;
+				if (options?.bytes != null && readBuffer.byteLength < options.bytes) {
+					stream.log.error("closed after reading %d/%d bytes", readBuffer.byteLength, options.bytes);
+					throw new UnexpectedEOFError$1(`Unexpected EOF - stream closed after reading ${readBuffer.byteLength}/${options.bytes} bytes`);
+				}
+			}
+			const bytesToRead = options?.bytes ?? 1;
+			hasBytes = Promise.withResolvers();
+			while (true) {
+				if (readBuffer.byteLength >= bytesToRead) {
+					hasBytes.resolve();
+					break;
+				}
+				await raceSignal(hasBytes.promise, options?.signal);
+				if (isEOF(stream)) {
+					if (readBuffer.byteLength === 0 && options?.bytes == null) return null;
+					break;
+				}
+				hasBytes = Promise.withResolvers();
+			}
+			const toRead = options?.bytes ?? readBuffer.byteLength;
+			if (readBuffer.byteLength < toRead) {
+				if (isEOF(stream)) {
+					stream.log.error("closed while reading %d/%d bytes", readBuffer.byteLength, toRead);
+					throw new UnexpectedEOFError$1(`Unexpected EOF - stream closed while reading ${readBuffer.byteLength}/${toRead} bytes`);
+				}
+				return byteStream.read(options);
+			}
+			const output = readBuffer.sublist(0, toRead);
+			readBuffer.consume(toRead);
+			return output;
 		},
-		decoder: { decode }
+		async write(data, options) {
+			if (unwrapped === true) throw new UnwrappedError("Stream was unwrapped");
+			if (!stream.send(data)) await pEvent(stream, "drain", {
+				signal: options?.signal,
+				rejectionEvents: ["close"]
+			});
+		},
+		unwrap() {
+			if (unwrapped) return stream;
+			unwrapped = true;
+			stream.removeEventListener("message", byteStreamOnMessageListener);
+			stream.removeEventListener("close", byteStreamOnCloseListener);
+			stream.removeEventListener("remoteCloseWrite", byteStreamOnRemoteCloseWrite);
+			if (readBuffer.byteLength > 0) {
+				stream.log("stream unwrapped with %d unread bytes", readBuffer.byteLength);
+				stream.unshift(readBuffer);
+			}
+			return stream;
+		}
+	};
+	return byteStream;
+}
+function lpStream(stream, opts = {}) {
+	const bytes = byteStream(stream, opts);
+	if (opts.maxDataLength != null && opts.maxLengthLength == null) opts.maxLengthLength = encodingLength(opts.maxDataLength);
+	const decodeLength = opts?.lengthDecoder ?? decode$5;
+	const encodeLength = opts?.lengthEncoder ?? encode$5;
+	return {
+		async read(options) {
+			let dataLength = -1;
+			const lengthBuffer = new Uint8ArrayList();
+			while (true) {
+				const buf = await bytes.read({
+					...options,
+					bytes: 1
+				});
+				if (buf == null) break;
+				lengthBuffer.append(buf);
+				try {
+					dataLength = decodeLength(lengthBuffer);
+				} catch (err) {
+					if (err instanceof RangeError) continue;
+					throw err;
+				}
+				if (dataLength < 0) throw new InvalidMessageLengthError$2("Invalid message length");
+				if (opts?.maxLengthLength != null && lengthBuffer.byteLength > opts.maxLengthLength) throw new InvalidDataLengthLengthError$1(`Message length length too long - ${lengthBuffer.byteLength} > ${opts.maxLengthLength}`);
+				if (dataLength > -1) break;
+			}
+			if (opts?.maxDataLength != null && dataLength > opts.maxDataLength) throw new InvalidDataLengthError$1(`Message length too long - ${dataLength} > ${opts.maxDataLength}`);
+			const buf = await bytes.read({
+				...options,
+				bytes: dataLength
+			});
+			if (buf == null) {
+				stream.log.error("tried to read %d bytes but the stream closed", dataLength);
+				throw new UnexpectedEOFError$1(`Unexpected EOF - tried to read ${dataLength} bytes but the stream closed`);
+			}
+			if (buf.byteLength !== dataLength) {
+				stream.log.error("read %d/%d bytes before the stream closed", buf.byteLength, dataLength);
+				throw new UnexpectedEOFError$1(`Unexpected EOF - read ${buf.byteLength}/${dataLength} bytes before the stream closed`);
+			}
+			return buf;
+		},
+		async write(data, options) {
+			await bytes.write(new Uint8ArrayList(encodeLength(data.byteLength), data), options);
+		},
+		async writeV(data, options) {
+			const list = new Uint8ArrayList(...data.flatMap((buf) => [encodeLength(buf.byteLength), buf]));
+			await bytes.write(list, options);
+		},
+		unwrap() {
+			return bytes.unwrap();
+		}
 	};
 }
-const string = createCodec$1("utf8", "u", (buf) => {
-	return "u" + new TextDecoder("utf8").decode(buf);
-}, (str) => {
-	return new TextEncoder().encode(str.substring(1));
-});
-const ascii = createCodec$1("ascii", "a", (buf) => {
-	let string = "a";
-	for (let i = 0; i < buf.length; i++) string += String.fromCharCode(buf[i]);
-	return string;
-}, (str) => {
-	str = str.substring(1);
-	const buf = allocUnsafe(str.length);
-	for (let i = 0; i < str.length; i++) buf[i] = str.charCodeAt(i);
-	return buf;
-});
-const BASES = {
-	utf8: string,
-	"utf-8": string,
-	hex: bases.base16,
-	latin1: ascii,
-	ascii,
-	binary: ascii,
-	...bases
-};
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/from-string.node.js
-/**
-* Create a `Uint8Array` from the passed string
-*
-* Supports `utf8`, `utf-8`, `hex`, and any encoding supported by the multiformats module.
-*
-* Also `ascii` which is similar to node's 'binary' encoding.
-*/
-function fromString(string, encoding = "utf8") {
-	const base = BASES[encoding];
-	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
-	if (encoding === "utf8" || encoding === "utf-8") return asUint8Array(Buffer$1.from(string, "utf-8"));
-	return base.decoder.decode(`${base.prefix}${string}`);
+//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/tracked-map.js
+var TrackedMap = class extends Map {
+	metric;
+	constructor(init) {
+		super();
+		const { name, metrics } = init;
+		this.metric = metrics.registerMetric(name);
+		this.updateComponentMetric();
+	}
+	set(key, value) {
+		super.set(key, value);
+		this.updateComponentMetric();
+		return this;
+	}
+	delete(key) {
+		const deleted = super.delete(key);
+		this.updateComponentMetric();
+		return deleted;
+	}
+	clear() {
+		super.clear();
+		this.updateComponentMetric();
+	}
+	updateComponentMetric() {
+		this.metric.update(this.size);
+	}
+};
+function trackedMap(config) {
+	const { name, metrics } = config;
+	let map;
+	if (metrics != null) map = new TrackedMap({
+		name,
+		metrics
+	});
+	else map = /* @__PURE__ */ new Map();
+	return map;
 }
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/to-string.node.js
+//#region node_modules/.pnpm/it-to-buffer@4.0.12/node_modules/it-to-buffer/dist/src/index.js
 /**
-* Turns a `Uint8Array` into a string.
+* @packageDocumentation
 *
-* Supports `utf8`, `utf-8` and any encoding supported by the multibase module.
+* Collects all `Uint8Array` values from an (async)iterable and returns them as a single `Uint8Array`.
 *
-* Also `ascii` which is similar to node's 'binary' encoding.
+* @example
+*
+* ```javascript
+* import toBuffer from 'it-to-buffer'
+*
+* // This can also be an iterator, generator, etc
+* const values = [Buffer.from([0, 1]), Buffer.from([2, 3])]
+*
+* const result = toBuffer(values)
+*
+* console.info(result) // Buffer[0, 1, 2, 3]
+* ```
+*
+* Async sources must be awaited:
+*
+* ```javascript
+* import toBuffer from 'it-to-buffer'
+*
+* const values = async function * () {
+*   yield Buffer.from([0, 1])
+*   yield Buffer.from([2, 3])
+* }
+*
+* const result = await toBuffer(values())
+*
+* console.info(result) // Buffer[0, 1, 2, 3]
+* ```
 */
-function toString$1(array, encoding = "utf8") {
-	const base = BASES[encoding];
-	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
-	if (encoding === "utf8" || encoding === "utf-8") return Buffer$1.from(array.buffer, array.byteOffset, array.byteLength).toString("utf8");
-	return base.encoder.encode(array).substring(1);
+function isAsyncIterable$8(thing) {
+	return thing[Symbol.asyncIterator] != null;
+}
+function toBuffer(source) {
+	if (isAsyncIterable$8(source)) return (async () => {
+		let buffer = new Uint8Array(0);
+		for await (const buf of source) buffer = concat([buffer, buf], buffer.length + buf.length);
+		return buffer;
+	})();
+	const bufs = [];
+	let length = 0;
+	for (const buf of source) {
+		bufs.push(buf);
+		length += buf.byteLength;
+	}
+	return concat(bufs, length);
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/block.js
+function readonly({ enumerable = true, configurable = false } = {}) {
+	return {
+		enumerable,
+		configurable,
+		writable: false
+	};
+}
+function* linksWithin(path, value) {
+	if (value != null && typeof value === "object") if (Array.isArray(value)) for (const [index, element] of value.entries()) {
+		const elementPath = [...path, index];
+		const cid = CID$1.asCID(element);
+		if (cid != null) yield [elementPath.join("/"), cid];
+		else if (typeof element === "object") yield* links(element, elementPath);
+	}
+	else {
+		const cid = CID$1.asCID(value);
+		if (cid != null) yield [path.join("/"), cid];
+		else yield* links(value, path);
+	}
+}
+function* links(source, base) {
+	if (source == null || source instanceof Uint8Array) return;
+	const cid = CID$1.asCID(source);
+	if (cid != null) yield [base.join("/"), cid];
+	for (const [key, value] of Object.entries(source)) yield* linksWithin([...base, key], value);
+}
+function* treeWithin(path, value) {
+	if (Array.isArray(value)) for (const [index, element] of value.entries()) {
+		const elementPath = [...path, index];
+		yield elementPath.join("/");
+		if (typeof element === "object" && CID$1.asCID(element) == null) yield* tree(element, elementPath);
+	}
+	else yield* tree(value, path);
+}
+function* tree(source, base) {
+	if (source == null || typeof source !== "object") return;
+	for (const [key, value] of Object.entries(source)) {
+		const path = [...base, key];
+		yield path.join("/");
+		if (value != null && !(value instanceof Uint8Array) && typeof value === "object" && CID$1.asCID(value) == null) yield* treeWithin(path, value);
+	}
+}
+function get(source, path) {
+	let node = source;
+	for (const [index, key] of path.entries()) {
+		node = node[key];
+		if (node == null) throw new Error(`Object has no property at ${path.slice(0, index + 1).map((part) => `[${JSON.stringify(part)}]`).join("")}`);
+		const cid = CID$1.asCID(node);
+		if (cid != null) return {
+			value: cid,
+			remaining: path.slice(index + 1).join("/")
+		};
+	}
+	return { value: node };
+}
+/**
+* @template T - Logical type of the data encoded in the block
+* @template C - multicodec code corresponding to codec used to encode the block
+* @template A - multicodec code corresponding to the hashing algorithm used in CID creation.
+* @template V - CID version
+*/
+var Block = class {
+	cid;
+	bytes;
+	value;
+	asBlock;
+	constructor({ cid, bytes, value }) {
+		if (cid == null || bytes == null || typeof value === "undefined") throw new Error("Missing required argument");
+		this.cid = cid;
+		this.bytes = bytes;
+		this.value = value;
+		this.asBlock = this;
+		Object.defineProperties(this, {
+			cid: readonly(),
+			bytes: readonly(),
+			value: readonly(),
+			asBlock: readonly()
+		});
+	}
+	links() {
+		return links(this.value, []);
+	}
+	tree() {
+		return tree(this.value, []);
+	}
+	get(path = "/") {
+		return get(this.value, path.split("/").filter(Boolean));
+	}
+};
+/**
+* @template T - Logical type of the data encoded in the block
+* @template Code - multicodec code corresponding to codec used to encode the block
+* @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
+* @template V - CID version
+*/
+function createUnsafe({ bytes, cid, value: maybeValue, codec }) {
+	const value = maybeValue !== void 0 ? maybeValue : codec?.decode(bytes);
+	if (value === void 0) throw new Error("Missing required argument, must either provide \"value\" or \"codec\"");
+	return new Block({
+		cid,
+		bytes,
+		value
+	});
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/errors.js
+var AlreadyPinnedError = class extends Error {
+	static name = "AlreadyPinnedError";
+	name = "AlreadyPinnedError";
+};
+var BlockPinnedError = class extends Error {
+	static name = "BlockPinnedError";
+	name = "BlockPinnedError";
+};
+var InvalidDatastoreVersionError = class extends Error {
+	static name = "InvalidDatastoreVersionError";
+	name = "InvalidDatastoreVersionError";
+};
+var InvalidConfigurationError = class extends Error {
+	static name = "InvalidConfigurationError";
+	name = "InvalidConfigurationError";
+};
+var GetFailedError = class extends AggregateError {
+	static name = "GetFailedError";
+	name = "GetFailedError";
+};
+var LoadBlockFailedError = class extends AggregateError {
+	static name = "LoadBlockFailedError";
+	name = "LoadBlockFailedError";
+};
+var BlockNotFoundWhileOfflineError = class extends Error {
+	static name = "BlockNotFoundWhileOfflineError";
+	name = "BlockNotFoundWhileOfflineError";
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/pins.js
+const DATASTORE_PIN_PREFIX = "/pin/";
+const DATASTORE_BLOCK_PREFIX = "/pinned-block/";
+const DATASTORE_ENCODING = base36$1;
+const DAG_WALK_QUEUE_CONCURRENCY = 1;
+function toDSKey(cid) {
+	if (cid.version === 0) cid = cid.toV1();
+	return new Key(`${DATASTORE_PIN_PREFIX}${cid.toString(DATASTORE_ENCODING)}`);
+}
+var PinsImpl = class {
+	datastore;
+	blockstore;
+	getCodec;
+	constructor(datastore, blockstore, getCodec) {
+		this.datastore = datastore;
+		this.blockstore = blockstore;
+		this.getCodec = getCodec;
+	}
+	async *add(cid, options = {}) {
+		const pinKey = toDSKey(cid);
+		if (await this.datastore.has(pinKey)) throw new AlreadyPinnedError("Already pinned");
+		const depth = Math.round(options.depth ?? Infinity);
+		if (depth < 0) throw new InvalidParametersError$4("Depth must be greater than or equal to 0");
+		const queue = new Queue$1({ concurrency: DAG_WALK_QUEUE_CONCURRENCY });
+		for await (const childCid of this.#walkDag(cid, queue, {
+			...options,
+			depth
+		})) {
+			await this.#updatePinnedBlock(childCid, (pinnedBlock) => {
+				if (pinnedBlock.pinnedBy.find((c) => equals(c, cid.bytes)) != null) return false;
+				pinnedBlock.pinCount++;
+				pinnedBlock.pinnedBy.push(cid.bytes);
+				return true;
+			}, options);
+			yield childCid;
+		}
+		const pin = {
+			depth,
+			metadata: options.metadata ?? {}
+		};
+		await this.datastore.put(pinKey, encode$10(pin), options);
+	}
+	/**
+	* Walk a DAG in an iterable fashion
+	*/
+	async *#walkDag(cid, queue, options) {
+		if (options.depth === -1) return;
+		const codec = await this.getCodec(cid.code);
+		const block = createUnsafe({
+			bytes: await toBuffer(this.blockstore.get(cid, options)),
+			cid,
+			codec
+		});
+		yield cid;
+		for (const [, cid] of block.links()) yield* await queue.add(async () => {
+			return this.#walkDag(cid, queue, {
+				...options,
+				depth: options.depth - 1
+			});
+		});
+	}
+	/**
+	* Update the pin count for the CID
+	*/
+	async #updatePinnedBlock(cid, withPinnedBlock, options) {
+		const blockKey = new Key(`${DATASTORE_BLOCK_PREFIX}${DATASTORE_ENCODING.encode(cid.multihash.bytes)}`);
+		let pinnedBlock = {
+			pinCount: 0,
+			pinnedBy: []
+		};
+		try {
+			pinnedBlock = decode$12(await this.datastore.get(blockKey, options));
+		} catch (err) {
+			if (err.name !== "NotFoundError") throw err;
+		}
+		if (!withPinnedBlock(pinnedBlock)) return;
+		if (pinnedBlock.pinCount === 0) {
+			if (await this.datastore.has(blockKey)) {
+				await this.datastore.delete(blockKey);
+				return;
+			}
+		}
+		await this.datastore.put(blockKey, encode$10(pinnedBlock), options);
+		options.onProgress?.(new CustomProgressEvent("helia:pin:add", cid));
+	}
+	async *rm(cid, options = {}) {
+		const pinKey = toDSKey(cid);
+		const pin = decode$12(await this.datastore.get(pinKey, options));
+		await this.datastore.delete(pinKey, options);
+		const queue = new Queue$1({ concurrency: DAG_WALK_QUEUE_CONCURRENCY });
+		for await (const childCid of this.#walkDag(cid, queue, {
+			...options,
+			depth: pin.depth
+		})) {
+			await this.#updatePinnedBlock(childCid, (pinnedBlock) => {
+				pinnedBlock.pinCount--;
+				pinnedBlock.pinnedBy = pinnedBlock.pinnedBy.filter((c) => equals(c, cid.bytes));
+				return true;
+			}, {
+				...options,
+				depth: pin.depth
+			});
+			yield childCid;
+		}
+	}
+	async *ls(options = {}) {
+		for await (const { key, value } of this.datastore.query({ prefix: DATASTORE_PIN_PREFIX + (options.cid != null ? `${options.cid.toString(base36$1)}` : "") }, options)) yield {
+			cid: CID$1.parse(key.toString().substring(5), base36$1),
+			...decode$12(value)
+		};
+	}
+	async isPinned(cid, options = {}) {
+		const blockKey = new Key(`${DATASTORE_BLOCK_PREFIX}${DATASTORE_ENCODING.encode(cid.multihash.bytes)}`);
+		return this.datastore.has(blockKey, options);
+	}
+	async get(cid, options) {
+		const pinKey = toDSKey(cid);
+		return decode$12(await this.datastore.get(pinKey, options));
+	}
+	async setMetadata(cid, metadata, options) {
+		const pinKey = toDSKey(cid);
+		const pin = decode$12(await this.datastore.get(pinKey, options));
+		pin.metadata = metadata ?? {};
+		await this.datastore.put(pinKey, encode$10(pin), options);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+interface@6.2.1/node_modules/@helia/interface/dist/src/errors.js
+var InsufficientProvidersError = class extends Error {
+	static name = "InsufficientProvidersError";
+	constructor(message = "Insufficient providers found") {
+		super(message);
+		this.name = "InsufficientProvidersError";
+	}
+};
+var NoRoutersAvailableError = class extends Error {
+	static name = "NoRoutersAvailableError";
+	constructor(message = "No routers available") {
+		super(message);
+		this.name = "NoRoutersAvailableError";
+	}
+};
+var UnknownHashAlgorithmError = class extends Error {
+	static name = "UnknownHashAlgorithmError";
+	constructor(message = "Unknown hash algorithm") {
+		super(message);
+		this.name = "UnknownHashAlgorithmError";
+	}
+};
+var UnknownCodecError = class extends Error {
+	static name = "UnknownCodecError";
+	constructor(message = "Unknown codec") {
+		super(message);
+		this.name = "UnknownCodecError";
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/routing.js
+const DEFAULT_PROVIDER_LOOKUP_CONCURRENCY = 5;
+var Routing = class {
+	name;
+	log;
+	routers;
+	providerLookupConcurrency;
+	constructor(components, init) {
+		this.name = "helia";
+		this.log = components.logger.forComponent("helia:routing");
+		this.routers = init.routers ?? [];
+		this.providerLookupConcurrency = init.providerLookupConcurrency ?? DEFAULT_PROVIDER_LOOKUP_CONCURRENCY;
+		this.findProviders = components.metrics?.traceFunction("helia.routing.findProviders", this.findProviders.bind(this), { optionsIndex: 1 }) ?? this.findProviders;
+		this.provide = components.metrics?.traceFunction("helia.routing.provide", this.provide.bind(this), { optionsIndex: 1 }) ?? this.provide;
+		this.cancelReprovide = components.metrics?.traceFunction("helia.routing.cancelReprovide", this.cancelReprovide.bind(this), { optionsIndex: 1 }) ?? this.cancelReprovide;
+		this.put = components.metrics?.traceFunction("helia.routing.put", this.put.bind(this), { optionsIndex: 2 }) ?? this.put;
+		this.get = components.metrics?.traceFunction("helia.routing.get", this.get.bind(this), { optionsIndex: 1 }) ?? this.get;
+		this.findPeer = components.metrics?.traceFunction("helia.routing.findPeer", this.findPeer.bind(this), { optionsIndex: 1 }) ?? this.findPeer;
+		this.getClosestPeers = components.metrics?.traceFunction("helia.routing.getClosestPeers", this.getClosestPeers.bind(this), { optionsIndex: 1 }) ?? this.getClosestPeers;
+	}
+	async start() {
+		await start(...this.routers);
+	}
+	async stop() {
+		await stop$1(...this.routers);
+	}
+	/**
+	* Iterates over all content routers in parallel to find providers of the
+	* given key
+	*/
+	async *findProviders(key, options = {}) {
+		if (this.routers.length === 0) throw new NoRoutersAvailableError("No content routers available");
+		const queue = new PeerQueue({ concurrency: this.providerLookupConcurrency });
+		let foundProviders = 0;
+		const errors = [];
+		const self = this;
+		let routersFinished = 0;
+		this.log("findProviders for %c start using routers %s", key, this.routers.map((r) => r.toString()).join(", "));
+		const routers = supports(this.routers, "findProviders").map(async function* (router) {
+			let foundProviders = 0;
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:find-providers:start", {
+				routing: router.name,
+				cid: key
+			}));
+			try {
+				for await (const prov of router.findProviders(key, options)) {
+					foundProviders++;
+					options?.onProgress?.(new CustomProgressEvent("helia:routing:find-providers:provider", {
+						routing: router.name,
+						cid: key,
+						provider: prov
+					}));
+					yield prov;
+				}
+			} catch (err) {
+				errors.push(err);
+			} finally {
+				self.log("router %s found %d providers for %c", router, foundProviders, key);
+				options?.onProgress?.(new CustomProgressEvent("helia:routing:find-providers:end", {
+					routing: router.name,
+					cid: key,
+					found: foundProviders
+				}));
+				routersFinished++;
+				if (routersFinished === routers.length && queue.size === 0) queue.emitIdle();
+			}
+		});
+		for await (const peer of merge(queue.toGenerator(), ...routers)) {
+			if (peer == null) continue;
+			if (peer.multiaddrs.length === 0) {
+				if (queue.find(peer.id) != null) continue;
+				queue.add(async () => {
+					try {
+						const provider = await this.findPeer(peer.id, options);
+						if (provider.multiaddrs.length === 0) return null;
+						return {
+							...provider,
+							protocols: peer.protocols,
+							routing: peer.routing
+						};
+					} catch (err) {
+						this.log.error("could not load multiaddrs for peer %p - %e", peer.id, err);
+						return null;
+					}
+				}, {
+					peerId: peer.id,
+					signal: options.signal
+				}).catch((err) => {
+					this.log.error("could not load multiaddrs for peer %p - %e", peer.id, err);
+				});
+				continue;
+			}
+			foundProviders++;
+			yield peer;
+		}
+		this.log("findProviders finished, found %d providers for %c", foundProviders, key);
+	}
+	/**
+	* Iterates over all content routers in parallel to notify it is
+	* a provider of the given key
+	*/
+	async provide(key, options = {}) {
+		if (this.routers.length === 0) throw new NoRoutersAvailableError("No content routers available");
+		await Promise.all(supports(this.routers, "provide").map(async (router) => {
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:provide:start", {
+				routing: router.name,
+				cid: key
+			}));
+			await router.provide(key, options);
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:provide:end", {
+				routing: router.name,
+				cid: key
+			}));
+		}));
+	}
+	async cancelReprovide(key, options = {}) {
+		await Promise.all(supports(this.routers, "cancelReprovide").map(async (router) => {
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:cancel-reprovide:start", {
+				routing: router.name,
+				cid: key
+			}));
+			await router.cancelReprovide(key, options);
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:cancel-reprovide:end", {
+				routing: router.name,
+				cid: key
+			}));
+		}));
+	}
+	/**
+	* Store the given key/value pair in the available content routings
+	*/
+	async put(key, value, options) {
+		await Promise.all(supports(this.routers, "put").map(async (router) => {
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:put:start", {
+				routing: router.name,
+				key,
+				value
+			}));
+			await router.put(key, value, options);
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:put:end", {
+				routing: router.name,
+				key,
+				value
+			}));
+		}));
+	}
+	/**
+	* Get the value to the given key. The first value offered by any configured
+	* router will be returned.
+	*/
+	async get(key, options) {
+		const errors = [];
+		let result;
+		try {
+			result = await Promise.any(supports(this.routers, "get").map(async (router) => {
+				options?.onProgress?.(new CustomProgressEvent("helia:routing:get:start", {
+					routing: router.name,
+					key
+				}));
+				try {
+					return await router.get(key, options);
+				} catch (err) {
+					this.log("router %s failed with %e", router, err);
+					errors.push(err);
+				} finally {
+					options?.onProgress?.(new CustomProgressEvent("helia:routing:get:end", {
+						routing: router.name,
+						key
+					}));
+				}
+			}));
+		} catch {}
+		if (result == null) throw new GetFailedError(errors, `Failed to get value key ${toString$2(key, "base58btc")}`);
+		return result;
+	}
+	/**
+	* Iterates over all peer routers in parallel to find the given peer
+	*/
+	async findPeer(id, options) {
+		if (this.routers.length === 0) throw new NoRoutersAvailableError("No peer routers available");
+		const self = this;
+		const source = merge(...supports(this.routers, "findPeer").map((router) => (async function* () {
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:find-peer:start", {
+				routing: router.name,
+				peerId: id
+			}));
+			try {
+				yield await router.findPeer(id, options);
+			} catch (err) {
+				self.log.error(err);
+			} finally {
+				options?.onProgress?.(new CustomProgressEvent("helia:routing:find-peer:end", {
+					routing: router.name,
+					peerId: id
+				}));
+			}
+		})()));
+		for await (const peer of source) {
+			if (peer == null) continue;
+			return peer;
+		}
+		throw new NotFoundError$2("Could not find peer in routing");
+	}
+	/**
+	* Attempt to find the closest peers on the network to the given key
+	*/
+	async *getClosestPeers(key, options = {}) {
+		if (this.routers.length === 0) throw new NoRoutersAvailableError("No peer routers available");
+		for await (const peer of merge(...supports(this.routers, "getClosestPeers").map(async function* (router) {
+			options?.onProgress?.(new CustomProgressEvent("helia:routing:get-closest-peers:start", {
+				routing: router.name,
+				key
+			}));
+			try {
+				yield* router.getClosestPeers(key, options);
+			} finally {
+				options?.onProgress?.(new CustomProgressEvent("helia:routing:get-closest-peers:end", {
+					routing: router.name,
+					key
+				}));
+			}
+		}))) {
+			if (peer == null) continue;
+			yield peer;
+		}
+	}
+};
+function supports(routers, key) {
+	return routers.filter((router) => router[key] != null);
+}
+//#endregion
+//#region node_modules/.pnpm/abort-error@1.0.2/node_modules/abort-error/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* A simple error class and options interface that seems to get copied from
+* project to project.
+*
+* @example Using AbortError
+*
+* ```JavaScript
+* import { AbortError } from 'abort-error'
+*
+* // a promise that will be settled later
+* const deferred = Promise.withResolvers()
+*
+* const signal = AbortSignal.timeout(1000)
+* signal.addEventListener('abort', () => {
+*   deferred.reject(new AbortError())
+* })
+* ```
+*
+* @example Using AbortOptions
+*
+* ```TypeScript
+* import type { AbortOptions } from 'abort-error'
+*
+* async function myFunction (options?: AbortOptions) {
+*   return fetch('https://example.com', {
+*     signal: options?.signal
+*   })
+* }
+* ```
+*/
+var AbortError$1 = class extends Error {
+	static name = "AbortError";
+	name = "AbortError";
+	constructor(message = "The operation was aborted", ...rest) {
+		super(message, ...rest);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/race-event@1.6.1/node_modules/race-event/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Race an event against an AbortSignal, taking care to remove any event
+* listeners that were added.
+*
+* @example Getting started
+*
+* ```TypeScript
+* import { raceEvent } from 'race-event'
+*
+* const controller = new AbortController()
+* const emitter = new EventTarget()
+*
+* setTimeout(() => {
+*   controller.abort()
+* }, 500)
+*
+* setTimeout(() => {
+*   // too late
+*   emitter.dispatchEvent(new CustomEvent('event'))
+* }, 1000)
+*
+* // throws an AbortError
+* const resolve = await raceEvent(emitter, 'event', controller.signal)
+* ```
+*
+* @example Aborting the promise with an error event
+*
+* ```TypeScript
+* import { raceEvent } from 'race-event'
+*
+* const emitter = new EventTarget()
+*
+* setTimeout(() => {
+*   emitter.dispatchEvent(new CustomEvent('failure', {
+*     detail: new Error('Oh no!')
+*   }))
+* }, 1000)
+*
+* // throws 'Oh no!' error
+* const resolve = await raceEvent(emitter, 'success', AbortSignal.timeout(5000), {
+*   errorEvent: 'failure'
+* })
+* ```
+*
+* @example Customising the thrown AbortError
+*
+* The error message and `.code` property of the thrown `AbortError` can be
+* specified by passing options:
+*
+* ```TypeScript
+* import { raceEvent } from 'race-event'
+*
+* const controller = new AbortController()
+* const emitter = new EventTarget()
+*
+* setTimeout(() => {
+*   controller.abort()
+* }, 500)
+*
+* // throws a Error: Oh no!
+* const resolve = await raceEvent(emitter, 'event', controller.signal, {
+*   errorMessage: 'Oh no!',
+*   errorCode: 'ERR_OH_NO'
+* })
+* ```
+*
+* @example Only resolving on specific events
+*
+* Where multiple events with the same type are emitted, a `filter` function can
+* be passed to only resolve on one of them:
+*
+* ```TypeScript
+* import { raceEvent } from 'race-event'
+*
+* const controller = new AbortController()
+* const emitter = new EventTarget()
+*
+* // throws a Error: Oh no!
+* const resolve = await raceEvent(emitter, 'event', controller.signal, {
+*   filter: (evt: Event) => {
+*     return evt.detail.foo === 'bar'
+*   }
+* })
+* ```
+*
+* @example Terminating early by throwing from the filter
+*
+* You can cause listening for the event to cease and all event listeners to be
+* removed by throwing from the filter:
+*
+* ```TypeScript
+* import { raceEvent } from 'race-event'
+*
+* const controller = new AbortController()
+* const emitter = new EventTarget()
+*
+* // throws Error: Cannot continue
+* const resolve = await raceEvent(emitter, 'event', controller.signal, {
+*   filter: (evt) => {
+*     if (...reasons) {
+*       throw new Error('Cannot continue')
+*     }
+*
+*     return true
+*   }
+* })
+* ```
+*/
+/**
+* Race a promise against an abort signal
+*/
+async function raceEvent(emitter, eventName, signal, opts) {
+	const error = new AbortError$1(opts?.errorMessage);
+	if (opts?.errorCode != null) error.code = opts.errorCode;
+	const errorEvent = opts?.errorEvent ?? "error";
+	if (signal?.aborted === true) return Promise.reject(error);
+	return new Promise((resolve, reject) => {
+		function removeListeners() {
+			removeListener(signal, "abort", abortListener);
+			removeListener(emitter, eventName, eventListener);
+			removeListener(emitter, errorEvent, errorEventListener);
+		}
+		const eventListener = (evt) => {
+			try {
+				if (opts?.filter?.(evt) === false) return;
+			} catch (err) {
+				removeListeners();
+				reject(err);
+				return;
+			}
+			removeListeners();
+			resolve(evt);
+		};
+		const errorEventListener = (evt) => {
+			removeListeners();
+			if (evt instanceof Error) {
+				reject(evt);
+				return;
+			}
+			reject(evt.detail ?? opts?.error ?? /* @__PURE__ */ new Error(`The "${opts?.errorEvent}" event was emitted but the event had no '.detail' field. Pass an 'error' option to race-event to change this message.`));
+		};
+		const abortListener = () => {
+			removeListeners();
+			reject(error);
+		};
+		addListener(signal, "abort", abortListener);
+		addListener(emitter, eventName, eventListener);
+		addListener(emitter, errorEvent, errorEventListener);
+	});
+}
+function addListener(emitter, event, listener) {
+	if (emitter == null) return;
+	if (isEventTarget(emitter)) emitter.addEventListener(event, listener);
+	else emitter.addListener(event, listener);
+}
+function removeListener(emitter, event, listener) {
+	if (emitter == null) return;
+	if (isEventTarget(emitter)) emitter.removeEventListener(event, listener);
+	else emitter.removeListener(event, listener);
+}
+function isEventTarget(emitter) {
+	return typeof emitter.addEventListener === "function" && typeof emitter.removeEventListener === "function";
+}
+//#endregion
+//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/errors.js
+var QueueFullError = class extends Error {
+	static name = "QueueFullError";
+	constructor(message = "The queue was full") {
+		super(message);
+		this.name = "QueueFullError";
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/recipient.js
+var JobRecipient = class {
+	deferred;
+	signal;
+	constructor(signal) {
+		this.signal = signal;
+		this.deferred = Promise.withResolvers();
+		this.onAbort = this.onAbort.bind(this);
+		this.signal?.addEventListener("abort", this.onAbort);
+	}
+	onAbort() {
+		this.deferred.reject(this.signal?.reason ?? new AbortError$1());
+	}
+	cleanup() {
+		this.signal?.removeEventListener("abort", this.onAbort);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/job.js
+/**
+* Returns a random string
+*/
+function randomId() {
+	return `${parseInt(String(Math.random() * 1e9), 10).toString()}${Date.now()}`;
+}
+var Job = class {
+	id;
+	fn;
+	options;
+	recipients;
+	status;
+	timeline;
+	controller;
+	constructor(fn, options) {
+		this.id = randomId();
+		this.status = "queued";
+		this.fn = fn;
+		this.options = options;
+		this.recipients = [];
+		this.timeline = { created: Date.now() };
+		this.controller = new AbortController();
+		setMaxListeners$1(Infinity, this.controller.signal);
+		this.onAbort = this.onAbort.bind(this);
+	}
+	abort(err) {
+		this.controller.abort(err);
+	}
+	onAbort() {
+		if (this.recipients.reduce((acc, curr) => {
+			return acc && curr.signal?.aborted === true;
+		}, true)) {
+			this.controller.abort(new AbortError$1());
+			this.cleanup();
+		}
+	}
+	async join(options = {}) {
+		const recipient = new JobRecipient(options.signal);
+		this.recipients.push(recipient);
+		options.signal?.addEventListener("abort", this.onAbort);
+		return recipient.deferred.promise;
+	}
+	async run() {
+		this.status = "running";
+		this.timeline.started = Date.now();
+		try {
+			this.controller.signal.throwIfAborted();
+			const result = await raceSignal(this.fn({
+				...this.options ?? {},
+				signal: this.controller.signal
+			}), this.controller.signal);
+			this.recipients.forEach((recipient) => {
+				recipient.deferred.resolve(result);
+			});
+			this.status = "complete";
+		} catch (err) {
+			this.recipients.forEach((recipient) => {
+				recipient.deferred.reject(err);
+			});
+			this.status = "errored";
+		} finally {
+			this.timeline.finished = Date.now();
+			this.cleanup();
+		}
+	}
+	cleanup() {
+		this.recipients.forEach((recipient) => {
+			recipient.cleanup();
+			recipient.signal?.removeEventListener("abort", this.onAbort);
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/utils.js
+/**
+* Returns a function wrapper that will only call the passed function once
+*
+* Important - the passed function should not throw or reject
+*/
+function debounce(func, wait) {
+	let timeout;
+	const output = function() {
+		const later = function() {
+			timeout = void 0;
+			func();
+		};
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+	};
+	output.start = () => {};
+	output.stop = () => {
+		clearTimeout(timeout);
+	};
+	return output;
+}
+//#endregion
+//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Based on `p-queue` but with access to the underlying queue, aborting a task
+* removes it from the queue and you can iterate over the queue results.
+*
+* @example
+*
+* ```ts
+* import all from 'it-all'
+* import { Queue } from 'it-queue'
+*
+* const queue = new Queue({
+*   concurrency: Infinity
+* })
+* void queue.add(async () => {
+*   return 'hello'
+* })
+* void queue.add(async () => {
+*   return 'world'
+* })
+*
+* const results = await all(queue)
+* // ['hello', 'world']
+*
+* // how many items are in the queue (includes running items)
+* console.info(queue.size)
+*
+* // how many items are running
+* console.info(queue.running)
+*
+* // how many items have not started running yet
+* console.info(queue.queued)
+* ```
+*/
+/**
+* Heavily influence by `p-queue` with the following differences:
+*
+* 1. Items remain at the head of the queue while they are running so `queue.size` includes `queue.pending` items - this is so interested parties can join the results of a queue item while it is running
+* 2. The options for a job are stored separately to the job in order for them to be modified while they are still in the queue
+* 3. If a job's abort signal fires before execution begins, it is removed from the queue immediately
+* 4. 'success'/'failure' events are emitted instead of 'error'/'complete'
+*/
+var Queue = class extends TypedEventEmitter {
+	concurrency;
+	maxSize;
+	queue;
+	pending;
+	sort;
+	autoStart;
+	constructor(init = {}) {
+		super();
+		this.concurrency = init.concurrency ?? Number.POSITIVE_INFINITY;
+		this.maxSize = init.maxSize ?? Number.POSITIVE_INFINITY;
+		this.pending = 0;
+		this.autoStart = init.autoStart ?? true;
+		this.sort = init.sort;
+		this.queue = [];
+		this.emitEmpty = debounce(this.emitEmpty.bind(this), 1);
+		this.emitIdle = debounce(this.emitIdle.bind(this), 1);
+	}
+	[Symbol.asyncIterator]() {
+		return this.toGenerator();
+	}
+	emitEmpty() {
+		if (this.size !== 0) return;
+		this.safeDispatchEvent("empty");
+	}
+	emitIdle() {
+		if (this.running !== 0) return;
+		this.safeDispatchEvent("idle");
+	}
+	tryToStartAnother() {
+		if (this.size === 0) {
+			this.emitEmpty();
+			if (this.running === 0) this.emitIdle();
+			return false;
+		}
+		if (this.pending < this.concurrency) {
+			let job;
+			for (const j of this.queue) if (j.status === "queued") {
+				job = j;
+				break;
+			}
+			if (job == null) return false;
+			this.safeDispatchEvent("active");
+			this.pending++;
+			job.run().finally(() => {
+				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
+					this.queue.splice(i, 1);
+					break;
+				}
+				this.pending--;
+				this.safeDispatchEvent("next");
+				if (this.autoStart) this.tryToStartAnother();
+			});
+			return true;
+		}
+		return false;
+	}
+	enqueue(job) {
+		this.queue.push(job);
+		if (this.sort != null) this.queue.sort(this.sort);
+	}
+	/**
+	* Start the queue. If the `autoStart` parameter passed to the constructor was
+	* not `false` this is a no-op
+	*/
+	start() {
+		if (this.autoStart !== false) return;
+		this.autoStart = true;
+		this.tryToStartAnother();
+	}
+	/**
+	* Prevent further jobs from running - call `.start` to start the queue again
+	*/
+	pause() {
+		this.autoStart = false;
+	}
+	/**
+	* Adds a sync or async task to the queue. Always returns a promise.
+	*/
+	async add(fn, options) {
+		options?.signal?.throwIfAborted();
+		if (this.size === this.maxSize) throw new QueueFullError();
+		const job = new Job(fn, options);
+		this.enqueue(job);
+		this.safeDispatchEvent("add");
+		if (this.autoStart) this.tryToStartAnother();
+		return job.join(options).then((result) => {
+			this.safeDispatchEvent("success", { detail: {
+				job,
+				result
+			} });
+			return result;
+		}).catch((err) => {
+			if (job.status === "queued") {
+				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
+					this.queue.splice(i, 1);
+					break;
+				}
+			}
+			this.safeDispatchEvent("failure", { detail: {
+				job,
+				error: err
+			} });
+			throw err;
+		});
+	}
+	/**
+	* Clear the queue
+	*/
+	clear() {
+		this.queue.splice(0, this.queue.length);
+	}
+	/**
+	* Abort all jobs in the queue and clear it
+	*/
+	abort() {
+		this.queue.forEach((job) => {
+			job.abort(new AbortError$1());
+		});
+		this.clear();
+	}
+	/**
+	* Can be called multiple times. Useful if you for example add additional items at a later time.
+	*
+	* @returns A promise that settles when the queue becomes empty.
+	*/
+	async onEmpty(options) {
+		if (this.size === 0) return;
+		await raceEvent(this, "empty", options?.signal);
+	}
+	/**
+	* @returns A promise that settles when the queue size is less than the given
+	* limit: `queue.size < limit`.
+	*
+	* If you want to avoid having the queue grow beyond a certain size you can
+	* `await queue.onSizeLessThan()` before adding a new item.
+	*
+	* Note that this only limits the number of items waiting to start. There
+	* could still be up to `concurrency` jobs already running that this call does
+	* not include in its calculation.
+	*/
+	async onSizeLessThan(limit, options) {
+		if (this.size < limit) return;
+		await raceEvent(this, "next", options?.signal, { filter: () => this.size < limit });
+	}
+	/**
+	* The difference with `.onEmpty` is that `.onIdle` guarantees that all work
+	* from the queue has finished. `.onEmpty` merely signals that the queue is
+	* empty, but it could mean that some promises haven't completed yet.
+	*
+	* @returns A promise that settles when the queue becomes empty, and all
+	* promises have completed; `queue.size === 0 && queue.pending === 0`.
+	*/
+	async onIdle(options) {
+		if (this.pending === 0 && this.size === 0) return;
+		await raceEvent(this, "idle", options?.signal);
+	}
+	/**
+	* Size of the queue including running items
+	*/
+	get size() {
+		return this.queue.length;
+	}
+	/**
+	* The number of queued items waiting to run.
+	*/
+	get queued() {
+		return this.queue.length - this.pending;
+	}
+	/**
+	* The number of items currently running.
+	*/
+	get running() {
+		return this.pending;
+	}
+	/**
+	* Returns an async generator that makes it easy to iterate over the results
+	* of jobs added to the queue.
+	*
+	* The generator will end when the queue becomes idle, that is there are no
+	* jobs running and no jobs that have yet to run.
+	*
+	* If you need to keep the queue open indefinitely, consider using it-pushable
+	* instead.
+	*/
+	async *toGenerator(options) {
+		options?.signal?.throwIfAborted();
+		const stream = pushable({ objectMode: true });
+		const cleanup = (err) => {
+			if (err != null) this.abort();
+			else this.clear();
+			stream.end(err);
+		};
+		const onQueueJobComplete = (evt) => {
+			if (evt.detail != null) stream.push(evt.detail.result);
+		};
+		const onQueueError = (evt) => {
+			cleanup(evt.detail.error);
+		};
+		const onQueueIdle = () => {
+			cleanup();
+		};
+		const onSignalAbort = () => {
+			cleanup(new AbortError$1("Queue aborted"));
+		};
+		this.addEventListener("success", onQueueJobComplete);
+		this.addEventListener("failure", onQueueError);
+		this.addEventListener("idle", onQueueIdle);
+		options?.signal?.addEventListener("abort", onSignalAbort);
+		try {
+			yield* stream;
+		} finally {
+			this.removeEventListener("success", onQueueJobComplete);
+			this.removeEventListener("failure", onQueueError);
+			this.removeEventListener("idle", onQueueIdle);
+			options?.signal?.removeEventListener("abort", onSignalAbort);
+			cleanup();
+		}
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/constants.js
+const WORKER_REQUEST_READ_LOCK = "lock:worker:request-read";
+const WORKER_ABORT_READ_LOCK_REQUEST = "lock:worker:abort-read-request";
+const WORKER_RELEASE_READ_LOCK = "lock:worker:release-read";
+const MASTER_GRANT_READ_LOCK = "lock:master:grant-read";
+const MASTER_READ_LOCK_ERROR = "lock:master:error-read";
+const WORKER_REQUEST_WRITE_LOCK = "lock:worker:request-write";
+const WORKER_ABORT_WRITE_LOCK_REQUEST = "lock:worker:abort-write-request";
+const WORKER_RELEASE_WRITE_LOCK = "lock:worker:release-write";
+const MASTER_GRANT_WRITE_LOCK = "lock:master:grant-write";
+const MASTER_WRITE_LOCK_ERROR = "lock:master:error-write";
+const WORKER_FINALIZE = "lock:worker:finalize";
+const BROADCAST_CHANNEL_NAME = "mortice";
+const defaultOptions$6 = { singleProcess: false };
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/main/channel.js
+const handleChannelWorkerLockRequest = (emitter, channel, masterEvent, abortMasterEvent, requestType, abortType, errorType, releaseType, grantType) => {
+	return (event) => {
+		if (event.data == null) return;
+		const requestEvent = {
+			type: event.data.type,
+			name: event.data.name,
+			identifier: event.data.identifier
+		};
+		if (requestEvent.type === requestType) emitter.safeDispatchEvent(masterEvent, { detail: {
+			name: requestEvent.name,
+			identifier: requestEvent.identifier,
+			handler: async () => {
+				channel.postMessage({
+					type: grantType,
+					name: requestEvent.name,
+					identifier: requestEvent.identifier
+				});
+				await new Promise((resolve) => {
+					const releaseEventListener = (event) => {
+						if (event?.data == null) return;
+						const releaseEvent = {
+							type: event.data.type,
+							name: event.data.name,
+							identifier: event.data.identifier
+						};
+						if (releaseEvent.type === releaseType && releaseEvent.identifier === requestEvent.identifier) {
+							channel.removeEventListener("message", releaseEventListener);
+							resolve();
+						}
+					};
+					channel.addEventListener("message", releaseEventListener);
+				});
+			},
+			onError: (err) => {
+				channel.postMessage({
+					type: errorType,
+					name: requestEvent.name,
+					identifier: requestEvent.identifier,
+					error: {
+						message: err.message,
+						name: err.name,
+						stack: err.stack
+					}
+				});
+			}
+		} });
+		if (requestEvent.type === abortType) emitter.safeDispatchEvent(abortMasterEvent, { detail: {
+			name: requestEvent.name,
+			identifier: requestEvent.identifier
+		} });
+		if (requestEvent.type === "lock:worker:finalize") emitter.safeDispatchEvent("finalizeRequest", { detail: { name: requestEvent.name } });
+	};
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/main/cluster.js
+const handleClusterWorkerLockRequest = (emitter, masterEvent, abortMasterEvent, requestType, abortType, errorType, releaseType, grantType) => {
+	return (worker, requestEvent) => {
+		if (requestEvent == null) return;
+		if (requestEvent.type === requestType) emitter.safeDispatchEvent(masterEvent, { detail: {
+			name: requestEvent.name,
+			identifier: requestEvent.identifier,
+			handler: async () => {
+				worker.send({
+					type: grantType,
+					name: requestEvent.name,
+					identifier: requestEvent.identifier
+				});
+				await new Promise((resolve) => {
+					const releaseEventListener = (releaseEvent) => {
+						if (releaseEvent.type === releaseType && releaseEvent.identifier === requestEvent.identifier) {
+							worker.removeListener("message", releaseEventListener);
+							resolve();
+						}
+					};
+					worker.on("message", releaseEventListener);
+				});
+			},
+			onError: (err) => {
+				worker.send({
+					type: errorType,
+					name: requestEvent.name,
+					identifier: requestEvent.identifier,
+					error: {
+						message: err.message,
+						name: err.name,
+						stack: err.stack
+					}
+				});
+			}
+		} });
+		if (requestEvent.type === abortType) emitter.safeDispatchEvent(abortMasterEvent, { detail: {
+			name: requestEvent.name,
+			identifier: requestEvent.identifier
+		} });
+		if (requestEvent.type === "lock:worker:finalize") emitter.safeDispatchEvent("finalizeRequest", { detail: { name: requestEvent.name } });
+	};
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/utils.js
+const nanoid$1 = (size = 10) => {
+	return Math.random().toString().substring(2, size + 2);
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/workers/channel.js
+var MorticeChannelWorker = class {
+	name;
+	channel;
+	constructor(name) {
+		this.name = name;
+		this.channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+	}
+	readLock(options) {
+		return this.sendRequest(WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_GRANT_READ_LOCK, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, options);
+	}
+	writeLock(options) {
+		return this.sendRequest(WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_GRANT_WRITE_LOCK, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, options);
+	}
+	finalize() {
+		this.channel.postMessage({
+			type: WORKER_FINALIZE,
+			name: this.name
+		});
+		this.channel.close();
+	}
+	async sendRequest(requestType, abortType, grantType, errorType, releaseType, options) {
+		options?.signal?.throwIfAborted();
+		const id = nanoid$1();
+		this.channel.postMessage({
+			type: requestType,
+			identifier: id,
+			name: this.name
+		});
+		return new Promise((resolve, reject) => {
+			const abortListener = () => {
+				this.channel.postMessage({
+					type: abortType,
+					identifier: id,
+					name: this.name
+				});
+			};
+			options?.signal?.addEventListener("abort", abortListener, { once: true });
+			const listener = (event) => {
+				if (event.data?.identifier !== id) return;
+				if (event.data?.type === grantType) {
+					this.channel.removeEventListener("message", listener);
+					options?.signal?.removeEventListener("abort", abortListener);
+					resolve(() => {
+						this.channel.postMessage({
+							type: releaseType,
+							identifier: id,
+							name: this.name
+						});
+					});
+				}
+				if (event.data.type === errorType) {
+					this.channel.removeEventListener("message", listener);
+					options?.signal?.removeEventListener("abort", abortListener);
+					const err = /* @__PURE__ */ new Error();
+					if (event.data.error != null) {
+						err.message = event.data.error.message;
+						err.name = event.data.error.name;
+						err.stack = event.data.error.stack;
+					}
+					reject(err);
+				}
+			};
+			this.channel.addEventListener("message", listener);
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/workers/cluster.js
+var MorticeClusterWorker = class {
+	name;
+	constructor(name) {
+		this.name = name;
+	}
+	readLock(options) {
+		return this.sendRequest(WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_GRANT_READ_LOCK, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, options);
+	}
+	writeLock(options) {
+		return this.sendRequest(WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_GRANT_WRITE_LOCK, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, options);
+	}
+	finalize() {
+		if (process.send == null) throw new Error("No send method on process - are we a cluster worker?");
+		process.send({
+			type: WORKER_FINALIZE,
+			identifier: nanoid$1(),
+			name: this.name
+		});
+	}
+	async sendRequest(requestType, abortType, grantType, errorType, releaseType, options) {
+		options?.signal?.throwIfAborted();
+		const id = nanoid$1();
+		if (process.send == null) throw new Error("No send method on process - are we a cluster worker?");
+		process.send({
+			type: requestType,
+			identifier: id,
+			name: this.name
+		});
+		return new Promise((resolve, reject) => {
+			const abortListener = () => {
+				process.send?.({
+					type: abortType,
+					identifier: id,
+					name: this.name
+				});
+			};
+			options?.signal?.addEventListener("abort", abortListener, { once: true });
+			const listener = (event) => {
+				if (event.identifier !== id) return;
+				if (event.type === grantType) {
+					process.removeListener("message", listener);
+					options?.signal?.removeEventListener("abort", abortListener);
+					resolve(() => {
+						process.send?.({
+							type: releaseType,
+							identifier: id,
+							name: this.name
+						});
+					});
+				}
+				if (event.type === errorType) {
+					process.removeListener("message", listener);
+					options?.signal?.removeEventListener("abort", abortListener);
+					const err = /* @__PURE__ */ new Error();
+					if (event.error != null) {
+						err.message = event.error.message;
+						err.name = event.error.name;
+						err.stack = event.error.stack;
+					}
+					reject(err);
+				}
+			};
+			process.on("message", listener);
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/node.js
+function isMain() {
+	if (worker.isMainThread === false) return false;
+	if (worker.isInternalThread === true) return false;
+	return cluster.isPrimary;
+}
+var node_default = (options) => {
+	options = Object.assign({}, defaultOptions$6, options);
+	if (isMain() || options.singleProcess) {
+		const emitter = new TypedEventEmitter();
+		cluster.on("message", handleClusterWorkerLockRequest(emitter, "requestReadLock", "abortReadLockRequest", WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, MASTER_GRANT_READ_LOCK));
+		cluster.on("message", handleClusterWorkerLockRequest(emitter, "requestWriteLock", "abortWriteLockRequest", WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, MASTER_GRANT_WRITE_LOCK));
+		const channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+		channel.addEventListener("message", handleChannelWorkerLockRequest(emitter, channel, "requestReadLock", "abortReadLockRequest", WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, MASTER_GRANT_READ_LOCK));
+		channel.addEventListener("message", handleChannelWorkerLockRequest(emitter, channel, "requestWriteLock", "abortWriteLockRequest", WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, MASTER_GRANT_WRITE_LOCK));
+		channel.unref?.();
+		return emitter;
+	}
+	if (cluster.isWorker) return new MorticeClusterWorker(options.name);
+	if (worker.isMainThread === false) return new MorticeChannelWorker(options.name);
+	throw new Error("Not a cluster worker or worker thread");
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/mortice.js
+const mutexes = /* @__PURE__ */ new Map();
+let implementation;
+function isMortice(obj) {
+	return typeof obj?.readLock === "function" && typeof obj?.writeLock === "function";
+}
+function getImplementation(opts) {
+	if (implementation == null) {
+		implementation = node_default(opts);
+		if (!isMortice(implementation)) {
+			const emitter = implementation;
+			emitter.addEventListener("requestReadLock", (event) => {
+				const mutexName = event.detail.name;
+				const identifier = event.detail.identifier;
+				const mutex = mutexes.get(mutexName);
+				if (mutex == null) return;
+				const abortController = new AbortController();
+				const abortListener = (event) => {
+					if (event.detail.name !== mutexName || event.detail.identifier !== identifier) return;
+					abortController.abort();
+				};
+				emitter.addEventListener("abortReadLockRequest", abortListener);
+				mutex.readLock({ signal: abortController.signal }).then(async (release) => {
+					await event.detail.handler().finally(() => {
+						release();
+					});
+				}).catch((err) => {
+					event.detail.onError(err);
+				}).finally(() => {
+					emitter.removeEventListener("abortReadLockRequest", abortListener);
+				});
+			});
+			emitter.addEventListener("requestWriteLock", (event) => {
+				const mutexName = event.detail.name;
+				const identifier = event.detail.identifier;
+				const mutex = mutexes.get(mutexName);
+				if (mutex == null) return;
+				const abortController = new AbortController();
+				const abortListener = (event) => {
+					if (event.detail.name !== mutexName || event.detail.identifier !== identifier) return;
+					abortController.abort();
+				};
+				emitter.addEventListener("abortWriteLockRequest", abortListener);
+				mutex.writeLock({ signal: abortController.signal }).then(async (release) => {
+					await event.detail.handler().finally(() => {
+						release();
+					});
+				}).catch((err) => {
+					event.detail.onError(err);
+				}).finally(() => {
+					emitter.removeEventListener("abortWriteLockRequest", abortListener);
+				});
+			});
+			emitter.addEventListener("finalizeRequest", (event) => {
+				const mutexName = event.detail.name;
+				const mutex = mutexes.get(mutexName);
+				if (mutex == null) return;
+				mutex.finalize();
+			});
+		}
+	}
+	return implementation;
+}
+async function createReleasable(queue, options) {
+	let res;
+	let rej;
+	const p = new Promise((resolve, reject) => {
+		res = resolve;
+		rej = reject;
+	});
+	const listener = () => {
+		rej(new AbortError$1());
+	};
+	options?.signal?.addEventListener("abort", listener, { once: true });
+	queue.add(async () => {
+		await new Promise((resolve) => {
+			res(() => {
+				options?.signal?.removeEventListener("abort", listener);
+				resolve();
+			});
+		});
+	}, { signal: options?.signal }).catch((err) => {
+		rej(err);
+	});
+	return p;
+}
+const createMutex = (name, options) => {
+	let mutex = mutexes.get(name);
+	if (mutex != null) return mutex;
+	const implementation = getImplementation(options);
+	if (isMortice(implementation)) {
+		mutex = implementation;
+		mutexes.set(name, mutex);
+		return mutex;
+	}
+	const masterQueue = new Queue({ concurrency: 1 });
+	let readQueue;
+	mutex = {
+		async readLock(opts) {
+			if (readQueue != null) return createReleasable(readQueue, opts);
+			readQueue = new Queue({
+				concurrency: options.concurrency,
+				autoStart: false
+			});
+			const localReadQueue = readQueue;
+			const readPromise = createReleasable(readQueue, opts);
+			masterQueue.add(async () => {
+				localReadQueue.start();
+				await localReadQueue.onIdle().then(() => {
+					if (readQueue === localReadQueue) readQueue = null;
+				});
+			});
+			return readPromise;
+		},
+		async writeLock(opts) {
+			readQueue = null;
+			return createReleasable(masterQueue, opts);
+		},
+		finalize: () => {
+			mutexes.delete(name);
+		},
+		queue: masterQueue
+	};
+	mutexes.set(name, mutex);
+	if (options.autoFinalize === true) masterQueue.addEventListener("idle", () => {
+		mutex.finalize();
+	}, { once: true });
+	return mutex;
+};
+//#endregion
+//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/index.js
+const defaultOptions$5 = {
+	name: "lock",
+	concurrency: Infinity,
+	singleProcess: false,
+	autoFinalize: false
+};
+function createMortice(options) {
+	const opts = Object.assign({}, defaultOptions$5, options);
+	return createMutex(opts.name, opts);
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/storage.js
+/**
+* BlockStorage is a hybrid blockstore that puts/gets blocks from a configured
+* blockstore (that may be on disk, s3, or something else). If the blocks are
+* not present Bitswap will be used to fetch them from network peers.
+*/
+var BlockStorage = class {
+	lock;
+	child;
+	pins;
+	routing;
+	started;
+	/**
+	* Create a new BlockStorage
+	*/
+	constructor(blockstore, pins, routing, options = {}) {
+		this.child = blockstore;
+		this.pins = pins;
+		this.routing = routing;
+		this.lock = createMortice({ singleProcess: options.holdGcLock });
+		this.started = false;
+	}
+	isStarted() {
+		return this.started;
+	}
+	async start() {
+		await start(this.child);
+		this.started = true;
+	}
+	async stop() {
+		await stop$1(this.child);
+		this.started = false;
+	}
+	unwrap() {
+		return this.child;
+	}
+	/**
+	* Put a block to the underlying datastore
+	*/
+	async put(cid, block, options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.readLock();
+		try {
+			return await this.child.put(cid, block, options);
+		} finally {
+			releaseLock();
+		}
+	}
+	/**
+	* Put a multiple blocks to the underlying datastore
+	*/
+	async *putMany(blocks, options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.readLock();
+		try {
+			yield* this.child.putMany(blocks, options);
+		} finally {
+			releaseLock();
+		}
+	}
+	/**
+	* Get a block by cid
+	*/
+	async *get(cid, options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.readLock();
+		try {
+			yield* this.child.get(cid, options);
+		} finally {
+			releaseLock();
+		}
+	}
+	/**
+	* Get multiple blocks back from an (async) iterable of cids
+	*/
+	async *getMany(cids, options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.readLock();
+		try {
+			yield* this.child.getMany(cids, options);
+		} finally {
+			releaseLock();
+		}
+	}
+	/**
+	* Delete a block from the blockstore
+	*/
+	async delete(cid, options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.writeLock();
+		try {
+			if (await this.pins.isPinned(cid)) throw new BlockPinnedError("Block was pinned - please unpin and try again");
+			await this.routing.cancelReprovide(cid, options);
+			await this.child.delete(cid, options);
+		} finally {
+			releaseLock();
+		}
+	}
+	/**
+	* Delete multiple blocks from the blockstore
+	*/
+	async *deleteMany(cids, options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.writeLock();
+		try {
+			const storage = this;
+			yield* this.child.deleteMany(async function* () {
+				for await (const cid of cids) {
+					if (await storage.pins.isPinned(cid)) throw new BlockPinnedError("Block was pinned - please unpin and try again");
+					await storage.routing.cancelReprovide(cid, options);
+					yield cid;
+				}
+			}(), options);
+		} finally {
+			releaseLock();
+		}
+	}
+	async has(cid, options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.readLock();
+		try {
+			return await this.child.has(cid, options);
+		} finally {
+			releaseLock();
+		}
+	}
+	async *getAll(options = {}) {
+		options?.signal?.throwIfAborted();
+		const releaseLock = await this.lock.readLock();
+		try {
+			yield* this.child.getAll(options);
+		} finally {
+			releaseLock();
+		}
+	}
+	createSession(root, options) {
+		options?.signal?.throwIfAborted();
+		return this.child.createSession(root, options);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/datastore-version.js
+const DS_VERSION_KEY = new Key("/version");
+const CURRENT_VERSION = 1;
+async function assertDatastoreVersionIsCurrent(datastore) {
+	if (!await datastore.has(DS_VERSION_KEY)) {
+		await datastore.put(DS_VERSION_KEY, fromString$2(`${CURRENT_VERSION}`));
+		return;
+	}
+	const str = toString$2(await datastore.get(DS_VERSION_KEY));
+	if (parseInt(str, 10) !== CURRENT_VERSION) throw new InvalidDatastoreVersionError("Invalid datastore version, a datastore migration may be required");
+}
+//#endregion
+//#region node_modules/.pnpm/@ipld+dag-cbor@9.2.7/node_modules/@ipld/dag-cbor/src/index.js
+var src_exports$2 = /* @__PURE__ */ __exportAll({
+	code: () => 113,
+	decode: () => decode$4,
+	decodeOptions: () => decodeOptions$1,
+	encode: () => encode$4,
+	encodeOptions: () => encodeOptions$1,
+	name: () => name$3,
+	toByteView: () => toByteView$2
+});
+const CID_CBOR_TAG = 42;
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
+*/
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
+*/
+/**
+* @template T
+* @param {ByteView<T> | ArrayBufferView<T>} buf
+* @returns {ByteView<T>}
+*/
+function toByteView$2(buf) {
+	if (buf instanceof ArrayBuffer) return new Uint8Array(buf, 0, buf.byteLength);
+	return buf;
+}
+/**
+* cidEncoder will receive all Objects during encode, it needs to filter out
+* anything that's not a CID and return `null` for that so it's encoded as
+* normal.
+*
+* @param {any} obj
+* @returns {cborg.Token[]|null}
+*/
+function cidEncoder$1(obj) {
+	if (obj.asCID !== obj && obj["/"] !== obj.bytes) return null;
+	const cid = CID$1.asCID(obj);
+	/* c8 ignore next 4 */
+	if (!cid) return null;
+	const bytes = new Uint8Array(cid.bytes.byteLength + 1);
+	bytes.set(cid.bytes, 1);
+	return [new Token(Type.tag, CID_CBOR_TAG), new Token(Type.bytes, bytes)];
+}
+/**
+* Intercept all `undefined` values from an object walk and reject the entire
+* object if we find one.
+*
+* @returns {null}
+*/
+function undefinedEncoder$1() {
+	throw new Error("`undefined` is not supported by the IPLD Data Model and cannot be encoded");
+}
+/**
+* Intercept all `number` values from an object walk and reject the entire
+* object if we find something that doesn't fit the IPLD data model (NaN &
+* Infinity).
+*
+* @param {number} num
+* @returns {null}
+*/
+function numberEncoder$1(num) {
+	if (Number.isNaN(num)) throw new Error("`NaN` is not supported by the IPLD Data Model and cannot be encoded");
+	if (num === Infinity || num === -Infinity) throw new Error("`Infinity` and `-Infinity` is not supported by the IPLD Data Model and cannot be encoded");
+	return null;
+}
+/**
+* @param {Map<any, any>} map
+* @returns {null}
+*/
+function mapEncoder(map) {
+	for (const key of map.keys()) if (typeof key !== "string" || key.length === 0) throw new Error("Non-string Map keys are not supported by the IPLD Data Model and cannot be encoded");
+	return null;
+}
+const _encodeOptions = {
+	float64: true,
+	typeEncoders: {
+		Map: mapEncoder,
+		Object: cidEncoder$1,
+		undefined: undefinedEncoder$1,
+		number: numberEncoder$1
+	}
+};
+const encodeOptions$1 = {
+	..._encodeOptions,
+	typeEncoders: { ..._encodeOptions.typeEncoders }
+};
+/**
+* @param {import('cborg').TagDecodeControl} decode
+* @returns {CID}
+*/
+function cidDecoder(decode) {
+	const bytes = decode();
+	if (bytes[0] !== 0) throw new Error("Invalid CID for CBOR tag 42; expected leading 0x00");
+	return CID$1.decode(bytes.subarray(1));
+}
+const _decodeOptions = {
+	allowIndefinite: false,
+	coerceUndefinedToNull: true,
+	allowNaN: false,
+	allowInfinity: false,
+	allowBigInt: true,
+	strict: true,
+	useMaps: false,
+	rejectDuplicateMapKeys: true,
+	/** @type {{ [tagNumber: number]: import('cborg').TagDecoder }} */
+	tags: { [CID_CBOR_TAG]: cidDecoder }
+};
+const decodeOptions$1 = {
+	..._decodeOptions,
+	tags: { ..._decodeOptions.tags }
+};
+const name$3 = "dag-cbor";
+/**
+* @template T
+* @param {T} node
+* @returns {ByteView<T>}
+*/
+const encode$4 = (node) => encode$10(node, _encodeOptions);
+/**
+* @template T
+* @param {ByteView<T> | ArrayBufferView<T>} data
+* @returns {T}
+*/
+const decode$4 = (data) => decode$12(toByteView$2(data), _decodeOptions);
+//#endregion
+//#region node_modules/.pnpm/cborg@5.1.1/node_modules/cborg/lib/json/encode.js
+/**
+* @typedef {import('../../interface.js').EncodeOptions} EncodeOptions
+* @typedef {import('../../interface.js').ByteWriter} ByteWriter
+* @typedef {import('../token.js').Token} Token
+*/
+var JSONEncoder = class extends Array {
+	constructor() {
+		super();
+		/** @type {{type:Type,elements:number}[]} */
+		this.inRecursive = [];
+	}
+	/**
+	* @param {ByteWriter} buf
+	*/
+	prefix(buf) {
+		const recurs = this.inRecursive[this.inRecursive.length - 1];
+		if (recurs) {
+			if (Type.equals(recurs.type, Type.array)) {
+				recurs.elements++;
+				if (recurs.elements !== 1) buf.push([44]);
+			}
+			if (Type.equals(recurs.type, Type.map)) {
+				recurs.elements++;
+				if (recurs.elements !== 1) if (recurs.elements % 2 === 1) buf.push([44]);
+				else buf.push([58]);
+			}
+		}
+	}
+	/**
+	* @param {ByteWriter} buf
+	* @param {Token} token
+	*/
+	[Type.uint.major](buf, token) {
+		this.prefix(buf);
+		const is = String(token.value);
+		const isa = [];
+		for (let i = 0; i < is.length; i++) isa[i] = is.charCodeAt(i);
+		buf.push(isa);
+	}
+	/**
+	* @param {ByteWriter} buf
+	* @param {Token} token
+	*/
+	[Type.negint.major](buf, token) {
+		this[Type.uint.major](buf, token);
+	}
+	/**
+	* @param {ByteWriter} _buf
+	* @param {Token} _token
+	*/
+	[Type.bytes.major](_buf, _token) {
+		throw new Error(`${encodeErrPrefix} unsupported type: Uint8Array`);
+	}
+	/**
+	* @param {ByteWriter} buf
+	* @param {Token} token
+	*/
+	[Type.string.major](buf, token) {
+		this.prefix(buf);
+		const byts = fromString$1(JSON.stringify(token.value));
+		buf.push(byts.length > 32 ? asU8A(byts) : byts);
+	}
+	/**
+	* @param {ByteWriter} buf
+	* @param {Token} _token
+	*/
+	[Type.array.major](buf, _token) {
+		this.prefix(buf);
+		this.inRecursive.push({
+			type: Type.array,
+			elements: 0
+		});
+		buf.push([91]);
+	}
+	/**
+	* @param {ByteWriter} buf
+	* @param {Token} _token
+	*/
+	[Type.map.major](buf, _token) {
+		this.prefix(buf);
+		this.inRecursive.push({
+			type: Type.map,
+			elements: 0
+		});
+		buf.push([123]);
+	}
+	/**
+	* @param {ByteWriter} _buf
+	* @param {Token} _token
+	*/
+	[Type.tag.major](_buf, _token) {}
+	/**
+	* @param {ByteWriter} buf
+	* @param {Token} token
+	*/
+	[Type.float.major](buf, token) {
+		if (token.type.name === "break") {
+			const recurs = this.inRecursive.pop();
+			if (recurs) {
+				if (Type.equals(recurs.type, Type.array)) buf.push([93]);
+				else if (Type.equals(recurs.type, Type.map)) buf.push([125]);
+				else throw new Error("Unexpected recursive type; this should not happen!");
+				return;
+			}
+			/* c8 ignore next 2 */
+			throw new Error("Unexpected break; this should not happen!");
+		}
+		if (token.value === void 0) throw new Error(`${encodeErrPrefix} unsupported type: undefined`);
+		this.prefix(buf);
+		if (token.type.name === "true") {
+			buf.push([
+				116,
+				114,
+				117,
+				101
+			]);
+			return;
+		} else if (token.type.name === "false") {
+			buf.push([
+				102,
+				97,
+				108,
+				115,
+				101
+			]);
+			return;
+		} else if (token.type.name === "null") {
+			buf.push([
+				110,
+				117,
+				108,
+				108
+			]);
+			return;
+		}
+		const is = String(token.value);
+		const isa = [];
+		let dp = false;
+		for (let i = 0; i < is.length; i++) {
+			isa[i] = is.charCodeAt(i);
+			if (!dp && (isa[i] === 46 || isa[i] === 101 || isa[i] === 69)) dp = true;
+		}
+		if (!dp) {
+			isa.push(46);
+			isa.push(48);
+		}
+		buf.push(isa);
+	}
+};
+/**
+* @param {(Token|Token[])[]} e1
+* @param {(Token|Token[])[]} e2
+* @returns {number}
+*/
+function mapSorter(e1, e2) {
+	if (Array.isArray(e1[0]) || Array.isArray(e2[0])) throw new Error(`${encodeErrPrefix} complex map keys are not supported`);
+	const keyToken1 = e1[0];
+	const keyToken2 = e2[0];
+	if (keyToken1.type !== Type.string || keyToken2.type !== Type.string) throw new Error(`${encodeErrPrefix} non-string map keys are not supported`);
+	if (keyToken1 < keyToken2) return -1;
+	if (keyToken1 > keyToken2) return 1;
+	/* c8 ignore next 1 */
+	throw new Error(`${encodeErrPrefix} unexpected duplicate map keys, this is not supported`);
+}
+const defaultEncodeOptions = {
+	addBreakTokens: true,
+	mapSorter
+};
+/**
+* @param {any} data
+* @param {EncodeOptions} [options]
+* @returns {Uint8Array}
+*/
+function encode$3(data, options) {
+	options = Object.assign({}, defaultEncodeOptions, options);
+	return encodeCustom(data, new JSONEncoder(), options);
+}
+//#endregion
+//#region node_modules/.pnpm/cborg@5.1.1/node_modules/cborg/lib/json/decode.js
+/**
+* @typedef {import('../../interface.js').DecodeOptions} DecodeOptions
+* @typedef {import('../../interface.js').DecodeTokenizer} DecodeTokenizer
+*/
+/**
+* @implements {DecodeTokenizer}
+*/
+var Tokenizer = class {
+	/**
+	* @param {Uint8Array} data
+	* @param {DecodeOptions} options
+	*/
+	constructor(data, options = {}) {
+		this._pos = 0;
+		this.data = data;
+		this.options = options;
+		/** @type {string[]} */
+		this.modeStack = ["value"];
+		this.lastToken = "";
+	}
+	pos() {
+		return this._pos;
+	}
+	/**
+	* @returns {boolean}
+	*/
+	done() {
+		return this._pos >= this.data.length;
+	}
+	/**
+	* @returns {number}
+	*/
+	ch() {
+		return this.data[this._pos];
+	}
+	/**
+	* @returns {string}
+	*/
+	currentMode() {
+		return this.modeStack[this.modeStack.length - 1];
+	}
+	skipWhitespace() {
+		let c = this.ch();
+		while (c === 32 || c === 9 || c === 13 || c === 10) c = this.data[++this._pos];
+	}
+	/**
+	* @param {number[]} str
+	*/
+	expect(str) {
+		if (this.data.length - this._pos < str.length) throw new Error(`${decodeErrPrefix} unexpected end of input at position ${this._pos}`);
+		for (let i = 0; i < str.length; i++) if (this.data[this._pos++] !== str[i]) throw new Error(`${decodeErrPrefix} unexpected token at position ${this._pos}, expected to find '${String.fromCharCode(...str)}'`);
+	}
+	parseNumber() {
+		const startPos = this._pos;
+		let negative = false;
+		let float = false;
+		/**
+		* @param {number[]} chars
+		*/
+		const swallow = (chars) => {
+			while (!this.done()) {
+				const ch = this.ch();
+				if (chars.includes(ch)) this._pos++;
+				else break;
+			}
+		};
+		if (this.ch() === 45) {
+			negative = true;
+			this._pos++;
+		}
+		if (this.ch() === 48) {
+			this._pos++;
+			if (this.ch() === 46) {
+				this._pos++;
+				float = true;
+			} else return new Token(Type.uint, 0, this._pos - startPos);
+		}
+		swallow([
+			48,
+			49,
+			50,
+			51,
+			52,
+			53,
+			54,
+			55,
+			56,
+			57
+		]);
+		if (negative && this._pos === startPos + 1) throw new Error(`${decodeErrPrefix} unexpected token at position ${this._pos}`);
+		if (!this.done() && this.ch() === 46) {
+			if (float) throw new Error(`${decodeErrPrefix} unexpected token at position ${this._pos}`);
+			float = true;
+			this._pos++;
+			swallow([
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57
+			]);
+		}
+		if (!this.done() && (this.ch() === 101 || this.ch() === 69)) {
+			float = true;
+			this._pos++;
+			if (!this.done() && (this.ch() === 43 || this.ch() === 45)) this._pos++;
+			swallow([
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57
+			]);
+		}
+		const numStr = String.fromCharCode.apply(null, this.data.subarray(startPos, this._pos));
+		const num = parseFloat(numStr);
+		if (float) return new Token(Type.float, num, this._pos - startPos);
+		if (this.options.allowBigInt !== true || Number.isSafeInteger(num)) return new Token(num >= 0 ? Type.uint : Type.negint, num, this._pos - startPos);
+		return new Token(num >= 0 ? Type.uint : Type.negint, BigInt(numStr), this._pos - startPos);
+	}
+	/**
+	* @returns {Token}
+	*/
+	parseString() {
+		/* c8 ignore next 4 */
+		if (this.ch() !== 34) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}; this shouldn't happen`);
+		this._pos++;
+		for (let i = this._pos, l = 0; i < this.data.length && l < 65536; i++, l++) {
+			const ch = this.data[i];
+			if (ch === 92 || ch < 32 || ch >= 128) break;
+			if (ch === 34) {
+				const str = String.fromCharCode.apply(null, this.data.subarray(this._pos, i));
+				this._pos = i + 1;
+				return new Token(Type.string, str, l);
+			}
+		}
+		const startPos = this._pos;
+		const chars = [];
+		const readu4 = () => {
+			if (this._pos + 4 >= this.data.length) throw new Error(`${decodeErrPrefix} unexpected end of unicode escape sequence at position ${this._pos}`);
+			let u4 = 0;
+			for (let i = 0; i < 4; i++) {
+				let ch = this.ch();
+				if (ch >= 48 && ch <= 57) ch -= 48;
+				else if (ch >= 97 && ch <= 102) ch = ch - 97 + 10;
+				else if (ch >= 65 && ch <= 70) ch = ch - 65 + 10;
+				else throw new Error(`${decodeErrPrefix} unexpected unicode escape character at position ${this._pos}`);
+				u4 = u4 * 16 + ch;
+				this._pos++;
+			}
+			return u4;
+		};
+		const readUtf8Char = () => {
+			const firstByte = this.ch();
+			let codePoint = null;
+			/* c8 ignore next 1 */
+			let bytesPerSequence = firstByte > 239 ? 4 : firstByte > 223 ? 3 : firstByte > 191 ? 2 : 1;
+			if (this._pos + bytesPerSequence > this.data.length) throw new Error(`${decodeErrPrefix} unexpected unicode sequence at position ${this._pos}`);
+			let secondByte, thirdByte, fourthByte, tempCodePoint;
+			switch (bytesPerSequence) {
+				/* c8 ignore next 6 */
+				case 1:
+					if (firstByte < 128) codePoint = firstByte;
+					break;
+				case 2:
+					secondByte = this.data[this._pos + 1];
+					if ((secondByte & 192) === 128) {
+						tempCodePoint = (firstByte & 31) << 6 | secondByte & 63;
+						if (tempCodePoint > 127) codePoint = tempCodePoint;
+					}
+					break;
+				case 3:
+					secondByte = this.data[this._pos + 1];
+					thirdByte = this.data[this._pos + 2];
+					if ((secondByte & 192) === 128 && (thirdByte & 192) === 128) {
+						tempCodePoint = (firstByte & 15) << 12 | (secondByte & 63) << 6 | thirdByte & 63;
+						/* c8 ignore next 3 */
+						if (tempCodePoint > 2047 && (tempCodePoint < 55296 || tempCodePoint > 57343)) codePoint = tempCodePoint;
+					}
+					break;
+				case 4:
+					secondByte = this.data[this._pos + 1];
+					thirdByte = this.data[this._pos + 2];
+					fourthByte = this.data[this._pos + 3];
+					if ((secondByte & 192) === 128 && (thirdByte & 192) === 128 && (fourthByte & 192) === 128) {
+						tempCodePoint = (firstByte & 15) << 18 | (secondByte & 63) << 12 | (thirdByte & 63) << 6 | fourthByte & 63;
+						if (tempCodePoint > 65535 && tempCodePoint < 1114112) codePoint = tempCodePoint;
+					}
+			}
+			/* c8 ignore next 5 */
+			if (codePoint === null) {
+				codePoint = 65533;
+				bytesPerSequence = 1;
+			} else if (codePoint > 65535) {
+				codePoint -= 65536;
+				chars.push(codePoint >>> 10 & 1023 | 55296);
+				codePoint = 56320 | codePoint & 1023;
+			}
+			chars.push(codePoint);
+			this._pos += bytesPerSequence;
+		};
+		while (!this.done()) {
+			const ch = this.ch();
+			let ch1;
+			switch (ch) {
+				case 92:
+					this._pos++;
+					if (this.done()) throw new Error(`${decodeErrPrefix} unexpected string termination at position ${this._pos}`);
+					ch1 = this.ch();
+					this._pos++;
+					switch (ch1) {
+						case 34:
+						case 39:
+						case 92:
+						case 47:
+							chars.push(ch1);
+							break;
+						case 98:
+							chars.push(8);
+							break;
+						case 116:
+							chars.push(9);
+							break;
+						case 110:
+							chars.push(10);
+							break;
+						case 102:
+							chars.push(12);
+							break;
+						case 114:
+							chars.push(13);
+							break;
+						case 117:
+							chars.push(readu4());
+							break;
+						default: throw new Error(`${decodeErrPrefix} unexpected string escape character at position ${this._pos}`);
+					}
+					break;
+				case 34:
+					this._pos++;
+					return new Token(Type.string, decodeCodePointsArray(chars), this._pos - startPos);
+				default: if (ch < 32) throw new Error(`${decodeErrPrefix} invalid control character at position ${this._pos}`);
+				else if (ch < 128) {
+					chars.push(ch);
+					this._pos++;
+				} else readUtf8Char();
+			}
+		}
+		throw new Error(`${decodeErrPrefix} unexpected end of string at position ${this._pos}`);
+	}
+	/**
+	* @returns {Token}
+	*/
+	parseValue() {
+		switch (this.ch()) {
+			case 123:
+				this.modeStack.push("obj-start");
+				this._pos++;
+				return new Token(Type.map, Infinity, 1);
+			case 91:
+				this.modeStack.push("array-start");
+				this._pos++;
+				return new Token(Type.array, Infinity, 1);
+			case 34: return this.parseString();
+			case 110:
+				this.expect([
+					110,
+					117,
+					108,
+					108
+				]);
+				return new Token(Type.null, null, 4);
+			case 102:
+				this.expect([
+					102,
+					97,
+					108,
+					115,
+					101
+				]);
+				return new Token(Type.false, false, 5);
+			case 116:
+				this.expect([
+					116,
+					114,
+					117,
+					101
+				]);
+				return new Token(Type.true, true, 4);
+			case 45:
+			case 48:
+			case 49:
+			case 50:
+			case 51:
+			case 52:
+			case 53:
+			case 54:
+			case 55:
+			case 56:
+			case 57: return this.parseNumber();
+			default: throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}`);
+		}
+	}
+	/**
+	* @returns {Token}
+	*/
+	next() {
+		this.skipWhitespace();
+		switch (this.currentMode()) {
+			case "value":
+				this.modeStack.pop();
+				return this.parseValue();
+			case "array-value":
+				this.modeStack.pop();
+				if (this.ch() === 93) {
+					this._pos++;
+					this.skipWhitespace();
+					return new Token(Type.break, void 0, 1);
+				}
+				if (this.ch() !== 44) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}, was expecting array delimiter but found '${String.fromCharCode(this.ch())}'`);
+				this._pos++;
+				this.modeStack.push("array-value");
+				this.skipWhitespace();
+				return this.parseValue();
+			case "array-start":
+				this.modeStack.pop();
+				if (this.ch() === 93) {
+					this._pos++;
+					this.skipWhitespace();
+					return new Token(Type.break, void 0, 1);
+				}
+				this.modeStack.push("array-value");
+				this.skipWhitespace();
+				return this.parseValue();
+			case "obj-key":
+				if (this.ch() === 125) {
+					this.modeStack.pop();
+					this._pos++;
+					this.skipWhitespace();
+					return new Token(Type.break, void 0, 1);
+				}
+				if (this.ch() !== 44) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}, was expecting object delimiter but found '${String.fromCharCode(this.ch())}'`);
+				this._pos++;
+				this.skipWhitespace();
+			case "obj-start": {
+				this.modeStack.pop();
+				if (this.ch() === 125) {
+					this._pos++;
+					this.skipWhitespace();
+					return new Token(Type.break, void 0, 1);
+				}
+				const token = this.parseString();
+				this.skipWhitespace();
+				if (this.ch() !== 58) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}, was expecting key/value delimiter ':' but found '${String.fromCharCode(this.ch())}'`);
+				this._pos++;
+				this.modeStack.push("obj-value");
+				return token;
+			}
+			case "obj-value":
+				this.modeStack.pop();
+				this.modeStack.push("obj-key");
+				this.skipWhitespace();
+				return this.parseValue();
+			/* c8 ignore next 2 */
+			default: throw new Error(`${decodeErrPrefix} unexpected parse state at position ${this._pos}; this shouldn't happen`);
+		}
+	}
+};
+/**
+* @param {Uint8Array} data
+* @param {DecodeOptions} [options]
+* @returns {any}
+*/
+function decode$3(data, options) {
+	options = Object.assign({ tokenizer: new Tokenizer(data, options) }, options);
+	return decode$12(data, options);
+}
+//#endregion
+//#region node_modules/.pnpm/@ipld+dag-json@10.2.9/node_modules/@ipld/dag-json/src/index.js
+var src_exports$1 = /* @__PURE__ */ __exportAll({
+	code: () => 297,
+	decode: () => decode$2,
+	encode: () => encode$2,
+	format: () => format,
+	name: () => name$2,
+	parse: () => parse$1,
+	stringify: () => format
+});
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
+*/
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
+*/
+/**
+* @template T
+* @typedef {import('multiformats').ToString<T>} ToString
+*/
+/**
+* @typedef {import('cborg/interface').DecodeTokenizer} DecodeTokenizer
+*/
+/**
+* @template T
+* @param {ByteView<T> | ArrayBufferView<T>} buf
+* @returns {ByteView<T>}
+*/
+function toByteView$1(buf) {
+	if (buf instanceof ArrayBuffer) return new Uint8Array(buf, 0, buf.byteLength);
+	return buf;
+}
+/**
+* cidEncoder will receive all Objects during encode, it needs to filter out
+* anything that's not a CID and return `null` for that so it's encoded as
+* normal. Encoding a CID means replacing it with a `{"/":"<CidString>}`
+* object as per the DAG-JSON spec.
+*
+* @param {any} obj
+* @returns {Token[]|null}
+*/
+function cidEncoder(obj) {
+	if (obj.asCID !== obj && obj["/"] !== obj.bytes) return null;
+	const cid = CID$1.asCID(obj);
+	/* c8 ignore next 4 */
+	if (!cid) return null;
+	const cidString = cid.toString();
+	return [
+		new Token(Type.map, Infinity, 1),
+		new Token(Type.string, "/", 1),
+		new Token(Type.string, cidString, cidString.length),
+		new Token(Type.break, void 0, 1)
+	];
+}
+/**
+* bytesEncoder will receive all Uint8Arrays (and friends) during encode, it
+* needs to replace it with a `{"/":{"bytes":"Base64ByteString"}}` object as
+* per the DAG-JSON spec.
+*
+* @param {Uint8Array} bytes
+* @returns {Token[]|null}
+*/
+function bytesEncoder(bytes) {
+	const bytesString = base64.encode(bytes).slice(1);
+	return [
+		new Token(Type.map, Infinity, 1),
+		new Token(Type.string, "/", 1),
+		new Token(Type.map, Infinity, 1),
+		new Token(Type.string, "bytes", 5),
+		new Token(Type.string, bytesString, bytesString.length),
+		new Token(Type.break, void 0, 1),
+		new Token(Type.break, void 0, 1)
+	];
+}
+/**
+* taBytesEncoder wraps bytesEncoder() but for the more exotic typed arrays so
+* that we access the underlying ArrayBuffer data
+*
+* @param {Int8Array|Uint16Array|Int16Array|Uint32Array|Int32Array|Float32Array|Float64Array|Uint8ClampedArray|BigInt64Array|BigUint64Array} obj
+* @returns {Token[]|null}
+*/
+function taBytesEncoder(obj) {
+	return bytesEncoder(new Uint8Array(obj.buffer, obj.byteOffset, obj.byteLength));
+}
+/**
+* abBytesEncoder wraps bytesEncoder() but for plain ArrayBuffers
+*
+* @param {ArrayBuffer} ab
+* @returns {Token[]|null}
+*/
+function abBytesEncoder(ab) {
+	return bytesEncoder(new Uint8Array(ab));
+}
+/**
+* Intercept all `undefined` values from an object walk and reject the entire
+* object if we find one.
+*
+* @returns {null}
+*/
+function undefinedEncoder() {
+	throw new Error("`undefined` is not supported by the IPLD Data Model and cannot be encoded");
+}
+/**
+* Intercept all `number` values from an object walk and reject the entire
+* object if we find something that doesn't fit the IPLD data model (NaN &
+* Infinity).
+*
+* @param {number} num
+* @returns {null}
+*/
+function numberEncoder(num) {
+	if (Number.isNaN(num)) throw new Error("`NaN` is not supported by the IPLD Data Model and cannot be encoded");
+	if (num === Infinity || num === -Infinity) throw new Error("`Infinity` and `-Infinity` is not supported by the IPLD Data Model and cannot be encoded");
+	return null;
+}
+const encodeOptions = { typeEncoders: {
+	Object: cidEncoder,
+	Buffer: bytesEncoder,
+	Uint8Array: bytesEncoder,
+	Int8Array: taBytesEncoder,
+	Uint16Array: taBytesEncoder,
+	Int16Array: taBytesEncoder,
+	Uint32Array: taBytesEncoder,
+	Int32Array: taBytesEncoder,
+	Float32Array: taBytesEncoder,
+	Float64Array: taBytesEncoder,
+	Uint8ClampedArray: taBytesEncoder,
+	BigInt64Array: taBytesEncoder,
+	BigUint64Array: taBytesEncoder,
+	DataView: taBytesEncoder,
+	ArrayBuffer: abBytesEncoder,
+	undefined: undefinedEncoder,
+	number: numberEncoder
+} };
+/**
+* @implements {DecodeTokenizer}
+*/
+var DagJsonTokenizer = class extends Tokenizer {
+	/**
+	* @param {Uint8Array} data
+	* @param {object} [options]
+	*/
+	constructor(data, options) {
+		super(data, options);
+		/** @type {Token[]} */
+		this.tokenBuffer = [];
+	}
+	/**
+	* @returns {boolean}
+	*/
+	done() {
+		return this.tokenBuffer.length === 0 && super.done();
+	}
+	/**
+	* @returns {Token}
+	*/
+	_next() {
+		if (this.tokenBuffer.length > 0) return this.tokenBuffer.pop();
+		return super.next();
+	}
+	/**
+	* Implements rules outlined in https://github.com/ipld/specs/pull/356
+	*
+	* @returns {Token}
+	*/
+	next() {
+		const token = this._next();
+		if (Type.equals(token.type, Type.map)) {
+			const keyToken = this._next();
+			if (Type.equals(keyToken.type, Type.string) && keyToken.value === "/") {
+				const valueToken = this._next();
+				if (Type.equals(valueToken.type, Type.string)) {
+					const breakToken = this._next();
+					if (!Type.equals(breakToken.type, Type.break)) throw new Error("Invalid encoded CID form");
+					this.tokenBuffer.push(valueToken);
+					return new Token(Type.tag, 42, 0);
+				}
+				if (Type.equals(valueToken.type, Type.map)) {
+					const innerKeyToken = this._next();
+					if (Type.equals(innerKeyToken.type, Type.string) && innerKeyToken.value === "bytes") {
+						const innerValueToken = this._next();
+						if (Type.equals(innerValueToken.type, Type.string)) {
+							for (let i = 0; i < 2; i++) {
+								const breakToken = this._next();
+								if (!Type.equals(breakToken.type, Type.break)) throw new Error("Invalid encoded Bytes form");
+							}
+							const bytes = base64.decode(`m${innerValueToken.value}`);
+							return new Token(Type.bytes, bytes, innerValueToken.value.length);
+						}
+						this.tokenBuffer.push(innerValueToken);
+					}
+					this.tokenBuffer.push(innerKeyToken);
+				}
+				this.tokenBuffer.push(valueToken);
+			}
+			this.tokenBuffer.push(keyToken);
+		}
+		return token;
+	}
+};
+const decodeOptions = {
+	allowIndefinite: false,
+	allowUndefined: false,
+	allowNaN: false,
+	allowInfinity: false,
+	allowBigInt: true,
+	strict: true,
+	useMaps: false,
+	rejectDuplicateMapKeys: true,
+	/** @type {{ [tagNumber: number]: import('cborg').TagDecoder }} */
+	tags: { 42: (decode) => CID$1.parse(decode()) }
+};
+const name$2 = "dag-json";
+/**
+* @template T
+* @param {T} node
+* @returns {ByteView<T>}
+*/
+const encode$2 = (node) => encode$3(node, encodeOptions);
+/**
+* @template T
+* @param {ByteView<T> | ArrayBufferView<T>} data
+* @returns {T}
+*/
+const decode$2 = (data) => {
+	const buf = toByteView$1(data);
+	return decode$3(buf, Object.assign(decodeOptions, { tokenizer: new DagJsonTokenizer(buf, decodeOptions) }));
+};
+/**
+* @template T
+* @param {T} node
+* @returns {ToString<T>}
+*/
+const format = (node) => utf8Decoder.decode(encode$2(node));
+const utf8Decoder = new TextDecoder();
+/**
+* @template T
+* @param {ToString<T>} data
+* @returns {T}
+*/
+const parse$1 = (data) => decode$2(utf8Encoder.encode(data));
+const utf8Encoder = new TextEncoder();
+//#endregion
+//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/pb-decode.js
+const textDecoder = new TextDecoder();
+/**
+* @typedef {import('./interface.js').RawPBLink} RawPBLink
+*/
+/**
+* @typedef {import('./interface.js').RawPBNode} RawPBNode
+*/
+/**
+* @param {Uint8Array} bytes
+* @param {number} offset
+* @returns {[number, number]}
+*/
+function decodeVarint(bytes, offset) {
+	let v = 0;
+	for (let shift = 0;; shift += 7) {
+		/* c8 ignore next 3 */
+		if (shift >= 64) throw new Error("protobuf: varint overflow");
+		/* c8 ignore next 3 */
+		if (offset >= bytes.length) throw new Error("protobuf: unexpected end of data");
+		const b = bytes[offset++];
+		v += shift < 28 ? (b & 127) << shift : (b & 127) * 2 ** shift;
+		if (b < 128) break;
+	}
+	return [v, offset];
+}
+/**
+* @param {Uint8Array} bytes
+* @param {number} offset
+* @returns {[Uint8Array, number]}
+*/
+function decodeBytes(bytes, offset) {
+	let byteLen;
+	[byteLen, offset] = decodeVarint(bytes, offset);
+	const postOffset = offset + byteLen;
+	/* c8 ignore next 3 */
+	if (byteLen < 0 || postOffset < 0) throw new Error("protobuf: invalid length");
+	/* c8 ignore next 3 */
+	if (postOffset > bytes.length) throw new Error("protobuf: unexpected end of data");
+	return [bytes.subarray(offset, postOffset), postOffset];
+}
+/**
+* @param {Uint8Array} bytes
+* @param {number} index
+* @returns {[number, number, number]}
+*/
+function decodeKey(bytes, index) {
+	let wire;
+	[wire, index] = decodeVarint(bytes, index);
+	return [
+		wire & 7,
+		wire >> 3,
+		index
+	];
+}
+/**
+* @param {Uint8Array} bytes
+* @returns {RawPBLink}
+*/
+function decodeLink(bytes) {
+	/** @type {RawPBLink} */
+	const link = {};
+	const l = bytes.length;
+	let index = 0;
+	while (index < l) {
+		let wireType, fieldNum;
+		[wireType, fieldNum, index] = decodeKey(bytes, index);
+		if (fieldNum === 1) {
+			if (link.Hash) throw new Error("protobuf: (PBLink) duplicate Hash section");
+			if (wireType !== 2) throw new Error(`protobuf: (PBLink) wrong wireType (${wireType}) for Hash`);
+			if (link.Name !== void 0) throw new Error("protobuf: (PBLink) invalid order, found Name before Hash");
+			if (link.Tsize !== void 0) throw new Error("protobuf: (PBLink) invalid order, found Tsize before Hash");
+			[link.Hash, index] = decodeBytes(bytes, index);
+		} else if (fieldNum === 2) {
+			if (link.Name !== void 0) throw new Error("protobuf: (PBLink) duplicate Name section");
+			if (wireType !== 2) throw new Error(`protobuf: (PBLink) wrong wireType (${wireType}) for Name`);
+			if (link.Tsize !== void 0) throw new Error("protobuf: (PBLink) invalid order, found Tsize before Name");
+			let byts;
+			[byts, index] = decodeBytes(bytes, index);
+			link.Name = textDecoder.decode(byts);
+		} else if (fieldNum === 3) {
+			if (link.Tsize !== void 0) throw new Error("protobuf: (PBLink) duplicate Tsize section");
+			if (wireType !== 0) throw new Error(`protobuf: (PBLink) wrong wireType (${wireType}) for Tsize`);
+			[link.Tsize, index] = decodeVarint(bytes, index);
+		} else throw new Error(`protobuf: (PBLink) invalid fieldNumber, expected 1, 2 or 3, got ${fieldNum}`);
+	}
+	/* c8 ignore next 3 */
+	if (index > l) throw new Error("protobuf: (PBLink) unexpected end of data");
+	return link;
+}
+/**
+* @param {Uint8Array} bytes
+* @returns {RawPBNode}
+*/
+function decodeNode(bytes) {
+	const l = bytes.length;
+	let index = 0;
+	/** @type {RawPBLink[]|void} */
+	let links = void 0;
+	let linksBeforeData = false;
+	/** @type {Uint8Array|void} */
+	let data = void 0;
+	while (index < l) {
+		let wireType, fieldNum;
+		[wireType, fieldNum, index] = decodeKey(bytes, index);
+		if (wireType !== 2) throw new Error(`protobuf: (PBNode) invalid wireType, expected 2, got ${wireType}`);
+		if (fieldNum === 1) {
+			if (data) throw new Error("protobuf: (PBNode) duplicate Data section");
+			[data, index] = decodeBytes(bytes, index);
+			if (links) linksBeforeData = true;
+		} else if (fieldNum === 2) {
+			if (linksBeforeData) throw new Error("protobuf: (PBNode) duplicate Links section");
+			else if (!links) links = [];
+			let byts;
+			[byts, index] = decodeBytes(bytes, index);
+			links.push(decodeLink(byts));
+		} else throw new Error(`protobuf: (PBNode) invalid fieldNumber, expected 1 or 2, got ${fieldNum}`);
+	}
+	/* c8 ignore next 3 */
+	if (index > l) throw new Error("protobuf: (PBNode) unexpected end of data");
+	/** @type {RawPBNode} */
+	const node = {};
+	if (data) node.Data = data;
+	node.Links = links || [];
+	return node;
+}
+//#endregion
+//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/pb-encode.js
+const textEncoder$1 = new TextEncoder();
+const maxInt32$1 = 2 ** 32;
+const maxUInt32 = 2 ** 31;
+/**
+* @typedef {import('./interface.js').RawPBLink} RawPBLink
+*/
+/**
+* @typedef {import('./interface.js').RawPBNode} RawPBNode
+*/
+/**
+* encodeLink() is passed a slice of the parent byte array that ends where this
+* link needs to end, so it packs to the right-most part of the passed `bytes`
+*
+* @param {RawPBLink} link
+* @param {Uint8Array} bytes
+* @returns {number}
+*/
+function encodeLink(link, bytes) {
+	let i = bytes.length;
+	if (typeof link.Tsize === "number") {
+		if (link.Tsize < 0) throw new Error("Tsize cannot be negative");
+		if (!Number.isSafeInteger(link.Tsize)) throw new Error("Tsize too large for encoding");
+		i = encodeVarint(bytes, i, link.Tsize) - 1;
+		bytes[i] = 24;
+	}
+	if (typeof link.Name === "string") {
+		const nameBytes = textEncoder$1.encode(link.Name);
+		i -= nameBytes.length;
+		bytes.set(nameBytes, i);
+		i = encodeVarint(bytes, i, nameBytes.length) - 1;
+		bytes[i] = 18;
+	}
+	if (link.Hash) {
+		i -= link.Hash.length;
+		bytes.set(link.Hash, i);
+		i = encodeVarint(bytes, i, link.Hash.length) - 1;
+		bytes[i] = 10;
+	}
+	return bytes.length - i;
+}
+/**
+* Encodes a PBNode into a new byte array of precisely the correct size
+*
+* @param {RawPBNode} node
+* @returns {Uint8Array}
+*/
+function encodeNode(node) {
+	const size = sizeNode(node);
+	const bytes = new Uint8Array(size);
+	let i = size;
+	if (node.Data) {
+		i -= node.Data.length;
+		bytes.set(node.Data, i);
+		i = encodeVarint(bytes, i, node.Data.length) - 1;
+		bytes[i] = 10;
+	}
+	if (node.Links) for (let index = node.Links.length - 1; index >= 0; index--) {
+		const size = encodeLink(node.Links[index], bytes.subarray(0, i));
+		i -= size;
+		i = encodeVarint(bytes, i, size) - 1;
+		bytes[i] = 18;
+	}
+	return bytes;
+}
+/**
+* work out exactly how many bytes this link takes up
+*
+* @param {RawPBLink} link
+* @returns
+*/
+function sizeLink(link) {
+	let n = 0;
+	if (link.Hash) {
+		const l = link.Hash.length;
+		n += 1 + l + sov(l);
+	}
+	if (typeof link.Name === "string") {
+		const l = textEncoder$1.encode(link.Name).length;
+		n += 1 + l + sov(l);
+	}
+	if (typeof link.Tsize === "number") n += 1 + sov(link.Tsize);
+	return n;
+}
+/**
+* Work out exactly how many bytes this node takes up
+*
+* @param {RawPBNode} node
+* @returns {number}
+*/
+function sizeNode(node) {
+	let n = 0;
+	if (node.Data) {
+		const l = node.Data.length;
+		n += 1 + l + sov(l);
+	}
+	if (node.Links) for (const link of node.Links) {
+		const l = sizeLink(link);
+		n += 1 + l + sov(l);
+	}
+	return n;
+}
+/**
+* @param {Uint8Array} bytes
+* @param {number} offset
+* @param {number} v
+* @returns {number}
+*/
+function encodeVarint(bytes, offset, v) {
+	offset -= sov(v);
+	const base = offset;
+	while (v >= maxUInt32) {
+		bytes[offset++] = v & 127 | 128;
+		v /= 128;
+	}
+	while (v >= 128) {
+		bytes[offset++] = v & 127 | 128;
+		v >>>= 7;
+	}
+	bytes[offset] = v;
+	return base;
+}
+/**
+* size of varint
+*
+* @param {number} x
+* @returns {number}
+*/
+function sov(x) {
+	if (x % 2 === 0) x++;
+	return Math.floor((len64$1(x) + 6) / 7);
+}
+/**
+* golang math/bits, how many bits does it take to represent this integer?
+*
+* @param {number} x
+* @returns {number}
+*/
+function len64$1(x) {
+	let n = 0;
+	if (x >= maxInt32$1) {
+		x = Math.floor(x / maxInt32$1);
+		n = 32;
+	}
+	if (x >= 65536) {
+		x >>>= 16;
+		n += 16;
+	}
+	if (x >= 256) {
+		x >>>= 8;
+		n += 8;
+	}
+	return n + len8tab$1[x];
+}
+const len8tab$1 = [
+	0,
+	1,
+	2,
+	2,
+	3,
+	3,
+	3,
+	3,
+	4,
+	4,
+	4,
+	4,
+	4,
+	4,
+	4,
+	4,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	5,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	7,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
+	8
+];
+//#endregion
+//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/util.js
+/**
+* @typedef {import('./interface.js').PBLink} PBLink
+* @typedef {import('./interface.js').PBNode} PBNode
+*/
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
+*/
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
+*/
+const pbNodeProperties = ["Data", "Links"];
+const pbLinkProperties = [
+	"Hash",
+	"Name",
+	"Tsize"
+];
+const textEncoder = new TextEncoder();
+/**
+* @param {PBLink} a
+* @param {PBLink} b
+* @returns {number}
+*/
+function linkComparator(a, b) {
+	if (a === b) return 0;
+	const abuf = a.Name ? textEncoder.encode(a.Name) : [];
+	const bbuf = b.Name ? textEncoder.encode(b.Name) : [];
+	let x = abuf.length;
+	let y = bbuf.length;
+	for (let i = 0, len = Math.min(x, y); i < len; ++i) if (abuf[i] !== bbuf[i]) {
+		x = abuf[i];
+		y = bbuf[i];
+		break;
+	}
+	return x < y ? -1 : y < x ? 1 : 0;
+}
+/**
+* @param {any} node
+* @param {string[]} properties
+* @returns {boolean}
+*/
+function hasOnlyProperties(node, properties) {
+	return !Object.keys(node).some((p) => !properties.includes(p));
+}
+/**
+* Converts a CID, or a PBLink-like object to a PBLink
+*
+* @param {any} link
+* @returns {PBLink}
+*/
+function asLink(link) {
+	if (typeof link.asCID === "object") {
+		const Hash = CID.asCID(link);
+		if (!Hash) throw new TypeError("Invalid DAG-PB form");
+		return { Hash };
+	}
+	if (typeof link !== "object" || Array.isArray(link)) throw new TypeError("Invalid DAG-PB form");
+	const pbl = {};
+	if (link.Hash) {
+		let cid = CID.asCID(link.Hash);
+		try {
+			if (!cid) {
+				if (typeof link.Hash === "string") cid = CID.parse(link.Hash);
+				else if (link.Hash instanceof Uint8Array) cid = CID.decode(link.Hash);
+			}
+		} catch (e) {
+			throw new TypeError(`Invalid DAG-PB form: ${e.message}`);
+		}
+		if (cid) pbl.Hash = cid;
+	}
+	if (!pbl.Hash) throw new TypeError("Invalid DAG-PB form");
+	if (typeof link.Name === "string") pbl.Name = link.Name;
+	if (typeof link.Tsize === "number") pbl.Tsize = link.Tsize;
+	return pbl;
+}
+/**
+* @param {any} node
+* @returns {PBNode}
+*/
+function prepare(node) {
+	if (node instanceof Uint8Array || typeof node === "string") node = { Data: node };
+	if (typeof node !== "object" || Array.isArray(node)) throw new TypeError("Invalid DAG-PB form");
+	/** @type {PBNode} */
+	const pbn = {};
+	if (node.Data !== void 0) if (typeof node.Data === "string") pbn.Data = textEncoder.encode(node.Data);
+	else if (node.Data instanceof Uint8Array) pbn.Data = node.Data;
+	else throw new TypeError("Invalid DAG-PB form");
+	if (node.Links !== void 0) if (Array.isArray(node.Links)) {
+		pbn.Links = node.Links.map(asLink);
+		pbn.Links.sort(linkComparator);
+	} else throw new TypeError("Invalid DAG-PB form");
+	else pbn.Links = [];
+	return pbn;
+}
+/**
+* @param {PBNode} node
+*/
+function validate$1(node) {
+	if (!node || typeof node !== "object" || Array.isArray(node) || node instanceof Uint8Array || node["/"] && node["/"] === node.bytes) throw new TypeError("Invalid DAG-PB form");
+	if (!hasOnlyProperties(node, pbNodeProperties)) throw new TypeError("Invalid DAG-PB form (extraneous properties)");
+	if (node.Data !== void 0 && !(node.Data instanceof Uint8Array)) throw new TypeError("Invalid DAG-PB form (Data must be bytes)");
+	if (!Array.isArray(node.Links)) throw new TypeError("Invalid DAG-PB form (Links must be a list)");
+	for (let i = 0; i < node.Links.length; i++) {
+		const link = node.Links[i];
+		if (!link || typeof link !== "object" || Array.isArray(link) || link instanceof Uint8Array || link["/"] && link["/"] === link.bytes) throw new TypeError("Invalid DAG-PB form (bad link)");
+		if (!hasOnlyProperties(link, pbLinkProperties)) throw new TypeError("Invalid DAG-PB form (extraneous properties on link)");
+		if (link.Hash === void 0) throw new TypeError("Invalid DAG-PB form (link must have a Hash)");
+		if (link.Hash == null || !link.Hash["/"] || link.Hash["/"] !== link.Hash.bytes) throw new TypeError("Invalid DAG-PB form (link Hash must be a CID)");
+		if (link.Name !== void 0 && typeof link.Name !== "string") throw new TypeError("Invalid DAG-PB form (link Name must be a string)");
+		if (link.Tsize !== void 0) {
+			if (typeof link.Tsize !== "number" || link.Tsize % 1 !== 0) throw new TypeError("Invalid DAG-PB form (link Tsize must be an integer)");
+			if (link.Tsize < 0) throw new TypeError("Invalid DAG-PB form (link Tsize cannot be negative)");
+		}
+		if (i > 0 && linkComparator(link, node.Links[i - 1]) === -1) throw new TypeError("Invalid DAG-PB form (links must be sorted by Name bytes)");
+	}
+}
+/**
+* @param {Uint8Array} data
+* @param {PBLink[]} [links]
+* @returns {PBNode}
+*/
+function createNode(data, links = []) {
+	return prepare({
+		Data: data,
+		Links: links
+	});
+}
+/**
+* @param {string} name
+* @param {number} size
+* @param {CID} cid
+* @returns {PBLink}
+*/
+function createLink(name, size, cid) {
+	return asLink({
+		Hash: cid,
+		Name: name,
+		Tsize: size
+	});
+}
+/**
+* @template T
+* @param {ByteView<T> | ArrayBufferView<T>} buf
+* @returns {ByteView<T>}
+*/
+function toByteView(buf) {
+	if (buf instanceof ArrayBuffer) return new Uint8Array(buf, 0, buf.byteLength);
+	return buf;
+}
+//#endregion
+//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/index.js
+var src_exports = /* @__PURE__ */ __exportAll({
+	code: () => 112,
+	createLink: () => createLink,
+	createNode: () => createNode,
+	decode: () => decode$1,
+	encode: () => encode$1,
+	name: () => name$1,
+	prepare: () => prepare,
+	validate: () => validate$1
+});
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
+*/
+/**
+* @template T
+* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
+*/
+/**
+* @typedef {import('./interface.js').PBLink} PBLink
+* @typedef {import('./interface.js').PBNode} PBNode
+*/
+const name$1 = "dag-pb";
+/**
+* @param {PBNode} node
+* @returns {ByteView<PBNode>}
+*/
+function encode$1(node) {
+	validate$1(node);
+	const pbn = {};
+	if (node.Links) pbn.Links = node.Links.map((l) => {
+		const link = {};
+		if (l.Hash) link.Hash = l.Hash.bytes;
+		if (l.Name !== void 0) link.Name = l.Name;
+		if (l.Tsize !== void 0) link.Tsize = l.Tsize;
+		return link;
+	});
+	if (node.Data) pbn.Data = node.Data;
+	return encodeNode(pbn);
+}
+/**
+* @param {ByteView<PBNode> | ArrayBufferView<PBNode>} bytes
+* @returns {PBNode}
+*/
+function decode$1(bytes) {
+	const pbn = decodeNode(toByteView(bytes));
+	const node = {};
+	if (pbn.Data) node.Data = pbn.Data;
+	if (pbn.Links) node.Links = pbn.Links.map((l) => {
+		const link = {};
+		try {
+			link.Hash = CID.decode(l.Hash);
+		} catch {}
+		if (!link.Hash) throw new Error("Invalid Hash field found in link, expected CID");
+		if (l.Name !== void 0) link.Name = l.Name;
+		if (l.Tsize !== void 0) link.Tsize = l.Tsize;
+		return link;
+	});
+	return node;
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/is-promise.js
+function isPromise$2(p) {
+	return p?.then != null;
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/get-codec.js
+function getCodec(initialCodecs = [], loadCodec) {
+	const codecs = {
+		[112]: src_exports,
+		[85]: raw_exports,
+		[113]: src_exports$2,
+		[297]: src_exports$1,
+		[512]: json_exports
+	};
+	initialCodecs.forEach((codec) => {
+		codecs[codec.code] = codec;
+	});
+	return async (code) => {
+		let codec = codecs[code];
+		if (codec == null && loadCodec != null) {
+			const res = loadCodec(code);
+			if (isPromise$2(res)) codec = await res;
+			else codec = res;
+			codecs[codec.code] = codec;
+		}
+		if (codec != null) return codec;
+		throw new UnknownCodecError(`Could not load codec for ${code}`);
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/get-hasher.js
+function getHasher(initialHashers = [], loadHasher) {
+	const hashers = {
+		[sha256$2.code]: sha256$2,
+		[sha512$2.code]: sha512$2,
+		[identity$2.code]: identity$2
+	};
+	initialHashers.forEach((hasher) => {
+		hashers[hasher.code] = hasher;
+	});
+	return async (code) => {
+		let hasher = hashers[code];
+		if (hasher == null && loadHasher != null) {
+			const res = loadHasher(code);
+			if (isPromise$2(res)) hasher = await res;
+			else hasher = res;
+			hashers[hasher.code] = hasher;
+		}
+		if (hasher != null) return hasher;
+		throw new UnknownHashAlgorithmError(`No hasher configured for multihash code 0x${code.toString(16)}, please configure one. You can look up which hash this is at https://github.com/multiformats/multicodec/blob/master/table.csv`);
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/identity.js
+const IDENTITY_CODEC$1 = 0;
+var IdentityHashDigestTooLongError = class extends Error {
+	static name = "IdentityHashDigestTooLongError";
+	name = "IdentityHashDigestTooLongError";
+};
+var IdentityBlockstore = class extends BaseBlockstore {
+	child;
+	maxDigestLength;
+	constructor(child, init) {
+		super();
+		this.child = child;
+		this.maxDigestLength = init?.maxDigestLength;
+	}
+	put(key, block, options) {
+		if (key.multihash.code === IDENTITY_CODEC$1) {
+			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
+			options?.signal?.throwIfAborted();
+			return key;
+		}
+		if (this.child == null) {
+			options?.signal?.throwIfAborted();
+			return key;
+		}
+		return this.child.put(key, block, options);
+	}
+	async *get(key, options) {
+		if (key.multihash.code === IDENTITY_CODEC$1) {
+			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
+			options?.signal?.throwIfAborted();
+			yield key.multihash.digest;
+			return;
+		}
+		if (this.child == null) {
+			options?.signal?.throwIfAborted();
+			throw new NotFoundError$3();
+		}
+		yield* this.child.get(key, options);
+	}
+	has(key, options) {
+		if (key.multihash.code === IDENTITY_CODEC$1) {
+			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
+			options?.signal?.throwIfAborted();
+			return true;
+		}
+		if (this.child == null) {
+			options?.signal?.throwIfAborted();
+			return false;
+		}
+		return this.child.has(key, options);
+	}
+	delete(key, options) {
+		if (key.code === IDENTITY_CODEC$1) {
+			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
+			options?.signal?.throwIfAborted();
+			return;
+		}
+		if (this.child != null) return this.child.delete(key, options);
+	}
+	async *getAll(options) {
+		if (this.child != null) yield* this.child.getAll(options);
+		options?.signal?.throwIfAborted();
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/it-foreach@2.1.7/node_modules/it-foreach/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Calls a function for each value in an (async)iterable.
+*
+* The function can be sync or async.
+*
+* Async functions can be awaited on so may slow down processing of the (async)iterable.
+*
+* @example
+*
+* ```javascript
+* import each from 'it-foreach'
+* import drain from 'it-drain'
+*
+* // This can also be an iterator, generator, etc
+* const values = [0, 1, 2, 3, 4]
+*
+* // prints [0, 0], [1, 1], [2, 2], [3, 3], [4, 4]
+* const arr = drain(
+*   each(values, console.info)
+* )
+* ```
+*
+* Async sources and callbacks must be awaited:
+*
+* ```javascript
+* import each from 'it-foreach'
+* import drain from 'it-drain'
+*
+* const values = async function * () {
+*   yield * [0, 1, 2, 3, 4]
+* }
+*
+* // prints [0, 0], [1, 1], [2, 2], [3, 3], [4, 4]
+* const arr = await drain(
+*   each(values(), console.info)
+* )
+* ```
+*/
+function isAsyncIterable$7(thing) {
+	return thing[Symbol.asyncIterator] != null;
+}
+function isPromise$1(thing) {
+	return thing?.then != null;
+}
+function forEach(source, fn) {
+	let index = 0;
+	if (isAsyncIterable$7(source)) return (async function* () {
+		for await (const val of source) {
+			const res = fn(val, index++);
+			if (isPromise$1(res)) await res;
+			yield val;
+		}
+	})();
+	const peekable$1 = peekable(source);
+	const { value, done } = peekable$1.next();
+	if (done === true) return function* () {}();
+	const res = fn(value, index++);
+	if (typeof res?.then === "function") return (async function* () {
+		await res;
+		yield value;
+		for (const val of peekable$1) {
+			const res = fn(val, index++);
+			if (isPromise$1(res)) await res;
+			yield val;
+		}
+	})();
+	const func = fn;
+	return (function* () {
+		yield value;
+		for (const val of peekable$1) {
+			func(val, index++);
+			yield val;
+		}
+	})();
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/storage.js
+const DEFAULT_MAX_IDENTITY_HASH_DIGEST_LENGTH = 128;
+var Storage = class {
+	child;
+	getHasher;
+	log;
+	logger;
+	blockBrokers;
+	/**
+	* Create a new BlockStorage
+	*/
+	constructor(components, init = {}) {
+		this.log = components.logger.forComponent("helia:networked-storage");
+		this.logger = components.logger;
+		this.blockBrokers = components.blockBrokers;
+		this.child = new IdentityBlockstore(components.blockstore, { maxDigestLength: init.maxIdentityHashDigestLength ?? DEFAULT_MAX_IDENTITY_HASH_DIGEST_LENGTH });
+		this.getHasher = components.getHasher;
+	}
+	/**
+	* Put a block to the underlying datastore
+	*/
+	async put(cid, block, options = {}) {
+		if (await this.child.has(cid, options)) {
+			options.onProgress?.(new CustomProgressEvent("blocks:put:duplicate", cid));
+			return cid;
+		}
+		options.onProgress?.(new CustomProgressEvent("blocks:put:providers:notify", cid));
+		await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
+		options.onProgress?.(new CustomProgressEvent("blocks:put:blockstore:put", cid));
+		return this.child.put(cid, block, options);
+	}
+	/**
+	* Put a multiple blocks to the underlying datastore
+	*/
+	async *putMany(blocks, options = {}) {
+		const notifyEach = forEach(filter(blocks, async ({ cid }) => {
+			const has = await this.child.has(cid, options);
+			if (has) options.onProgress?.(new CustomProgressEvent("blocks:put-many:duplicate", cid));
+			return !has;
+		}), async ({ cid }) => {
+			options.onProgress?.(new CustomProgressEvent("blocks:put-many:providers:notify", cid));
+			await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
+		});
+		options.onProgress?.(new CustomProgressEvent("blocks:put-many:blockstore:put-many"));
+		yield* this.child.putMany(notifyEach, options);
+	}
+	/**
+	* Get a block by cid
+	*/
+	async *get(cid, options = {}) {
+		const has = await this.child.has(cid, options);
+		const offline = options.offline === true;
+		if (!has) {
+			if (offline) throw new BlockNotFoundWhileOfflineError("The block was present in the blockstore and the node is running offline so cannot fetch it");
+			const hasher = await this.getHasher(cid.multihash.code);
+			options?.signal?.throwIfAborted();
+			options.onProgress?.(new CustomProgressEvent("blocks:get:providers:get", cid));
+			const block = await raceBlockRetrievers(cid, this.blockBrokers, hasher, {
+				...options,
+				log: this.log
+			});
+			options.onProgress?.(new CustomProgressEvent("blocks:get:blockstore:put", cid));
+			await this.child.put(cid, block, options);
+			options.onProgress?.(new CustomProgressEvent("blocks:get:providers:notify", cid));
+			await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
+			yield block;
+			return;
+		}
+		options.onProgress?.(new CustomProgressEvent("blocks:get:blockstore:get", cid));
+		yield* this.child.get(cid, options);
+	}
+	/**
+	* Get multiple blocks back from an (async) iterable of cids
+	*/
+	async *getMany(cids, options = {}) {
+		options.onProgress?.(new CustomProgressEvent("blocks:get-many:blockstore:get-many"));
+		yield* this.child.getMany(forEach(cids, async (cid) => {
+			const has = await this.child.has(cid, options);
+			const offline = options.offline === true;
+			if (!has) {
+				if (offline) throw new BlockNotFoundWhileOfflineError("The block was present in the blockstore and the node is running offline so cannot fetch it");
+				const hasher = await this.getHasher(cid.multihash.code);
+				options?.signal?.throwIfAborted();
+				options.onProgress?.(new CustomProgressEvent("blocks:get-many:providers:get", cid));
+				const block = await raceBlockRetrievers(cid, this.blockBrokers, hasher, {
+					...options,
+					log: this.log
+				});
+				options.onProgress?.(new CustomProgressEvent("blocks:get-many:blockstore:put", cid));
+				await this.child.put(cid, block, options);
+				options.onProgress?.(new CustomProgressEvent("blocks:get-many:providers:notify", cid));
+				await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
+			}
+		}));
+	}
+	/**
+	* Delete a block from the blockstore
+	*/
+	async delete(cid, options = {}) {
+		options.onProgress?.(new CustomProgressEvent("blocks:delete:blockstore:delete", cid));
+		await this.child.delete(cid, options);
+	}
+	/**
+	* Delete multiple blocks from the blockstore
+	*/
+	async *deleteMany(cids, options = {}) {
+		options.onProgress?.(new CustomProgressEvent("blocks:delete-many:blockstore:delete-many"));
+		yield* this.child.deleteMany(async function* () {
+			for await (const cid of cids) yield cid;
+		}(), options);
+	}
+	async has(cid, options = {}) {
+		return this.child.has(cid, options);
+	}
+	async *getAll(options = {}) {
+		options.onProgress?.(new CustomProgressEvent("blocks:get-all:blockstore:get-many"));
+		yield* this.child.getAll(options);
+	}
+};
+/**
+* Race block providers cancelling any pending requests once the block has been
+* found.
+*/
+async function raceBlockRetrievers(cid, blockBrokers, hasher, options) {
+	const validateFn = getCidBlockVerifierFunction(cid, hasher);
+	const controller = new AbortController();
+	const signal = anySignal([controller.signal, options.signal]);
+	setMaxListeners$1(Infinity, controller.signal, signal);
+	const retrievers = [];
+	for (const broker of blockBrokers) if (isRetrievingBlockBroker(broker)) retrievers.push(broker);
+	if (retrievers.length === 0) throw new InvalidConfigurationError(`No block brokers capable of retrieving blocks are configured, the CID ${cid} cannot be fetched from the network`);
+	try {
+		return await Promise.any(retrievers.map(async (retriever) => {
+			try {
+				let blocksWereValidated = false;
+				const block = await retriever.retrieve(cid, {
+					...options,
+					signal,
+					validateFn: async (block) => {
+						await validateFn(block);
+						options.signal?.throwIfAborted();
+						blocksWereValidated = true;
+					}
+				});
+				if (!blocksWereValidated) {
+					await validateFn(block);
+					options.signal?.throwIfAborted();
+				}
+				return block;
+			} catch (err) {
+				options.log.error("could not retrieve verified block for %c from %s - %e", cid, retriever.name, err);
+				throw err;
+			}
+		}));
+	} catch (err) {
+		throw new LoadBlockFailedError(err.errors, `Failed to load block for ${cid}`);
+	} finally {
+		controller.abort();
+		signal.clear();
+	}
+}
+function isRetrievingBlockBroker(broker) {
+	return typeof broker.retrieve === "function";
+}
+const getCidBlockVerifierFunction = (cid, hasher) => {
+	if (hasher == null) throw new InvalidParametersError$4(`No hasher configured for multihash code 0x${cid.multihash.code.toString(16)}, please configure one. You can look up which hash this is at https://github.com/multiformats/multicodec/blob/master/table.csv`);
+	return async (block) => {
+		let hash;
+		const res = hasher.digest(block, { truncate: cid.multihash.digest.byteLength });
+		if (isPromise$2(res)) hash = await res;
+		else hash = res;
+		if (!equals(hash.digest, cid.multihash.digest)) throw new InvalidMultihashError("Hash of downloaded block did not match multihash from passed CID");
+	};
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/session-storage.js
+/**
+* Storage subclass that can cancel any ongoing operation at any point.
+*/
+var SessionStorage = class extends Storage {
+	closeController;
+	constructor(components, init) {
+		super(components);
+		this.closeController = new AbortController();
+		setMaxListeners$1(Infinity, this.closeController.signal);
+		this.log = components.logger.forComponent(`helia:session-storage:${init.root}`);
+	}
+	close() {
+		this.closeController.abort();
+	}
+	async addPeer(peer, options) {
+		await Promise.all(this.blockBrokers.map((broker) => broker.addPeer(peer, options)));
+	}
+	/**
+	* Put a block to the underlying datastore
+	*/
+	async put(cid, block, options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			return await super.put(cid, block, {
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+	/**
+	* Put a multiple blocks to the underlying datastore
+	*/
+	async *putMany(blocks, options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			yield* super.putMany(blocks, {
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+	/**
+	* Get a block by cid
+	*/
+	async *get(cid, options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			yield* super.get(cid, {
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+	/**
+	* Get multiple blocks back from an (async) iterable of cids
+	*/
+	async *getMany(cids, options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			yield* super.getMany(cids, {
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+	/**
+	* Delete a block from the blockstore
+	*/
+	async delete(cid, options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			await super.delete(cid, {
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+	/**
+	* Delete multiple blocks from the blockstore
+	*/
+	async *deleteMany(cids, options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			yield* super.deleteMany(cids, {
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+	async has(cid, options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			return await super.has(cid, {
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+	async *getAll(options = {}) {
+		const signal = anySignal([this.closeController.signal, options.signal]);
+		setMaxListeners$1(Infinity, signal);
+		try {
+			yield* super.getAll({
+				...options,
+				signal
+			});
+		} finally {
+			signal.clear();
+		}
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/networked-storage.js
+/**
+* Networked storage wraps a regular blockstore - when getting blocks if the
+* blocks are not present, the configured BlockBrokers will be used to fetch them.
+*/
+var NetworkedStorage = class extends Storage {
+	started;
+	/**
+	* Create a new BlockStorage
+	*/
+	constructor(components, init = {}) {
+		super(components, init);
+		this.started = false;
+	}
+	isStarted() {
+		return this.started;
+	}
+	async start() {
+		await start(this.child, ...this.blockBrokers);
+		this.started = true;
+	}
+	async stop() {
+		await stop$1(this.child, ...this.blockBrokers);
+		this.started = false;
+	}
+	unwrap() {
+		return this.child;
+	}
+	createSession(root, options) {
+		if (this.blockBrokers.length === 0) throw new InvalidConfigurationError("No block brokers configured");
+		const blockBrokers = this.blockBrokers.map((broker) => broker.createSession?.(options)).filter((broker) => broker != null);
+		if (blockBrokers.length === 0) throw new InvalidConfigurationError(`No configured block brokers support sessions - tried ${this.blockBrokers.map((b) => b.name).join(", ")}`);
+		return new SessionStorage({
+			blockstore: this.child,
+			blockBrokers,
+			getHasher: this.getHasher,
+			logger: this.logger
+		}, { root });
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/abstract-session.js
+var AbstractSession = class extends TypedEventEmitter {
+	initialPeerSearchComplete;
+	requests;
+	logName;
+	log;
+	logger;
+	minProviders;
+	maxProviders;
+	providers;
+	evictionFilter;
+	initialProviders;
+	cidPeerFilterSize;
+	constructor(components, init) {
+		super();
+		setMaxListeners$1(Infinity, this);
+		this.logName = init.name;
+		this.logger = components.logger;
+		this.log = components.logger.forComponent(this.logName);
+		this.requests = /* @__PURE__ */ new Map();
+		this.minProviders = init.minProviders ?? 1;
+		this.maxProviders = init.maxProviders ?? 5;
+		this.cidPeerFilterSize = init.cidPeerFilterSize ?? 100;
+		this.providers = [];
+		this.evictionFilter = createScalableCuckooFilter(this.maxProviders);
+		this.initialProviders = [...init.providers ?? []];
+	}
+	async retrieve(cid, options = {}) {
+		const cidStr = base64.encode(cid.multihash.bytes);
+		const existingJob = this.requests.get(cidStr);
+		if (existingJob != null) {
+			this.log("join existing request for %c", cid);
+			existingJob.observers++;
+			return existingJob.promise;
+		}
+		const deferred = pDefer();
+		const request = {
+			promise: deferred.promise,
+			observers: 1,
+			queryFilter: createScalableCuckooFilter(this.cidPeerFilterSize)
+		};
+		this.requests.set(cidStr, request);
+		let first = false;
+		if (this.initialPeerSearchComplete == null) {
+			first = true;
+			this.log = this.logger.forComponent(`${this.logName}:${cid}`);
+			this.initialPeerSearchComplete = this.findProviders(cid, this.minProviders, options);
+		}
+		let foundBlock = false;
+		const queue = new Queue$1({ concurrency: this.maxProviders });
+		queue.addEventListener("failure", (evt) => {
+			this.log.error("error querying provider %s, evicting from session - %e", evt.detail.job.options.provider, evt.detail.error);
+			this.evict(evt.detail.job.options.provider);
+		});
+		queue.addEventListener("success", (evt) => {
+			foundBlock = true;
+			deferred.resolve(evt.detail.result);
+		});
+		queue.addEventListener("idle", () => {
+			if (foundBlock) {
+				this.log.trace("session idle, found block");
+				return;
+			}
+			if (options.signal?.aborted === true) {
+				this.log.trace("session idle, signal aborted");
+				return;
+			}
+			Promise.resolve().then(async () => {
+				this.log("no session peers had block for for %c, finding new providers", cid);
+				for (let i = 0; i < this.minProviders; i++) {
+					if (this.providers.length === 0) break;
+					const provider = this.providers[Math.floor(Math.random() * this.providers.length)];
+					this.evict(provider);
+				}
+				await this.findProviders(cid, this.minProviders, options);
+				this.log("found new providers re-retrieving %c", cid);
+				this.requests.delete(cidStr);
+				deferred.resolve(await this.retrieve(cid, options));
+			}).catch((err) => {
+				this.log.error("could not find new providers for %c - %e", cid, err);
+				deferred.reject(err);
+			});
+		});
+		const peerAddedToSessionListener = (event) => {
+			const filterKey = this.toFilterKey(event.detail);
+			if (request.queryFilter.has(filterKey)) return;
+			request.queryFilter.add(filterKey);
+			this.emitFoundProviderProgressEvent(cid, event.detail, options);
+			queue.add(async () => {
+				return this.queryProvider(cid, event.detail, options);
+			}, { provider: event.detail }).catch((err) => {
+				if (options.signal?.aborted === true) return;
+				this.log.error("error retrieving session block for %c - %e", cid, err);
+			});
+		};
+		this.addEventListener("provider", peerAddedToSessionListener);
+		if (first) try {
+			await raceSignal(this.initialPeerSearchComplete, options.signal);
+			if (first) this.log("found initial session peers for %c", cid);
+		} catch (err) {
+			if (first) this.log("failed to find initial session peers for %c - %e", cid, err);
+			this.requests.delete(cidStr);
+			if (request.observers > 1) deferred.reject(err);
+			throw err;
+		}
+		Promise.all([...this.providers].filter((provider) => {
+			const filterKey = this.toFilterKey(provider);
+			const has = request.queryFilter.has(filterKey);
+			if (!has) request.queryFilter.add(this.toFilterKey(provider));
+			return !has;
+		}).map(async (provider) => {
+			return queue.add(async () => this.queryProvider(cid, provider, options), { provider });
+		})).catch((err) => {
+			if (options.signal?.aborted === true) return;
+			this.log.error("error retrieving session block for %c - %e", cid, err);
+		});
+		const signalAbortedListener = () => {
+			deferred.reject(new AbortError$3(options.signal?.reason ?? "Session aborted"));
+			queue.abort();
+		};
+		options.signal?.addEventListener("abort", signalAbortedListener);
+		try {
+			return await deferred.promise;
+		} finally {
+			this.removeEventListener("provider", peerAddedToSessionListener);
+			options.signal?.removeEventListener("abort", signalAbortedListener);
+			queue.clear();
+			this.requests.delete(cidStr);
+		}
+	}
+	evict(provider) {
+		this.evictionFilter.add(this.toFilterKey(provider));
+		const index = this.providers.findIndex((prov) => this.equals(prov, provider));
+		if (index === -1) return;
+		this.providers.splice(index, 1);
+	}
+	isEvicted(provider) {
+		return this.evictionFilter.has(this.toFilterKey(provider));
+	}
+	hasProvider(provider) {
+		if (this.providers.find((prov) => this.equals(prov, provider)) != null) return true;
+		if (this.isEvicted(provider)) return true;
+		return false;
+	}
+	async addPeer(peer, options) {
+		const provider = await this.convertToProvider(peer, "manually-added", options);
+		if (provider == null || this.hasProvider(provider)) return;
+		this.providers.push(provider);
+		this.safeDispatchEvent("provider", { detail: provider });
+	}
+	async findProviders(cid, count, options) {
+		const deferred = pDefer();
+		let found = 0;
+		Promise.resolve().then(async () => {
+			this.log("finding %d-%d new provider(s) for %c - %d initial providers", count, this.maxProviders, cid, this.initialProviders.length);
+			const self = this;
+			const initialProviders = async function* () {
+				while (self.initialProviders.length > 0) {
+					const initialProvider = self.initialProviders.pop();
+					if (initialProvider == null) continue;
+					const provider = await self.convertToProvider(initialProvider, "manual", options);
+					if (provider == null) continue;
+					yield provider;
+				}
+			};
+			const providers = async function* () {
+				yield* initialProviders();
+				yield* self.findNewProviders(cid, options);
+			};
+			for await (const provider of providers()) {
+				if (this.providers.length === this.maxProviders || options.signal?.aborted === true) break;
+				if (this.hasProvider(provider)) continue;
+				this.log("found %d providers, %d in session", found, this.providers.length);
+				this.providers.push(provider);
+				this.safeDispatchEvent("provider", { detail: provider });
+				found++;
+				if (this.providers.length === count) {
+					this.log("session is ready with %d peer(s), new peers present", this.providers.length);
+					deferred.resolve();
+				}
+				if (this.providers.length === this.maxProviders) {
+					this.log("found max session peers %d", this.providers.length);
+					break;
+				}
+			}
+			this.log("found %d new session peers while trying to find %d, %d in session", found, count, this.providers.length);
+			if (this.providers.length < count) throw new InsufficientProvidersError(`Found ${found} of ${count} ${this.name} providers for ${cid}, ${this.providers.length} in session after evictions`);
+		}).catch((err) => {
+			this.log.error("error searching routing for potential session peers for %c - %e", cid, err);
+			deferred.reject(err);
+		});
+		return deferred.promise;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/graph-walker.js
+/**
+* A depth-first walker descends into child blocks before processing successor
+* sibling blocks
+*/
+function depthFirstWalker(init) {
+	return (components) => new DepthFirstGraphWalker(components, init);
+}
+/**
+* A breadth-first walker processes sibling blocks before child blocks
+*/
+function breadthFirstWalker(init) {
+	return (components) => new BreadthFirstGraphWalker(components, init);
+}
+var AbstractGraphWalker = class {
+	components;
+	constructor(components, init = {}) {
+		this.components = components;
+	}
+	async *walk(cid, options) {
+		const queue = this.getQueue();
+		const gen = filter(queue.toGenerator(options), (node) => node != null);
+		let finished = false;
+		const job = async (opts) => {
+			const cid = opts.cid;
+			const block = createUnsafe({
+				cid,
+				bytes: await toBuffer(this.components.blockstore.get(cid, opts)),
+				codec: await this.components.getCodec(cid.code)
+			});
+			for (const [, linkedCid] of block.links()) {
+				if (options?.includeChild?.(linkedCid, block) === false) continue;
+				queue.add(job, {
+					...opts,
+					cid: linkedCid,
+					depth: opts.depth + 1,
+					path: [...opts.path, linkedCid]
+				}).catch((err) => {
+					if (!finished) gen.throw(err);
+				});
+			}
+			return {
+				block,
+				depth: opts.depth,
+				path: opts.path
+			};
+		};
+		queue.add(job, {
+			...options,
+			cid,
+			depth: 0,
+			path: [cid]
+		}).catch((err) => {
+			if (!finished) gen.throw(err);
+		});
+		try {
+			yield* gen;
+		} finally {
+			finished = true;
+			queue.abort();
+		}
+	}
+};
+var DepthFirstGraphWalker = class extends AbstractGraphWalker {
+	getQueue() {
+		return new Queue$1({
+			concurrency: 1,
+			sort: (a, b) => {
+				if (a.options.depth === b.options.depth) return 0;
+				if (a.options.depth < b.options.depth) return 1;
+				return -1;
+			}
+		});
+	}
+};
+var BreadthFirstGraphWalker = class extends AbstractGraphWalker {
+	getQueue() {
+		return new Queue$1({
+			concurrency: 1,
+			sort: (a, b) => {
+				if (a.options.depth === b.options.depth) return 0;
+				if (a.options.depth < b.options.depth) return -1;
+				return 1;
+			}
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* This module contains utility code that is shared between various Helia
+* modules such as `helia`, `@helia/http`, etc.
+*/
+var Helia = class {
+	libp2p;
+	blockstore;
+	datastore;
+	events;
+	pins;
+	logger;
+	routing;
+	getCodec;
+	getHasher;
+	dns;
+	metrics;
+	log;
+	constructor(init) {
+		this.logger = init.logger ?? init.libp2p.logger;
+		this.log = this.logger.forComponent("helia");
+		this.getHasher = getHasher(init.hashers, init.loadHasher);
+		this.getCodec = getCodec(init.codecs, init.loadCodec);
+		this.dns = init.dns ?? dns();
+		this.metrics = init.metrics;
+		this.libp2p = init.libp2p;
+		this.events = new TypedEventEmitter();
+		const components = {
+			blockstore: init.blockstore,
+			datastore: init.datastore,
+			logger: this.logger,
+			libp2p: this.libp2p,
+			blockBrokers: [],
+			getHasher: this.getHasher,
+			getCodec: this.getCodec,
+			dns: this.dns,
+			metrics: this.metrics,
+			...init.components ?? {}
+		};
+		this.routing = components.routing = new Routing(components, {
+			routers: (init.routers ?? []).flatMap((router) => {
+				if (typeof router === "function") router = router(components);
+				const routers = [router];
+				const contentRouting = asContentRouting(router);
+				if (contentRouting != null) routers.push(contentRouting);
+				const peerRouting = asPeerRouting(router);
+				if (peerRouting != null) routers.push(peerRouting);
+				return routers;
+			}),
+			providerLookupConcurrency: init.providerLookupConcurrency
+		});
+		components.blockBrokers = init.blockBrokers.map((fn) => {
+			return fn(components);
+		});
+		const networkedStorage = new NetworkedStorage(components, init);
+		this.pins = new PinsImpl(init.datastore, networkedStorage, this.getCodec);
+		this.blockstore = new BlockStorage(networkedStorage, this.pins, this.routing, { holdGcLock: init.holdGcLock ?? true });
+		this.datastore = init.datastore;
+	}
+	async start() {
+		await assertDatastoreVersionIsCurrent(this.datastore);
+		await start(this.blockstore, this.datastore, this.routing, this.libp2p);
+		this.events.dispatchEvent(new CustomEvent("start", { detail: this }));
+	}
+	async stop() {
+		await stop$1(this.blockstore, this.datastore, this.routing, this.libp2p);
+		this.events.dispatchEvent(new CustomEvent("stop", { detail: this }));
+	}
+	async gc(options = {}) {
+		const releaseLock = await this.blockstore.lock.writeLock();
+		try {
+			const helia = this;
+			const blockstore = this.blockstore.unwrap();
+			this.log("gc start");
+			await drain(blockstore.deleteMany(async function* () {
+				for await (const { cid } of blockstore.getAll()) try {
+					if (await helia.pins.isPinned(cid, options)) continue;
+					yield cid;
+					options.onProgress?.(new CustomProgressEvent("helia:gc:deleted", cid));
+				} catch (err) {
+					helia.log.error("error during gc - %e", err);
+					options.onProgress?.(new CustomProgressEvent("helia:gc:error", err));
+				}
+			}()));
+		} finally {
+			releaseLock();
+		}
+		this.log("gc finished");
+	}
+};
+function asContentRouting(obj) {
+	return obj?.[contentRoutingSymbol];
+}
+function asPeerRouting(obj) {
+	return obj?.[peerRoutingSymbol];
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/export-strategies/subgraph-exporter.js
+/**
+* Traverses the DAG breadth-first starting at the target CID and yields all
+* encountered blocks.
+*
+* Blocks linked to from the target block are traversed using codecs defined in
+* the helia config.
+*/
+var SubgraphExporter = class {
+	walker;
+	constructor(init) {
+		this.walker = init?.walker;
+	}
+	async *export(cid, blockstore, getCodec, options) {
+		let walker;
+		const components = {
+			blockstore,
+			getCodec
+		};
+		if (this.walker != null) walker = this.walker(components);
+		else walker = breadthFirstWalker()(components);
+		for await (const node of walker.walk(cid, options)) yield node.block;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/car.js
+var Car = class {
+	components;
+	log;
+	constructor(components) {
+		this.components = components;
+		this.log = components.logger.forComponent("helia:car");
+	}
+	async import(reader, options) {
+		await drain(this.components.blockstore.putMany(map(reader.blocks(), ({ cid, bytes }) => ({
+			cid,
+			bytes
+		})), options));
+	}
+	async *export(root, options) {
+		const roots = Array.isArray(root) ? root : [root];
+		const { writer, out } = CarWriter.create(roots);
+		const iter = out[Symbol.asyncIterator]();
+		const controller = new AbortController();
+		this._export(roots, writer, options).catch((err) => {
+			this.log.error("error during streaming export - %e", err);
+			controller.abort(err);
+		});
+		while (true) {
+			const { done, value } = await raceSignal(iter.next(), controller.signal);
+			if (controller.signal.aborted) throw controller.signal.reason;
+			if (value != null) yield value;
+			if (done === true) break;
+		}
+	}
+	async _export(roots, writer, options) {
+		const traversalStrategy = options?.traversal;
+		for (const root of roots) {
+			if (root.multihash.code === 0) continue;
+			const exportStrategy = options?.exporter ?? (root.code === 112 ? new UnixFSExporter() : new SubgraphExporter());
+			let current = root;
+			let underRoot = false;
+			if (traversalStrategy != null) for await (const { cid, bytes } of traversalStrategy.traverse(current, this.components.blockstore, this.components.getCodec, options)) {
+				this.log.trace("next CID on path to %c is %c", root, cid);
+				current = cid;
+				if (root.equals(cid)) underRoot = true;
+				if (underRoot || options?.includeTraversalBlocks === true) {
+					if (options?.blockFilter?.has(cid.multihash.bytes) === true) continue;
+					options?.blockFilter?.add(cid.multihash.bytes);
+					await writer.put({
+						cid,
+						bytes
+					});
+				}
+			}
+			for await (const { cid, bytes } of exportStrategy.export(current, this.components.blockstore, this.components.getCodec, options)) {
+				if (options?.blockFilter?.has(cid.multihash.bytes) === true) continue;
+				if (cid.multihash.code === 0) continue;
+				if (underRoot && cid.equals(current)) continue;
+				options?.blockFilter?.add(cid.multihash.bytes);
+				await writer.put({
+					cid,
+					bytes
+				});
+			}
+		}
+		await writer.close();
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs@12.0.2/node_modules/ipfs-unixfs/dist/src/errors.js
+var InvalidTypeError = class InvalidTypeError extends Error {
+	static name = "InvalidTypeError";
+	static code = "ERR_INVALID_TYPE";
+	name = InvalidTypeError.name;
+	code = InvalidTypeError.code;
+	constructor(message = "Invalid type") {
+		super(message);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/float.js
+const f32 = new Float32Array([-0]);
+const f8b = new Uint8Array(f32.buffer);
+/**
+* Writes a 32 bit float to a buffer using little endian byte order
+*/
+function writeFloatLE(val, buf, pos) {
+	f32[0] = val;
+	buf[pos] = f8b[0];
+	buf[pos + 1] = f8b[1];
+	buf[pos + 2] = f8b[2];
+	buf[pos + 3] = f8b[3];
+}
+/**
+* Reads a 32 bit float from a buffer using little endian byte order
+*/
+function readFloatLE(buf, pos) {
+	f8b[0] = buf[pos];
+	f8b[1] = buf[pos + 1];
+	f8b[2] = buf[pos + 2];
+	f8b[3] = buf[pos + 3];
+	return f32[0];
+}
+const f64 = new Float64Array([-0]);
+const d8b = new Uint8Array(f64.buffer);
+/**
+* Writes a 64 bit double to a buffer using little endian byte order
+*/
+function writeDoubleLE(val, buf, pos) {
+	f64[0] = val;
+	buf[pos] = d8b[0];
+	buf[pos + 1] = d8b[1];
+	buf[pos + 2] = d8b[2];
+	buf[pos + 3] = d8b[3];
+	buf[pos + 4] = d8b[4];
+	buf[pos + 5] = d8b[5];
+	buf[pos + 6] = d8b[6];
+	buf[pos + 7] = d8b[7];
+}
+/**
+* Reads a 64 bit double from a buffer using little endian byte order
+*/
+function readDoubleLE(buf, pos) {
+	d8b[0] = buf[pos];
+	d8b[1] = buf[pos + 1];
+	d8b[2] = buf[pos + 2];
+	d8b[3] = buf[pos + 3];
+	d8b[4] = buf[pos + 4];
+	d8b[5] = buf[pos + 5];
+	d8b[6] = buf[pos + 6];
+	d8b[7] = buf[pos + 7];
+	return f64[0];
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/longbits.js
+const MAX_SAFE_NUMBER_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
+const MIN_SAFE_NUMBER_INTEGER = BigInt(Number.MIN_SAFE_INTEGER);
+/**
+* Constructs new long bits.
+*
+* @classdesc Helper class for working with the low and high bits of a 64 bit value.
+* @memberof util
+* @function Object() { [native code] }
+* @param {number} lo - Low 32 bits, unsigned
+* @param {number} hi - High 32 bits, unsigned
+*/
+var LongBits = class LongBits {
+	lo;
+	hi;
+	constructor(lo, hi) {
+		/**
+		* Low bits
+		*/
+		this.lo = lo | 0;
+		/**
+		* High bits
+		*/
+		this.hi = hi | 0;
+	}
+	/**
+	* Converts this long bits to a possibly unsafe JavaScript number
+	*/
+	toNumber(unsigned = false) {
+		if (!unsigned && this.hi >>> 31 > 0) {
+			const lo = ~this.lo + 1 >>> 0;
+			let hi = ~this.hi >>> 0;
+			if (lo === 0) hi = hi + 1 >>> 0;
+			return -(lo + hi * 4294967296);
+		}
+		return this.lo + this.hi * 4294967296;
+	}
+	/**
+	* Converts this long bits to a bigint
+	*/
+	toBigInt(unsigned = false) {
+		if (unsigned) return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n);
+		if (this.hi >>> 31 !== 0) {
+			const lo = ~this.lo + 1 >>> 0;
+			let hi = ~this.hi >>> 0;
+			if (lo === 0) hi = hi + 1 >>> 0;
+			return -(BigInt(lo) + (BigInt(hi) << 32n));
+		}
+		return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n);
+	}
+	/**
+	* Converts this long bits to a string
+	*/
+	toString(unsigned = false) {
+		return this.toBigInt(unsigned).toString();
+	}
+	/**
+	* Zig-zag encodes this long bits
+	*/
+	zzEncode() {
+		const mask = this.hi >> 31;
+		this.hi = ((this.hi << 1 | this.lo >>> 31) ^ mask) >>> 0;
+		this.lo = (this.lo << 1 ^ mask) >>> 0;
+		return this;
+	}
+	/**
+	* Zig-zag decodes this long bits
+	*/
+	zzDecode() {
+		const mask = -(this.lo & 1);
+		this.lo = ((this.lo >>> 1 | this.hi << 31) ^ mask) >>> 0;
+		this.hi = (this.hi >>> 1 ^ mask) >>> 0;
+		return this;
+	}
+	/**
+	* Calculates the length of this longbits when encoded as a varint.
+	*/
+	length() {
+		const part0 = this.lo;
+		const part1 = (this.lo >>> 28 | this.hi << 4) >>> 0;
+		const part2 = this.hi >>> 24;
+		return part2 === 0 ? part1 === 0 ? part0 < 16384 ? part0 < 128 ? 1 : 2 : part0 < 2097152 ? 3 : 4 : part1 < 16384 ? part1 < 128 ? 5 : 6 : part1 < 2097152 ? 7 : 8 : part2 < 128 ? 9 : 10;
+	}
+	/**
+	* Constructs new long bits from the specified number
+	*/
+	static fromBigInt(value) {
+		if (value === 0n) return zero;
+		if (value < MAX_SAFE_NUMBER_INTEGER && value > MIN_SAFE_NUMBER_INTEGER) return this.fromNumber(Number(value));
+		const negative = value < 0n;
+		if (negative) value = -value;
+		let hi = value >> 32n;
+		let lo = value - (hi << 32n);
+		if (negative) {
+			hi = ~hi | 0n;
+			lo = ~lo | 0n;
+			if (++lo > TWO_32) {
+				lo = 0n;
+				if (++hi > TWO_32) hi = 0n;
+			}
+		}
+		return new LongBits(Number(lo), Number(hi));
+	}
+	/**
+	* Constructs new long bits from the specified number
+	*/
+	static fromNumber(value) {
+		if (value === 0) return zero;
+		const sign = value < 0;
+		if (sign) value = -value;
+		let lo = value >>> 0;
+		let hi = (value - lo) / 4294967296 >>> 0;
+		if (sign) {
+			hi = ~hi >>> 0;
+			lo = ~lo >>> 0;
+			if (++lo > 4294967295) {
+				lo = 0;
+				if (++hi > 4294967295) hi = 0;
+			}
+		}
+		return new LongBits(lo, hi);
+	}
+	/**
+	* Constructs new long bits from a number, long or string
+	*/
+	static from(value) {
+		if (typeof value === "number") return LongBits.fromNumber(value);
+		if (typeof value === "bigint") return LongBits.fromBigInt(value);
+		if (typeof value === "string") return LongBits.fromBigInt(BigInt(value));
+		return value.low != null || value.high != null ? new LongBits(value.low >>> 0, value.high >>> 0) : zero;
+	}
+};
+const zero = new LongBits(0, 0);
+zero.toBigInt = function() {
+	return 0n;
+};
+zero.zzEncode = zero.zzDecode = function() {
+	return this;
+};
+zero.length = function() {
+	return 1;
+};
+const TWO_32 = 4294967296n;
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/utf8.js
+/**
+* Calculates the UTF8 byte length of a string
+*/
+function length(string) {
+	let len = 0;
+	let c = 0;
+	for (let i = 0; i < string.length; ++i) {
+		c = string.charCodeAt(i);
+		if (c < 128) len += 1;
+		else if (c < 2048) len += 2;
+		else if ((c & 64512) === 55296 && (string.charCodeAt(i + 1) & 64512) === 56320) {
+			++i;
+			len += 4;
+		} else len += 3;
+	}
+	return len;
+}
+/**
+* Reads UTF8 bytes as a string
+*/
+function read(buffer, start, end) {
+	if (end - start < 1) return "";
+	let parts;
+	const chunk = [];
+	let i = 0;
+	let t;
+	while (start < end) {
+		t = buffer[start++];
+		if (t < 128) chunk[i++] = t;
+		else if (t > 191 && t < 224) chunk[i++] = (t & 31) << 6 | buffer[start++] & 63;
+		else if (t > 239 && t < 365) {
+			t = ((t & 7) << 18 | (buffer[start++] & 63) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63) - 65536;
+			chunk[i++] = 55296 + (t >> 10);
+			chunk[i++] = 56320 + (t & 1023);
+		} else chunk[i++] = (t & 15) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63;
+		if (i > 8191) {
+			(parts ?? (parts = [])).push(String.fromCharCode.apply(String, chunk));
+			i = 0;
+		}
+	}
+	if (parts != null) {
+		if (i > 0) parts.push(String.fromCharCode.apply(String, chunk.slice(0, i)));
+		return parts.join("");
+	}
+	return String.fromCharCode.apply(String, chunk.slice(0, i));
+}
+/**
+* Writes a string as UTF8 bytes
+*/
+function write(string, buffer, offset) {
+	const start = offset;
+	let c1;
+	let c2;
+	for (let i = 0; i < string.length; ++i) {
+		c1 = string.charCodeAt(i);
+		if (c1 < 128) buffer[offset++] = c1;
+		else if (c1 < 2048) {
+			buffer[offset++] = c1 >> 6 | 192;
+			buffer[offset++] = c1 & 63 | 128;
+		} else if ((c1 & 64512) === 55296 && ((c2 = string.charCodeAt(i + 1)) & 64512) === 56320) {
+			c1 = 65536 + ((c1 & 1023) << 10) + (c2 & 1023);
+			++i;
+			buffer[offset++] = c1 >> 18 | 240;
+			buffer[offset++] = c1 >> 12 & 63 | 128;
+			buffer[offset++] = c1 >> 6 & 63 | 128;
+			buffer[offset++] = c1 & 63 | 128;
+		} else {
+			buffer[offset++] = c1 >> 12 | 224;
+			buffer[offset++] = c1 >> 6 & 63 | 128;
+			buffer[offset++] = c1 & 63 | 128;
+		}
+	}
+	return offset - start;
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/reader.js
+/* istanbul ignore next */
+function indexOutOfRange(reader, writeLength) {
+	return RangeError(`index out of range: ${reader.pos} + ${writeLength ?? 1} > ${reader.len}`);
+}
+function readFixed32End(buf, end) {
+	return (buf[end - 4] | buf[end - 3] << 8 | buf[end - 2] << 16 | buf[end - 1] << 24) >>> 0;
+}
+/**
+* Constructs a new reader instance using the specified buffer.
+*/
+var Uint8ArrayReader = class {
+	buf;
+	pos;
+	len;
+	_slice = Uint8Array.prototype.subarray;
+	constructor(buffer) {
+		/**
+		* Read buffer
+		*/
+		this.buf = buffer;
+		/**
+		* Read buffer position
+		*/
+		this.pos = 0;
+		/**
+		* Read buffer length
+		*/
+		this.len = buffer.length;
+	}
+	/**
+	* Reads a varint as an unsigned 32 bit value
+	*/
+	uint32() {
+		let value = 4294967295;
+		value = (this.buf[this.pos] & 127) >>> 0;
+		if (this.buf[this.pos++] < 128) return value;
+		value = (value | (this.buf[this.pos] & 127) << 7) >>> 0;
+		if (this.buf[this.pos++] < 128) return value;
+		value = (value | (this.buf[this.pos] & 127) << 14) >>> 0;
+		if (this.buf[this.pos++] < 128) return value;
+		value = (value | (this.buf[this.pos] & 127) << 21) >>> 0;
+		if (this.buf[this.pos++] < 128) return value;
+		value = (value | (this.buf[this.pos] & 15) << 28) >>> 0;
+		if (this.buf[this.pos++] < 128) return value;
+		if ((this.pos += 5) > this.len) {
+			this.pos = this.len;
+			throw indexOutOfRange(this, 10);
+		}
+		return value;
+	}
+	/**
+	* Reads a varint as a signed 32 bit value
+	*/
+	int32() {
+		return this.uint32() | 0;
+	}
+	/**
+	* Reads a zig-zag encoded varint as a signed 32 bit value
+	*/
+	sint32() {
+		const value = this.uint32();
+		return value >>> 1 ^ -(value & 1) | 0;
+	}
+	/**
+	* Reads a varint as a boolean
+	*/
+	bool() {
+		return this.uint32() !== 0;
+	}
+	/**
+	* Reads fixed 32 bits as an unsigned 32 bit integer
+	*/
+	fixed32() {
+		if (this.pos + 4 > this.len) throw indexOutOfRange(this, 4);
+		return readFixed32End(this.buf, this.pos += 4);
+	}
+	/**
+	* Reads fixed 32 bits as a signed 32 bit integer
+	*/
+	sfixed32() {
+		if (this.pos + 4 > this.len) throw indexOutOfRange(this, 4);
+		return readFixed32End(this.buf, this.pos += 4) | 0;
+	}
+	/**
+	* Reads a float (32 bit) as a number
+	*/
+	float() {
+		if (this.pos + 4 > this.len) throw indexOutOfRange(this, 4);
+		const value = readFloatLE(this.buf, this.pos);
+		this.pos += 4;
+		return value;
+	}
+	/**
+	* Reads a double (64 bit float) as a number
+	*/
+	double() {
+		/* istanbul ignore if */
+		if (this.pos + 8 > this.len) throw indexOutOfRange(this, 4);
+		const value = readDoubleLE(this.buf, this.pos);
+		this.pos += 8;
+		return value;
+	}
+	/**
+	* Reads a sequence of bytes preceded by its length as a varint
+	*/
+	bytes() {
+		const length = this.uint32();
+		const start = this.pos;
+		const end = this.pos + length;
+		/* istanbul ignore if */
+		if (end > this.len) throw indexOutOfRange(this, length);
+		this.pos += length;
+		return start === end ? new Uint8Array(0) : this.buf.subarray(start, end);
+	}
+	/**
+	* Reads a string preceded by its byte length as a varint
+	*/
+	string() {
+		const bytes = this.bytes();
+		return read(bytes, 0, bytes.length);
+	}
+	/**
+	* Skips the specified number of bytes if specified, otherwise skips a varint
+	*/
+	skip(length) {
+		if (typeof length === "number") {
+			/* istanbul ignore if */
+			if (this.pos + length > this.len) throw indexOutOfRange(this, length);
+			this.pos += length;
+		} else do
+			/* istanbul ignore if */
+			if (this.pos >= this.len) throw indexOutOfRange(this);
+		while ((this.buf[this.pos++] & 128) !== 0);
+		return this;
+	}
+	/**
+	* Skips the next element of the specified wire type
+	*/
+	skipType(wireType) {
+		switch (wireType) {
+			case 0:
+				this.skip();
+				break;
+			case 1:
+				this.skip(8);
+				break;
+			case 2:
+				this.skip(this.uint32());
+				break;
+			case 3:
+				while ((wireType = this.uint32() & 7) !== 4) this.skipType(wireType);
+				break;
+			case 5:
+				this.skip(4);
+				break;
+			/* istanbul ignore next */
+			default: throw Error(`invalid wire type ${wireType} at offset ${this.pos}`);
+		}
+		return this;
+	}
+	readLongVarint() {
+		const bits = new LongBits(0, 0);
+		let i = 0;
+		if (this.len - this.pos > 4) {
+			for (; i < 4; ++i) {
+				bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
+				if (this.buf[this.pos++] < 128) return bits;
+			}
+			bits.lo = (bits.lo | (this.buf[this.pos] & 127) << 28) >>> 0;
+			bits.hi = (bits.hi | (this.buf[this.pos] & 127) >> 4) >>> 0;
+			if (this.buf[this.pos++] < 128) return bits;
+			i = 0;
+		} else {
+			for (; i < 3; ++i) {
+				/* istanbul ignore if */
+				if (this.pos >= this.len) throw indexOutOfRange(this);
+				bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
+				if (this.buf[this.pos++] < 128) return bits;
+			}
+			bits.lo = (bits.lo | (this.buf[this.pos++] & 127) << i * 7) >>> 0;
+			return bits;
+		}
+		if (this.len - this.pos > 4) for (; i < 5; ++i) {
+			bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
+			if (this.buf[this.pos++] < 128) return bits;
+		}
+		else for (; i < 5; ++i) {
+			if (this.pos >= this.len) throw indexOutOfRange(this);
+			bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
+			if (this.buf[this.pos++] < 128) return bits;
+		}
+		throw Error("invalid varint encoding");
+	}
+	readFixed64() {
+		if (this.pos + 8 > this.len) throw indexOutOfRange(this, 8);
+		return new LongBits(readFixed32End(this.buf, this.pos += 4), readFixed32End(this.buf, this.pos += 4));
+	}
+	/**
+	* Reads a varint as a signed 64 bit value
+	*/
+	int64() {
+		return this.readLongVarint().toBigInt();
+	}
+	/**
+	* Reads a varint as a signed 64 bit value returned as a possibly unsafe
+	* JavaScript number
+	*/
+	int64Number() {
+		return this.readLongVarint().toNumber();
+	}
+	/**
+	* Reads a varint as a signed 64 bit value returned as a string
+	*/
+	int64String() {
+		return this.readLongVarint().toString();
+	}
+	/**
+	* Reads a varint as an unsigned 64 bit value
+	*/
+	uint64() {
+		return this.readLongVarint().toBigInt(true);
+	}
+	/**
+	* Reads a varint as an unsigned 64 bit value returned as a possibly unsafe
+	* JavaScript number
+	*/
+	uint64Number() {
+		const value = decodeUint8Array(this.buf, this.pos);
+		this.pos += encodingLength(value);
+		return value;
+	}
+	/**
+	* Reads a varint as an unsigned 64 bit value returned as a string
+	*/
+	uint64String() {
+		return this.readLongVarint().toString(true);
+	}
+	/**
+	* Reads a zig-zag encoded varint as a signed 64 bit value
+	*/
+	sint64() {
+		return this.readLongVarint().zzDecode().toBigInt();
+	}
+	/**
+	* Reads a zig-zag encoded varint as a signed 64 bit value returned as a
+	* possibly unsafe JavaScript number
+	*/
+	sint64Number() {
+		return this.readLongVarint().zzDecode().toNumber();
+	}
+	/**
+	* Reads a zig-zag encoded varint as a signed 64 bit value returned as a
+	* string
+	*/
+	sint64String() {
+		return this.readLongVarint().zzDecode().toString();
+	}
+	/**
+	* Reads fixed 64 bits
+	*/
+	fixed64() {
+		return this.readFixed64().toBigInt();
+	}
+	/**
+	* Reads fixed 64 bits returned as a possibly unsafe JavaScript number
+	*/
+	fixed64Number() {
+		return this.readFixed64().toNumber();
+	}
+	/**
+	* Reads fixed 64 bits returned as a string
+	*/
+	fixed64String() {
+		return this.readFixed64().toString();
+	}
+	/**
+	* Reads zig-zag encoded fixed 64 bits
+	*/
+	sfixed64() {
+		return this.readFixed64().toBigInt();
+	}
+	/**
+	* Reads zig-zag encoded fixed 64 bits returned as a possibly unsafe
+	* JavaScript number
+	*/
+	sfixed64Number() {
+		return this.readFixed64().toNumber();
+	}
+	/**
+	* Reads zig-zag encoded fixed 64 bits returned as a string
+	*/
+	sfixed64String() {
+		return this.readFixed64().toString();
+	}
+};
+function createReader(buf) {
+	return new Uint8ArrayReader(buf instanceof Uint8Array ? buf : buf.subarray());
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/decode.js
+function decodeMessage(buf, codec, opts) {
+	const reader = createReader(buf);
+	return codec.decode(reader, void 0, opts);
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/pool.js
+/**
+* A general purpose buffer pool
+*/
+function pool(size) {
+	const SIZE = size ?? 8192;
+	const MAX = SIZE >>> 1;
+	let slab;
+	let offset = SIZE;
+	return function poolAlloc(size) {
+		if (size < 1 || size > MAX) return allocUnsafe$1(size);
+		if (offset + size > SIZE) {
+			slab = allocUnsafe$1(SIZE);
+			offset = 0;
+		}
+		const buf = slab.subarray(offset, offset += size);
+		if ((offset & 7) !== 0) offset = (offset | 7) + 1;
+		return buf;
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/writer.js
+/**
+* Constructs a new writer operation instance.
+*
+* @classdesc Scheduled writer operation
+*/
+var Op = class {
+	/**
+	* Function to call
+	*/
+	fn;
+	/**
+	* Value byte length
+	*/
+	len;
+	/**
+	* Next operation
+	*/
+	next;
+	/**
+	* Value to write
+	*/
+	val;
+	constructor(fn, len, val) {
+		this.fn = fn;
+		this.len = len;
+		this.next = void 0;
+		this.val = val;
+	}
+};
+/* istanbul ignore next */
+function noop$1() {}
+/**
+* Constructs a new writer state instance
+*/
+var State = class {
+	/**
+	* Current head
+	*/
+	head;
+	/**
+	* Current tail
+	*/
+	tail;
+	/**
+	* Current buffer length
+	*/
+	len;
+	/**
+	* Next state
+	*/
+	next;
+	constructor(writer) {
+		this.head = writer.head;
+		this.tail = writer.tail;
+		this.len = writer.len;
+		this.next = writer.states;
+	}
+};
+const bufferPool = pool();
+/**
+* Allocates a buffer of the specified size
+*/
+function alloc(size) {
+	if (globalThis.Buffer != null) return allocUnsafe$1(size);
+	return bufferPool(size);
+}
+/**
+* When a value is written, the writer calculates its byte length and puts it into a linked
+* list of operations to perform when finish() is called. This both allows us to allocate
+* buffers of the exact required size and reduces the amount of work we have to do compared
+* to first calculating over objects and then encoding over objects. In our case, the encoding
+* part is just a linked list walk calling operations with already prepared values.
+*/
+var Uint8ArrayWriter = class {
+	/**
+	* Current length
+	*/
+	len;
+	/**
+	* Operations head
+	*/
+	head;
+	/**
+	* Operations tail
+	*/
+	tail;
+	/**
+	* Linked forked states
+	*/
+	states;
+	constructor() {
+		this.len = 0;
+		this.head = new Op(noop$1, 0, 0);
+		this.tail = this.head;
+		this.states = null;
+	}
+	/**
+	* Pushes a new operation to the queue
+	*/
+	_push(fn, len, val) {
+		this.tail = this.tail.next = new Op(fn, len, val);
+		this.len += len;
+		return this;
+	}
+	/**
+	* Writes an unsigned 32 bit value as a varint
+	*/
+	uint32(value) {
+		this.len += (this.tail = this.tail.next = new VarintOp((value = value >>> 0) < 128 ? 1 : value < 16384 ? 2 : value < 2097152 ? 3 : value < 268435456 ? 4 : 5, value)).len;
+		return this;
+	}
+	/**
+	* Writes a signed 32 bit value as a varint`
+	*/
+	int32(value) {
+		return value < 0 ? this._push(writeVarint64, 10, LongBits.fromNumber(value)) : this.uint32(value);
+	}
+	/**
+	* Writes a 32 bit value as a varint, zig-zag encoded
+	*/
+	sint32(value) {
+		return this.uint32((value << 1 ^ value >> 31) >>> 0);
+	}
+	/**
+	* Writes an unsigned 64 bit value as a varint
+	*/
+	uint64(value) {
+		const bits = LongBits.fromBigInt(value);
+		return this._push(writeVarint64, bits.length(), bits);
+	}
+	/**
+	* Writes an unsigned 64 bit value as a varint
+	*/
+	uint64Number(value) {
+		return this._push(encodeUint8Array, encodingLength(value), value);
+	}
+	/**
+	* Writes an unsigned 64 bit value as a varint
+	*/
+	uint64String(value) {
+		return this.uint64(BigInt(value));
+	}
+	/**
+	* Writes a signed 64 bit value as a varint
+	*/
+	int64(value) {
+		return this.uint64(value);
+	}
+	/**
+	* Writes a signed 64 bit value as a varint
+	*/
+	int64Number(value) {
+		return this.uint64Number(value);
+	}
+	/**
+	* Writes a signed 64 bit value as a varint
+	*/
+	int64String(value) {
+		return this.uint64String(value);
+	}
+	/**
+	* Writes a signed 64 bit value as a varint, zig-zag encoded
+	*/
+	sint64(value) {
+		const bits = LongBits.fromBigInt(value).zzEncode();
+		return this._push(writeVarint64, bits.length(), bits);
+	}
+	/**
+	* Writes a signed 64 bit value as a varint, zig-zag encoded
+	*/
+	sint64Number(value) {
+		const bits = LongBits.fromNumber(value).zzEncode();
+		return this._push(writeVarint64, bits.length(), bits);
+	}
+	/**
+	* Writes a signed 64 bit value as a varint, zig-zag encoded
+	*/
+	sint64String(value) {
+		return this.sint64(BigInt(value));
+	}
+	/**
+	* Writes a boolish value as a varint
+	*/
+	bool(value) {
+		return this._push(writeByte, 1, value ? 1 : 0);
+	}
+	/**
+	* Writes an unsigned 32 bit value as fixed 32 bits
+	*/
+	fixed32(value) {
+		return this._push(writeFixed32, 4, value >>> 0);
+	}
+	/**
+	* Writes a signed 32 bit value as fixed 32 bits
+	*/
+	sfixed32(value) {
+		return this.fixed32(value);
+	}
+	/**
+	* Writes an unsigned 64 bit value as fixed 64 bits
+	*/
+	fixed64(value) {
+		const bits = LongBits.fromBigInt(value);
+		return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
+	}
+	/**
+	* Writes an unsigned 64 bit value as fixed 64 bits
+	*/
+	fixed64Number(value) {
+		const bits = LongBits.fromNumber(value);
+		return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
+	}
+	/**
+	* Writes an unsigned 64 bit value as fixed 64 bits
+	*/
+	fixed64String(value) {
+		return this.fixed64(BigInt(value));
+	}
+	/**
+	* Writes a signed 64 bit value as fixed 64 bits
+	*/
+	sfixed64(value) {
+		return this.fixed64(value);
+	}
+	/**
+	* Writes a signed 64 bit value as fixed 64 bits
+	*/
+	sfixed64Number(value) {
+		return this.fixed64Number(value);
+	}
+	/**
+	* Writes a signed 64 bit value as fixed 64 bits
+	*/
+	sfixed64String(value) {
+		return this.fixed64String(value);
+	}
+	/**
+	* Writes a float (32 bit)
+	*/
+	float(value) {
+		return this._push(writeFloatLE, 4, value);
+	}
+	/**
+	* Writes a double (64 bit float).
+	*
+	* @function
+	* @param {number} value - Value to write
+	* @returns {Writer} `this`
+	*/
+	double(value) {
+		return this._push(writeDoubleLE, 8, value);
+	}
+	/**
+	* Writes a sequence of bytes
+	*/
+	bytes(value) {
+		const len = value.length >>> 0;
+		if (len === 0) return this._push(writeByte, 1, 0);
+		return this.uint32(len)._push(writeBytes, len, value);
+	}
+	/**
+	* Writes a string
+	*/
+	string(value) {
+		const len = length(value);
+		return len !== 0 ? this.uint32(len)._push(write, len, value) : this._push(writeByte, 1, 0);
+	}
+	/**
+	* Forks this writer's state by pushing it to a stack.
+	* Calling {@link Writer#reset|reset} or {@link Writer#ldelim|ldelim} resets the writer to the previous state.
+	*/
+	fork() {
+		this.states = new State(this);
+		this.head = this.tail = new Op(noop$1, 0, 0);
+		this.len = 0;
+		return this;
+	}
+	/**
+	* Resets this instance to the last state
+	*/
+	reset() {
+		if (this.states != null) {
+			this.head = this.states.head;
+			this.tail = this.states.tail;
+			this.len = this.states.len;
+			this.states = this.states.next;
+		} else {
+			this.head = this.tail = new Op(noop$1, 0, 0);
+			this.len = 0;
+		}
+		return this;
+	}
+	/**
+	* Resets to the last state and appends the fork state's current write length as a varint followed by its operations.
+	*/
+	ldelim() {
+		const head = this.head;
+		const tail = this.tail;
+		const len = this.len;
+		this.reset().uint32(len);
+		if (len !== 0) {
+			this.tail.next = head.next;
+			this.tail = tail;
+			this.len += len;
+		}
+		return this;
+	}
+	/**
+	* Finishes the write operation
+	*/
+	finish() {
+		let head = this.head.next;
+		const buf = alloc(this.len);
+		let pos = 0;
+		while (head != null) {
+			head.fn(head.val, buf, pos);
+			pos += head.len;
+			head = head.next;
+		}
+		return buf;
+	}
+};
+function writeByte(val, buf, pos) {
+	buf[pos] = val & 255;
+}
+function writeVarint32(val, buf, pos) {
+	while (val > 127) {
+		buf[pos++] = val & 127 | 128;
+		val >>>= 7;
+	}
+	buf[pos] = val;
+}
+/**
+* Constructs a new varint writer operation instance.
+*
+* @classdesc Scheduled varint writer operation
+*/
+var VarintOp = class extends Op {
+	next;
+	constructor(len, val) {
+		super(writeVarint32, len, val);
+		this.next = void 0;
+	}
+};
+function writeVarint64(val, buf, pos) {
+	while (val.hi !== 0) {
+		buf[pos++] = val.lo & 127 | 128;
+		val.lo = (val.lo >>> 7 | val.hi << 25) >>> 0;
+		val.hi >>>= 7;
+	}
+	while (val.lo > 127) {
+		buf[pos++] = val.lo & 127 | 128;
+		val.lo = val.lo >>> 7;
+	}
+	buf[pos++] = val.lo;
+}
+function writeFixed32(val, buf, pos) {
+	buf[pos] = val & 255;
+	buf[pos + 1] = val >>> 8 & 255;
+	buf[pos + 2] = val >>> 16 & 255;
+	buf[pos + 3] = val >>> 24;
+}
+function writeBytes(val, buf, pos) {
+	buf.set(val, pos);
+}
+if (globalThis.Buffer != null) {
+	Uint8ArrayWriter.prototype.bytes = function(value) {
+		const len = value.length >>> 0;
+		this.uint32(len);
+		if (len > 0) this._push(writeBytesBuffer, len, value);
+		return this;
+	};
+	Uint8ArrayWriter.prototype.string = function(value) {
+		const len = globalThis.Buffer.byteLength(value);
+		this.uint32(len);
+		if (len > 0) this._push(writeStringBuffer, len, value);
+		return this;
+	};
+}
+function writeBytesBuffer(val, buf, pos) {
+	buf.set(val, pos);
+}
+function writeStringBuffer(val, buf, pos) {
+	if (val.length < 40) write(val, buf, pos);
+	else if (buf.utf8Write != null) buf.utf8Write(val, pos);
+	else buf.set(fromString$2(val), pos);
+}
+/**
+* Creates a new writer
+*/
+function createWriter() {
+	return new Uint8ArrayWriter();
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/encode.js
+function encodeMessage(message, codec) {
+	const w = createWriter();
+	codec.encode(message, w, { lengthDelimited: false });
+	return w.finish();
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/stream.js
+function* streamMessage(buf, codec, opts) {
+	const reader = createReader(buf);
+	yield* codec.stream(reader, void 0, "$", opts);
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/codec.js
+const CODEC_TYPES = {
+	VARINT: 0,
+	BIT64: 1,
+	LENGTH_DELIMITED: 2,
+	START_GROUP: 3,
+	END_GROUP: 4,
+	BIT32: 5
+};
+function createCodec(name, type, encode, decode, stream) {
+	return {
+		name,
+		type,
+		encode,
+		decode,
+		stream
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/codecs/enum.js
+function enumeration(v) {
+	function findValue(val) {
+		if (v[val.toString()] == null) throw new Error("Invalid enum value");
+		return v[val];
+	}
+	return createCodec("enum", CODEC_TYPES.VARINT, function enumEncode(val, writer) {
+		const enumValue = findValue(val);
+		writer.int32(enumValue);
+	}, function enumDecode(reader) {
+		return findValue(reader.int32());
+	}, function* enumStream(reader) {
+		yield findValue(reader.int32());
+	});
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/codecs/message.js
+function message(encode, decode, stream) {
+	return createCodec("message", CODEC_TYPES.LENGTH_DELIMITED, encode, decode, stream);
+}
+//#endregion
+//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/index.js
+/**
+* Thrown when a repeated field has too many elements
+*/
+var MaxLengthError = class extends Error {
+	/**
+	* This will be removed in a future release
+	*
+	* @deprecated use the `.name` property instead
+	*/
+	code = "ERR_MAX_LENGTH";
+	name = "MaxLengthError";
+};
+/**
+* Thrown when a map has too many elements
+*/
+var MaxSizeError = class extends Error {
+	/**
+	* This will be removed in a future release
+	*
+	* @deprecated use the `.name` property instead
+	*/
+	code = "ERR_MAX_SIZE";
+	name = "MaxSizeError";
+};
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs@12.0.2/node_modules/ipfs-unixfs/dist/src/unixfs.js
+var Data;
+(function(Data) {
+	(function(DataType) {
+		DataType["Raw"] = "Raw";
+		DataType["Directory"] = "Directory";
+		DataType["File"] = "File";
+		DataType["Metadata"] = "Metadata";
+		DataType["Symlink"] = "Symlink";
+		DataType["HAMTShard"] = "HAMTShard";
+	})(Data.DataType || (Data.DataType = {}));
+	let __DataTypeValues;
+	(function(__DataTypeValues) {
+		__DataTypeValues[__DataTypeValues["Raw"] = 0] = "Raw";
+		__DataTypeValues[__DataTypeValues["Directory"] = 1] = "Directory";
+		__DataTypeValues[__DataTypeValues["File"] = 2] = "File";
+		__DataTypeValues[__DataTypeValues["Metadata"] = 3] = "Metadata";
+		__DataTypeValues[__DataTypeValues["Symlink"] = 4] = "Symlink";
+		__DataTypeValues[__DataTypeValues["HAMTShard"] = 5] = "HAMTShard";
+	})(__DataTypeValues || (__DataTypeValues = {}));
+	(function(DataType) {
+		DataType.codec = () => {
+			return enumeration(__DataTypeValues);
+		};
+	})(Data.DataType || (Data.DataType = {}));
+	let _codec;
+	Data.codec = () => {
+		if (_codec == null) _codec = message((obj, w, opts = {}) => {
+			if (opts.lengthDelimited !== false) w.fork();
+			if (obj.Type != null) {
+				w.uint32(8);
+				Data.DataType.codec().encode(obj.Type, w);
+			}
+			if (obj.Data != null) {
+				w.uint32(18);
+				w.bytes(obj.Data);
+			}
+			if (obj.filesize != null) {
+				w.uint32(24);
+				w.uint64(obj.filesize);
+			}
+			if (obj.blocksizes != null && obj.blocksizes.length > 0) for (const value of obj.blocksizes) {
+				w.uint32(32);
+				w.uint64(value);
+			}
+			if (obj.hashType != null) {
+				w.uint32(40);
+				w.uint64(obj.hashType);
+			}
+			if (obj.fanout != null) {
+				w.uint32(48);
+				w.uint64(obj.fanout);
+			}
+			if (obj.mode != null) {
+				w.uint32(56);
+				w.uint32(obj.mode);
+			}
+			if (obj.mtime != null) {
+				w.uint32(66);
+				UnixTime.codec().encode(obj.mtime, w);
+			}
+			if (opts.lengthDelimited !== false) w.ldelim();
+		}, (reader, length, opts = {}) => {
+			const obj = { blocksizes: [] };
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						obj.Type = Data.DataType.codec().decode(reader);
+						break;
+					case 2:
+						obj.Data = reader.bytes();
+						break;
+					case 3:
+						obj.filesize = reader.uint64();
+						break;
+					case 4:
+						if (opts.limits?.blocksizes != null && obj.blocksizes.length === opts.limits.blocksizes) throw new MaxLengthError("Decode error - repeated field \"blocksizes\" had too many elements");
+						obj.blocksizes.push(reader.uint64());
+						break;
+					case 5:
+						obj.hashType = reader.uint64();
+						break;
+					case 6:
+						obj.fanout = reader.uint64();
+						break;
+					case 7:
+						obj.mode = reader.uint32();
+						break;
+					case 8:
+						obj.mtime = UnixTime.codec().decode(reader, reader.uint32(), { limits: opts.limits?.mtime });
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+			return obj;
+		}, function* (reader, length, prefix, opts = {}) {
+			const obj = { blocksizes: 0 };
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						yield {
+							field: `${prefix}.Type`,
+							value: Data.DataType.codec().decode(reader)
+						};
+						break;
+					case 2:
+						yield {
+							field: `${prefix}.Data`,
+							value: reader.bytes()
+						};
+						break;
+					case 3:
+						yield {
+							field: `${prefix}.filesize`,
+							value: reader.uint64()
+						};
+						break;
+					case 4:
+						if (opts.limits?.blocksizes != null && obj.blocksizes === opts.limits.blocksizes) throw new MaxLengthError("Streaming decode error - repeated field \"blocksizes\" had too many elements");
+						yield {
+							field: `${prefix}.blocksizes[]`,
+							index: obj.blocksizes,
+							value: reader.uint64()
+						};
+						obj.blocksizes++;
+						break;
+					case 5:
+						yield {
+							field: `${prefix}.hashType`,
+							value: reader.uint64()
+						};
+						break;
+					case 6:
+						yield {
+							field: `${prefix}.fanout`,
+							value: reader.uint64()
+						};
+						break;
+					case 7:
+						yield {
+							field: `${prefix}.mode`,
+							value: reader.uint32()
+						};
+						break;
+					case 8:
+						yield* UnixTime.codec().stream(reader, reader.uint32(), `${prefix}.mtime`, { limits: opts.limits?.mtime });
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+		});
+		return _codec;
+	};
+	function encode(obj) {
+		return encodeMessage(obj, Data.codec());
+	}
+	Data.encode = encode;
+	function decode(buf, opts) {
+		return decodeMessage(buf, Data.codec(), opts);
+	}
+	Data.decode = decode;
+	function stream(buf, opts) {
+		return streamMessage(buf, Data.codec(), opts);
+	}
+	Data.stream = stream;
+})(Data || (Data = {}));
+var UnixTime;
+(function(UnixTime) {
+	let _codec;
+	UnixTime.codec = () => {
+		if (_codec == null) _codec = message((obj, w, opts = {}) => {
+			if (opts.lengthDelimited !== false) w.fork();
+			if (obj.Seconds != null) {
+				w.uint32(8);
+				w.int64(obj.Seconds);
+			}
+			if (obj.FractionalNanoseconds != null) {
+				w.uint32(21);
+				w.fixed32(obj.FractionalNanoseconds);
+			}
+			if (opts.lengthDelimited !== false) w.ldelim();
+		}, (reader, length, opts = {}) => {
+			const obj = {};
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						obj.Seconds = reader.int64();
+						break;
+					case 2:
+						obj.FractionalNanoseconds = reader.fixed32();
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+			return obj;
+		}, function* (reader, length, prefix, opts = {}) {
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						yield {
+							field: `${prefix}.Seconds`,
+							value: reader.int64()
+						};
+						break;
+					case 2:
+						yield {
+							field: `${prefix}.FractionalNanoseconds`,
+							value: reader.fixed32()
+						};
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+		});
+		return _codec;
+	};
+	function encode(obj) {
+		return encodeMessage(obj, UnixTime.codec());
+	}
+	UnixTime.encode = encode;
+	function decode(buf, opts) {
+		return decodeMessage(buf, UnixTime.codec(), opts);
+	}
+	UnixTime.decode = decode;
+	function stream(buf, opts) {
+		return streamMessage(buf, UnixTime.codec(), opts);
+	}
+	UnixTime.stream = stream;
+})(UnixTime || (UnixTime = {}));
+var Metadata;
+(function(Metadata) {
+	let _codec;
+	Metadata.codec = () => {
+		if (_codec == null) _codec = message((obj, w, opts = {}) => {
+			if (opts.lengthDelimited !== false) w.fork();
+			if (obj.MimeType != null) {
+				w.uint32(10);
+				w.string(obj.MimeType);
+			}
+			if (opts.lengthDelimited !== false) w.ldelim();
+		}, (reader, length, opts = {}) => {
+			const obj = {};
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						obj.MimeType = reader.string();
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+			return obj;
+		}, function* (reader, length, prefix, opts = {}) {
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						yield {
+							field: `${prefix}.MimeType`,
+							value: reader.string()
+						};
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+		});
+		return _codec;
+	};
+	function encode(obj) {
+		return encodeMessage(obj, Metadata.codec());
+	}
+	Metadata.encode = encode;
+	function decode(buf, opts) {
+		return decodeMessage(buf, Metadata.codec(), opts);
+	}
+	Metadata.decode = decode;
+	function stream(buf, opts) {
+		return streamMessage(buf, Metadata.codec(), opts);
+	}
+	Metadata.stream = stream;
+})(Metadata || (Metadata = {}));
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs@12.0.2/node_modules/ipfs-unixfs/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* This module contains the protobuf definition of the UnixFS data structure found at the root of all UnixFS DAGs.
+*
+* The UnixFS spec can be found in the [ipfs/specs repository](http://github.com/ipfs/specs)
+*
+* @example Create a file composed of several blocks
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const data = new UnixFS({ type: 'file' })
+* data.addBlockSize(256n) // add the size of each block
+* data.addBlockSize(256n)
+* // ...
+* ```
+*
+* @example Create a directory that contains several files
+*
+* Creating a directory that contains several files is achieve by creating a unixfs element that identifies a MerkleDAG node as a directory. The links of that MerkleDAG node are the files that are contained in this directory.
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const data = new UnixFS({ type: 'directory' })
+* ```
+*
+* @example Create an unixfs Data element
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const data = new UnixFS({
+*   // ...options
+* })
+* ```
+*
+* `options` is an optional object argument that might include the following keys:
+*
+* - type (string, default `file`): The type of UnixFS entry.  Can be:
+*   - `raw`
+*   - `directory`
+*   - `file`
+*   - `metadata`
+*   - `symlink`
+*   - `hamt-sharded-directory`
+* - data (Uint8Array): The optional data field for this node
+* - blockSizes (Array, default: `[]`): If this is a `file` node that is made up of multiple blocks, `blockSizes` is a list numbers that represent the size of the file chunks stored in each child node. It is used to calculate the total file size.
+* - mode (Number, default `0644` for files, `0755` for directories/hamt-sharded-directories) file mode
+* - mtime (`Date`, `{ secs, nsecs }`, `{ Seconds, FractionalNanoseconds }`, `[ secs, nsecs ]`): The modification time of this node
+*
+* @example Add and remove a block size to the block size list
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const data = new UnixFS({ type: 'file' })
+* const sizeInBytes = 100n
+* data.addBlockSize(sizeInBytes)
+* ```
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const data = new UnixFS({ type: 'file' })
+*
+* const index = 0
+* data.removeBlockSize(index)
+* ```
+*
+* @example Get total fileSize
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const data = new UnixFS({ type: 'file' })
+* data.fileSize() // => size in bytes
+* ```
+*
+* @example Marshal and unmarshal
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const data = new UnixFS({ type: 'file' })
+* const marshaled = data.marshal()
+* const unmarshaled = UnixFS.unmarshal(marshaled)
+* ```
+*
+* @example Is this UnixFS entry a directory?
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const dir = new UnixFS({ type: 'directory' })
+* dir.isDirectory() // true
+*
+* const file = new UnixFS({ type: 'file' })
+* file.isDirectory() // false
+* ```
+*
+* @example Has an mtime been set?
+*
+* If no modification time has been set, no `mtime` property will be present on the `Data` instance:
+*
+* ```TypeScript
+* import { UnixFS } from 'ipfs-unixfs'
+*
+* const file = new UnixFS({ type: 'file' })
+* file.mtime // undefined
+*
+* Object.prototype.hasOwnProperty.call(file, 'mtime') // false
+*
+* const dir = new UnixFS({ type: 'directory', mtime: { secs: 5n } })
+* dir.mtime // { secs: Number, nsecs: Number }
+* ```
+*/
+const types = {
+	Raw: "raw",
+	Directory: "directory",
+	File: "file",
+	Metadata: "metadata",
+	Symlink: "symlink",
+	HAMTShard: "hamt-sharded-directory"
+};
+const dirTypes = ["directory", "hamt-sharded-directory"];
+const DEFAULT_FILE_MODE$1 = parseInt("0644", 8);
+const DEFAULT_DIRECTORY_MODE = parseInt("0755", 8);
+var UnixFS$1 = class UnixFS$1 {
+	/**
+	* Decode from protobuf https://github.com/ipfs/specs/blob/master/UNIXFS.md
+	*/
+	static unmarshal(marshaled) {
+		const message = Data.decode(marshaled);
+		const data = new UnixFS$1({
+			type: types[message.Type != null ? message.Type.toString() : "File"],
+			data: message.Data,
+			blockSizes: message.blocksizes,
+			mode: message.mode,
+			mtime: message.mtime != null ? {
+				secs: message.mtime.Seconds ?? 0n,
+				nsecs: message.mtime.FractionalNanoseconds
+			} : void 0,
+			fanout: message.fanout
+		});
+		data._originalMode = message.mode ?? 0;
+		return data;
+	}
+	type;
+	data;
+	blockSizes;
+	hashType;
+	fanout;
+	mtime;
+	_mode;
+	_originalMode;
+	constructor(options = { type: "file" }) {
+		const { type, data, blockSizes, hashType, fanout, mtime, mode } = options;
+		if (type != null && !Object.values(types).includes(type)) throw new InvalidTypeError("Type: " + type + " is not valid");
+		this.type = type ?? "file";
+		this.data = data;
+		this.hashType = hashType;
+		this.fanout = fanout;
+		this.blockSizes = blockSizes ?? [];
+		this._originalMode = 0;
+		this.mode = mode;
+		this.mtime = mtime;
+	}
+	set mode(mode) {
+		if (mode == null) this._mode = this.isDirectory() ? DEFAULT_DIRECTORY_MODE : DEFAULT_FILE_MODE$1;
+		else this._mode = mode & 4095;
+	}
+	get mode() {
+		return this._mode;
+	}
+	isDirectory() {
+		return dirTypes.includes(this.type);
+	}
+	addBlockSize(size) {
+		this.blockSizes.push(size);
+	}
+	removeBlockSize(index) {
+		this.blockSizes.splice(index, 1);
+	}
+	/**
+	* Returns `0n` for directories or `data.length + sum(blockSizes)` for everything else
+	*/
+	fileSize() {
+		if (this.isDirectory()) return 0n;
+		let sum = 0n;
+		this.blockSizes.forEach((size) => {
+			sum += size;
+		});
+		if (this.data != null) sum += BigInt(this.data.length);
+		return sum;
+	}
+	/**
+	* encode to protobuf Uint8Array
+	*/
+	marshal() {
+		let type;
+		switch (this.type) {
+			case "raw":
+				type = Data.DataType.Raw;
+				break;
+			case "directory":
+				type = Data.DataType.Directory;
+				break;
+			case "file":
+				type = Data.DataType.File;
+				break;
+			case "metadata":
+				type = Data.DataType.Metadata;
+				break;
+			case "symlink":
+				type = Data.DataType.Symlink;
+				break;
+			case "hamt-sharded-directory":
+				type = Data.DataType.HAMTShard;
+				break;
+			default: throw new InvalidTypeError(`Type: ${type} is not valid`);
+		}
+		let data = this.data;
+		if (this.data == null || this.data.length === 0) data = void 0;
+		let mode;
+		if (this.mode != null) {
+			mode = this._originalMode & 4294963200 | (this.mode ?? 0);
+			if (mode === DEFAULT_FILE_MODE$1 && !this.isDirectory()) mode = void 0;
+			if (mode === DEFAULT_DIRECTORY_MODE && this.isDirectory()) mode = void 0;
+		}
+		let mtime;
+		if (this.mtime != null) mtime = {
+			Seconds: this.mtime.secs,
+			FractionalNanoseconds: this.mtime.nsecs
+		};
+		return Data.encode({
+			Type: type,
+			Data: data,
+			filesize: this.isDirectory() ? void 0 : this.fileSize(),
+			blocksizes: this.blockSizes,
+			hashType: this.hashType,
+			fanout: this.fanout,
+			mode,
+			mtime
+		});
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/errors.js
+var NotUnixFSError$2 = class extends Error {
+	static code = "ERR_NOT_UNIXFS";
+	static message = "Not a UnixFS node";
+	static name = "NotUnixFSError";
+	code = "ERR_NOT_UNIXFS";
+	message = "Not a UnixFS node";
+	name = "NotUnixFSError";
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/export-strategies/unixfs-exporter.js
+function isRawBlock(block) {
+	return block.cid.code === 85;
+}
+function isDagPBBlock(block) {
+	return block.cid.code === 112;
+}
+function isFile(block) {
+	if (isRawBlock(block)) return true;
+	else if (isDagPBBlock(block) && block.value.Data != null) {
+		const u = UnixFS$1.unmarshal(block.value.Data);
+		return u.type === "file" || u.type === "raw";
+	} else throw new NotUnixFSError$2("Encountered non raw/dag-pb CID in UnixFS DAG");
+}
+/**
+* Traverses the DAG depth-first starting at the target CID and yields all
+* encountered blocks.
+*
+* Blocks linked to from the target block are traversed using codecs defined in
+* the helia config.
+*/
+var UnixFSExporter = class {
+	options;
+	constructor(options) {
+		this.options = options;
+	}
+	async *export(cid, blockstore, getCodec, options) {
+		if (cid.code !== 112 && cid.code !== 85) throw new NotUnixFSError$2("Target CID was not UnixFS - use the SubGraphExporter to export arbitrary graphs");
+		const walker = depthFirstWalker()({
+			blockstore,
+			getCodec
+		});
+		const offset = this.options?.offset ?? 0;
+		const length = this.options?.length ?? Infinity;
+		const listingOnly = this.options?.listingOnly ?? false;
+		if (offset < 0) throw new InvalidParametersError$4("Offset cannot be negative");
+		if (length < 0) throw new InvalidParametersError$4("Length cannot be negative");
+		let exportingFile;
+		const abortController = new AbortController();
+		const signal = anySignal([abortController.signal, options?.signal]);
+		setMaxListeners$1(Infinity, abortController.signal, signal);
+		function includeChild(child, parent) {
+			if (exportingFile == null) exportingFile = isFile(parent);
+			if (!exportingFile) {
+				const link = parent.value.Links.find((l) => l.Hash.equals(child));
+				const u = UnixFS$1.unmarshal(parent.value.Data ?? new Uint8Array());
+				if (u.type === "directory") return !listingOnly;
+				if (u.type === "hamt-sharded-directory" && listingOnly) return link?.Name?.length === 2;
+				return true;
+			}
+			const childIndex = parent.value.Links.findIndex((link) => link.Hash.equals(child));
+			const layout = UnixFS$1.unmarshal(parent.value.Data ?? new Uint8Array());
+			const start = offset;
+			const end = start + length;
+			const childStart = Number([...layout.blockSizes].slice(0, childIndex).reduce((curr, acc) => curr + acc, 0n));
+			const childEnd = childStart + Number(layout.blockSizes[childIndex]);
+			if (start >= childStart && start < childEnd) return true;
+			if (end >= childStart && end < childEnd) return true;
+			if (start <= childStart && end >= childEnd) return true;
+			return false;
+		}
+		try {
+			for await (const node of walker.walk(cid, {
+				...options,
+				includeChild,
+				signal
+			})) yield node.block;
+		} finally {
+			abortController.abort();
+			signal.clear();
+		}
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* `@helia/car` provides `import` and `export` methods to read/write Car files
+* to {@link https://github.com/ipfs/helia Helia}'s blockstore.
+*
+* See the {@link Car} interface for all available operations.
+*
+* By default it supports `dag-pb`, `dag-cbor`, `dag-json` and `raw` CIDs, more
+* esoteric DAG walkers can be passed as an init option.
+*
+* @example Exporting a DAG as a CAR file
+*
+* ```typescript
+* import { createHelia } from 'helia'
+* import { car } from '@helia/car'
+* import { CID } from 'multiformats/cid'
+* import nodeFs from 'node:fs'
+*
+* const helia = await createHelia()
+* const cid = CID.parse('QmFoo...')
+*
+* const c = car(helia)
+* const out = nodeFs.createWriteStream('example.car')
+*
+* for await (const buf of c.export(cid, {
+*   signal: AbortSignal.timeout(5_000)
+* })) {
+*   out.write(buf)
+* }
+*
+* out.end()
+* ```
+*
+* @example Exporting a part of a UnixFS DAG as a CAR file
+*
+* Here the graph traversal will start at `root` and include the blocks for
+* `root`, `/foo`, `/bar`, and all the blocks that make up `baz.txt`.
+*
+* If there are other files/directories in the UnixFS DAG under `root`, they
+* will not be included.
+*
+* `root` will be the only entry in the CAR file roots.
+*
+* ```typescript
+* import { createHelia } from 'helia'
+* import { car, UnixFSPath } from '@helia/car'
+* import { CID } from 'multiformats/cid'
+* import nodeFs from 'node:fs'
+*
+* const helia = await createHelia()
+* const root = CID.parse('QmFoo...')
+*
+* const c = car(helia)
+* const out = nodeFs.createWriteStream('example.car')
+*
+* for await (const buf of c.export(root, {
+*   signal: AbortSignal.timeout(5_000),
+*   traversal: new UnixFSPath('/foo/bar/baz.txt')
+* })) {
+*   out.write(buf)
+* }
+*
+* out.end()
+* ```
+*
+* @example Including traversal path above the root in a CAR
+*
+* The `includeTraversalBlocks` option will include the traversal blocks in the
+* CAR when they would otherwise be excluded (for example when the traversal
+* starts in a parent of the export root).
+*
+* Here `baz` is the CID for `baz.txt`.
+*
+* The CAR file will include the blocks for `parent`, `/foo`, `/bar`, and
+* `/baz.txt`.
+*
+* `baz` will be the only entry in the CAR file roots.
+*
+* ```typescript
+* import { createHelia } from 'helia'
+* import { car, UnixFSPath } from '@helia/car'
+* import { CID } from 'multiformats/cid'
+* import nodeFs from 'node:fs'
+*
+* const helia = await createHelia()
+* const parent = CID.parse('QmFoo...')
+* const baz = CID.parse('QmBar...')
+*
+* const c = car(helia)
+* const out = nodeFs.createWriteStream('example.car')
+*
+* for await (const buf of c.export(baz, {
+*   signal: AbortSignal.timeout(5_000),
+*   traversal: new UnixFSPath(parent, '/foo/bar/baz.txt'),
+*   includeTraversalBlocks: true
+* })) {
+*   out.write(buf)
+* }
+*
+* out.end()
+* ```
+*
+* @example Importing all blocks from a CAR file
+*
+* ```typescript
+* import { createHelia } from 'helia'
+* import { unixfs } from '@helia/unixfs'
+* import { car } from '@helia/car'
+* import { CarReader } from '@ipld/car'
+* import { Readable } from 'node:stream'
+* import nodeFs from 'node:fs'
+*
+* const helia = await createHelia({
+*   // ... helia config
+* })
+*
+* // import the car
+* const inStream = nodeFs.createReadStream('example.car')
+* const reader = await CarReader.fromIterable(inStream)
+*
+* const c = car(helia)
+* await c.import(reader, {
+*   signal: AbortSignal.timeout(5_000)
+* })
+* ```
+*/
+/**
+* Create a {@link Car} instance for use with {@link https://github.com/ipfs/helia Helia}
+*/
+function car(helia) {
+	return new Car(helia);
+}
+//#endregion
+//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/errors.js
+/**
+* The reported length of the next data message was not a positive integer
+*/
+var InvalidMessageLengthError$1 = class extends Error {
+	name = "InvalidMessageLengthError";
+	code = "ERR_INVALID_MSG_LENGTH";
+};
+/**
+* The reported length of the next data message was larger than the configured
+* max allowable value
+*/
+var InvalidDataLengthError = class extends Error {
+	name = "InvalidDataLengthError";
+	code = "ERR_MSG_DATA_TOO_LONG";
+};
+/**
+* The varint used to specify the length of the next data message contained more
+* bytes than the configured max allowable value
+*/
+var InvalidDataLengthLengthError = class extends Error {
+	name = "InvalidDataLengthLengthError";
+	code = "ERR_MSG_LENGTH_TOO_LONG";
+};
+/**
+* The incoming stream ended before the expected number of bytes were read
+*/
+var UnexpectedEOFError = class extends Error {
+	name = "UnexpectedEOFError";
+	code = "ERR_UNEXPECTED_EOF";
+};
+//#endregion
+//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/utils.js
+function isAsyncIterable$6(thing) {
+	return thing[Symbol.asyncIterator] != null;
+}
+//#endregion
+//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/encode.js
+function validateMaxDataLength(chunk, maxDataLength) {
+	if (chunk.byteLength > maxDataLength) throw new InvalidDataLengthError("Message length too long");
+}
+const defaultEncoder = (length) => {
+	const lengthLength = encodingLength(length);
+	const lengthBuf = allocUnsafe$1(lengthLength);
+	encode$5(length, lengthBuf);
+	defaultEncoder.bytes = lengthLength;
+	return lengthBuf;
+};
+defaultEncoder.bytes = 0;
+function encode(source, options) {
+	options = options ?? {};
+	const encodeLength = options.lengthEncoder ?? defaultEncoder;
+	const maxDataLength = options?.maxDataLength ?? 4194304;
+	function* maybeYield(chunk) {
+		validateMaxDataLength(chunk, maxDataLength);
+		const length = encodeLength(chunk.byteLength);
+		if (length instanceof Uint8Array) yield length;
+		else yield* length;
+		if (chunk instanceof Uint8Array) yield chunk;
+		else yield* chunk;
+	}
+	if (isAsyncIterable$6(source)) return (async function* () {
+		for await (const chunk of source) yield* maybeYield(chunk);
+	})();
+	return (function* () {
+		for (const chunk of source) yield* maybeYield(chunk);
+	})();
+}
+encode.single = (chunk, options) => {
+	options = options ?? {};
+	const encodeLength = options.lengthEncoder ?? defaultEncoder;
+	validateMaxDataLength(chunk, options?.maxDataLength ?? 4194304);
+	return new Uint8ArrayList(encodeLength(chunk.byteLength), chunk);
+};
+//#endregion
+//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/decode.js
+var ReadMode;
+(function(ReadMode) {
+	ReadMode[ReadMode["LENGTH"] = 0] = "LENGTH";
+	ReadMode[ReadMode["DATA"] = 1] = "DATA";
+})(ReadMode || (ReadMode = {}));
+const defaultDecoder = (buf) => {
+	const length = decode$5(buf);
+	defaultDecoder.bytes = encodingLength(length);
+	return length;
+};
+defaultDecoder.bytes = 0;
+function decode(source, options) {
+	const buffer = new Uint8ArrayList();
+	let mode = ReadMode.LENGTH;
+	let dataLength = -1;
+	const lengthDecoder = options?.lengthDecoder ?? defaultDecoder;
+	const maxLengthLength = options?.maxLengthLength ?? 8;
+	const maxDataLength = options?.maxDataLength ?? 4194304;
+	function* maybeYield() {
+		while (buffer.byteLength > 0) {
+			if (mode === ReadMode.LENGTH) try {
+				dataLength = lengthDecoder(buffer);
+				if (dataLength < 0) throw new InvalidMessageLengthError$1("Invalid message length");
+				if (dataLength > maxDataLength) throw new InvalidDataLengthError("Message length too long");
+				const dataLengthLength = lengthDecoder.bytes;
+				buffer.consume(dataLengthLength);
+				if (options?.onLength != null) options.onLength(dataLength);
+				mode = ReadMode.DATA;
+			} catch (err) {
+				if (err instanceof RangeError) {
+					if (buffer.byteLength > maxLengthLength) throw new InvalidDataLengthLengthError("Message length length too long");
+					break;
+				}
+				throw err;
+			}
+			if (mode === ReadMode.DATA) {
+				if (buffer.byteLength < dataLength) break;
+				const data = buffer.sublist(0, dataLength);
+				buffer.consume(dataLength);
+				if (options?.onData != null) options.onData(data);
+				yield data;
+				mode = ReadMode.LENGTH;
+			}
+		}
+	}
+	if (isAsyncIterable$6(source)) return (async function* () {
+		for await (const buf of source) {
+			buffer.append(buf);
+			yield* maybeYield();
+		}
+		if (buffer.byteLength > 0) throw new UnexpectedEOFError("Unexpected end of input");
+	})();
+	return (function* () {
+		for (const buf of source) {
+			buffer.append(buf);
+			yield* maybeYield();
+		}
+		if (buffer.byteLength > 0) throw new UnexpectedEOFError("Unexpected end of input");
+	})();
+}
+decode.fromReader = (reader, options) => {
+	let byteLength = 1;
+	const varByteSource = async function* () {
+		while (true) try {
+			const { done, value } = await reader.next(byteLength);
+			if (done === true) return;
+			if (value != null) yield value;
+		} catch (err) {
+			if (err.code === "ERR_UNDER_READ") return {
+				done: true,
+				value: null
+			};
+			throw err;
+		} finally {
+			byteLength = 1;
+		}
+	}();
+	/**
+	* Once the length has been parsed, read chunk for that length
+	*/
+	const onLength = (l) => {
+		byteLength = l;
+	};
+	return decode(varByteSource, {
+		...options ?? {},
+		onLength
+	});
+};
+//#endregion
+//#region node_modules/.pnpm/it-take@3.0.11/node_modules/it-take/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* For when you only want a few values out of an (async)iterable.
+*
+* @example
+*
+* ```javascript
+* import take from 'it-take'
+* import all from 'it-all'
+*
+* // This can also be an iterator, generator, etc
+* const values = [0, 1, 2, 3, 4]
+*
+* const arr = all(take(values, 2))
+*
+* console.info(arr) // 0, 1
+* ```
+*
+* Async sources must be awaited:
+*
+* ```javascript
+* import take from 'it-take'
+* import all from 'it-all'
+*
+* const values = async function * () {
+*   yield * [0, 1, 2, 3, 4]
+* }
+*
+* const arr = await all(take(values(), 2))
+*
+* console.info(arr) // 0, 1
+* ```
+*/
+function isAsyncIterable$5(thing) {
+	return thing[Symbol.asyncIterator] != null;
+}
+function take(source, limit) {
+	if (isAsyncIterable$5(source)) return (async function* () {
+		let items = 0;
+		if (limit < 1) return;
+		for await (const entry of source) {
+			yield entry;
+			items++;
+			if (items === limit) return;
+		}
+	})();
+	return (function* () {
+		let items = 0;
+		if (limit < 1) return;
+		for (const entry of source) {
+			yield entry;
+			items++;
+			if (items === limit) return;
+		}
+	})();
+}
+async function generateECDSAKey(curve = "P-256") {
+	const keyPair = await crypto.subtle.generateKey({
+		name: "ECDSA",
+		namedCurve: curve
+	}, true, ["sign", "verify"]);
+	return {
+		publicKey: await crypto.subtle.exportKey("jwk", keyPair.publicKey),
+		privateKey: await crypto.subtle.exportKey("jwk", keyPair.privateKey)
+	};
+}
+async function hashAndSign$3(key, msg, options) {
+	const privateKey = await crypto.subtle.importKey("jwk", key, {
+		name: "ECDSA",
+		namedCurve: key.crv ?? "P-256"
+	}, false, ["sign"]);
+	options?.signal?.throwIfAborted();
+	const signature = await crypto.subtle.sign({
+		name: "ECDSA",
+		hash: { name: "SHA-256" }
+	}, privateKey, withArrayBuffer(msg.subarray()));
+	options?.signal?.throwIfAborted();
+	return new Uint8Array(signature, 0, signature.byteLength);
+}
+async function hashAndVerify$3(key, sig, msg, options) {
+	const publicKey = await crypto.subtle.importKey("jwk", key, {
+		name: "ECDSA",
+		namedCurve: key.crv ?? "P-256"
+	}, false, ["verify"]);
+	options?.signal?.throwIfAborted();
+	const result = await crypto.subtle.verify({
+		name: "ECDSA",
+		hash: { name: "SHA-256" }
+	}, publicKey, withArrayBuffer(sig), withArrayBuffer(msg.subarray()));
+	options?.signal?.throwIfAborted();
+	return result;
 }
 //#endregion
 //#region node_modules/.pnpm/@libp2p+crypto@5.1.19/node_modules/@libp2p/crypto/dist/src/keys/rsa/der.js
 const TAG_MASK = parseInt("11111", 2);
 const LONG_LENGTH_MASK = parseInt("10000000", 2);
 const LONG_LENGTH_BYTES_MASK = parseInt("01111111", 2);
-const decoders$1 = {
+const decoders = {
 	0: readSequence,
 	1: readSequence,
 	2: readInteger,
@@ -26566,7 +36727,7 @@ const decoders$1 = {
 function decodeDer(buf, context = { offset: 0 }) {
 	const tag = buf[context.offset] & TAG_MASK;
 	context.offset++;
-	if (decoders$1[tag] != null) return decoders$1[tag](buf, context);
+	if (decoders[tag] != null) return decoders[tag](buf, context);
 	throw new Error("No decoder for tag " + tag);
 }
 function readLength(buf, context) {
@@ -26862,7 +37023,7 @@ var ECDSAPublicKey = class {
 		return this._raw;
 	}
 	toMultihash() {
-		return identity$1.digest(publicKeyToProtobuf(this));
+		return identity.digest(publicKeyToProtobuf(this));
 	}
 	toCID() {
 		return CID.createV1(114, this.toMultihash());
@@ -30347,14 +40508,6 @@ const ristretto255_hasher = Object.freeze({
 	}
 });
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/concat.node.js
-/**
-* Returns a new Uint8Array created by concatenating the passed Uint8Arrays
-*/
-function concat(arrays, length) {
-	return asUint8Array(Buffer$1.concat(arrays, length));
-}
-//#endregion
 //#region node_modules/.pnpm/@libp2p+crypto@5.1.19/node_modules/@libp2p/crypto/dist/src/keys/ed25519/index.js
 const keypair$1 = crypto$1.generateKeyPairSync;
 const KEYS_BYTE_LENGTH = 32;
@@ -30376,7 +40529,7 @@ function generateKey() {
 	const privateKeyRaw = fromString(key.privateKey.d, "base64url");
 	const publicKeyRaw = fromString(key.publicKey.x, "base64url");
 	return {
-		privateKey: concat([privateKeyRaw, publicKeyRaw], privateKeyRaw.byteLength + publicKeyRaw.byteLength),
+		privateKey: concat$1([privateKeyRaw, publicKeyRaw], privateKeyRaw.byteLength + publicKeyRaw.byteLength),
 		publicKey: publicKeyRaw
 	};
 }
@@ -30419,7 +40572,7 @@ function hashAndVerify$2(key, sig, msg) {
 }
 //#endregion
 //#region node_modules/.pnpm/@libp2p+crypto@5.1.19/node_modules/@libp2p/crypto/dist/src/util.js
-function isPromise$2(thing) {
+function isPromise(thing) {
 	if (thing == null) return false;
 	return typeof thing.then === "function" && typeof thing.catch === "function" && typeof thing.finally === "function";
 }
@@ -30432,7 +40585,7 @@ var Ed25519PublicKey = class {
 		this.raw = ensureEd25519Key(key, 32);
 	}
 	toMultihash() {
-		return identity$1.digest(publicKeyToProtobuf(this));
+		return identity.digest(publicKeyToProtobuf(this));
 	}
 	toCID() {
 		return CID.createV1(114, this.toMultihash());
@@ -30447,7 +40600,7 @@ var Ed25519PublicKey = class {
 	verify(data, sig, options) {
 		options?.signal?.throwIfAborted();
 		const result = hashAndVerify$2(this.raw, sig, data);
-		if (isPromise$2(result)) return result.then((res) => {
+		if (isPromise(result)) return result.then((res) => {
 			options?.signal?.throwIfAborted();
 			return res;
 		});
@@ -30469,7 +40622,7 @@ var Ed25519PrivateKey = class {
 	sign(message, options) {
 		options?.signal?.throwIfAborted();
 		const sig = hashAndSign$2(this.raw, message);
-		if (isPromise$2(sig)) return sig.then((res) => {
+		if (isPromise(sig)) return sig.then((res) => {
 			options?.signal?.throwIfAborted();
 			return res;
 		});
@@ -30500,1232 +40653,6 @@ function ensureEd25519Key(key, length) {
 	if (key.length !== length) throw new InvalidParametersError$4(`Key must be a Uint8Array of length ${length}, got ${key.length}`);
 	return key;
 }
-//#endregion
-//#region node_modules/.pnpm/uint8-varint@2.0.5/node_modules/uint8-varint/dist/src/index.js
-const N1$1 = Math.pow(2, 7);
-const N2$1 = Math.pow(2, 14);
-const N3$1 = Math.pow(2, 21);
-const N4$1 = Math.pow(2, 28);
-const N5$1 = Math.pow(2, 35);
-const N6$1 = Math.pow(2, 42);
-const N7$1 = Math.pow(2, 49);
-/** Most significant bit of a byte */
-const MSB$1 = 128;
-/** Rest of the bits in a byte */
-const REST$1 = 127;
-function encodingLength$1(value) {
-	if (value < N1$1) return 1;
-	if (value < N2$1) return 2;
-	if (value < N3$1) return 3;
-	if (value < N4$1) return 4;
-	if (value < N5$1) return 5;
-	if (value < N6$1) return 6;
-	if (value < N7$1) return 7;
-	if (Number.MAX_SAFE_INTEGER != null && value > Number.MAX_SAFE_INTEGER) throw new RangeError("Could not encode varint");
-	return 8;
-}
-function encodeUint8Array$1(value, buf, offset = 0) {
-	switch (encodingLength$1(value)) {
-		case 8:
-			buf[offset++] = value & 255 | MSB$1;
-			value /= 128;
-		case 7:
-			buf[offset++] = value & 255 | MSB$1;
-			value /= 128;
-		case 6:
-			buf[offset++] = value & 255 | MSB$1;
-			value /= 128;
-		case 5:
-			buf[offset++] = value & 255 | MSB$1;
-			value /= 128;
-		case 4:
-			buf[offset++] = value & 255 | MSB$1;
-			value >>>= 7;
-		case 3:
-			buf[offset++] = value & 255 | MSB$1;
-			value >>>= 7;
-		case 2:
-			buf[offset++] = value & 255 | MSB$1;
-			value >>>= 7;
-		case 1:
-			buf[offset++] = value & 255;
-			value >>>= 7;
-			break;
-		default: throw new Error("unreachable");
-	}
-	return buf;
-}
-function encodeUint8ArrayList(value, buf, offset = 0) {
-	switch (encodingLength$1(value)) {
-		case 8:
-			buf.set(offset++, value & 255 | MSB$1);
-			value /= 128;
-		case 7:
-			buf.set(offset++, value & 255 | MSB$1);
-			value /= 128;
-		case 6:
-			buf.set(offset++, value & 255 | MSB$1);
-			value /= 128;
-		case 5:
-			buf.set(offset++, value & 255 | MSB$1);
-			value /= 128;
-		case 4:
-			buf.set(offset++, value & 255 | MSB$1);
-			value >>>= 7;
-		case 3:
-			buf.set(offset++, value & 255 | MSB$1);
-			value >>>= 7;
-		case 2:
-			buf.set(offset++, value & 255 | MSB$1);
-			value >>>= 7;
-		case 1:
-			buf.set(offset++, value & 255);
-			value >>>= 7;
-			break;
-		default: throw new Error("unreachable");
-	}
-	return buf;
-}
-function decodeUint8Array$1(buf, offset) {
-	let b = buf[offset];
-	let res = 0;
-	res += b & REST$1;
-	if (b < MSB$1) return res;
-	b = buf[offset + 1];
-	res += (b & REST$1) << 7;
-	if (b < MSB$1) return res;
-	b = buf[offset + 2];
-	res += (b & REST$1) << 14;
-	if (b < MSB$1) return res;
-	b = buf[offset + 3];
-	res += (b & REST$1) << 21;
-	if (b < MSB$1) return res;
-	b = buf[offset + 4];
-	res += (b & REST$1) * N4$1;
-	if (b < MSB$1) return res;
-	b = buf[offset + 5];
-	res += (b & REST$1) * N5$1;
-	if (b < MSB$1) return res;
-	b = buf[offset + 6];
-	res += (b & REST$1) * N6$1;
-	if (b < MSB$1) return res;
-	b = buf[offset + 7];
-	res += (b & REST$1) * N7$1;
-	if (b < MSB$1) return res;
-	throw new RangeError("Could not decode varint");
-}
-function decodeUint8ArrayList$1(buf, offset) {
-	let b = buf.get(offset);
-	let res = 0;
-	res += b & REST$1;
-	if (b < MSB$1) return res;
-	b = buf.get(offset + 1);
-	res += (b & REST$1) << 7;
-	if (b < MSB$1) return res;
-	b = buf.get(offset + 2);
-	res += (b & REST$1) << 14;
-	if (b < MSB$1) return res;
-	b = buf.get(offset + 3);
-	res += (b & REST$1) << 21;
-	if (b < MSB$1) return res;
-	b = buf.get(offset + 4);
-	res += (b & REST$1) * N4$1;
-	if (b < MSB$1) return res;
-	b = buf.get(offset + 5);
-	res += (b & REST$1) * N5$1;
-	if (b < MSB$1) return res;
-	b = buf.get(offset + 6);
-	res += (b & REST$1) * N6$1;
-	if (b < MSB$1) return res;
-	b = buf.get(offset + 7);
-	res += (b & REST$1) * N7$1;
-	if (b < MSB$1) return res;
-	throw new RangeError("Could not decode varint");
-}
-function encode$5(value, buf, offset = 0) {
-	if (buf == null) buf = allocUnsafe$1(encodingLength$1(value));
-	if (buf instanceof Uint8Array) return encodeUint8Array$1(value, buf, offset);
-	else return encodeUint8ArrayList(value, buf, offset);
-}
-function decode$6(buf, offset = 0) {
-	if (buf instanceof Uint8Array) return decodeUint8Array$1(buf, offset);
-	else return decodeUint8ArrayList$1(buf, offset);
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/float.js
-const f32 = new Float32Array([-0]);
-const f8b = new Uint8Array(f32.buffer);
-/**
-* Writes a 32 bit float to a buffer using little endian byte order
-*/
-function writeFloatLE(val, buf, pos) {
-	f32[0] = val;
-	buf[pos] = f8b[0];
-	buf[pos + 1] = f8b[1];
-	buf[pos + 2] = f8b[2];
-	buf[pos + 3] = f8b[3];
-}
-/**
-* Reads a 32 bit float from a buffer using little endian byte order
-*/
-function readFloatLE(buf, pos) {
-	f8b[0] = buf[pos];
-	f8b[1] = buf[pos + 1];
-	f8b[2] = buf[pos + 2];
-	f8b[3] = buf[pos + 3];
-	return f32[0];
-}
-const f64 = new Float64Array([-0]);
-const d8b = new Uint8Array(f64.buffer);
-/**
-* Writes a 64 bit double to a buffer using little endian byte order
-*/
-function writeDoubleLE(val, buf, pos) {
-	f64[0] = val;
-	buf[pos] = d8b[0];
-	buf[pos + 1] = d8b[1];
-	buf[pos + 2] = d8b[2];
-	buf[pos + 3] = d8b[3];
-	buf[pos + 4] = d8b[4];
-	buf[pos + 5] = d8b[5];
-	buf[pos + 6] = d8b[6];
-	buf[pos + 7] = d8b[7];
-}
-/**
-* Reads a 64 bit double from a buffer using little endian byte order
-*/
-function readDoubleLE(buf, pos) {
-	d8b[0] = buf[pos];
-	d8b[1] = buf[pos + 1];
-	d8b[2] = buf[pos + 2];
-	d8b[3] = buf[pos + 3];
-	d8b[4] = buf[pos + 4];
-	d8b[5] = buf[pos + 5];
-	d8b[6] = buf[pos + 6];
-	d8b[7] = buf[pos + 7];
-	return f64[0];
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/longbits.js
-const MAX_SAFE_NUMBER_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
-const MIN_SAFE_NUMBER_INTEGER = BigInt(Number.MIN_SAFE_INTEGER);
-/**
-* Constructs new long bits.
-*
-* @classdesc Helper class for working with the low and high bits of a 64 bit value.
-* @memberof util
-* @function Object() { [native code] }
-* @param {number} lo - Low 32 bits, unsigned
-* @param {number} hi - High 32 bits, unsigned
-*/
-var LongBits = class LongBits {
-	lo;
-	hi;
-	constructor(lo, hi) {
-		/**
-		* Low bits
-		*/
-		this.lo = lo | 0;
-		/**
-		* High bits
-		*/
-		this.hi = hi | 0;
-	}
-	/**
-	* Converts this long bits to a possibly unsafe JavaScript number
-	*/
-	toNumber(unsigned = false) {
-		if (!unsigned && this.hi >>> 31 > 0) {
-			const lo = ~this.lo + 1 >>> 0;
-			let hi = ~this.hi >>> 0;
-			if (lo === 0) hi = hi + 1 >>> 0;
-			return -(lo + hi * 4294967296);
-		}
-		return this.lo + this.hi * 4294967296;
-	}
-	/**
-	* Converts this long bits to a bigint
-	*/
-	toBigInt(unsigned = false) {
-		if (unsigned) return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n);
-		if (this.hi >>> 31 !== 0) {
-			const lo = ~this.lo + 1 >>> 0;
-			let hi = ~this.hi >>> 0;
-			if (lo === 0) hi = hi + 1 >>> 0;
-			return -(BigInt(lo) + (BigInt(hi) << 32n));
-		}
-		return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n);
-	}
-	/**
-	* Converts this long bits to a string
-	*/
-	toString(unsigned = false) {
-		return this.toBigInt(unsigned).toString();
-	}
-	/**
-	* Zig-zag encodes this long bits
-	*/
-	zzEncode() {
-		const mask = this.hi >> 31;
-		this.hi = ((this.hi << 1 | this.lo >>> 31) ^ mask) >>> 0;
-		this.lo = (this.lo << 1 ^ mask) >>> 0;
-		return this;
-	}
-	/**
-	* Zig-zag decodes this long bits
-	*/
-	zzDecode() {
-		const mask = -(this.lo & 1);
-		this.lo = ((this.lo >>> 1 | this.hi << 31) ^ mask) >>> 0;
-		this.hi = (this.hi >>> 1 ^ mask) >>> 0;
-		return this;
-	}
-	/**
-	* Calculates the length of this longbits when encoded as a varint.
-	*/
-	length() {
-		const part0 = this.lo;
-		const part1 = (this.lo >>> 28 | this.hi << 4) >>> 0;
-		const part2 = this.hi >>> 24;
-		return part2 === 0 ? part1 === 0 ? part0 < 16384 ? part0 < 128 ? 1 : 2 : part0 < 2097152 ? 3 : 4 : part1 < 16384 ? part1 < 128 ? 5 : 6 : part1 < 2097152 ? 7 : 8 : part2 < 128 ? 9 : 10;
-	}
-	/**
-	* Constructs new long bits from the specified number
-	*/
-	static fromBigInt(value) {
-		if (value === 0n) return zero;
-		if (value < MAX_SAFE_NUMBER_INTEGER && value > MIN_SAFE_NUMBER_INTEGER) return this.fromNumber(Number(value));
-		const negative = value < 0n;
-		if (negative) value = -value;
-		let hi = value >> 32n;
-		let lo = value - (hi << 32n);
-		if (negative) {
-			hi = ~hi | 0n;
-			lo = ~lo | 0n;
-			if (++lo > TWO_32) {
-				lo = 0n;
-				if (++hi > TWO_32) hi = 0n;
-			}
-		}
-		return new LongBits(Number(lo), Number(hi));
-	}
-	/**
-	* Constructs new long bits from the specified number
-	*/
-	static fromNumber(value) {
-		if (value === 0) return zero;
-		const sign = value < 0;
-		if (sign) value = -value;
-		let lo = value >>> 0;
-		let hi = (value - lo) / 4294967296 >>> 0;
-		if (sign) {
-			hi = ~hi >>> 0;
-			lo = ~lo >>> 0;
-			if (++lo > 4294967295) {
-				lo = 0;
-				if (++hi > 4294967295) hi = 0;
-			}
-		}
-		return new LongBits(lo, hi);
-	}
-	/**
-	* Constructs new long bits from a number, long or string
-	*/
-	static from(value) {
-		if (typeof value === "number") return LongBits.fromNumber(value);
-		if (typeof value === "bigint") return LongBits.fromBigInt(value);
-		if (typeof value === "string") return LongBits.fromBigInt(BigInt(value));
-		return value.low != null || value.high != null ? new LongBits(value.low >>> 0, value.high >>> 0) : zero;
-	}
-};
-const zero = new LongBits(0, 0);
-zero.toBigInt = function() {
-	return 0n;
-};
-zero.zzEncode = zero.zzDecode = function() {
-	return this;
-};
-zero.length = function() {
-	return 1;
-};
-const TWO_32 = 4294967296n;
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/utf8.js
-/**
-* Calculates the UTF8 byte length of a string
-*/
-function length(string) {
-	let len = 0;
-	let c = 0;
-	for (let i = 0; i < string.length; ++i) {
-		c = string.charCodeAt(i);
-		if (c < 128) len += 1;
-		else if (c < 2048) len += 2;
-		else if ((c & 64512) === 55296 && (string.charCodeAt(i + 1) & 64512) === 56320) {
-			++i;
-			len += 4;
-		} else len += 3;
-	}
-	return len;
-}
-/**
-* Reads UTF8 bytes as a string
-*/
-function read(buffer, start, end) {
-	if (end - start < 1) return "";
-	let parts;
-	const chunk = [];
-	let i = 0;
-	let t;
-	while (start < end) {
-		t = buffer[start++];
-		if (t < 128) chunk[i++] = t;
-		else if (t > 191 && t < 224) chunk[i++] = (t & 31) << 6 | buffer[start++] & 63;
-		else if (t > 239 && t < 365) {
-			t = ((t & 7) << 18 | (buffer[start++] & 63) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63) - 65536;
-			chunk[i++] = 55296 + (t >> 10);
-			chunk[i++] = 56320 + (t & 1023);
-		} else chunk[i++] = (t & 15) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63;
-		if (i > 8191) {
-			(parts ?? (parts = [])).push(String.fromCharCode.apply(String, chunk));
-			i = 0;
-		}
-	}
-	if (parts != null) {
-		if (i > 0) parts.push(String.fromCharCode.apply(String, chunk.slice(0, i)));
-		return parts.join("");
-	}
-	return String.fromCharCode.apply(String, chunk.slice(0, i));
-}
-/**
-* Writes a string as UTF8 bytes
-*/
-function write(string, buffer, offset) {
-	const start = offset;
-	let c1;
-	let c2;
-	for (let i = 0; i < string.length; ++i) {
-		c1 = string.charCodeAt(i);
-		if (c1 < 128) buffer[offset++] = c1;
-		else if (c1 < 2048) {
-			buffer[offset++] = c1 >> 6 | 192;
-			buffer[offset++] = c1 & 63 | 128;
-		} else if ((c1 & 64512) === 55296 && ((c2 = string.charCodeAt(i + 1)) & 64512) === 56320) {
-			c1 = 65536 + ((c1 & 1023) << 10) + (c2 & 1023);
-			++i;
-			buffer[offset++] = c1 >> 18 | 240;
-			buffer[offset++] = c1 >> 12 & 63 | 128;
-			buffer[offset++] = c1 >> 6 & 63 | 128;
-			buffer[offset++] = c1 & 63 | 128;
-		} else {
-			buffer[offset++] = c1 >> 12 | 224;
-			buffer[offset++] = c1 >> 6 & 63 | 128;
-			buffer[offset++] = c1 & 63 | 128;
-		}
-	}
-	return offset - start;
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/reader.js
-/* istanbul ignore next */
-function indexOutOfRange(reader, writeLength) {
-	return RangeError(`index out of range: ${reader.pos} + ${writeLength ?? 1} > ${reader.len}`);
-}
-function readFixed32End(buf, end) {
-	return (buf[end - 4] | buf[end - 3] << 8 | buf[end - 2] << 16 | buf[end - 1] << 24) >>> 0;
-}
-/**
-* Constructs a new reader instance using the specified buffer.
-*/
-var Uint8ArrayReader = class {
-	buf;
-	pos;
-	len;
-	_slice = Uint8Array.prototype.subarray;
-	constructor(buffer) {
-		/**
-		* Read buffer
-		*/
-		this.buf = buffer;
-		/**
-		* Read buffer position
-		*/
-		this.pos = 0;
-		/**
-		* Read buffer length
-		*/
-		this.len = buffer.length;
-	}
-	/**
-	* Reads a varint as an unsigned 32 bit value
-	*/
-	uint32() {
-		let value = 4294967295;
-		value = (this.buf[this.pos] & 127) >>> 0;
-		if (this.buf[this.pos++] < 128) return value;
-		value = (value | (this.buf[this.pos] & 127) << 7) >>> 0;
-		if (this.buf[this.pos++] < 128) return value;
-		value = (value | (this.buf[this.pos] & 127) << 14) >>> 0;
-		if (this.buf[this.pos++] < 128) return value;
-		value = (value | (this.buf[this.pos] & 127) << 21) >>> 0;
-		if (this.buf[this.pos++] < 128) return value;
-		value = (value | (this.buf[this.pos] & 15) << 28) >>> 0;
-		if (this.buf[this.pos++] < 128) return value;
-		if ((this.pos += 5) > this.len) {
-			this.pos = this.len;
-			throw indexOutOfRange(this, 10);
-		}
-		return value;
-	}
-	/**
-	* Reads a varint as a signed 32 bit value
-	*/
-	int32() {
-		return this.uint32() | 0;
-	}
-	/**
-	* Reads a zig-zag encoded varint as a signed 32 bit value
-	*/
-	sint32() {
-		const value = this.uint32();
-		return value >>> 1 ^ -(value & 1) | 0;
-	}
-	/**
-	* Reads a varint as a boolean
-	*/
-	bool() {
-		return this.uint32() !== 0;
-	}
-	/**
-	* Reads fixed 32 bits as an unsigned 32 bit integer
-	*/
-	fixed32() {
-		if (this.pos + 4 > this.len) throw indexOutOfRange(this, 4);
-		return readFixed32End(this.buf, this.pos += 4);
-	}
-	/**
-	* Reads fixed 32 bits as a signed 32 bit integer
-	*/
-	sfixed32() {
-		if (this.pos + 4 > this.len) throw indexOutOfRange(this, 4);
-		return readFixed32End(this.buf, this.pos += 4) | 0;
-	}
-	/**
-	* Reads a float (32 bit) as a number
-	*/
-	float() {
-		if (this.pos + 4 > this.len) throw indexOutOfRange(this, 4);
-		const value = readFloatLE(this.buf, this.pos);
-		this.pos += 4;
-		return value;
-	}
-	/**
-	* Reads a double (64 bit float) as a number
-	*/
-	double() {
-		/* istanbul ignore if */
-		if (this.pos + 8 > this.len) throw indexOutOfRange(this, 4);
-		const value = readDoubleLE(this.buf, this.pos);
-		this.pos += 8;
-		return value;
-	}
-	/**
-	* Reads a sequence of bytes preceded by its length as a varint
-	*/
-	bytes() {
-		const length = this.uint32();
-		const start = this.pos;
-		const end = this.pos + length;
-		/* istanbul ignore if */
-		if (end > this.len) throw indexOutOfRange(this, length);
-		this.pos += length;
-		return start === end ? new Uint8Array(0) : this.buf.subarray(start, end);
-	}
-	/**
-	* Reads a string preceded by its byte length as a varint
-	*/
-	string() {
-		const bytes = this.bytes();
-		return read(bytes, 0, bytes.length);
-	}
-	/**
-	* Skips the specified number of bytes if specified, otherwise skips a varint
-	*/
-	skip(length) {
-		if (typeof length === "number") {
-			/* istanbul ignore if */
-			if (this.pos + length > this.len) throw indexOutOfRange(this, length);
-			this.pos += length;
-		} else do
-			/* istanbul ignore if */
-			if (this.pos >= this.len) throw indexOutOfRange(this);
-		while ((this.buf[this.pos++] & 128) !== 0);
-		return this;
-	}
-	/**
-	* Skips the next element of the specified wire type
-	*/
-	skipType(wireType) {
-		switch (wireType) {
-			case 0:
-				this.skip();
-				break;
-			case 1:
-				this.skip(8);
-				break;
-			case 2:
-				this.skip(this.uint32());
-				break;
-			case 3:
-				while ((wireType = this.uint32() & 7) !== 4) this.skipType(wireType);
-				break;
-			case 5:
-				this.skip(4);
-				break;
-			/* istanbul ignore next */
-			default: throw Error(`invalid wire type ${wireType} at offset ${this.pos}`);
-		}
-		return this;
-	}
-	readLongVarint() {
-		const bits = new LongBits(0, 0);
-		let i = 0;
-		if (this.len - this.pos > 4) {
-			for (; i < 4; ++i) {
-				bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
-				if (this.buf[this.pos++] < 128) return bits;
-			}
-			bits.lo = (bits.lo | (this.buf[this.pos] & 127) << 28) >>> 0;
-			bits.hi = (bits.hi | (this.buf[this.pos] & 127) >> 4) >>> 0;
-			if (this.buf[this.pos++] < 128) return bits;
-			i = 0;
-		} else {
-			for (; i < 3; ++i) {
-				/* istanbul ignore if */
-				if (this.pos >= this.len) throw indexOutOfRange(this);
-				bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
-				if (this.buf[this.pos++] < 128) return bits;
-			}
-			bits.lo = (bits.lo | (this.buf[this.pos++] & 127) << i * 7) >>> 0;
-			return bits;
-		}
-		if (this.len - this.pos > 4) for (; i < 5; ++i) {
-			bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
-			if (this.buf[this.pos++] < 128) return bits;
-		}
-		else for (; i < 5; ++i) {
-			if (this.pos >= this.len) throw indexOutOfRange(this);
-			bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
-			if (this.buf[this.pos++] < 128) return bits;
-		}
-		throw Error("invalid varint encoding");
-	}
-	readFixed64() {
-		if (this.pos + 8 > this.len) throw indexOutOfRange(this, 8);
-		return new LongBits(readFixed32End(this.buf, this.pos += 4), readFixed32End(this.buf, this.pos += 4));
-	}
-	/**
-	* Reads a varint as a signed 64 bit value
-	*/
-	int64() {
-		return this.readLongVarint().toBigInt();
-	}
-	/**
-	* Reads a varint as a signed 64 bit value returned as a possibly unsafe
-	* JavaScript number
-	*/
-	int64Number() {
-		return this.readLongVarint().toNumber();
-	}
-	/**
-	* Reads a varint as a signed 64 bit value returned as a string
-	*/
-	int64String() {
-		return this.readLongVarint().toString();
-	}
-	/**
-	* Reads a varint as an unsigned 64 bit value
-	*/
-	uint64() {
-		return this.readLongVarint().toBigInt(true);
-	}
-	/**
-	* Reads a varint as an unsigned 64 bit value returned as a possibly unsafe
-	* JavaScript number
-	*/
-	uint64Number() {
-		const value = decodeUint8Array$1(this.buf, this.pos);
-		this.pos += encodingLength$1(value);
-		return value;
-	}
-	/**
-	* Reads a varint as an unsigned 64 bit value returned as a string
-	*/
-	uint64String() {
-		return this.readLongVarint().toString(true);
-	}
-	/**
-	* Reads a zig-zag encoded varint as a signed 64 bit value
-	*/
-	sint64() {
-		return this.readLongVarint().zzDecode().toBigInt();
-	}
-	/**
-	* Reads a zig-zag encoded varint as a signed 64 bit value returned as a
-	* possibly unsafe JavaScript number
-	*/
-	sint64Number() {
-		return this.readLongVarint().zzDecode().toNumber();
-	}
-	/**
-	* Reads a zig-zag encoded varint as a signed 64 bit value returned as a
-	* string
-	*/
-	sint64String() {
-		return this.readLongVarint().zzDecode().toString();
-	}
-	/**
-	* Reads fixed 64 bits
-	*/
-	fixed64() {
-		return this.readFixed64().toBigInt();
-	}
-	/**
-	* Reads fixed 64 bits returned as a possibly unsafe JavaScript number
-	*/
-	fixed64Number() {
-		return this.readFixed64().toNumber();
-	}
-	/**
-	* Reads fixed 64 bits returned as a string
-	*/
-	fixed64String() {
-		return this.readFixed64().toString();
-	}
-	/**
-	* Reads zig-zag encoded fixed 64 bits
-	*/
-	sfixed64() {
-		return this.readFixed64().toBigInt();
-	}
-	/**
-	* Reads zig-zag encoded fixed 64 bits returned as a possibly unsafe
-	* JavaScript number
-	*/
-	sfixed64Number() {
-		return this.readFixed64().toNumber();
-	}
-	/**
-	* Reads zig-zag encoded fixed 64 bits returned as a string
-	*/
-	sfixed64String() {
-		return this.readFixed64().toString();
-	}
-};
-function createReader(buf) {
-	return new Uint8ArrayReader(buf instanceof Uint8Array ? buf : buf.subarray());
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/decode.js
-function decodeMessage(buf, codec, opts) {
-	const reader = createReader(buf);
-	return codec.decode(reader, void 0, opts);
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/pool.js
-/**
-* A general purpose buffer pool
-*/
-function pool(size) {
-	const SIZE = size ?? 8192;
-	const MAX = SIZE >>> 1;
-	let slab;
-	let offset = SIZE;
-	return function poolAlloc(size) {
-		if (size < 1 || size > MAX) return allocUnsafe$1(size);
-		if (offset + size > SIZE) {
-			slab = allocUnsafe$1(SIZE);
-			offset = 0;
-		}
-		const buf = slab.subarray(offset, offset += size);
-		if ((offset & 7) !== 0) offset = (offset | 7) + 1;
-		return buf;
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/utils/writer.js
-/**
-* Constructs a new writer operation instance.
-*
-* @classdesc Scheduled writer operation
-*/
-var Op = class {
-	/**
-	* Function to call
-	*/
-	fn;
-	/**
-	* Value byte length
-	*/
-	len;
-	/**
-	* Next operation
-	*/
-	next;
-	/**
-	* Value to write
-	*/
-	val;
-	constructor(fn, len, val) {
-		this.fn = fn;
-		this.len = len;
-		this.next = void 0;
-		this.val = val;
-	}
-};
-/* istanbul ignore next */
-function noop$1() {}
-/**
-* Constructs a new writer state instance
-*/
-var State = class {
-	/**
-	* Current head
-	*/
-	head;
-	/**
-	* Current tail
-	*/
-	tail;
-	/**
-	* Current buffer length
-	*/
-	len;
-	/**
-	* Next state
-	*/
-	next;
-	constructor(writer) {
-		this.head = writer.head;
-		this.tail = writer.tail;
-		this.len = writer.len;
-		this.next = writer.states;
-	}
-};
-const bufferPool = pool();
-/**
-* Allocates a buffer of the specified size
-*/
-function alloc(size) {
-	if (globalThis.Buffer != null) return allocUnsafe$1(size);
-	return bufferPool(size);
-}
-/**
-* When a value is written, the writer calculates its byte length and puts it into a linked
-* list of operations to perform when finish() is called. This both allows us to allocate
-* buffers of the exact required size and reduces the amount of work we have to do compared
-* to first calculating over objects and then encoding over objects. In our case, the encoding
-* part is just a linked list walk calling operations with already prepared values.
-*/
-var Uint8ArrayWriter = class {
-	/**
-	* Current length
-	*/
-	len;
-	/**
-	* Operations head
-	*/
-	head;
-	/**
-	* Operations tail
-	*/
-	tail;
-	/**
-	* Linked forked states
-	*/
-	states;
-	constructor() {
-		this.len = 0;
-		this.head = new Op(noop$1, 0, 0);
-		this.tail = this.head;
-		this.states = null;
-	}
-	/**
-	* Pushes a new operation to the queue
-	*/
-	_push(fn, len, val) {
-		this.tail = this.tail.next = new Op(fn, len, val);
-		this.len += len;
-		return this;
-	}
-	/**
-	* Writes an unsigned 32 bit value as a varint
-	*/
-	uint32(value) {
-		this.len += (this.tail = this.tail.next = new VarintOp((value = value >>> 0) < 128 ? 1 : value < 16384 ? 2 : value < 2097152 ? 3 : value < 268435456 ? 4 : 5, value)).len;
-		return this;
-	}
-	/**
-	* Writes a signed 32 bit value as a varint`
-	*/
-	int32(value) {
-		return value < 0 ? this._push(writeVarint64, 10, LongBits.fromNumber(value)) : this.uint32(value);
-	}
-	/**
-	* Writes a 32 bit value as a varint, zig-zag encoded
-	*/
-	sint32(value) {
-		return this.uint32((value << 1 ^ value >> 31) >>> 0);
-	}
-	/**
-	* Writes an unsigned 64 bit value as a varint
-	*/
-	uint64(value) {
-		const bits = LongBits.fromBigInt(value);
-		return this._push(writeVarint64, bits.length(), bits);
-	}
-	/**
-	* Writes an unsigned 64 bit value as a varint
-	*/
-	uint64Number(value) {
-		return this._push(encodeUint8Array$1, encodingLength$1(value), value);
-	}
-	/**
-	* Writes an unsigned 64 bit value as a varint
-	*/
-	uint64String(value) {
-		return this.uint64(BigInt(value));
-	}
-	/**
-	* Writes a signed 64 bit value as a varint
-	*/
-	int64(value) {
-		return this.uint64(value);
-	}
-	/**
-	* Writes a signed 64 bit value as a varint
-	*/
-	int64Number(value) {
-		return this.uint64Number(value);
-	}
-	/**
-	* Writes a signed 64 bit value as a varint
-	*/
-	int64String(value) {
-		return this.uint64String(value);
-	}
-	/**
-	* Writes a signed 64 bit value as a varint, zig-zag encoded
-	*/
-	sint64(value) {
-		const bits = LongBits.fromBigInt(value).zzEncode();
-		return this._push(writeVarint64, bits.length(), bits);
-	}
-	/**
-	* Writes a signed 64 bit value as a varint, zig-zag encoded
-	*/
-	sint64Number(value) {
-		const bits = LongBits.fromNumber(value).zzEncode();
-		return this._push(writeVarint64, bits.length(), bits);
-	}
-	/**
-	* Writes a signed 64 bit value as a varint, zig-zag encoded
-	*/
-	sint64String(value) {
-		return this.sint64(BigInt(value));
-	}
-	/**
-	* Writes a boolish value as a varint
-	*/
-	bool(value) {
-		return this._push(writeByte, 1, value ? 1 : 0);
-	}
-	/**
-	* Writes an unsigned 32 bit value as fixed 32 bits
-	*/
-	fixed32(value) {
-		return this._push(writeFixed32, 4, value >>> 0);
-	}
-	/**
-	* Writes a signed 32 bit value as fixed 32 bits
-	*/
-	sfixed32(value) {
-		return this.fixed32(value);
-	}
-	/**
-	* Writes an unsigned 64 bit value as fixed 64 bits
-	*/
-	fixed64(value) {
-		const bits = LongBits.fromBigInt(value);
-		return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
-	}
-	/**
-	* Writes an unsigned 64 bit value as fixed 64 bits
-	*/
-	fixed64Number(value) {
-		const bits = LongBits.fromNumber(value);
-		return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
-	}
-	/**
-	* Writes an unsigned 64 bit value as fixed 64 bits
-	*/
-	fixed64String(value) {
-		return this.fixed64(BigInt(value));
-	}
-	/**
-	* Writes a signed 64 bit value as fixed 64 bits
-	*/
-	sfixed64(value) {
-		return this.fixed64(value);
-	}
-	/**
-	* Writes a signed 64 bit value as fixed 64 bits
-	*/
-	sfixed64Number(value) {
-		return this.fixed64Number(value);
-	}
-	/**
-	* Writes a signed 64 bit value as fixed 64 bits
-	*/
-	sfixed64String(value) {
-		return this.fixed64String(value);
-	}
-	/**
-	* Writes a float (32 bit)
-	*/
-	float(value) {
-		return this._push(writeFloatLE, 4, value);
-	}
-	/**
-	* Writes a double (64 bit float).
-	*
-	* @function
-	* @param {number} value - Value to write
-	* @returns {Writer} `this`
-	*/
-	double(value) {
-		return this._push(writeDoubleLE, 8, value);
-	}
-	/**
-	* Writes a sequence of bytes
-	*/
-	bytes(value) {
-		const len = value.length >>> 0;
-		if (len === 0) return this._push(writeByte, 1, 0);
-		return this.uint32(len)._push(writeBytes, len, value);
-	}
-	/**
-	* Writes a string
-	*/
-	string(value) {
-		const len = length(value);
-		return len !== 0 ? this.uint32(len)._push(write, len, value) : this._push(writeByte, 1, 0);
-	}
-	/**
-	* Forks this writer's state by pushing it to a stack.
-	* Calling {@link Writer#reset|reset} or {@link Writer#ldelim|ldelim} resets the writer to the previous state.
-	*/
-	fork() {
-		this.states = new State(this);
-		this.head = this.tail = new Op(noop$1, 0, 0);
-		this.len = 0;
-		return this;
-	}
-	/**
-	* Resets this instance to the last state
-	*/
-	reset() {
-		if (this.states != null) {
-			this.head = this.states.head;
-			this.tail = this.states.tail;
-			this.len = this.states.len;
-			this.states = this.states.next;
-		} else {
-			this.head = this.tail = new Op(noop$1, 0, 0);
-			this.len = 0;
-		}
-		return this;
-	}
-	/**
-	* Resets to the last state and appends the fork state's current write length as a varint followed by its operations.
-	*/
-	ldelim() {
-		const head = this.head;
-		const tail = this.tail;
-		const len = this.len;
-		this.reset().uint32(len);
-		if (len !== 0) {
-			this.tail.next = head.next;
-			this.tail = tail;
-			this.len += len;
-		}
-		return this;
-	}
-	/**
-	* Finishes the write operation
-	*/
-	finish() {
-		let head = this.head.next;
-		const buf = alloc(this.len);
-		let pos = 0;
-		while (head != null) {
-			head.fn(head.val, buf, pos);
-			pos += head.len;
-			head = head.next;
-		}
-		return buf;
-	}
-};
-function writeByte(val, buf, pos) {
-	buf[pos] = val & 255;
-}
-function writeVarint32(val, buf, pos) {
-	while (val > 127) {
-		buf[pos++] = val & 127 | 128;
-		val >>>= 7;
-	}
-	buf[pos] = val;
-}
-/**
-* Constructs a new varint writer operation instance.
-*
-* @classdesc Scheduled varint writer operation
-*/
-var VarintOp = class extends Op {
-	next;
-	constructor(len, val) {
-		super(writeVarint32, len, val);
-		this.next = void 0;
-	}
-};
-function writeVarint64(val, buf, pos) {
-	while (val.hi !== 0) {
-		buf[pos++] = val.lo & 127 | 128;
-		val.lo = (val.lo >>> 7 | val.hi << 25) >>> 0;
-		val.hi >>>= 7;
-	}
-	while (val.lo > 127) {
-		buf[pos++] = val.lo & 127 | 128;
-		val.lo = val.lo >>> 7;
-	}
-	buf[pos++] = val.lo;
-}
-function writeFixed32(val, buf, pos) {
-	buf[pos] = val & 255;
-	buf[pos + 1] = val >>> 8 & 255;
-	buf[pos + 2] = val >>> 16 & 255;
-	buf[pos + 3] = val >>> 24;
-}
-function writeBytes(val, buf, pos) {
-	buf.set(val, pos);
-}
-if (globalThis.Buffer != null) {
-	Uint8ArrayWriter.prototype.bytes = function(value) {
-		const len = value.length >>> 0;
-		this.uint32(len);
-		if (len > 0) this._push(writeBytesBuffer, len, value);
-		return this;
-	};
-	Uint8ArrayWriter.prototype.string = function(value) {
-		const len = globalThis.Buffer.byteLength(value);
-		this.uint32(len);
-		if (len > 0) this._push(writeStringBuffer, len, value);
-		return this;
-	};
-}
-function writeBytesBuffer(val, buf, pos) {
-	buf.set(val, pos);
-}
-function writeStringBuffer(val, buf, pos) {
-	if (val.length < 40) write(val, buf, pos);
-	else if (buf.utf8Write != null) buf.utf8Write(val, pos);
-	else buf.set(fromString$2(val), pos);
-}
-/**
-* Creates a new writer
-*/
-function createWriter() {
-	return new Uint8ArrayWriter();
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/encode.js
-function encodeMessage(message, codec) {
-	const w = createWriter();
-	codec.encode(message, w, { lengthDelimited: false });
-	return w.finish();
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/stream.js
-function* streamMessage(buf, codec, opts) {
-	const reader = createReader(buf);
-	yield* codec.stream(reader, void 0, "$", opts);
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/codec.js
-const CODEC_TYPES = {
-	VARINT: 0,
-	BIT64: 1,
-	LENGTH_DELIMITED: 2,
-	START_GROUP: 3,
-	END_GROUP: 4,
-	BIT32: 5
-};
-function createCodec(name, type, encode, decode, stream) {
-	return {
-		name,
-		type,
-		encode,
-		decode,
-		stream
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/codecs/enum.js
-function enumeration(v) {
-	function findValue(val) {
-		if (v[val.toString()] == null) throw new Error("Invalid enum value");
-		return v[val];
-	}
-	return createCodec("enum", CODEC_TYPES.VARINT, function enumEncode(val, writer) {
-		const enumValue = findValue(val);
-		writer.int32(enumValue);
-	}, function enumDecode(reader) {
-		return findValue(reader.int32());
-	}, function* enumStream(reader) {
-		yield findValue(reader.int32());
-	});
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/codecs/message.js
-function message(encode, decode, stream) {
-	return createCodec("message", CODEC_TYPES.LENGTH_DELIMITED, encode, decode, stream);
-}
-//#endregion
-//#region node_modules/.pnpm/protons-runtime@6.0.2/node_modules/protons-runtime/dist/src/index.js
-/**
-* Thrown when a repeated field has too many elements
-*/
-var MaxLengthError = class extends Error {
-	/**
-	* This will be removed in a future release
-	*
-	* @deprecated use the `.name` property instead
-	*/
-	code = "ERR_MAX_LENGTH";
-	name = "MaxLengthError";
-};
-/**
-* Thrown when a map has too many elements
-*/
-var MaxSizeError = class extends Error {
-	/**
-	* This will be removed in a future release
-	*
-	* @deprecated use the `.name` property instead
-	*/
-	code = "ERR_MAX_SIZE";
-	name = "MaxSizeError";
-};
 //#endregion
 //#region node_modules/.pnpm/@libp2p+crypto@5.1.19/node_modules/@libp2p/crypto/dist/src/keys/keys.js
 var KeyType;
@@ -33360,7 +42287,7 @@ var Secp256k1PublicKey = class {
 		this.raw = compressSecp256k1PublicKey(this._key);
 	}
 	toMultihash() {
-		return identity$1.digest(publicKeyToProtobuf(this));
+		return identity.digest(publicKeyToProtobuf(this));
 	}
 	toCID() {
 		return CID.createV1(114, this.toMultihash());
@@ -33544,12273 +42471,6 @@ function toCurve(curve) {
 	throw new InvalidParametersError$4("Unsupported curve, should be P-256, P-384 or P-521");
 }
 //#endregion
-//#region node_modules/.pnpm/@noble+hashes@2.2.0/node_modules/@noble/hashes/legacy.js
-/**
-
-SHA1 (RFC 3174), MD5 (RFC 1321), and RIPEMD160 legacy, weak hash functions.
-RFC 2286 only covers HMAC-RIPEMD160 wrapper material and test vectors,
-not the base RIPEMD-160 compression spec.
-Don't use them in a new protocol. What "weak" means:
-
-- Collisions can be made with 2^18 effort in MD5, 2^60 in SHA1, 2^80 in RIPEMD160.
-- No practical pre-image attacks (only theoretical, 2^123.4)
-- HMAC seems kinda ok: https://www.rfc-editor.org/rfc/rfc6151
-* @module
-*/
-/** Initial SHA-1 state from RFC 3174 §6.1. */
-const SHA1_IV = /* @__PURE__ */ Uint32Array.from([
-	1732584193,
-	4023233417,
-	2562383102,
-	271733878,
-	3285377520
-]);
-const SHA1_W = /* @__PURE__ */ new Uint32Array(80);
-/** Internal SHA1 legacy hash class. */
-var _SHA1 = class extends HashMD {
-	A = SHA1_IV[0] | 0;
-	B = SHA1_IV[1] | 0;
-	C = SHA1_IV[2] | 0;
-	D = SHA1_IV[3] | 0;
-	E = SHA1_IV[4] | 0;
-	constructor() {
-		super(64, 20, 8, false);
-	}
-	get() {
-		const { A, B, C, D, E } = this;
-		return [
-			A,
-			B,
-			C,
-			D,
-			E
-		];
-	}
-	set(A, B, C, D, E) {
-		this.A = A | 0;
-		this.B = B | 0;
-		this.C = C | 0;
-		this.D = D | 0;
-		this.E = E | 0;
-	}
-	process(view, offset) {
-		for (let i = 0; i < 16; i++, offset += 4) SHA1_W[i] = view.getUint32(offset, false);
-		for (let i = 16; i < 80; i++) SHA1_W[i] = rotl(SHA1_W[i - 3] ^ SHA1_W[i - 8] ^ SHA1_W[i - 14] ^ SHA1_W[i - 16], 1);
-		let { A, B, C, D, E } = this;
-		for (let i = 0; i < 80; i++) {
-			let F, K;
-			if (i < 20) {
-				F = Chi(B, C, D);
-				K = 1518500249;
-			} else if (i < 40) {
-				F = B ^ C ^ D;
-				K = 1859775393;
-			} else if (i < 60) {
-				F = Maj(B, C, D);
-				K = 2400959708;
-			} else {
-				F = B ^ C ^ D;
-				K = 3395469782;
-			}
-			const T = rotl(A, 5) + F + E + K + SHA1_W[i] | 0;
-			E = D;
-			D = C;
-			C = rotl(B, 30);
-			B = A;
-			A = T;
-		}
-		A = A + this.A | 0;
-		B = B + this.B | 0;
-		C = C + this.C | 0;
-		D = D + this.D | 0;
-		E = E + this.E | 0;
-		this.set(A, B, C, D, E);
-	}
-	roundClean() {
-		clean(SHA1_W);
-	}
-	destroy() {
-		this.destroyed = true;
-		this.set(0, 0, 0, 0, 0);
-		clean(this.buffer);
-	}
-};
-/**
-* SHA1 (RFC 3174) legacy hash function. It was cryptographically broken.
-* @param msg - message bytes to hash
-* @returns Digest bytes.
-* @example
-* Hash a message with SHA1.
-* ```ts
-* sha1(new Uint8Array([97, 98, 99]));
-* ```
-*/
-const sha1 = /* @__PURE__ */ createHasher(() => new _SHA1());
-//#endregion
-//#region node_modules/.pnpm/@noble+hashes@2.2.0/node_modules/@noble/hashes/pbkdf2.js
-/**
-* PBKDF (RFC 2898). Can be used to create a key from password and salt.
-* @module
-*/
-function pbkdf2Init(hash, _password, _salt, _opts) {
-	ahash(hash);
-	const { c, dkLen, asyncTick } = checkOpts({
-		dkLen: 32,
-		asyncTick: 10
-	}, _opts);
-	anumber$1(c, "c");
-	anumber$1(dkLen, "dkLen");
-	anumber$1(asyncTick, "asyncTick");
-	if (c < 1) throw new Error("iterations (c) must be >= 1");
-	if (dkLen < 1) throw new Error("\"dkLen\" must be >= 1");
-	if (dkLen > (2 ** 32 - 1) * hash.outputLen) throw new Error("derived key too long");
-	const password = kdfInputToBytes(_password, "password");
-	const salt = kdfInputToBytes(_salt, "salt");
-	const DK = new Uint8Array(dkLen);
-	const PRF = hmac.create(hash, password);
-	return {
-		c,
-		dkLen,
-		asyncTick,
-		DK,
-		PRF,
-		PRFSalt: PRF._cloneInto().update(salt)
-	};
-}
-function pbkdf2Output(PRF, PRFSalt, DK, prfW, u) {
-	PRF.destroy();
-	PRFSalt.destroy();
-	if (prfW) prfW.destroy();
-	clean(u);
-	return DK;
-}
-/**
-* PBKDF2-HMAC: RFC 8018 key derivation function.
-* @param hash - hash function that would be used e.g. sha256
-* @param password - password from which a derived key is generated;
-*   JS string inputs are UTF-8 encoded first
-* @param salt - cryptographic salt; JS string inputs are UTF-8 encoded first
-* @param opts - PBKDF2 work factor and output settings. `dkLen`, if provided,
-*   must be `>= 1` per RFC 8018 §5.2. See {@link Pbkdf2Opt}.
-* @returns Derived key bytes.
-* @throws If the PBKDF2 iteration count or derived-key settings are invalid. {@link Error}
-* @example
-* PBKDF2-HMAC: RFC 2898 key derivation function.
-* ```ts
-* import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
-* import { sha256 } from '@noble/hashes/sha2.js';
-* const key = pbkdf2(sha256, 'password', 'salt', { dkLen: 32, c: Math.pow(2, 18) });
-* ```
-*/
-function pbkdf2$1(hash, password, salt, opts) {
-	const { c, dkLen, DK, PRF, PRFSalt } = pbkdf2Init(hash, password, salt, opts);
-	let prfW;
-	const arr = new Uint8Array(4);
-	const view = createView(arr);
-	const u = new Uint8Array(PRF.outputLen);
-	for (let ti = 1, pos = 0; pos < dkLen; ti++, pos += PRF.outputLen) {
-		const Ti = DK.subarray(pos, pos + PRF.outputLen);
-		view.setInt32(0, ti, false);
-		(prfW = PRFSalt._cloneInto(prfW)).update(arr).digestInto(u);
-		Ti.set(u.subarray(0, Ti.length));
-		for (let ui = 1; ui < c; ui++) {
-			PRF._cloneInto(prfW).update(u).digestInto(u);
-			for (let i = 0; i < Ti.length; i++) Ti[i] ^= u[i];
-		}
-	}
-	return pbkdf2Output(PRF, PRFSalt, DK, prfW, u);
-}
-/**
-* PBKDF2-HMAC: RFC 8018 key derivation function. Async version.
-* @param hash - hash function that would be used e.g. sha256
-* @param password - password from which a derived key is generated;
-*   JS string inputs are UTF-8 encoded first
-* @param salt - cryptographic salt; JS string inputs are UTF-8 encoded first
-* @param opts - PBKDF2 work factor and output settings. `dkLen`, if provided,
-*   must be `>= 1` per RFC 8018 §5.2. `asyncTick` is only a local
-*   scheduler-yield knob for this JS wrapper, not part of RFC 8018.
-*   See {@link Pbkdf2Opt}.
-* @returns Promise resolving to derived key bytes.
-* @throws If the PBKDF2 iteration count or derived-key settings are invalid. {@link Error}
-* @example
-* PBKDF2-HMAC: RFC 2898 key derivation function.
-* ```ts
-* import { pbkdf2Async } from '@noble/hashes/pbkdf2.js';
-* import { sha256 } from '@noble/hashes/sha2.js';
-* const key = await pbkdf2Async(sha256, 'password', 'salt', { dkLen: 32, c: 500_000 });
-* ```
-*/
-async function pbkdf2Async(hash, password, salt, opts) {
-	const { c, dkLen, asyncTick, DK, PRF, PRFSalt } = pbkdf2Init(hash, password, salt, opts);
-	let prfW;
-	const arr = new Uint8Array(4);
-	const view = createView(arr);
-	const u = new Uint8Array(PRF.outputLen);
-	for (let ti = 1, pos = 0; pos < dkLen; ti++, pos += PRF.outputLen) {
-		const Ti = DK.subarray(pos, pos + PRF.outputLen);
-		view.setInt32(0, ti, false);
-		(prfW = PRFSalt._cloneInto(prfW)).update(arr).digestInto(u);
-		Ti.set(u.subarray(0, Ti.length));
-		await asyncLoop(c - 1, asyncTick, () => {
-			PRF._cloneInto(prfW).update(u).digestInto(u);
-			for (let i = 0; i < Ti.length; i++) Ti[i] ^= u[i];
-		});
-	}
-	return pbkdf2Output(PRF, PRFSalt, DK, prfW, u);
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+crypto@5.1.19/node_modules/@libp2p/crypto/dist/src/pbkdf2.js
-/**
-* Maps an IPFS hash name to its @noble/hashes equivalent.
-*
-* See https://github.com/multiformats/multicodec/blob/master/table.csv
-*
-* @private
-*/
-const hashName = {
-	sha1,
-	"sha2-256": sha256,
-	"sha2-512": sha512
-};
-/**
-* Computes the Password-Based Key Derivation Function 2.
-*/
-function pbkdf2(password, salt, iterations, keySize, hash) {
-	if (hash !== "sha1" && hash !== "sha2-256" && hash !== "sha2-512") throw new InvalidParametersError$4(`Hash '${hash}' is unknown or not supported. Must be ${Object.keys(hashName).join(" / ")}`);
-	const hasher = hashName[hash];
-	const dek = pbkdf2$1(hasher, password, salt, {
-		c: iterations,
-		dkLen: keySize
-	});
-	return base64$1.encode(dek).substring(1);
-}
-//#endregion
-//#region node_modules/.pnpm/@sindresorhus+fnv1a@3.1.0/node_modules/@sindresorhus/fnv1a/index.js
-const FNV_PRIMES = {
-	32: 16777619n,
-	64: 1099511628211n,
-	128: 309485009821345068724781371n,
-	256: 374144419156711147060143317175368453031918731002211n,
-	512: 35835915874844867368919076489095108449946327955754392558399825615420669938882575126094039892345713852759n,
-	1024: 5016456510113118655434598811035278955030765345404790744303017523831112055108147451509157692220295382716162651878526895249385292291816524375083746691371804094271873160484737966720260389217684476157468082573n
-};
-const FNV_OFFSETS = {
-	32: 2166136261n,
-	64: 14695981039346656037n,
-	128: 144066263297769815596495629667062367629n,
-	256: 100029257958052580907070968620625704837092796014241193945225284501741471925557n,
-	512: 9659303129496669498009435400716310466090418745672637896108374329434462657994582932197716438449813051892206539805784495328239340083876191928701583869517785n,
-	1024: 14197795064947621068722070641403218320880622795441933960878474914617582723252296732303717722150864096521202355549365628174669108571814760471015076148029755969804077320157692458563003215304957150157403644460363550505412711285966361610267868082893823963790439336411086884584107735010676915n
-};
-const cachedEncoder = new globalThis.TextEncoder();
-function fnv1aUint8Array(uint8Array, size) {
-	const fnvPrime = FNV_PRIMES[size];
-	let hash = FNV_OFFSETS[size];
-	for (let index = 0; index < uint8Array.length; index++) {
-		hash ^= BigInt(uint8Array[index]);
-		hash = BigInt.asUintN(size, hash * fnvPrime);
-	}
-	return hash;
-}
-function fnv1aEncodeInto(string, size, utf8Buffer) {
-	if (utf8Buffer.length === 0) throw new Error("The `utf8Buffer` option must have a length greater than zero");
-	const fnvPrime = FNV_PRIMES[size];
-	let hash = FNV_OFFSETS[size];
-	let remaining = string;
-	while (remaining.length > 0) {
-		const result = cachedEncoder.encodeInto(remaining, utf8Buffer);
-		remaining = remaining.slice(result.read);
-		for (let index = 0; index < result.written; index++) {
-			hash ^= BigInt(utf8Buffer[index]);
-			hash = BigInt.asUintN(size, hash * fnvPrime);
-		}
-	}
-	return hash;
-}
-function fnv1a$1(value, { size = 32, utf8Buffer } = {}) {
-	if (!FNV_PRIMES[size]) throw new Error("The `size` option must be one of 32, 64, 128, 256, 512, or 1024");
-	if (typeof value === "string") {
-		if (utf8Buffer) return fnv1aEncodeInto(value, size, utf8Buffer);
-		value = cachedEncoder.encode(value);
-	}
-	return fnv1aUint8Array(value, size);
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/hashes.js
-const fnv1a = {
-	hash: (input) => {
-		return Number(fnv1a$1(input, { size: 32 }));
-	},
-	hashV: (input, seed) => {
-		return numberToBuffer(fnv1a.hash(input, seed));
-	}
-};
-function numberToBuffer(num) {
-	let hex = num.toString(16);
-	if (hex.length % 2 === 1) hex = `0${hex}`;
-	return fromString(hex, "base16");
-}
-var Fingerprint = class {
-	fp;
-	h;
-	seed;
-	constructor(buf, hash, seed, fingerprintSize = 2) {
-		if (fingerprintSize > 64) throw new TypeError("Invalid Fingerprint Size");
-		const fnv = hash.hashV(buf, seed);
-		const fp = alloc$1(fingerprintSize);
-		for (let i = 0; i < fp.length; i++) fp[i] = fnv[i];
-		if (fp.length === 0) fp[0] = 7;
-		this.fp = fp;
-		this.h = hash;
-		this.seed = seed;
-	}
-	hash() {
-		return this.h.hash(this.fp, this.seed);
-	}
-	equals(other) {
-		if (!(other?.fp instanceof Uint8Array)) return false;
-		return equals$1(this.fp, other.fp);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/utils.js
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min)) + min;
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/bucket.js
-var Bucket$1 = class {
-	contents;
-	constructor(size) {
-		this.contents = new Array(size).fill(null);
-	}
-	has(fingerprint) {
-		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
-		return this.contents.some((fp) => {
-			return fingerprint.equals(fp);
-		});
-	}
-	add(fingerprint) {
-		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
-		for (let i = 0; i < this.contents.length; i++) if (this.contents[i] == null) {
-			this.contents[i] = fingerprint;
-			return true;
-		}
-		return true;
-	}
-	swap(fingerprint) {
-		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
-		const i = getRandomInt(0, this.contents.length - 1);
-		const current = this.contents[i];
-		this.contents[i] = fingerprint;
-		return current;
-	}
-	remove(fingerprint) {
-		if (!(fingerprint instanceof Fingerprint)) throw new TypeError("Invalid Fingerprint");
-		const found = this.contents.findIndex((fp) => {
-			return fingerprint.equals(fp);
-		});
-		if (found > -1) {
-			this.contents[found] = null;
-			return true;
-		} else return false;
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/cuckoo-filter.js
-const maxCuckooCount = 500;
-var CuckooFilter = class {
-	bucketSize;
-	filterSize;
-	fingerprintSize;
-	buckets;
-	count;
-	hash;
-	seed;
-	constructor(init) {
-		this.filterSize = init.filterSize;
-		this.bucketSize = init.bucketSize ?? 4;
-		this.fingerprintSize = init.fingerprintSize ?? 2;
-		this.count = 0;
-		this.buckets = [];
-		this.hash = init.hash ?? fnv1a;
-		this.seed = init.seed ?? getRandomInt(0, Math.pow(2, 10));
-	}
-	add(item) {
-		if (typeof item === "string") item = fromString(item);
-		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
-		const j = this.hash.hash(item, this.seed) % this.filterSize;
-		const k = (j ^ fingerprint.hash()) % this.filterSize;
-		if (this.buckets[j] == null) this.buckets[j] = new Bucket$1(this.bucketSize);
-		if (this.buckets[k] == null) this.buckets[k] = new Bucket$1(this.bucketSize);
-		if (this.buckets[j].add(fingerprint) || this.buckets[k].add(fingerprint)) {
-			this.count++;
-			return true;
-		}
-		const rand = [j, k];
-		let i = rand[getRandomInt(0, rand.length - 1)];
-		if (this.buckets[i] == null) this.buckets[i] = new Bucket$1(this.bucketSize);
-		for (let n = 0; n < maxCuckooCount; n++) {
-			const swapped = this.buckets[i].swap(fingerprint);
-			if (swapped == null) continue;
-			i = (i ^ swapped.hash()) % this.filterSize;
-			if (this.buckets[i] == null) this.buckets[i] = new Bucket$1(this.bucketSize);
-			if (this.buckets[i].add(swapped)) {
-				this.count++;
-				return true;
-			} else continue;
-		}
-		return false;
-	}
-	has(item) {
-		if (typeof item === "string") item = fromString(item);
-		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
-		const j = this.hash.hash(item, this.seed) % this.filterSize;
-		const inJ = this.buckets[j]?.has(fingerprint) ?? false;
-		if (inJ) return inJ;
-		const k = (j ^ fingerprint.hash()) % this.filterSize;
-		return this.buckets[k]?.has(fingerprint) ?? false;
-	}
-	remove(item) {
-		if (typeof item === "string") item = fromString(item);
-		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
-		const j = this.hash.hash(item, this.seed) % this.filterSize;
-		const inJ = this.buckets[j]?.remove(fingerprint) ?? false;
-		if (inJ) {
-			this.count--;
-			return inJ;
-		}
-		const k = (j ^ fingerprint.hash()) % this.filterSize;
-		const inK = this.buckets[k]?.remove(fingerprint) ?? false;
-		if (inK) this.count--;
-		return inK;
-	}
-	get reliable() {
-		return Math.floor(100 * (this.count / this.filterSize)) <= 90;
-	}
-};
-const MAX_LOAD = {
-	1: .5,
-	2: .84,
-	4: .95,
-	8: .98
-};
-function calculateBucketSize(errorRate = .001) {
-	if (errorRate > .002) return 2;
-	if (errorRate > 1e-5) return 4;
-	return 8;
-}
-function optimize(maxItems, errorRate = .001) {
-	const bucketSize = calculateBucketSize(errorRate);
-	const load = MAX_LOAD[bucketSize];
-	return {
-		filterSize: Math.round(maxItems / load),
-		bucketSize,
-		fingerprintSize: Math.min(Math.ceil(Math.log2(1 / errorRate) + Math.log2(2 * bucketSize)), 64)
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/scalable-cuckoo-filter.js
-var ScalableCuckooFilter = class {
-	filterSize;
-	bucketSize;
-	fingerprintSize;
-	scale;
-	filterSeries;
-	hash;
-	seed;
-	constructor(init) {
-		this.bucketSize = init.bucketSize ?? 4;
-		this.filterSize = init.filterSize ?? (1 << 18) / this.bucketSize;
-		this.fingerprintSize = init.fingerprintSize ?? 2;
-		this.scale = init.scale ?? 2;
-		this.hash = init.hash ?? fnv1a;
-		this.seed = init.seed ?? getRandomInt(0, Math.pow(2, 10));
-		this.filterSeries = [new CuckooFilter({
-			filterSize: this.filterSize,
-			bucketSize: this.bucketSize,
-			fingerprintSize: this.fingerprintSize,
-			hash: this.hash,
-			seed: this.seed
-		})];
-	}
-	add(item) {
-		if (typeof item === "string") item = fromString(item);
-		if (this.has(item)) return true;
-		let current = this.filterSeries.find((cuckoo) => {
-			return cuckoo.reliable;
-		});
-		if (current == null) {
-			current = new CuckooFilter({
-				filterSize: this.filterSize * Math.pow(this.scale, this.filterSeries.length),
-				bucketSize: this.bucketSize,
-				fingerprintSize: this.fingerprintSize,
-				hash: this.hash,
-				seed: this.seed
-			});
-			this.filterSeries.push(current);
-		}
-		return current.add(item);
-	}
-	has(item) {
-		if (typeof item === "string") item = fromString(item);
-		for (let i = 0; i < this.filterSeries.length; i++) if (this.filterSeries[i].has(item)) return true;
-		return false;
-	}
-	remove(item) {
-		if (typeof item === "string") item = fromString(item);
-		for (let i = 0; i < this.filterSeries.length; i++) if (this.filterSeries[i].remove(item)) return true;
-		return false;
-	}
-	get count() {
-		return this.filterSeries.reduce((acc, curr) => {
-			return acc + curr.count;
-		}, 0);
-	}
-};
-function createScalableCuckooFilter(maxItems, errorRate = .001, options) {
-	return new ScalableCuckooFilter({
-		...optimize(maxItems, errorRate),
-		...options ?? {}
-	});
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/get-net-config.js
-/**
-* Returns host/port/etc information for a multiaddr if it starts with a
-* network address (IPv4, IPv6, DNS, DNS4, DNS6 or DNSADDR), or null otherwise.
-*/
-function tryGetNetConfig(ma) {
-	const components = ma.getComponents();
-	const config = {};
-	let index = 0;
-	if (components[index]?.name === "ip6zone") {
-		config.zone = `${components[index].value}`;
-		index++;
-	}
-	if (components[index]?.name === "ip4" || components[index]?.name === "ip6") {
-		config.type = components[index].name;
-		config.host = components[index].value;
-		index++;
-	} else if (components[index]?.name === "dns" || components[index]?.name === "dns4" || components[index]?.name === "dns6") {
-		config.type = components[index].name;
-		config.host = components[index].value;
-		index++;
-	} else if (components[index]?.name === "dnsaddr") {
-		config.type = components[index].name;
-		config.host = `_dnsaddr.${components[index].value}`;
-		index++;
-	}
-	if (components[index]?.name === "tcp" || components[index]?.name === "udp") {
-		config.protocol = components[index].name === "tcp" ? "tcp" : "udp";
-		config.port = parseInt(`${components[index].value}`);
-		index++;
-	}
-	if (components[index]?.name === "ipcidr") {
-		if (config.type === "ip4") config.cidr = parseInt(`${components[index].value}`);
-		else if (config.type === "ip6") config.cidr = `${components[index].value}`;
-		index++;
-	}
-	if (config.type == null || config.host == null) return null;
-	if (components[index]?.name === "tls" && components[index + 1]?.name === "sni") {
-		config.sni = components[index + 1].value;
-		index += 2;
-	}
-	return config;
-}
-/**
-* Like `tryGetNetConfig` but throws `InvalidParametersError` when the multiaddr
-* does not start with a network address.
-*/
-function getNetConfig(ma) {
-	const config = tryGetNetConfig(ma);
-	if (config == null) throw new InvalidParametersError$4(`Multiaddr ${ma} was not an IPv4, IPv6, DNS, DNS4, DNS6 or DNSADDR address`);
-	return config;
-}
-//#endregion
-//#region node_modules/.pnpm/@chainsafe+is-ip@2.1.0/node_modules/@chainsafe/is-ip/lib/parser.js
-var Parser = class {
-	index = 0;
-	input = "";
-	new(input) {
-		this.index = 0;
-		this.input = input;
-		return this;
-	}
-	/** Run a parser, and restore the pre-parse state if it fails. */
-	readAtomically(fn) {
-		const index = this.index;
-		const result = fn();
-		if (result === void 0) this.index = index;
-		return result;
-	}
-	/** Run a parser, but fail if the entire input wasn't consumed. Doesn't run atomically. */
-	parseWith(fn) {
-		const result = fn();
-		if (this.index !== this.input.length) return;
-		return result;
-	}
-	/** Peek the next character from the input */
-	peekChar() {
-		if (this.index >= this.input.length) return;
-		return this.input[this.index];
-	}
-	/** Read the next character from the input */
-	readChar() {
-		if (this.index >= this.input.length) return;
-		return this.input[this.index++];
-	}
-	/** Read the next character from the input if it matches the target. */
-	readGivenChar(target) {
-		return this.readAtomically(() => {
-			const char = this.readChar();
-			if (char !== target) return;
-			return char;
-		});
-	}
-	/**
-	* Helper for reading separators in an indexed loop. Reads the separator
-	* character iff index > 0, then runs the parser. When used in a loop,
-	* the separator character will only be read on index > 0 (see
-	* readIPv4Addr for an example)
-	*/
-	readSeparator(sep, index, inner) {
-		return this.readAtomically(() => {
-			if (index > 0) {
-				if (this.readGivenChar(sep) === void 0) return;
-			}
-			return inner();
-		});
-	}
-	/**
-	* Read a number off the front of the input in the given radix, stopping
-	* at the first non-digit character or eof. Fails if the number has more
-	* digits than max_digits or if there is no number.
-	*/
-	readNumber(radix, maxDigits, allowZeroPrefix, maxBytes) {
-		return this.readAtomically(() => {
-			let result = 0;
-			let digitCount = 0;
-			const leadingChar = this.peekChar();
-			if (leadingChar === void 0) return;
-			const hasLeadingZero = leadingChar === "0";
-			const maxValue = 2 ** (8 * maxBytes) - 1;
-			while (true) {
-				const digit = this.readAtomically(() => {
-					const char = this.readChar();
-					if (char === void 0) return;
-					const num = Number.parseInt(char, radix);
-					if (Number.isNaN(num)) return;
-					return num;
-				});
-				if (digit === void 0) break;
-				result *= radix;
-				result += digit;
-				if (result > maxValue) return;
-				digitCount += 1;
-				if (maxDigits !== void 0) {
-					if (digitCount > maxDigits) return;
-				}
-			}
-			if (digitCount === 0) return;
-			else if (!allowZeroPrefix && hasLeadingZero && digitCount > 1) return;
-			else return result;
-		});
-	}
-	/** Read an IPv4 address. */
-	readIPv4Addr() {
-		return this.readAtomically(() => {
-			const out = new Uint8Array(4);
-			for (let i = 0; i < out.length; i++) {
-				const ix = this.readSeparator(".", i, () => this.readNumber(10, 3, false, 1));
-				if (ix === void 0) return;
-				out[i] = ix;
-			}
-			return out;
-		});
-	}
-	/** Read an IPv6 Address. */
-	readIPv6Addr() {
-		/**
-		* Read a chunk of an IPv6 address into `groups`. Returns the number
-		* of groups read, along with a bool indicating if an embedded
-		* trailing IPv4 address was read. Specifically, read a series of
-		* colon-separated IPv6 groups (0x0000 - 0xFFFF), with an optional
-		* trailing embedded IPv4 address.
-		*/
-		const readGroups = (groups) => {
-			for (let i = 0; i < groups.length / 2; i++) {
-				const ix = i * 2;
-				if (i < groups.length - 3) {
-					const ipv4 = this.readSeparator(":", i, () => this.readIPv4Addr());
-					if (ipv4 !== void 0) {
-						groups[ix] = ipv4[0];
-						groups[ix + 1] = ipv4[1];
-						groups[ix + 2] = ipv4[2];
-						groups[ix + 3] = ipv4[3];
-						return [ix + 4, true];
-					}
-				}
-				const group = this.readSeparator(":", i, () => this.readNumber(16, 4, true, 2));
-				if (group === void 0) return [ix, false];
-				groups[ix] = group >> 8;
-				groups[ix + 1] = group & 255;
-			}
-			return [groups.length, false];
-		};
-		return this.readAtomically(() => {
-			const head = new Uint8Array(16);
-			const [headSize, headIp4] = readGroups(head);
-			if (headSize === 16) return head;
-			if (headIp4) return;
-			if (this.readGivenChar(":") === void 0) return;
-			if (this.readGivenChar(":") === void 0) return;
-			const tail = new Uint8Array(14);
-			const limit = 16 - (headSize + 2);
-			const [tailSize] = readGroups(tail.subarray(0, limit));
-			head.set(tail.subarray(0, tailSize), 16 - tailSize);
-			return head;
-		});
-	}
-	/** Read an IP Address, either IPv4 or IPv6. */
-	readIPAddr() {
-		return this.readIPv4Addr() ?? this.readIPv6Addr();
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@chainsafe+is-ip@2.1.0/node_modules/@chainsafe/is-ip/lib/parse.js
-const MAX_IPV6_LENGTH = 45;
-const MAX_IPV4_LENGTH = 15;
-const parser = new Parser();
-/** Parse `input` into IPv4 bytes. */
-function parseIPv4(input) {
-	if (input.length > MAX_IPV4_LENGTH) return;
-	return parser.new(input).parseWith(() => parser.readIPv4Addr());
-}
-/** Parse `input` into IPv6 bytes. */
-function parseIPv6(input) {
-	if (input.includes("%")) input = input.split("%")[0];
-	if (input.length > MAX_IPV6_LENGTH) return;
-	return parser.new(input).parseWith(() => parser.readIPv6Addr());
-}
-/** Parse `input` into IPv4 or IPv6 bytes. */
-function parseIP(input, mapIPv4ToIPv6 = false) {
-	if (input.includes("%")) input = input.split("%")[0];
-	if (input.length > MAX_IPV6_LENGTH) return;
-	const addr = parser.new(input).parseWith(() => parser.readIPAddr());
-	if (!addr) return;
-	if (mapIPv4ToIPv6 && addr.length === 4) return Uint8Array.from([
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		255,
-		255,
-		addr[0],
-		addr[1],
-		addr[2],
-		addr[3]
-	]);
-	return addr;
-}
-//#endregion
-//#region node_modules/.pnpm/@chainsafe+netmask@2.0.0/node_modules/@chainsafe/netmask/dist/src/util.js
-function allFF(a, from, to) {
-	let i = 0;
-	for (const e of a) {
-		if (i < from) continue;
-		if (i > to) break;
-		if (e !== 255) return false;
-		i++;
-	}
-	return true;
-}
-function deepEqual(a, b, from, to) {
-	let i = 0;
-	for (const e of a) {
-		if (i < from) continue;
-		if (i > to) break;
-		if (e !== b[i]) return false;
-		i++;
-	}
-	return true;
-}
-/***
-* Returns long ip format
-*/
-function ipToString(ip) {
-	switch (ip.length) {
-		case 4: return ip.join(".");
-		case 16: {
-			const result = [];
-			for (let i = 0; i < ip.length; i++) if (i % 2 === 0) result.push(ip[i].toString(16).padStart(2, "0") + ip[i + 1].toString(16).padStart(2, "0"));
-			return result.join(":");
-		}
-		default: throw new Error("Invalid ip length");
-	}
-}
-/**
-* If mask is a sequence of 1 bits followed by 0 bits, return number of 1 bits else -1
-*/
-function simpleMaskLength(mask) {
-	let ones = 0;
-	for (let [index, byte] of mask.entries()) {
-		if (byte === 255) {
-			ones += 8;
-			continue;
-		}
-		while ((byte & 128) != 0) {
-			ones++;
-			byte = byte << 1;
-		}
-		if ((byte & 128) != 0) return -1;
-		for (let i = index + 1; i < mask.length; i++) if (mask[i] != 0) return -1;
-		break;
-	}
-	return ones;
-}
-function maskToHex(mask) {
-	let hex = "0x";
-	for (const byte of mask) hex += (byte >> 4).toString(16) + (byte & 15).toString(16);
-	return hex;
-}
-const ipv4Prefix = new Uint8Array([
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	255,
-	255
-]);
-function maskIp(ip, mask) {
-	if (mask.length === 16 && ip.length === 4 && allFF(mask, 0, 11)) mask = mask.slice(12);
-	if (mask.length === 4 && ip.length === 16 && deepEqual(ip, ipv4Prefix, 0, 11)) ip = ip.slice(12);
-	const n = ip.length;
-	if (n != mask.length) throw new Error("Failed to mask ip");
-	const out = new Uint8Array(n);
-	for (let i = 0; i < n; i++) out[i] = ip[i] & mask[i];
-	return out;
-}
-function containsIp(net, ip) {
-	if (typeof ip === "string") ip = parseIP(ip);
-	if (ip == null) throw new Error("Invalid ip");
-	if (ip.length !== net.network.length) return false;
-	for (let i = 0; i < ip.length; i++) if ((net.network[i] & net.mask[i]) !== (ip[i] & net.mask[i])) return false;
-	return true;
-}
-//#endregion
-//#region node_modules/.pnpm/@chainsafe+netmask@2.0.0/node_modules/@chainsafe/netmask/dist/src/cidr.js
-function parseCidr(s) {
-	const [address, maskString] = s.split("/");
-	if (!address || !maskString) throw new Error("Failed to parse given CIDR: " + s);
-	let ipLength = 4;
-	let ip = parseIPv4(address);
-	if (ip == null) {
-		ipLength = 16;
-		ip = parseIPv6(address);
-		if (ip == null) throw new Error("Failed to parse given CIDR: " + s);
-	}
-	const m = parseInt(maskString, 10);
-	if (Number.isNaN(m) || String(m).length !== maskString.length || m < 0 || m > ipLength * 8) throw new Error("Failed to parse given CIDR: " + s);
-	const mask = cidrMask(m, 8 * ipLength);
-	return {
-		network: maskIp(ip, mask),
-		mask
-	};
-}
-function cidrMask(ones, bits) {
-	if (bits !== 32 && bits !== 128) throw new Error("Invalid CIDR mask");
-	if (ones < 0 || ones > bits) throw new Error("Invalid CIDR mask");
-	const l = bits / 8;
-	const m = new Uint8Array(l);
-	for (let i = 0; i < l; i++) {
-		if (ones >= 8) {
-			m[i] = 255;
-			ones -= 8;
-			continue;
-		}
-		m[i] = 255 - (255 >> ones);
-		ones = 0;
-	}
-	return m;
-}
-//#endregion
-//#region node_modules/.pnpm/@chainsafe+netmask@2.0.0/node_modules/@chainsafe/netmask/dist/src/ipnet.js
-var IpNet = class {
-	/**
-	*
-	* @param ipOrCidr either network ip or full cidr address
-	* @param mask in case ipOrCidr is network this can be either mask in decimal format or as ip address
-	*/
-	constructor(ipOrCidr, mask) {
-		if (mask == null) ({network: this.network, mask: this.mask} = parseCidr(ipOrCidr));
-		else {
-			const ipResult = parseIP(ipOrCidr);
-			if (ipResult == null) throw new Error("Failed to parse network");
-			mask = String(mask);
-			const m = parseInt(mask, 10);
-			if (Number.isNaN(m) || String(m).length !== mask.length || m < 0 || m > ipResult.length * 8) {
-				const maskResult = parseIP(mask);
-				if (maskResult == null) throw new Error("Failed to parse mask");
-				this.mask = maskResult;
-			} else this.mask = cidrMask(m, 8 * ipResult.length);
-			this.network = maskIp(ipResult, this.mask);
-		}
-	}
-	/**
-	* Checks if netmask contains ip address
-	* @param ip
-	* @returns
-	*/
-	contains(ip) {
-		return containsIp({
-			network: this.network,
-			mask: this.mask
-		}, ip);
-	}
-	/**Serializes back to string format */
-	toString() {
-		const l = simpleMaskLength(this.mask);
-		const mask = l !== -1 ? String(l) : maskToHex(this.mask);
-		return ipToString(this.network) + "/" + mask;
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-link-local.js
-/**
-* Check if a given multiaddr is a link-local address
-*/
-function isLinkLocal(ma) {
-	try {
-		const config = getNetConfig(ma);
-		switch (config.type) {
-			case "ip4": return config.host.startsWith("169.254.");
-			case "ip6": return config.host.toLowerCase().startsWith("fe80");
-			default: return false;
-		}
-	} catch (err) {
-		return false;
-	}
-}
-//#endregion
-//#region node_modules/.pnpm/is-loopback-addr@2.0.2/node_modules/is-loopback-addr/dist/src/index.js
-/**
-* Check if a given ip address is a loopback address
-*/
-function isLoopbackAddr(ip) {
-	return /^127\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(ip) || /^::1$/.test(ip);
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-loopback.js
-/**
-* Check if a given multiaddr is a loopback address.
-*/
-function isLoopback(ma) {
-	try {
-		const config = getNetConfig(ma);
-		switch (config.type) {
-			case "ip4":
-			case "ip6": return isLoopbackAddr(config.host);
-			default: return false;
-		}
-	} catch {
-		return false;
-	}
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-network-address.js
-/**
-* Check if a given multiaddr is a network address
-*/
-function isNetworkAddress(ma) {
-	return tryGetNetConfig(ma) !== null;
-}
-//#endregion
-//#region node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask4.js
-var require_netmask4 = /* @__PURE__ */ __commonJSMin(((exports) => {
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.Netmask4Impl = void 0;
-	exports.ip2long = ip2long;
-	exports.long2ip = long2ip;
-	function long2ip(long) {
-		return [
-			(long & 255 << 24) >>> 24,
-			(long & 255 << 16) >>> 16,
-			(long & 65280) >>> 8,
-			long & 255
-		].join(".");
-	}
-	const chr0 = "0".charCodeAt(0);
-	const chra = "a".charCodeAt(0);
-	const chrA = "A".charCodeAt(0);
-	function parseNum(s) {
-		let n = 0;
-		let base = 10;
-		let dmax = "9";
-		let i = 0;
-		if (s.length > 1 && s[i] === "0") {
-			if (s[i + 1] === "x" || s[i + 1] === "X") {
-				i += 2;
-				base = 16;
-			} else if ("0" <= s[i + 1] && s[i + 1] <= "9") {
-				i++;
-				base = 8;
-				dmax = "7";
-			}
-		}
-		const start = i;
-		while (i < s.length) {
-			if ("0" <= s[i] && s[i] <= dmax) n = n * base + (s.charCodeAt(i) - chr0) >>> 0;
-			else if (base === 16) if ("a" <= s[i] && s[i] <= "f") n = n * base + (10 + s.charCodeAt(i) - chra) >>> 0;
-			else if ("A" <= s[i] && s[i] <= "F") n = n * base + (10 + s.charCodeAt(i) - chrA) >>> 0;
-			else break;
-			else break;
-			if (n > 4294967295) throw new Error("too large");
-			i++;
-		}
-		if (i === start) throw new Error("empty octet");
-		return [n, i];
-	}
-	function ip2long(ip) {
-		const b = [];
-		for (let i = 0; i <= 3; i++) {
-			if (ip.length === 0) break;
-			if (i > 0) {
-				if (ip[0] !== ".") throw new Error("Invalid IP");
-				ip = ip.substring(1);
-			}
-			const [n, c] = parseNum(ip);
-			ip = ip.substring(c);
-			b.push(n);
-		}
-		if (ip.length !== 0) throw new Error("Invalid IP");
-		switch (b.length) {
-			case 1:
-				if (b[0] > 4294967295) throw new Error("Invalid IP");
-				return b[0] >>> 0;
-			case 2:
-				if (b[0] > 255 || b[1] > 16777215) throw new Error("Invalid IP");
-				return (b[0] << 24 | b[1]) >>> 0;
-			case 3:
-				if (b[0] > 255 || b[1] > 255 || b[2] > 65535) throw new Error("Invalid IP");
-				return (b[0] << 24 | b[1] << 16 | b[2]) >>> 0;
-			case 4:
-				if (b[0] > 255 || b[1] > 255 || b[2] > 255 || b[3] > 255) throw new Error("Invalid IP");
-				return (b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]) >>> 0;
-			default: throw new Error("Invalid IP");
-		}
-	}
-	exports.Netmask4Impl = class Netmask4Impl {
-		constructor(net, mask) {
-			if (typeof net !== "string") throw new Error("Missing `net' parameter");
-			let maskStr = mask;
-			if (!maskStr) {
-				const parts = net.split("/", 2);
-				net = parts[0];
-				maskStr = parts[1];
-			}
-			if (!maskStr) maskStr = 32;
-			if (typeof maskStr === "string" && maskStr.indexOf(".") > -1) {
-				try {
-					this.maskLong = ip2long(maskStr);
-				} catch (error) {
-					throw new Error("Invalid mask: " + maskStr);
-				}
-				this.bitmask = NaN;
-				for (let i = 32; i >= 0; i--) if (this.maskLong === 4294967295 << 32 - i >>> 0) {
-					this.bitmask = i;
-					break;
-				}
-			} else if (maskStr || maskStr === 0) {
-				this.bitmask = parseInt(maskStr, 10);
-				this.maskLong = 0;
-				if (this.bitmask > 0) this.maskLong = 4294967295 << 32 - this.bitmask >>> 0;
-			} else throw new Error("Invalid mask: empty");
-			try {
-				this.netLong = (ip2long(net) & this.maskLong) >>> 0;
-			} catch (error) {
-				throw new Error("Invalid net address: " + net);
-			}
-			if (!(this.bitmask <= 32)) throw new Error("Invalid mask for ip4: " + maskStr);
-			this.size = Math.pow(2, 32 - this.bitmask);
-			this.base = long2ip(this.netLong);
-			this.mask = long2ip(this.maskLong);
-			this.hostmask = long2ip(~this.maskLong);
-			this.first = this.bitmask <= 30 ? long2ip(this.netLong + 1) : this.base;
-			this.last = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 2) : long2ip(this.netLong + this.size - 1);
-			this.broadcast = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 1) : void 0;
-		}
-		contains(ip) {
-			if (typeof ip === "string" && (ip.indexOf("/") > 0 || ip.split(".").length !== 4)) ip = new Netmask4Impl(ip);
-			if (ip instanceof Netmask4Impl) return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
-			else return (ip2long(ip) & this.maskLong) >>> 0 === (this.netLong & this.maskLong) >>> 0;
-		}
-		next(count = 1) {
-			return new Netmask4Impl(long2ip(this.netLong + this.size * count), this.mask);
-		}
-		forEach(fn) {
-			let long = ip2long(this.first);
-			const lastLong = ip2long(this.last);
-			let index = 0;
-			while (long <= lastLong) {
-				fn(long2ip(long), long, index);
-				index++;
-				long++;
-			}
-		}
-		toString() {
-			return this.base + "/" + this.bitmask;
-		}
-	};
-}));
-//#endregion
-//#region node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask6.js
-var require_netmask6 = /* @__PURE__ */ __commonJSMin(((exports) => {
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.Netmask6Impl = void 0;
-	exports.ip6bigint = ip6bigint;
-	exports.bigint2ip6 = bigint2ip6;
-	const netmask4_1 = require_netmask4();
-	const MAX_IPV6 = (1n << 128n) - 1n;
-	function ip6bigint(ip) {
-		const zoneIdx = ip.indexOf("%");
-		if (zoneIdx !== -1) ip = ip.substring(0, zoneIdx);
-		const lastColon = ip.lastIndexOf(":");
-		if (lastColon !== -1 && ip.indexOf(".", lastColon) !== -1) {
-			const ipv4Part = ip.substring(lastColon + 1);
-			const ipv4Long = (0, netmask4_1.ip2long)(ipv4Part);
-			return parseIPv6Pure(ip.substring(0, lastColon + 1) + "0:0") & -4294967296n | BigInt(ipv4Long);
-		}
-		return parseIPv6Pure(ip);
-	}
-	function parseIPv6Pure(ip) {
-		const doubleColonIdx = ip.indexOf("::");
-		let groups;
-		if (doubleColonIdx !== -1) {
-			const left = ip.substring(0, doubleColonIdx);
-			const right = ip.substring(doubleColonIdx + 2);
-			const leftGroups = left === "" ? [] : left.split(":");
-			const rightGroups = right === "" ? [] : right.split(":");
-			const missing = 8 - leftGroups.length - rightGroups.length;
-			if (missing < 0) throw new Error("Invalid IPv6: too many groups");
-			groups = [
-				...leftGroups,
-				...Array(missing).fill("0"),
-				...rightGroups
-			];
-		} else groups = ip.split(":");
-		if (groups.length !== 8) throw new Error("Invalid IPv6: expected 8 groups, got " + groups.length);
-		let result = 0n;
-		for (let i = 0; i < 8; i++) {
-			const g = groups[i];
-			if (g.length === 0 || g.length > 4) throw new Error("Invalid IPv6: bad group \"" + g + "\"");
-			const val = parseInt(g, 16);
-			if (isNaN(val) || val < 0 || val > 65535) throw new Error("Invalid IPv6: bad group \"" + g + "\"");
-			result = result << 16n | BigInt(val);
-		}
-		return result;
-	}
-	function bigint2ip6(n) {
-		if (n < 0n || n > MAX_IPV6) throw new Error("Invalid IPv6 address value");
-		const groups = [];
-		for (let i = 0; i < 8; i++) {
-			groups.unshift(Number(n & 65535n));
-			n >>= 16n;
-		}
-		let bestStart = -1;
-		let bestLen = 0;
-		let curStart = -1;
-		let curLen = 0;
-		for (let i = 0; i < 8; i++) if (groups[i] === 0) if (curStart === -1) {
-			curStart = i;
-			curLen = 1;
-		} else curLen++;
-		else {
-			if (curLen > bestLen && curLen >= 2) {
-				bestStart = curStart;
-				bestLen = curLen;
-			}
-			curStart = -1;
-			curLen = 0;
-		}
-		if (curLen > bestLen && curLen >= 2) {
-			bestStart = curStart;
-			bestLen = curLen;
-		}
-		if (bestStart !== -1 && bestStart + bestLen === 8 && bestStart > 0) return groups.slice(0, bestStart).map((g) => g.toString(16)).join(":") + "::";
-		else if (bestStart === 0) return "::" + groups.slice(bestLen).map((g) => g.toString(16)).join(":");
-		else if (bestStart > 0) {
-			const before = groups.slice(0, bestStart).map((g) => g.toString(16));
-			const after = groups.slice(bestStart + bestLen).map((g) => g.toString(16));
-			return before.join(":") + "::" + after.join(":");
-		} else return groups.map((g) => g.toString(16)).join(":");
-	}
-	exports.Netmask6Impl = class Netmask6Impl {
-		constructor(net, mask) {
-			if (typeof net !== "string") throw new Error("Missing `net' parameter");
-			let prefixLen = mask;
-			if (prefixLen === void 0 || prefixLen === null) {
-				const slashIdx = net.indexOf("/");
-				if (slashIdx !== -1) {
-					prefixLen = parseInt(net.substring(slashIdx + 1), 10);
-					net = net.substring(0, slashIdx);
-				} else prefixLen = 128;
-			}
-			if (isNaN(prefixLen) || prefixLen < 0 || prefixLen > 128) throw new Error("Invalid mask for IPv6: " + prefixLen);
-			this.bitmask = prefixLen;
-			if (this.bitmask === 0) this.maskBigint = 0n;
-			else this.maskBigint = MAX_IPV6 >> BigInt(128 - this.bitmask) << BigInt(128 - this.bitmask);
-			try {
-				this.netBigint = ip6bigint(net) & this.maskBigint;
-			} catch (error) {
-				throw new Error("Invalid IPv6 net address: " + net);
-			}
-			this.size = Number(1n << BigInt(128 - this.bitmask));
-			this.base = bigint2ip6(this.netBigint);
-			this.mask = bigint2ip6(this.maskBigint);
-			this.hostmask = bigint2ip6(~this.maskBigint & MAX_IPV6);
-			this.first = this.base;
-			this.last = bigint2ip6(this.netBigint + (1n << BigInt(128 - this.bitmask)) - 1n);
-			this.broadcast = void 0;
-		}
-		contains(ip) {
-			if (typeof ip === "string") {
-				if (ip.indexOf("/") > 0) ip = new Netmask6Impl(ip);
-			}
-			if (ip instanceof Netmask6Impl) return this.contains(ip.base) && this.contains(ip.last);
-			else return (ip6bigint(ip) & this.maskBigint) === this.netBigint;
-		}
-		next(count = 1) {
-			const sizeBig = 1n << BigInt(128 - this.bitmask);
-			return new Netmask6Impl(bigint2ip6(this.netBigint + sizeBig * BigInt(count)), this.bitmask);
-		}
-		forEach(fn) {
-			let addr = this.netBigint;
-			const sizeBig = 1n << BigInt(128 - this.bitmask);
-			const lastAddr = this.netBigint + sizeBig - 1n;
-			let index = 0;
-			while (addr <= lastAddr) {
-				fn(bigint2ip6(addr), Number(addr), index);
-				index++;
-				addr++;
-			}
-		}
-		toString() {
-			return this.base + "/" + this.bitmask;
-		}
-	};
-}));
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/private-ip.js
-var import_netmask = (/* @__PURE__ */ __commonJSMin(((exports) => {
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.long2ip = exports.ip2long = exports.Netmask = void 0;
-	const netmask4_1 = require_netmask4();
-	Object.defineProperty(exports, "ip2long", {
-		enumerable: true,
-		get: function() {
-			return netmask4_1.ip2long;
-		}
-	});
-	Object.defineProperty(exports, "long2ip", {
-		enumerable: true,
-		get: function() {
-			return netmask4_1.long2ip;
-		}
-	});
-	const netmask6_1 = require_netmask6();
-	exports.Netmask = class Netmask {
-		constructor(net, mask) {
-			if (typeof net !== "string") throw new Error("Missing `net' parameter");
-			if ((net.indexOf("/") !== -1 ? net.substring(0, net.indexOf("/")) : net).indexOf(":") !== -1) this._impl = new netmask6_1.Netmask6Impl(net, mask);
-			else this._impl = new netmask4_1.Netmask4Impl(net, mask);
-			this.base = this._impl.base;
-			this.mask = this._impl.mask;
-			this.hostmask = this._impl.hostmask;
-			this.bitmask = this._impl.bitmask;
-			this.size = this._impl.size;
-			this.first = this._impl.first;
-			this.last = this._impl.last;
-			this.broadcast = this._impl.broadcast;
-			if (this._impl instanceof netmask4_1.Netmask4Impl) {
-				this.maskLong = this._impl.maskLong;
-				this.netLong = this._impl.netLong;
-			} else {
-				this.maskLong = 0;
-				this.netLong = 0;
-			}
-		}
-		contains(ip) {
-			if (typeof ip === "string") {
-				if (ip.indexOf("/") > 0) ip = new Netmask(ip);
-				else if (ip.indexOf(":") === -1 && ip.split(".").length !== 4) ip = new Netmask(ip);
-			}
-			if (ip instanceof Netmask) return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
-			return this._impl.contains(ip);
-		}
-		next(count = 1) {
-			const nextImpl = this._impl.next(count);
-			return new Netmask(nextImpl.base, nextImpl.bitmask);
-		}
-		/** @deprecated */
-		forEach(fn) {
-			this._impl.forEach(fn);
-		}
-		toString() {
-			return this._impl.toString();
-		}
-	};
-})))();
-const NETMASK_RANGES = [
-	"0.0.0.0/8",
-	"10.0.0.0/8",
-	"100.64.0.0/10",
-	"127.0.0.0/8",
-	"169.254.0.0/16",
-	"172.16.0.0/12",
-	"192.0.0.0/24",
-	"192.0.0.0/29",
-	"192.0.0.8/32",
-	"192.0.0.9/32",
-	"192.0.0.10/32",
-	"192.0.0.170/32",
-	"192.0.0.171/32",
-	"192.0.2.0/24",
-	"192.31.196.0/24",
-	"192.52.193.0/24",
-	"192.88.99.0/24",
-	"192.168.0.0/16",
-	"192.175.48.0/24",
-	"198.18.0.0/15",
-	"198.51.100.0/24",
-	"203.0.113.0/24",
-	"240.0.0.0/4",
-	"255.255.255.255/32"
-].map((ipRange) => new import_netmask.Netmask(ipRange));
-function ipv4Check(ipAddr) {
-	for (const r of NETMASK_RANGES) if (r.contains(ipAddr)) return true;
-	return false;
-}
-function isIpv4MappedIpv6(ipAddr) {
-	return /^::ffff:([0-9a-fA-F]{1,4}):([0-9a-fA-F]{1,4})$/.test(ipAddr);
-}
-/**
-* @see https://datatracker.ietf.org/doc/html/rfc4291#section-2.5.5.2
-*/
-function ipv4MappedIpv6Check(ipAddr) {
-	const parts = ipAddr.split(":");
-	if (parts.length < 2) return false;
-	const octet34 = parts[parts.length - 1].padStart(4, "0");
-	const octet12 = parts[parts.length - 2].padStart(4, "0");
-	return ipv4Check(`${parseInt(octet12.substring(0, 2), 16)}.${parseInt(octet12.substring(2), 16)}.${parseInt(octet34.substring(0, 2), 16)}.${parseInt(octet34.substring(2), 16)}`);
-}
-/**
-* @see https://datatracker.ietf.org/doc/html/rfc4291#section-2.2 example 3
-*/
-function isIpv4EmbeddedIpv6(ipAddr) {
-	return /^::ffff:([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/.test(ipAddr);
-}
-function ipv4EmbeddedIpv6Check(ipAddr) {
-	const parts = ipAddr.split(":");
-	const ip4 = parts[parts.length - 1];
-	return ipv4Check(ip4);
-}
-function ipv6Check(ipAddr) {
-	return /^::$/.test(ipAddr) || /^::1$/.test(ipAddr) || /^64:ff9b::([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/.test(ipAddr) || /^100::([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2001::([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2001:2[0-9a-fA-F]:([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2001:db8:([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^2002:([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4}):?([0-9a-fA-F]{0,4})$/.test(ipAddr) || /^f[c-d]([0-9a-fA-F]{2,2}):/i.test(ipAddr) || /^fe[8-9a-bA-B][0-9a-fA-F]:/i.test(ipAddr) || /^ff([0-9a-fA-F]{2,2}):/i.test(ipAddr);
-}
-function isPrivateIp(ip) {
-	if (isIPv4$1(ip)) return ipv4Check(ip);
-	if (isIpv4MappedIpv6(ip)) return ipv4MappedIpv6Check(ip);
-	if (isIpv4EmbeddedIpv6(ip)) return ipv4EmbeddedIpv6Check(ip);
-	if (isIPv6$1(ip)) return ipv6Check(ip);
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/is-private.js
-/**
-* Check if a given multiaddr starts with a private address
-*/
-function isPrivate(ma) {
-	try {
-		const config = getNetConfig(ma);
-		switch (config.type) {
-			case "ip4":
-			case "ip6": return isPrivateIp(config.host) ?? false;
-			default: return config.host === "localhost";
-		}
-	} catch {
-		return false;
-	}
-}
-//#endregion
-//#region node_modules/.pnpm/uint8-varint@3.0.0/node_modules/uint8-varint/dist/src/index.js
-const N1 = Math.pow(2, 7);
-const N2 = Math.pow(2, 14);
-const N3 = Math.pow(2, 21);
-const N4 = Math.pow(2, 28);
-const N5 = Math.pow(2, 35);
-const N6 = Math.pow(2, 42);
-const N7 = Math.pow(2, 49);
-/** Most significant bit of a byte */
-const MSB = 128;
-/** Rest of the bits in a byte */
-const REST = 127;
-function encodingLength(value) {
-	if (value < N1) return 1;
-	if (value < N2) return 2;
-	if (value < N3) return 3;
-	if (value < N4) return 4;
-	if (value < N5) return 5;
-	if (value < N6) return 6;
-	if (value < N7) return 7;
-	if (Number.MAX_SAFE_INTEGER != null && value > Number.MAX_SAFE_INTEGER) throw new RangeError("Could not encode varint");
-	return 8;
-}
-function encodeUint8Array(value, buf, offset = 0) {
-	switch (encodingLength(value)) {
-		case 8:
-			buf[offset++] = value & 255 | MSB;
-			value /= 128;
-		case 7:
-			buf[offset++] = value & 255 | MSB;
-			value /= 128;
-		case 6:
-			buf[offset++] = value & 255 | MSB;
-			value /= 128;
-		case 5:
-			buf[offset++] = value & 255 | MSB;
-			value /= 128;
-		case 4:
-			buf[offset++] = value & 255 | MSB;
-			value >>>= 7;
-		case 3:
-			buf[offset++] = value & 255 | MSB;
-			value >>>= 7;
-		case 2:
-			buf[offset++] = value & 255 | MSB;
-			value >>>= 7;
-		case 1:
-			buf[offset++] = value & 255;
-			value >>>= 7;
-			break;
-		default: throw new Error("unreachable");
-	}
-	return buf;
-}
-function decodeUint8Array(buf, offset) {
-	let b = buf[offset];
-	let res = 0;
-	res += b & REST;
-	if (b < MSB) return res;
-	b = buf[offset + 1];
-	res += (b & REST) << 7;
-	if (b < MSB) return res;
-	b = buf[offset + 2];
-	res += (b & REST) << 14;
-	if (b < MSB) return res;
-	b = buf[offset + 3];
-	res += (b & REST) << 21;
-	if (b < MSB) return res;
-	b = buf[offset + 4];
-	res += (b & REST) * N4;
-	if (b < MSB) return res;
-	b = buf[offset + 5];
-	res += (b & REST) * N5;
-	if (b < MSB) return res;
-	b = buf[offset + 6];
-	res += (b & REST) * N6;
-	if (b < MSB) return res;
-	b = buf[offset + 7];
-	res += (b & REST) * N7;
-	if (b < MSB) return res;
-	throw new RangeError("Could not decode varint");
-}
-function decodeUint8ArrayList(buf, offset) {
-	let b = buf.get(offset);
-	let res = 0;
-	res += b & REST;
-	if (b < MSB) return res;
-	b = buf.get(offset + 1);
-	res += (b & REST) << 7;
-	if (b < MSB) return res;
-	b = buf.get(offset + 2);
-	res += (b & REST) << 14;
-	if (b < MSB) return res;
-	b = buf.get(offset + 3);
-	res += (b & REST) << 21;
-	if (b < MSB) return res;
-	b = buf.get(offset + 4);
-	res += (b & REST) * N4;
-	if (b < MSB) return res;
-	b = buf.get(offset + 5);
-	res += (b & REST) * N5;
-	if (b < MSB) return res;
-	b = buf.get(offset + 6);
-	res += (b & REST) * N6;
-	if (b < MSB) return res;
-	b = buf.get(offset + 7);
-	res += (b & REST) * N7;
-	if (b < MSB) return res;
-	throw new RangeError("Could not decode varint");
-}
-function decode$5(buf, offset = 0) {
-	if (buf instanceof Uint8Array) return decodeUint8Array(buf, offset);
-	else return decodeUint8ArrayList(buf, offset);
-}
-//#endregion
-//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/errors.js
-/**
-* Thrown when an invalid multiaddr is encountered
-*/
-var InvalidMultiaddrError = class extends Error {
-	static name = "InvalidMultiaddrError";
-	name = "InvalidMultiaddrError";
-};
-var ValidationError$1 = class extends Error {
-	static name = "ValidationError";
-	name = "ValidationError";
-};
-var InvalidParametersError$3 = class extends Error {
-	static name = "InvalidParametersError";
-	name = "InvalidParametersError";
-};
-var UnknownProtocolError = class extends Error {
-	static name = "UnknownProtocolError";
-	name = "UnknownProtocolError";
-};
-//#endregion
-//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/utils.js
-function bytesToString(base) {
-	return (buf) => {
-		return toString$1(buf, base);
-	};
-}
-function stringToBytes(base) {
-	return (buf) => {
-		return fromString(buf, base);
-	};
-}
-function bytes2port(buf) {
-	return new DataView(buf.buffer).getUint16(buf.byteOffset).toString();
-}
-function port2bytes(port) {
-	const buf = /* @__PURE__ */ new ArrayBuffer(2);
-	new DataView(buf).setUint16(0, typeof port === "string" ? parseInt(port) : port);
-	return new Uint8Array(buf);
-}
-function onion2bytes(str) {
-	const addr = str.split(":");
-	if (addr.length !== 2) throw new Error(`failed to parse onion addr: ["'${addr.join("\", \"")}'"]' does not contain a port number`);
-	if (addr[0].length !== 16) throw new Error(`failed to parse onion addr: ${addr[0]} not a Tor onion address.`);
-	const buf = fromString(addr[0], "base32");
-	const port = parseInt(addr[1], 10);
-	if (port < 1 || port > 65536) throw new Error("Port number is not in range(1, 65536)");
-	const portBuf = port2bytes(port);
-	return concat([buf, portBuf], buf.length + portBuf.length);
-}
-function onion32bytes(str) {
-	const addr = str.split(":");
-	if (addr.length !== 2) throw new Error(`failed to parse onion addr: ["'${addr.join("\", \"")}'"]' does not contain a port number`);
-	if (addr[0].length !== 56) throw new Error(`failed to parse onion addr: ${addr[0]} not a Tor onion3 address.`);
-	const buf = base32.decode(`b${addr[0]}`);
-	const port = parseInt(addr[1], 10);
-	if (port < 1 || port > 65536) throw new Error("Port number is not in range(1, 65536)");
-	const portBuf = port2bytes(port);
-	return concat([buf, portBuf], buf.length + portBuf.length);
-}
-function bytes2onion(buf) {
-	const addrBytes = buf.subarray(0, buf.length - 2);
-	const portBytes = buf.subarray(buf.length - 2);
-	return `${toString$1(addrBytes, "base32")}:${bytes2port(portBytes)}`;
-}
-const ip4ToBytes = function(ip) {
-	ip = ip.toString().trim();
-	const bytes = new Uint8Array(4);
-	ip.split(/\./g).forEach((byte, index) => {
-		const value = parseInt(byte, 10);
-		if (isNaN(value) || value < 0 || value > 255) throw new InvalidMultiaddrError("Invalid byte value in IP address");
-		bytes[index] = value;
-	});
-	return bytes;
-};
-const ip6ToBytes = function(ip) {
-	let offset = 0;
-	ip = ip.toString().trim();
-	const sections = ip.split(":", 8);
-	let i;
-	for (i = 0; i < sections.length; i++) {
-		const isv4 = isIPv4$1(sections[i]);
-		let v4Buffer;
-		if (isv4) {
-			v4Buffer = ip4ToBytes(sections[i]);
-			sections[i] = toString$1(v4Buffer.subarray(0, 2), "base16");
-		}
-		if (v4Buffer != null && ++i < 8) sections.splice(i, 0, toString$1(v4Buffer.subarray(2, 4), "base16"));
-	}
-	if (sections[0] === "") while (sections.length < 8) sections.unshift("0");
-	else if (sections[sections.length - 1] === "") while (sections.length < 8) sections.push("0");
-	else if (sections.length < 8) {
-		for (i = 0; i < sections.length && sections[i] !== ""; i++);
-		const argv = [i, 1];
-		for (i = 9 - sections.length; i > 0; i--) argv.push("0");
-		sections.splice.apply(sections, argv);
-	}
-	const bytes = new Uint8Array(offset + 16);
-	for (i = 0; i < sections.length; i++) {
-		if (sections[i] === "") sections[i] = "0";
-		const word = parseInt(sections[i], 16);
-		if (isNaN(word) || word < 0 || word > 65535) throw new InvalidMultiaddrError("Invalid byte value in IP address");
-		bytes[offset++] = word >> 8 & 255;
-		bytes[offset++] = word & 255;
-	}
-	return bytes;
-};
-const ip4ToString = function(buf) {
-	if (buf.byteLength !== 4) throw new InvalidMultiaddrError("IPv4 address was incorrect length");
-	const result = [];
-	for (let i = 0; i < buf.byteLength; i++) result.push(buf[i]);
-	return result.join(".");
-};
-const ip6ToString = function(buf) {
-	if (buf.byteLength !== 16) throw new InvalidMultiaddrError("IPv6 address was incorrect length");
-	const result = [];
-	for (let i = 0; i < buf.byteLength; i += 2) {
-		const byte1 = buf[i];
-		const byte2 = buf[i + 1];
-		const tuple = `${byte1.toString(16).padStart(2, "0")}${byte2.toString(16).padStart(2, "0")}`;
-		result.push(tuple);
-	}
-	const ip = result.join(":");
-	try {
-		const url = new URL(`http://[${ip}]`);
-		return url.hostname.substring(1, url.hostname.length - 1);
-	} catch {
-		throw new InvalidMultiaddrError(`Invalid IPv6 address "${ip}"`);
-	}
-};
-function ip6StringToValue(str) {
-	try {
-		const url = new URL(`http://[${str}]`);
-		return url.hostname.substring(1, url.hostname.length - 1);
-	} catch {
-		throw new InvalidMultiaddrError(`Invalid IPv6 address "${str}"`);
-	}
-}
-const decoders = Object.values(bases).map((c) => c.decoder);
-const anybaseDecoder = (function() {
-	let acc = decoders[0].or(decoders[1]);
-	decoders.slice(2).forEach((d) => acc = acc.or(d));
-	return acc;
-})();
-function mb2bytes(mbstr) {
-	return anybaseDecoder.decode(mbstr);
-}
-function bytes2mb(base) {
-	return (buf) => {
-		return base.encoder.encode(buf);
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/validation.js
-function integer(value) {
-	if (parseInt(value).toString() !== value) throw new ValidationError$1("Value must be an integer");
-}
-function positive(value) {
-	if (value < 0) throw new ValidationError$1("Value must be a positive integer, or zero");
-}
-function maxValue(max) {
-	return (value) => {
-		if (value > max) throw new ValidationError$1(`Value must be smaller than or equal to ${max}`);
-	};
-}
-function validate$3(...funcs) {
-	return (value) => {
-		for (const fn of funcs) fn(value);
-	};
-}
-const validatePort = validate$3(integer, positive, maxValue(65535));
-var Registry = class {
-	protocolsByCode = /* @__PURE__ */ new Map();
-	protocolsByName = /* @__PURE__ */ new Map();
-	getProtocol(key) {
-		let codec;
-		if (typeof key === "string") codec = this.protocolsByName.get(key);
-		else codec = this.protocolsByCode.get(key);
-		if (codec == null) throw new UnknownProtocolError(`Protocol ${key} was unknown`);
-		return codec;
-	}
-	addProtocol(codec) {
-		this.protocolsByCode.set(codec.code, codec);
-		this.protocolsByName.set(codec.name, codec);
-		codec.aliases?.forEach((alias) => {
-			this.protocolsByName.set(alias, codec);
-		});
-	}
-	removeProtocol(code) {
-		const codec = this.protocolsByCode.get(code);
-		if (codec == null) return;
-		this.protocolsByCode.delete(codec.code);
-		this.protocolsByName.delete(codec.name);
-		codec.aliases?.forEach((alias) => {
-			this.protocolsByName.delete(alias);
-		});
-	}
-};
-const registry = new Registry();
-[
-	{
-		code: 4,
-		name: "ip4",
-		size: 32,
-		valueToBytes: ip4ToBytes,
-		bytesToValue: ip4ToString,
-		validate: (value) => {
-			if (!isIPv4$1(value)) throw new ValidationError$1(`Invalid IPv4 address "${value}"`);
-		}
-	},
-	{
-		code: 6,
-		name: "tcp",
-		size: 16,
-		valueToBytes: port2bytes,
-		bytesToValue: bytes2port,
-		validate: validatePort
-	},
-	{
-		code: 273,
-		name: "udp",
-		size: 16,
-		valueToBytes: port2bytes,
-		bytesToValue: bytes2port,
-		validate: validatePort
-	},
-	{
-		code: 33,
-		name: "dccp",
-		size: 16,
-		valueToBytes: port2bytes,
-		bytesToValue: bytes2port,
-		validate: validatePort
-	},
-	{
-		code: 41,
-		name: "ip6",
-		size: 128,
-		valueToBytes: ip6ToBytes,
-		bytesToValue: ip6ToString,
-		stringToValue: ip6StringToValue,
-		validate: (value) => {
-			if (!isIPv6$1(value)) throw new ValidationError$1(`Invalid IPv6 address "${value}"`);
-		}
-	},
-	{
-		code: 42,
-		name: "ip6zone",
-		size: -1
-	},
-	{
-		code: 43,
-		name: "ipcidr",
-		size: 8,
-		bytesToValue: bytesToString("base10"),
-		valueToBytes: stringToBytes("base10")
-	},
-	{
-		code: 53,
-		name: "dns",
-		size: -1
-	},
-	{
-		code: 54,
-		name: "dns4",
-		size: -1
-	},
-	{
-		code: 55,
-		name: "dns6",
-		size: -1
-	},
-	{
-		code: 56,
-		name: "dnsaddr",
-		size: -1
-	},
-	{
-		code: 132,
-		name: "sctp",
-		size: 16,
-		valueToBytes: port2bytes,
-		bytesToValue: bytes2port,
-		validate: validatePort
-	},
-	{
-		code: 301,
-		name: "udt"
-	},
-	{
-		code: 302,
-		name: "utp"
-	},
-	{
-		code: 400,
-		name: "unix",
-		size: -1,
-		stringToValue: (str) => decodeURIComponent(str),
-		valueToString: (val) => encodeURIComponent(val)
-	},
-	{
-		code: 421,
-		name: "p2p",
-		aliases: ["ipfs"],
-		size: -1,
-		bytesToValue: bytesToString("base58btc"),
-		valueToBytes: (val) => {
-			if (val.startsWith("Q") || val.startsWith("1")) return stringToBytes("base58btc")(val);
-			return CID.parse(val).multihash.bytes;
-		}
-	},
-	{
-		code: 444,
-		name: "onion",
-		size: 96,
-		bytesToValue: bytes2onion,
-		valueToBytes: onion2bytes
-	},
-	{
-		code: 445,
-		name: "onion3",
-		size: 296,
-		bytesToValue: bytes2onion,
-		valueToBytes: onion32bytes
-	},
-	{
-		code: 446,
-		name: "garlic64",
-		size: -1
-	},
-	{
-		code: 447,
-		name: "garlic32",
-		size: -1
-	},
-	{
-		code: 448,
-		name: "tls"
-	},
-	{
-		code: 449,
-		name: "sni",
-		size: -1
-	},
-	{
-		code: 454,
-		name: "noise"
-	},
-	{
-		code: 460,
-		name: "quic"
-	},
-	{
-		code: 461,
-		name: "quic-v1"
-	},
-	{
-		code: 465,
-		name: "webtransport"
-	},
-	{
-		code: 466,
-		name: "certhash",
-		size: -1,
-		bytesToValue: bytes2mb(base64url$1),
-		valueToBytes: mb2bytes
-	},
-	{
-		code: 480,
-		name: "http"
-	},
-	{
-		code: 481,
-		name: "http-path",
-		size: -1,
-		stringToValue: (str) => `/${decodeURIComponent(str)}`,
-		valueToString: (val) => encodeURIComponent(val.substring(1))
-	},
-	{
-		code: 443,
-		name: "https"
-	},
-	{
-		code: 477,
-		name: "ws"
-	},
-	{
-		code: 478,
-		name: "wss"
-	},
-	{
-		code: 479,
-		name: "p2p-websocket-star"
-	},
-	{
-		code: 277,
-		name: "p2p-stardust"
-	},
-	{
-		code: 275,
-		name: "p2p-webrtc-star"
-	},
-	{
-		code: 276,
-		name: "p2p-webrtc-direct"
-	},
-	{
-		code: 280,
-		name: "webrtc-direct"
-	},
-	{
-		code: 281,
-		name: "webrtc"
-	},
-	{
-		code: 290,
-		name: "p2p-circuit"
-	},
-	{
-		code: 777,
-		name: "memory",
-		size: -1
-	}
-].forEach((codec) => {
-	registry.addProtocol(codec);
-});
-//#endregion
-//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/components.js
-function bytesToComponents(bytes) {
-	const components = [];
-	let i = 0;
-	while (i < bytes.length) {
-		const code = decode$5(bytes, i);
-		const codec = registry.getProtocol(code);
-		const codeLength = encodingLength(code);
-		const size = sizeForAddr(codec, bytes, i + codeLength);
-		let sizeLength = 0;
-		if (size > 0 && codec.size === -1) sizeLength = encodingLength(size);
-		const componentLength = codeLength + sizeLength + size;
-		const component = {
-			code,
-			name: codec.name,
-			bytes: withArrayBuffer(bytes.subarray(i, i + componentLength))
-		};
-		if (size > 0) {
-			const valueOffset = i + codeLength + sizeLength;
-			const valueBytes = bytes.subarray(valueOffset, valueOffset + size);
-			component.value = codec.bytesToValue?.(valueBytes) ?? toString$1(valueBytes);
-		}
-		components.push(component);
-		i += componentLength;
-	}
-	return components;
-}
-function componentsToBytes(components) {
-	let length = 0;
-	const bytes = [];
-	for (const component of components) {
-		if (component.bytes == null) {
-			const codec = registry.getProtocol(component.code);
-			const codecLength = encodingLength(component.code);
-			let valueBytes;
-			let valueLength = 0;
-			let valueLengthLength = 0;
-			if (component.value != null) {
-				valueBytes = codec.valueToBytes?.(component.value) ?? fromString(component.value);
-				valueLength = valueBytes.byteLength;
-				if (codec.size === -1) valueLengthLength = encodingLength(valueLength);
-			}
-			const bytes = new Uint8Array(codecLength + valueLengthLength + valueLength);
-			let offset = 0;
-			encodeUint8Array(component.code, bytes, offset);
-			offset += codecLength;
-			if (valueBytes != null) {
-				if (codec.size === -1) {
-					encodeUint8Array(valueLength, bytes, offset);
-					offset += valueLengthLength;
-				}
-				bytes.set(valueBytes, offset);
-			}
-			component.bytes = bytes;
-		}
-		bytes.push(component.bytes);
-		length += component.bytes.byteLength;
-	}
-	return concat(bytes, length);
-}
-function stringToComponents(string) {
-	if (string.charAt(0) !== "/") throw new InvalidMultiaddrError("String multiaddr must start with \"/\"");
-	const components = [];
-	let collecting = "protocol";
-	let value = "";
-	let protocol = "";
-	for (let i = 1; i < string.length; i++) {
-		const char = string.charAt(i);
-		if (char !== "/") if (collecting === "protocol") protocol += string.charAt(i);
-		else value += string.charAt(i);
-		const ended = i === string.length - 1;
-		if (char === "/" || ended) {
-			const codec = registry.getProtocol(protocol);
-			if (collecting === "protocol") {
-				if (codec.size == null || codec.size === 0) {
-					components.push({
-						code: codec.code,
-						name: codec.name
-					});
-					value = "";
-					protocol = "";
-					collecting = "protocol";
-					continue;
-				} else if (ended) throw new InvalidMultiaddrError(`Component ${protocol} was missing value`);
-				collecting = "value";
-			} else if (collecting === "value") {
-				const component = {
-					code: codec.code,
-					name: codec.name
-				};
-				if (codec.size != null && codec.size !== 0) {
-					if (value === "") throw new InvalidMultiaddrError(`Component ${protocol} was missing value`);
-					component.value = codec.stringToValue?.(value) ?? value;
-				}
-				components.push(component);
-				value = "";
-				protocol = "";
-				collecting = "protocol";
-			}
-		}
-	}
-	if (protocol !== "" && value !== "") throw new InvalidMultiaddrError("Incomplete multiaddr");
-	return components;
-}
-function componentsToString(components) {
-	return `/${components.flatMap((component) => {
-		if (component.value == null) return component.name;
-		const codec = registry.getProtocol(component.code);
-		if (codec == null) throw new InvalidMultiaddrError(`Unknown protocol code ${component.code}`);
-		return [component.name, codec.valueToString?.(component.value) ?? component.value];
-	}).join("/")}`;
-}
-/**
-* For the passed address, return the serialized size
-*/
-function sizeForAddr(codec, bytes, offset) {
-	if (codec.size == null || codec.size === 0) return 0;
-	if (codec.size > 0) return codec.size / 8;
-	return decode$5(bytes, offset);
-}
-//#endregion
-//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/multiaddr.js
-const inspect$1 = Symbol.for("nodejs.util.inspect.custom");
-const symbol = Symbol.for("@multiformats/multiaddr");
-function toComponents(addr) {
-	if (addr == null) addr = "/";
-	if (isMultiaddr(addr)) return addr.getComponents();
-	if (addr instanceof Uint8Array) return bytesToComponents(addr);
-	if (typeof addr === "string") {
-		addr = addr.replace(/\/(\/)+/, "/").replace(/(\/)+$/, "");
-		if (addr === "") addr = "/";
-		return stringToComponents(addr);
-	}
-	if (Array.isArray(addr)) return addr;
-	throw new InvalidMultiaddrError("Must be a string, Uint8Array, Component[], or another Multiaddr");
-}
-/**
-* Creates a {@link Multiaddr} from a {@link MultiaddrInput}
-*/
-var Multiaddr = class Multiaddr {
-	[symbol] = true;
-	#components;
-	#string;
-	#bytes;
-	constructor(addr = "/", options = {}) {
-		this.#components = toComponents(addr);
-		if (options.validate !== false) validate$2(this);
-	}
-	get bytes() {
-		if (this.#bytes == null) this.#bytes = componentsToBytes(this.#components);
-		return this.#bytes;
-	}
-	toString() {
-		if (this.#string == null) this.#string = componentsToString(this.#components);
-		return this.#string;
-	}
-	toJSON() {
-		return this.toString();
-	}
-	getComponents() {
-		return [...this.#components.map((c) => ({ ...c }))];
-	}
-	encapsulate(addr) {
-		const ma = new Multiaddr(addr);
-		return new Multiaddr([...this.#components, ...ma.getComponents()], { validate: false });
-	}
-	decapsulate(addr) {
-		const addrString = addr.toString();
-		const s = this.toString();
-		const i = s.lastIndexOf(addrString);
-		if (i < 0) throw new InvalidParametersError$3(`Address ${this.toString()} does not contain subaddress: ${addrString}`);
-		return new Multiaddr(s.slice(0, i), { validate: false });
-	}
-	decapsulateCode(code) {
-		let index;
-		for (let i = this.#components.length - 1; i > -1; i--) if (this.#components[i].code === code) {
-			index = i;
-			break;
-		}
-		return new Multiaddr(this.#components.slice(0, index), { validate: false });
-	}
-	equals(addr) {
-		return equals$1(this.bytes, addr.bytes);
-	}
-	/**
-	* Returns Multiaddr as a human-readable string
-	* https://nodejs.org/api/util.html#utilinspectcustom
-	*
-	* @example
-	* ```js
-	* import { multiaddr } from '@multiformats/multiaddr'
-	*
-	* console.info(multiaddr('/ip4/127.0.0.1/tcp/4001'))
-	* // 'Multiaddr(/ip4/127.0.0.1/tcp/4001)'
-	* ```
-	*/
-	[inspect$1]() {
-		return `Multiaddr(${this.toString()})`;
-	}
-};
-/**
-* Ensures all multiaddr tuples are correct. Throws if any invalid protocols or
-* values are encountered.
-*/
-function validate$2(addr) {
-	addr.getComponents().forEach((component) => {
-		const codec = registry.getProtocol(component.code);
-		if (component.value == null) return;
-		codec.validate?.(component.value);
-	});
-}
-//#endregion
-//#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* A standard way to represent addresses that
-*
-* - support any standard network protocol
-* - have a binary packed format
-* - have a nice string representation
-* - encapsulate well
-*
-* @example
-*
-* ```TypeScript
-* import { multiaddr } from '@multiformats/multiaddr'
-*
-* const addr = multiaddr('/ip4/127.0.0.1/udp/1234')
-* // Multiaddr(/ip4/127.0.0.1/udp/1234)
-*
-* addr.bytes
-* // <Uint8Array 04 7f 00 00 01 11 04 d2>
-*
-* addr.toString()
-* // '/ip4/127.0.0.1/udp/1234'
-*
-* addr.getComponents()
-* // [
-* //   { code: 4, name: 'ip4', value: '127.0.0.1' },
-* //   { code: 273, name: 'udp', value: '1234' }
-* // ]
-*
-* addr.encapsulate('/sctp/5678')
-* // Multiaddr(/ip4/127.0.0.1/udp/1234/sctp/5678)
-* ```
-*
-* @example Adding custom protocols
-*
-* To add application-specific or experimental protocols, add a protocol codec
-* to the protocol registry:
-*
-* ```ts
-* import { registry, V, multiaddr } from '@multiformats/multiaddr'
-* import type { ProtocolCodec } from '@multiformats/multiaddr'
-*
-* const maWithCustomTuple = '/custom-protocol/hello'
-*
-* // throws UnknownProtocolError
-* multiaddr(maWithCustomTuple)
-*
-* const protocol: ProtocolCodec = {
-*   code: 2059,
-*   name: 'custom-protocol',
-*   size: V
-*   // V means variable length, can also be 0, a positive integer (e.g. a fixed
-*   // length or omitted
-* }
-*
-* registry.addProtocol(protocol)
-*
-* // does not throw UnknownProtocolError
-* multiaddr(maWithCustomTuple)
-*
-* // protocols can also be removed
-* registry.removeProtocol(protocol.code)
-* ```
-*/
-/**
-* Check if object is a {@link Multiaddr} instance
-*
-* @example
-*
-* ```js
-* import { isMultiaddr, multiaddr } from '@multiformats/multiaddr'
-*
-* isMultiaddr(5)
-* // false
-* isMultiaddr(multiaddr('/ip4/127.0.0.1'))
-* // true
-* ```
-*/
-function isMultiaddr(value) {
-	return Boolean(value?.[symbol]);
-}
-/**
-* A function that takes a {@link MultiaddrInput} and returns a {@link Multiaddr}
-*
-* @example
-* ```js
-* import { multiaddr } from '@libp2p/multiaddr'
-*
-* multiaddr('/ip4/127.0.0.1/tcp/4001')
-* // Multiaddr(/ip4/127.0.0.1/tcp/4001)
-* ```
-*
-* @param {MultiaddrInput} [addr] - If String or Uint8Array, needs to adhere to the address format of a [multiaddr](https://github.com/multiformats/multiaddr#string-format)
-*/
-function multiaddr(addr) {
-	return new Multiaddr(addr);
-}
-//#endregion
-//#region node_modules/.pnpm/@multiformats+multiaddr-matcher@3.0.2/node_modules/@multiformats/multiaddr-matcher/dist/src/utils.js
-/**
-* Matches a multiaddr component with the specified code but no value
-*/
-const code$3 = (code) => {
-	return { match: (vals) => {
-		const component = vals[0];
-		if (component == null) return false;
-		if (component.code !== code) return false;
-		if (component.value != null) return false;
-		return vals.slice(1);
-	} };
-};
-/**
-* Matches a multiaddr component with the specified code and value. If the value
-* is omitted any non-undefined value is matched.
-*/
-const value = (code, value) => {
-	return { match: (vals) => {
-		const component = vals[0];
-		if (component?.code !== code) return false;
-		if (component.value == null) return false;
-		if (value != null && component.value !== value) return false;
-		return vals.slice(1);
-	} };
-};
-/**
-* Matches a multiaddr component with the specified code and value. If the value
-* is omitted any non-undefined value is matched.
-*/
-const not = (matcher) => {
-	return { match: (vals) => {
-		if (matcher.match(vals) === false) return vals;
-		return false;
-	} };
-};
-/**
-* An optional matcher
-*/
-const optional = (matcher) => {
-	return { match: (vals) => {
-		const result = matcher.match(vals);
-		if (result === false) return vals;
-		return result;
-	} };
-};
-/**
-* Matches any one of the passed matches
-*/
-const or = (...matchers) => {
-	return { match: (vals) => {
-		let matches;
-		for (const matcher of matchers) {
-			const result = matcher.match(vals);
-			if (result === false) continue;
-			if (matches == null || result.length < matches.length) matches = result;
-		}
-		if (matches == null) return false;
-		return matches;
-	} };
-};
-/**
-* Matches all of the passed matchers
-*/
-const and = (...matchers) => {
-	return { match: (vals) => {
-		for (const matcher of matchers) {
-			const result = matcher.match(vals);
-			if (result === false) return false;
-			vals = result;
-		}
-		return vals;
-	} };
-};
-/**
-* Create a multiaddr matcher from the passed component matchers
-*/
-function fmt(...matchers) {
-	function match(ma) {
-		if (ma == null) return false;
-		let parts = ma.getComponents();
-		for (const matcher of matchers) {
-			const result = matcher.match(parts);
-			if (result === false) return false;
-			parts = result;
-		}
-		return parts;
-	}
-	function matches(ma) {
-		return match(ma) !== false;
-	}
-	function exactMatch(ma) {
-		const result = match(ma);
-		if (result === false) return false;
-		return result.length === 0;
-	}
-	return {
-		matchers,
-		matches,
-		exactMatch
-	};
-}
-const PEER_ID = fmt(value(421));
-/**
-* DNS matchers
-*/
-const _DNS4 = value(54);
-const _DNS6 = value(55);
-const _DNSADDR = value(56);
-const _DNS = value(53);
-/**
-* Matches any dns address.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { DNS } from '@multiformats/multiaddr-matcher'
-*
-* DNS.matches(multiaddr('/dnsaddr/example.org')) // true
-* DNS.matches(multiaddr('/dns4/example.org')) // true
-* DNS.matches(multiaddr('/dns6/example.org')) // true
-* DNS.matches(multiaddr('/dns6/example.org/p2p/Qmfoo')) // true
-* ```
-*/
-const DNS = fmt(or(_DNS, _DNSADDR, _DNS4, _DNS6), optional(value(421)));
-const _IP4 = and(value(4), optional(value(43)));
-const _IP6 = and(optional(value(42)), value(41), optional(value(43)));
-const _IP_OR_DOMAIN = or(or(_IP4, _IP6), _DNS, _DNS4, _DNS6, _DNSADDR);
-/**
-* Matches ip4 addresses.
-*
-* Use {@link IP IP} instead to match any ip4/ip6 address.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { IP4 } from '@multiformats/multiaddr-matcher'
-*
-* const ma = multiaddr('/ip4/123.123.123.123')
-*
-* IP4.matches(ma) // true
-* ```
-*/
-const IP4 = fmt(_IP4);
-/**
-* Matches ip6 addresses.
-*
-* Use {@link IP IP} instead to match any ip4/ip6 address.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { IP6 } from '@multiformats/multiaddr-matcher'
-*
-* const ma = multiaddr('/ip6/fe80::1cc1:a3b8:322f:cf22')
-*
-* IP6.matches(ma) // true
-* ```
-*/
-const IP6 = fmt(_IP6);
-const _TCP = and(_IP_OR_DOMAIN, value(6));
-const _UDP = and(_IP_OR_DOMAIN, value(273));
-/**
-* Matches TCP addresses.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { TCP } from '@multiformats/multiaddr-matcher'
-*
-* TCP.matches(multiaddr('/ip4/123.123.123.123/tcp/1234')) // true
-* ```
-*/
-const TCP = fmt(and(_TCP, optional(value(421))));
-const _QUIC = and(_UDP, code$3(460), optional(value(421)));
-const _QUIC_V1 = and(_UDP, code$3(461), optional(value(421)));
-const QUIC_V0_OR_V1 = or(_QUIC, _QUIC_V1);
-/**
-* Matches QUICv1 addresses.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { QUIC_V1 } from '@multiformats/multiaddr-matcher'
-*
-* QUIC_V1.matches(multiaddr('/ip4/123.123.123.123/udp/1234/quic-v1')) // true
-* ```
-*/
-const QUIC_V1 = fmt(_QUIC_V1);
-const _WEB = or(_IP_OR_DOMAIN, _TCP, _UDP, _QUIC, _QUIC_V1);
-const _WebSockets = or(and(_WEB, code$3(477), optional(value(421))));
-/**
-* Matches WebSocket addresses.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { WebSockets } from '@multiformats/multiaddr-matcher'
-*
-* WebSockets.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/ws')) // true
-* ```
-*/
-const WebSockets = fmt(_WebSockets);
-const _WebSocketsSecure = or(and(_WEB, code$3(478), optional(value(421))), and(_WEB, code$3(448), optional(value(449)), code$3(477), optional(value(421))));
-/**
-* Matches secure WebSocket addresses.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { WebSocketsSecure } from '@multiformats/multiaddr-matcher'
-*
-* WebSocketsSecure.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/wss')) // true
-* ```
-*/
-const WebSocketsSecure = fmt(_WebSocketsSecure);
-const _WebRTCDirect = and(_UDP, code$3(280), optional(value(466)), optional(value(466)), optional(value(421)));
-/**
-* Matches WebRTC-direct addresses.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { WebRTCDirect } from '@multiformats/multiaddr-matcher'
-*
-* WebRTCDirect.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/p2p/QmFoo/webrtc-direct/certhash/u....')) // true
-* ```
-*/
-const WebRTCDirect = fmt(_WebRTCDirect);
-const _WebTransport = and(_QUIC_V1, code$3(465), optional(value(466)), optional(value(466)), optional(value(421)));
-/**
-* Matches WebTransport addresses.
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { WebRTCDirect } from '@multiformats/multiaddr-matcher'
-*
-* WebRTCDirect.matches(multiaddr('/ip4/123.123.123.123/udp/1234/quic-v1/webtransport/certhash/u..../certhash/u..../p2p/QmFoo')) // true
-* ```
-*/
-const WebTransport = fmt(_WebTransport);
-const _P2P = or(_WebSockets, _WebSocketsSecure, and(_TCP, optional(value(421))), and(QUIC_V0_OR_V1, optional(value(421))), and(_IP_OR_DOMAIN, optional(value(421))), _WebRTCDirect, _WebTransport, value(421));
-/**
-* Matches circuit relay addresses
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { Circuit } from '@multiformats/multiaddr-matcher'
-*
-* Circuit.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/p2p/QmRelay/p2p-circuit/p2p/QmTarget')) // true
-* ```
-*/
-const Circuit = fmt(and(optional(_P2P), code$3(290), not(code$3(281)), optional(value(421))));
-/**
-* Matches WebRTC addresses
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { WebRTC } from '@multiformats/multiaddr-matcher'
-*
-* WebRTC.matches(multiaddr('/ip4/123.123.123.123/tcp/1234/p2p/QmRelay/p2p-circuit/webrtc/p2p/QmTarget')) // true
-* ```
-*/
-const WebRTC = fmt(or(and(_P2P, code$3(290), code$3(281), optional(value(421))), and(_P2P, code$3(281), optional(value(421))), and(code$3(281), optional(value(421)))));
-/**
-* Matches HTTP addresses
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { HTTP } from '@multiformats/multiaddr-matcher'
-*
-* HTTP.matches(multiaddr('/dns/example.org/http')) // true
-* ```
-*/
-const HTTP = fmt(and(_IP_OR_DOMAIN, or(and(value(6, "80")), and(value(6), code$3(480)), code$3(480)), optional(value(481)), optional(value(421))));
-/**
-* Matches HTTPS addresses
-*
-* @example
-*
-* ```ts
-* import { multiaddr } from '@multiformats/multiaddr'
-* import { HTTP } from '@multiformats/multiaddr-matcher'
-*
-* HTTP.matches(multiaddr('/dns/example.org/tls/http')) // true
-* ```
-*/
-const HTTPS = fmt(and(_IP_OR_DOMAIN, or(and(value(6, "443")), and(value(6, "443"), code$3(480)), and(value(6), code$3(443)), and(value(6), code$3(448), code$3(480)), and(code$3(448), code$3(480)), code$3(448), code$3(443)), optional(value(481)), optional(value(421))));
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/multiaddr/sorters.js
-/**
-* Sorts addresses by order of reliability, where they have presented the fewest
-* problems:
-*
-* TCP -> WebSockets/Secure -> WebRTC -> WebRTCDirect -> WebTransport
-*/
-function reliableTransportsFirst(a, b) {
-	const isATcp = TCP.exactMatch(a);
-	const isBTcp = TCP.exactMatch(b);
-	if (isATcp && !isBTcp) return -1;
-	if (!isATcp && isBTcp) return 1;
-	const isAWebSocketSecure = WebSocketsSecure.exactMatch(a);
-	const isBWebSocketSecure = WebSocketsSecure.exactMatch(b);
-	if (isAWebSocketSecure && !isBWebSocketSecure) return -1;
-	if (!isAWebSocketSecure && isBWebSocketSecure) return 1;
-	const isAWebSocket = WebSockets.exactMatch(a);
-	const isBWebSocket = WebSockets.exactMatch(b);
-	if (isAWebSocket && !isBWebSocket) return -1;
-	if (!isAWebSocket && isBWebSocket) return 1;
-	const isAWebRTC = WebRTC.exactMatch(a);
-	const isBWebRTC = WebRTC.exactMatch(b);
-	if (isAWebRTC && !isBWebRTC) return -1;
-	if (!isAWebRTC && isBWebRTC) return 1;
-	const isAWebRTCDirect = WebRTCDirect.exactMatch(a);
-	const isBWebRTCDirect = WebRTCDirect.exactMatch(b);
-	if (isAWebRTCDirect && !isBWebRTCDirect) return -1;
-	if (!isAWebRTCDirect && isBWebRTCDirect) return 1;
-	const isAWebTransport = WebTransport.exactMatch(a);
-	const isBWebTransport = WebTransport.exactMatch(b);
-	if (isAWebTransport && !isBWebTransport) return -1;
-	if (!isAWebTransport && isBWebTransport) return 1;
-	return 0;
-}
-/**
-* Compare function for array.sort() that moves loopback addresses to the end
-* of the array.
-*/
-function loopbackAddressLast(a, b) {
-	const isALoopback = isLoopback(a);
-	const isBLoopback = isLoopback(b);
-	if (isALoopback && !isBLoopback) return 1;
-	else if (!isALoopback && isBLoopback) return -1;
-	return 0;
-}
-/**
-* Compare function for array.sort() that moves public addresses to the start
-* of the array.
-*/
-function publicAddressesFirst(a, b) {
-	const isAPrivate = isPrivate(a);
-	const isBPrivate = isPrivate(b);
-	if (isAPrivate && !isBPrivate) return 1;
-	else if (!isAPrivate && isBPrivate) return -1;
-	return 0;
-}
-/**
-* Compare function for array.sort() that moves circuit relay addresses to the
-* end of the array.
-*/
-function circuitRelayAddressesLast(a, b) {
-	const isACircuit = Circuit.exactMatch(a);
-	const isBCircuit = Circuit.exactMatch(b);
-	if (isACircuit && !isBCircuit) return 1;
-	else if (!isACircuit && isBCircuit) return -1;
-	return 0;
-}
-//#endregion
-//#region node_modules/.pnpm/it-pushable@3.2.4/node_modules/it-pushable/dist/src/fifo.js
-var FixedFIFO = class {
-	buffer;
-	mask;
-	top;
-	btm;
-	next;
-	constructor(hwm) {
-		if (!(hwm > 0) || (hwm - 1 & hwm) !== 0) throw new Error("Max size for a FixedFIFO should be a power of two");
-		this.buffer = new Array(hwm);
-		this.mask = hwm - 1;
-		this.top = 0;
-		this.btm = 0;
-		this.next = null;
-	}
-	push(data) {
-		if (this.buffer[this.top] !== void 0) return false;
-		this.buffer[this.top] = data;
-		this.top = this.top + 1 & this.mask;
-		return true;
-	}
-	shift() {
-		const last = this.buffer[this.btm];
-		if (last === void 0) return;
-		this.buffer[this.btm] = void 0;
-		this.btm = this.btm + 1 & this.mask;
-		return last;
-	}
-	isEmpty() {
-		return this.buffer[this.btm] === void 0;
-	}
-};
-var FIFO = class {
-	size;
-	hwm;
-	head;
-	tail;
-	constructor(options = {}) {
-		this.hwm = options.splitLimit ?? 16;
-		this.head = new FixedFIFO(this.hwm);
-		this.tail = this.head;
-		this.size = 0;
-	}
-	calculateSize(obj) {
-		if (obj?.byteLength != null) return obj.byteLength;
-		return 1;
-	}
-	push(val) {
-		if (val?.value != null) this.size += this.calculateSize(val.value);
-		if (!this.head.push(val)) {
-			const prev = this.head;
-			this.head = prev.next = new FixedFIFO(2 * this.head.buffer.length);
-			this.head.push(val);
-		}
-	}
-	shift() {
-		let val = this.tail.shift();
-		if (val === void 0 && this.tail.next != null) {
-			const next = this.tail.next;
-			this.tail.next = null;
-			this.tail = next;
-			val = this.tail.shift();
-		}
-		if (val?.value != null) this.size -= this.calculateSize(val.value);
-		return val;
-	}
-	isEmpty() {
-		return this.head.isEmpty();
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/it-pushable@3.2.4/node_modules/it-pushable/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* An iterable that you can push values into.
-*
-* @example
-*
-* ```js
-* import { pushable } from 'it-pushable'
-*
-* const source = pushable()
-*
-* setTimeout(() => source.push('hello'), 100)
-* setTimeout(() => source.push('world'), 200)
-* setTimeout(() => source.end(), 300)
-*
-* const start = Date.now()
-*
-* for await (const value of source) {
-*   console.log(`got "${value}" after ${Date.now() - start}ms`)
-* }
-* console.log(`done after ${Date.now() - start}ms`)
-*
-* // Output:
-* // got "hello" after 105ms
-* // got "world" after 207ms
-* // done after 309ms
-* ```
-*
-* @example
-*
-* ```js
-* import { pushableV } from 'it-pushable'
-* import all from 'it-all'
-*
-* const source = pushableV()
-*
-* source.push(1)
-* source.push(2)
-* source.push(3)
-* source.end()
-*
-* console.info(await all(source))
-*
-* // Output:
-* // [ [1, 2, 3] ]
-* ```
-*/
-var AbortError$2 = class extends Error {
-	type;
-	code;
-	constructor(message, code) {
-		super(message ?? "The operation was aborted");
-		this.type = "aborted";
-		this.code = code ?? "ABORT_ERR";
-	}
-};
-function pushable(options = {}) {
-	const getNext = (buffer) => {
-		const next = buffer.shift();
-		if (next == null) return { done: true };
-		if (next.error != null) throw next.error;
-		return {
-			done: next.done === true,
-			value: next.value
-		};
-	};
-	return _pushable(getNext, options);
-}
-function _pushable(getNext, options) {
-	options = options ?? {};
-	let onEnd = options.onEnd;
-	let buffer = new FIFO();
-	let pushable;
-	let onNext;
-	let ended;
-	let drain = pDefer();
-	const waitNext = async () => {
-		try {
-			if (!buffer.isEmpty()) return getNext(buffer);
-			if (ended) return { done: true };
-			return await new Promise((resolve, reject) => {
-				onNext = (next) => {
-					onNext = null;
-					buffer.push(next);
-					try {
-						resolve(getNext(buffer));
-					} catch (err) {
-						reject(err);
-					}
-					return pushable;
-				};
-			});
-		} finally {
-			if (buffer.isEmpty()) queueMicrotask(() => {
-				drain.resolve();
-				drain = pDefer();
-			});
-		}
-	};
-	const bufferNext = (next) => {
-		if (onNext != null) return onNext(next);
-		buffer.push(next);
-		return pushable;
-	};
-	const bufferError = (err) => {
-		buffer = new FIFO();
-		if (onNext != null) return onNext({ error: err });
-		buffer.push({ error: err });
-		return pushable;
-	};
-	const push = (value) => {
-		if (ended) return pushable;
-		if (options?.objectMode !== true && value?.byteLength == null) throw new Error("objectMode was not true but tried to push non-Uint8Array value");
-		return bufferNext({
-			done: false,
-			value
-		});
-	};
-	const end = (err) => {
-		if (ended) return pushable;
-		ended = true;
-		return err != null ? bufferError(err) : bufferNext({ done: true });
-	};
-	const _return = () => {
-		buffer = new FIFO();
-		end();
-		return { done: true };
-	};
-	const _throw = (err) => {
-		end(err);
-		return { done: true };
-	};
-	pushable = {
-		[Symbol.asyncIterator]() {
-			return this;
-		},
-		next: waitNext,
-		return: _return,
-		throw: _throw,
-		push,
-		end,
-		get readableLength() {
-			return buffer.size;
-		},
-		onEmpty: async (options) => {
-			const signal = options?.signal;
-			signal?.throwIfAborted();
-			if (buffer.isEmpty()) return;
-			let cancel;
-			let listener;
-			if (signal != null) cancel = new Promise((resolve, reject) => {
-				listener = () => {
-					reject(new AbortError$2());
-				};
-				signal.addEventListener("abort", listener);
-			});
-			try {
-				await Promise.race([drain.promise, cancel]);
-			} finally {
-				if (listener != null && signal != null) signal?.removeEventListener("abort", listener);
-			}
-		}
-	};
-	if (onEnd == null) return pushable;
-	const _pushable = pushable;
-	pushable = {
-		[Symbol.asyncIterator]() {
-			return this;
-		},
-		next() {
-			return _pushable.next();
-		},
-		throw(err) {
-			_pushable.throw(err);
-			if (onEnd != null) {
-				onEnd(err);
-				onEnd = void 0;
-			}
-			return { done: true };
-		},
-		return() {
-			_pushable.return();
-			if (onEnd != null) {
-				onEnd();
-				onEnd = void 0;
-			}
-			return { done: true };
-		},
-		push,
-		end(err) {
-			_pushable.end(err);
-			if (onEnd != null) {
-				onEnd(err);
-				onEnd = void 0;
-			}
-			return pushable;
-		},
-		get readableLength() {
-			return _pushable.readableLength;
-		},
-		onEmpty: (opts) => {
-			return _pushable.onEmpty(opts);
-		}
-	};
-	return pushable;
-}
-//#endregion
-//#region node_modules/.pnpm/p-timeout@7.0.1/node_modules/p-timeout/index.js
-var TimeoutError$1 = class TimeoutError$1 extends Error {
-	name = "TimeoutError";
-	constructor(message, options) {
-		super(message, options);
-		Error.captureStackTrace?.(this, TimeoutError$1);
-	}
-};
-const getAbortedReason = (signal) => signal.reason ?? new DOMException("This operation was aborted.", "AbortError");
-function pTimeout(promise, options) {
-	const { milliseconds, fallback, message, customTimers = {
-		setTimeout,
-		clearTimeout
-	}, signal } = options;
-	let timer;
-	let abortHandler;
-	const cancelablePromise = new Promise((resolve, reject) => {
-		if (typeof milliseconds !== "number" || Math.sign(milliseconds) !== 1) throw new TypeError(`Expected \`milliseconds\` to be a positive number, got \`${milliseconds}\``);
-		if (signal?.aborted) {
-			reject(getAbortedReason(signal));
-			return;
-		}
-		if (signal) {
-			abortHandler = () => {
-				reject(getAbortedReason(signal));
-			};
-			signal.addEventListener("abort", abortHandler, { once: true });
-		}
-		promise.then(resolve, reject);
-		if (milliseconds === Number.POSITIVE_INFINITY) return;
-		const timeoutError = new TimeoutError$1();
-		timer = customTimers.setTimeout.call(void 0, () => {
-			if (fallback) {
-				try {
-					resolve(fallback());
-				} catch (error) {
-					reject(error);
-				}
-				return;
-			}
-			if (typeof promise.cancel === "function") promise.cancel();
-			if (message === false) resolve();
-			else if (message instanceof Error) reject(message);
-			else {
-				timeoutError.message = message ?? `Promise timed out after ${milliseconds} milliseconds`;
-				reject(timeoutError);
-			}
-		}, milliseconds);
-	}).finally(() => {
-		cancelablePromise.clear();
-		if (abortHandler && signal) signal.removeEventListener("abort", abortHandler);
-	});
-	cancelablePromise.clear = () => {
-		customTimers.clearTimeout.call(void 0, timer);
-		timer = void 0;
-	};
-	return cancelablePromise;
-}
-//#endregion
-//#region node_modules/.pnpm/p-event@7.1.0/node_modules/p-event/index.js
-const normalizeEmitter = (emitter) => {
-	const addListener = emitter.addEventListener || emitter.on || emitter.addListener;
-	const removeListener = emitter.removeEventListener || emitter.off || emitter.removeListener;
-	if (!addListener || !removeListener) throw new TypeError("Emitter is not compatible");
-	return {
-		addListener: addListener.bind(emitter),
-		removeListener: removeListener.bind(emitter)
-	};
-};
-function pEventMultiple(emitter, event, options) {
-	let cancel;
-	const returnValue = new Promise((resolve, reject) => {
-		options = {
-			rejectionEvents: ["error"],
-			multiArgs: false,
-			rejectionMultiArgs: false,
-			resolveImmediately: false,
-			...options
-		};
-		if (!(options.count >= 0 && (options.count === Number.POSITIVE_INFINITY || Number.isInteger(options.count)))) throw new TypeError("The `count` option should be at least 0 or more");
-		options.signal?.throwIfAborted();
-		const events = [event].flat();
-		const items = [];
-		const { addListener, removeListener } = normalizeEmitter(emitter);
-		const onItem = async (...arguments_) => {
-			const value = options.multiArgs ? arguments_ : arguments_[0];
-			if (options.filter) try {
-				if (!await options.filter(value)) return;
-			} catch (error) {
-				cancel();
-				reject(error);
-				return;
-			}
-			items.push(value);
-			if (options.count === items.length) {
-				cancel();
-				resolve(items);
-			}
-		};
-		const rejectHandler = (...arguments_) => {
-			cancel();
-			reject(options.rejectionMultiArgs ? arguments_ : arguments_[0]);
-		};
-		cancel = () => {
-			for (const event of events) removeListener(event, onItem);
-			for (const rejectionEvent of options.rejectionEvents) if (!events.includes(rejectionEvent)) removeListener(rejectionEvent, rejectHandler);
-		};
-		for (const event of events) addListener(event, onItem);
-		for (const rejectionEvent of options.rejectionEvents) if (!events.includes(rejectionEvent)) addListener(rejectionEvent, rejectHandler);
-		if (options.signal) options.signal.addEventListener("abort", () => {
-			rejectHandler(options.signal.reason);
-		}, { once: true });
-		if (options.resolveImmediately) resolve(items);
-	});
-	returnValue.cancel = cancel;
-	if (typeof options.timeout === "number") {
-		const timeout = pTimeout(returnValue, { milliseconds: options.timeout });
-		timeout.cancel = () => {
-			cancel();
-			timeout.clear();
-		};
-		return timeout;
-	}
-	return returnValue;
-}
-function pEvent(emitter, event, options) {
-	if (typeof options === "function") options = { filter: options };
-	options = {
-		...options,
-		count: 1,
-		resolveImmediately: false
-	};
-	const arrayPromise = pEventMultiple(emitter, event, options);
-	const promise = arrayPromise.then((array) => array[0]);
-	promise.cancel = arrayPromise.cancel;
-	return promise;
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/debounce.js
-/**
-* Returns a function wrapper that will only call the passed function once
-*
-* Important - the passed function should not throw or reject
-*/
-function debounce$1(func, wait) {
-	let timeout;
-	const output = function() {
-		const later = function() {
-			timeout = void 0;
-			func();
-		};
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-	};
-	output.start = () => {};
-	output.stop = () => {
-		clearTimeout(timeout);
-	};
-	return output;
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/errors.js
-/**
-* A rate limit was hit
-*/
-var RateLimitError = class extends Error {
-	remainingPoints;
-	msBeforeNext;
-	consumedPoints;
-	isFirstInDuration;
-	constructor(message = "Rate limit exceeded", props) {
-		super(message);
-		this.name = "RateLimitError";
-		this.remainingPoints = props.remainingPoints;
-		this.msBeforeNext = props.msBeforeNext;
-		this.consumedPoints = props.consumedPoints;
-		this.isFirstInDuration = props.isFirstInDuration;
-	}
-};
-var QueueFullError$1 = class extends Error {
-	static name = "QueueFullError";
-	constructor(message = "The queue was full") {
-		super(message);
-		this.name = "QueueFullError";
-	}
-};
-var UnexpectedEOFError$1 = class extends Error {
-	static name = "UnexpectedEOFError";
-	name = "UnexpectedEOFError";
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/queue/recipient.js
-var JobRecipient$1 = class {
-	deferred;
-	signal;
-	onProgress;
-	constructor(options) {
-		this.signal = options?.signal;
-		this.onProgress = options?.onProgress;
-		this.deferred = pDefer();
-		this.onAbort = this.onAbort.bind(this);
-		this.signal?.addEventListener("abort", this.onAbort);
-	}
-	onAbort() {
-		this.deferred.reject(this.signal?.reason ?? new AbortError$3());
-	}
-	cleanup() {
-		this.signal?.removeEventListener("abort", this.onAbort);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/queue/job.js
-/**
-* Returns a random string
-*/
-function randomId$1() {
-	return `${parseInt(String(Math.random() * 1e9), 10).toString()}${Date.now()}`;
-}
-var Job$1 = class {
-	id;
-	fn;
-	options;
-	recipients;
-	status;
-	timeline;
-	controller;
-	dispatchingProgress;
-	constructor(fn, options) {
-		this.id = randomId$1();
-		this.status = "queued";
-		this.fn = fn;
-		this.options = options;
-		this.recipients = [];
-		this.timeline = { created: Date.now() };
-		this.controller = new AbortController();
-		setMaxListeners$1(Infinity, this.controller.signal);
-		this.dispatchingProgress = false;
-		this.onAbort = this.onAbort.bind(this);
-	}
-	abort(err) {
-		this.controller.abort(err);
-	}
-	onAbort() {
-		if (this.recipients.reduce((acc, curr) => {
-			return acc && curr.signal?.aborted === true;
-		}, true)) {
-			this.controller.abort(new AbortError$3());
-			this.cleanup();
-		}
-	}
-	async join(options) {
-		const recipient = new JobRecipient$1(options);
-		this.recipients.push(recipient);
-		options?.signal?.addEventListener("abort", this.onAbort);
-		return recipient.deferred.promise;
-	}
-	async run() {
-		this.status = "running";
-		this.timeline.started = Date.now();
-		try {
-			this.controller.signal.throwIfAborted();
-			const result = await raceSignal(this.fn({
-				...this.options ?? {},
-				signal: this.controller.signal,
-				onProgress: (evt) => {
-					if (this.dispatchingProgress) return;
-					this.dispatchingProgress = true;
-					try {
-						this.recipients.forEach((recipient) => {
-							recipient.onProgress?.(evt);
-						});
-					} finally {
-						this.dispatchingProgress = false;
-					}
-				}
-			}), this.controller.signal);
-			this.recipients.forEach((recipient) => {
-				recipient.deferred.resolve(result);
-			});
-			this.status = "complete";
-		} catch (err) {
-			this.recipients.forEach((recipient) => {
-				recipient.deferred.reject(err);
-			});
-			this.status = "errored";
-		} finally {
-			this.timeline.finished = Date.now();
-			this.cleanup();
-		}
-	}
-	cleanup() {
-		this.recipients.forEach((recipient) => {
-			recipient.cleanup();
-			recipient.signal?.removeEventListener("abort", this.onAbort);
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/queue/index.js
-/**
-* Heavily influence by `p-queue` with the following differences:
-*
-* 1. Items remain at the head of the queue while they are running so `queue.size` includes `queue.pending` items - this is so interested parties can join the results of a queue item while it is running
-* 2. The options for a job are stored separately to the job in order for them to be modified while they are still in the queue
-*/
-var Queue$1 = class extends TypedEventEmitter {
-	concurrency;
-	maxSize;
-	queue;
-	pending;
-	sort;
-	paused;
-	constructor(init = {}) {
-		super();
-		this.concurrency = init.concurrency ?? Number.POSITIVE_INFINITY;
-		this.maxSize = init.maxSize ?? Number.POSITIVE_INFINITY;
-		this.pending = 0;
-		this.paused = false;
-		if (init.metricName != null) init.metrics?.registerMetricGroup(init.metricName, { calculate: () => {
-			return {
-				size: this.queue.length,
-				running: this.pending,
-				queued: this.queue.length - this.pending
-			};
-		} });
-		this.sort = init.sort;
-		this.queue = [];
-		this.emitEmpty = debounce$1(this.emitEmpty.bind(this), 1);
-		this.emitIdle = debounce$1(this.emitIdle.bind(this), 1);
-	}
-	emitEmpty() {
-		if (this.size !== 0) return;
-		this.safeDispatchEvent("empty");
-	}
-	emitIdle() {
-		if (this.running !== 0) return;
-		this.safeDispatchEvent("idle");
-	}
-	pause() {
-		this.paused = true;
-	}
-	resume() {
-		if (!this.paused) return;
-		this.paused = false;
-		this.tryToStartAnother();
-	}
-	tryToStartAnother() {
-		if (this.paused) return false;
-		if (this.size === 0) {
-			this.emitEmpty();
-			if (this.running === 0) this.emitIdle();
-			return false;
-		}
-		if (this.pending < this.concurrency) {
-			let job;
-			for (const j of this.queue) if (j.status === "queued") {
-				job = j;
-				break;
-			}
-			if (job == null) return false;
-			this.safeDispatchEvent("active");
-			this.pending++;
-			job.run().finally(() => {
-				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
-					this.queue.splice(i, 1);
-					break;
-				}
-				this.pending--;
-				this.tryToStartAnother();
-				this.safeDispatchEvent("next");
-			});
-			return true;
-		}
-		return false;
-	}
-	enqueue(job) {
-		this.queue.push(job);
-		if (this.sort != null) this.queue.sort(this.sort);
-	}
-	/**
-	* Adds a sync or async task to the queue. Always returns a promise.
-	*/
-	async add(fn, options) {
-		options?.signal?.throwIfAborted();
-		if (this.size === this.maxSize) throw new QueueFullError$1();
-		const job = new Job$1(fn, options);
-		this.enqueue(job);
-		this.safeDispatchEvent("add");
-		const result = job.join(options).then((result) => {
-			this.safeDispatchEvent("completed", { detail: result });
-			this.safeDispatchEvent("success", { detail: {
-				job,
-				result
-			} });
-			return result;
-		}).catch((err) => {
-			if (job.status === "queued") {
-				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
-					this.queue.splice(i, 1);
-					break;
-				}
-			}
-			this.safeDispatchEvent("failure", { detail: {
-				job,
-				error: err
-			} });
-			throw err;
-		});
-		this.tryToStartAnother();
-		return result;
-	}
-	/**
-	* Clear the queue
-	*/
-	clear() {
-		this.queue.splice(0, this.queue.length);
-	}
-	/**
-	* Abort all jobs in the queue and clear it
-	*/
-	abort() {
-		this.queue.forEach((job) => {
-			job.abort(new AbortError$3());
-		});
-		this.clear();
-	}
-	/**
-	* Can be called multiple times. Useful if you for example add additional items at a later time.
-	*
-	* @returns A promise that settles when the queue becomes empty.
-	*/
-	async onEmpty(options) {
-		if (this.size === 0) return;
-		await pEvent(this, "empty", options);
-	}
-	/**
-	* @returns A promise that settles when the queue size is less than the given
-	* limit: `queue.size < limit`.
-	*
-	* If you want to avoid having the queue grow beyond a certain size you can
-	* `await queue.onSizeLessThan()` before adding a new item.
-	*
-	* Note that this only limits the number of items waiting to start. There
-	* could still be up to `concurrency` jobs already running that this call does
-	* not include in its calculation.
-	*/
-	async onSizeLessThan(limit, options) {
-		if (this.size < limit) return;
-		await pEvent(this, "next", {
-			...options,
-			filter: () => this.size < limit
-		});
-	}
-	/**
-	* The difference with `.onEmpty` is that `.onIdle` guarantees that all work
-	* from the queue has finished. `.onEmpty` merely signals that the queue is
-	* empty, but it could mean that some promises haven't completed yet.
-	*
-	* @returns A promise that settles when the queue becomes empty, and all
-	* promises have completed; `queue.size === 0 && queue.pending === 0`.
-	*/
-	async onIdle(options) {
-		if (this.pending === 0 && this.size === 0) return;
-		await pEvent(this, "idle", options);
-	}
-	/**
-	* Size of the queue including running items
-	*/
-	get size() {
-		return this.queue.length;
-	}
-	/**
-	* The number of queued items waiting to run.
-	*/
-	get queued() {
-		return this.queue.length - this.pending;
-	}
-	/**
-	* The number of items currently running.
-	*/
-	get running() {
-		return this.pending;
-	}
-	/**
-	* Returns an async generator that makes it easy to iterate over the results
-	* of jobs added to the queue.
-	*
-	* The generator will end when the queue becomes idle, that is there are no
-	* jobs running and no jobs that have yet to run.
-	*
-	* If you need to keep the queue open indefinitely, consider using it-pushable
-	* instead.
-	*/
-	async *toGenerator(options) {
-		options?.signal?.throwIfAborted();
-		const stream = pushable({ objectMode: true });
-		const cleanup = (err) => {
-			if (err != null) this.abort();
-			else this.clear();
-			stream.end(err);
-		};
-		const onQueueJobComplete = (evt) => {
-			if (evt.detail != null) stream.push(evt.detail);
-		};
-		const onQueueFailure = (evt) => {
-			cleanup(evt.detail.error);
-		};
-		const onQueueIdle = () => {
-			cleanup();
-		};
-		const onSignalAbort = () => {
-			cleanup(new AbortError$3("Queue aborted"));
-		};
-		this.addEventListener("completed", onQueueJobComplete);
-		this.addEventListener("failure", onQueueFailure);
-		this.addEventListener("idle", onQueueIdle);
-		options?.signal?.addEventListener("abort", onSignalAbort);
-		try {
-			yield* stream;
-		} finally {
-			this.removeEventListener("completed", onQueueJobComplete);
-			this.removeEventListener("failure", onQueueFailure);
-			this.removeEventListener("idle", onQueueIdle);
-			options?.signal?.removeEventListener("abort", onSignalAbort);
-			cleanup();
-		}
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/any-signal@4.2.0/node_modules/any-signal/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Similar to [AbortSignal.any](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/any_static)
-* except the returned promise has a `.clear` method that removes all event
-* listeners added to passed signals preventing memory leaks.
-*
-* At the time of writing at least, `AbortSignal.any` leaks memory in Node.js
-* and Deno environments:
-*
-* - https://github.com/nodejs/node/issues/54614
-* - https://github.com/denoland/deno/issues/24842
-*
-* @example
-*
-* ```js
-* import { anySignal } from 'any-signal'
-*
-* const userController = new AbortController()
-*
-* // Abort after 1 second
-* const timeoutSignal = AbortSignal.timeout(1000)
-*
-* const combinedSignal = anySignal([userController.signal, timeoutSignal])
-* combinedSignal.addEventListener('abort', () => console.log('Abort!'))
-*
-* try {
-*   // The user or the timeout can now abort the action
-*   await performSomeAction({ signal: combinedSignal })
-* } finally {
-*   // Clear will clean up internal event handlers
-*   combinedSignal.clear()
-* }
-* ```
-*/
-/**
-* Takes an array of AbortSignals and returns a single signal.
-* If any signals are aborted, the returned signal will be aborted.
-*/
-function anySignal(signals) {
-	const controller = new globalThis.AbortController();
-	function onAbort() {
-		const reason = signals.filter((s) => s?.aborted === true).map((s) => s?.reason).pop();
-		controller.abort(reason);
-		for (const signal of signals) if (signal?.removeEventListener != null) signal.removeEventListener("abort", onAbort);
-	}
-	for (const signal of signals) {
-		if (signal?.aborted === true) {
-			onAbort();
-			break;
-		}
-		if (signal?.addEventListener != null) signal.addEventListener("abort", onAbort);
-	}
-	function clear() {
-		for (const signal of signals) if (signal?.removeEventListener != null) signal.removeEventListener("abort", onAbort);
-	}
-	const signal = controller.signal;
-	signal.clear = clear;
-	return signal;
-}
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/moving-average.js
-/**
-* Implements exponential moving average. Ported from `moving-average`.
-*
-* @see https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
-* @see https://www.npmjs.com/package/moving-average
-*/
-var MovingAverage = class {
-	movingAverage;
-	variance;
-	deviation;
-	forecast;
-	timeSpan;
-	previousTime;
-	constructor(timeSpan) {
-		this.timeSpan = timeSpan;
-		this.movingAverage = 0;
-		this.variance = 0;
-		this.deviation = 0;
-		this.forecast = 0;
-	}
-	alpha(t, pt) {
-		return 1 - Math.exp(-(t - pt) / this.timeSpan);
-	}
-	push(value, time = Date.now()) {
-		if (this.previousTime != null) {
-			const a = this.alpha(time, this.previousTime);
-			const diff = value - this.movingAverage;
-			const incr = a * diff;
-			this.movingAverage = a * value + (1 - a) * this.movingAverage;
-			this.variance = (1 - a) * (this.variance + diff * incr);
-			this.deviation = Math.sqrt(this.variance);
-			this.forecast = this.movingAverage + a * diff;
-		} else this.movingAverage = value;
-		this.previousTime = time;
-	}
-};
-var AdaptiveTimeout = class {
-	success;
-	failure;
-	next;
-	metric;
-	timeoutMultiplier;
-	failureMultiplier;
-	minTimeout;
-	maxTimeout;
-	constructor(init = {}) {
-		const interval = init.interval ?? 5e3;
-		this.success = new MovingAverage(interval);
-		this.failure = new MovingAverage(interval);
-		this.next = new MovingAverage(interval);
-		this.failureMultiplier = init.failureMultiplier ?? 2;
-		this.timeoutMultiplier = init.timeoutMultiplier ?? 1.2;
-		this.minTimeout = init.minTimeout ?? 5e3;
-		this.maxTimeout = init.maxTimeout ?? 6e4;
-		if (init.metricName != null) this.metric = init.metrics?.registerMetricGroup(init.metricName);
-	}
-	getTimeoutSignal(options = {}) {
-		let timeout = Math.round(this.next.movingAverage * (options.timeoutFactor ?? this.timeoutMultiplier));
-		if (timeout < this.minTimeout) timeout = this.minTimeout;
-		if (timeout > this.maxTimeout) timeout = this.maxTimeout;
-		const sendTimeout = AbortSignal.timeout(timeout);
-		const timeoutSignal = anySignal([options.signal, sendTimeout]);
-		setMaxListeners$1(Infinity, timeoutSignal, sendTimeout);
-		timeoutSignal.start = Date.now();
-		timeoutSignal.timeout = timeout;
-		return timeoutSignal;
-	}
-	cleanUp(signal) {
-		signal.clear();
-		const time = Date.now() - signal.start;
-		if (signal.aborted) {
-			this.failure.push(time);
-			this.next.push(time * this.failureMultiplier);
-			this.metric?.update({
-				failureMovingAverage: this.failure.movingAverage,
-				failureDeviation: this.failure.deviation,
-				failureForecast: this.failure.forecast,
-				failureVariance: this.failure.variance,
-				failure: time
-			});
-		} else {
-			this.success.push(time);
-			this.next.push(time);
-			this.metric?.update({
-				successMovingAverage: this.success.movingAverage,
-				successDeviation: this.success.deviation,
-				successForecast: this.success.forecast,
-				successVariance: this.success.variance,
-				success: time
-			});
-		}
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/it-pipe@3.0.1/node_modules/it-pipe/dist/src/index.js
-function pipe(first, ...rest) {
-	if (first == null) throw new Error("Empty pipeline");
-	if (isDuplex(first)) {
-		const duplex = first;
-		first = () => duplex.source;
-	} else if (isIterable$1(first) || isAsyncIterable$9(first)) {
-		const source = first;
-		first = () => source;
-	}
-	const fns = [first, ...rest];
-	if (fns.length > 1) {
-		if (isDuplex(fns[fns.length - 1])) fns[fns.length - 1] = fns[fns.length - 1].sink;
-	}
-	if (fns.length > 2) {
-		for (let i = 1; i < fns.length - 1; i++) if (isDuplex(fns[i])) fns[i] = duplexPipelineFn(fns[i]);
-	}
-	return rawPipe(...fns);
-}
-const rawPipe = (...fns) => {
-	let res;
-	while (fns.length > 0) res = fns.shift()(res);
-	return res;
-};
-const isAsyncIterable$9 = (obj) => {
-	return obj?.[Symbol.asyncIterator] != null;
-};
-const isIterable$1 = (obj) => {
-	return obj?.[Symbol.iterator] != null;
-};
-const isDuplex = (obj) => {
-	if (obj == null) return false;
-	return obj.sink != null && obj.source != null;
-};
-const duplexPipelineFn = (duplex) => {
-	return (source) => {
-		const p = duplex.sink(source);
-		if (p?.then != null) {
-			const stream = pushable({ objectMode: true });
-			p.then(() => {
-				stream.end();
-			}, (err) => {
-				stream.end(err);
-			});
-			let sourceWrap;
-			const source = duplex.source;
-			if (isAsyncIterable$9(source)) sourceWrap = async function* () {
-				yield* source;
-				stream.end();
-			};
-			else if (isIterable$1(source)) sourceWrap = function* () {
-				yield* source;
-				stream.end();
-			};
-			else throw new Error("Unknown duplex source type - must be Iterable or AsyncIterable");
-			return merge(stream, sourceWrap());
-		}
-		return duplex.source;
-	};
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/stream-utils.js
-const DEFAULT_MAX_BUFFER_SIZE = 4194304;
-var UnwrappedError = class extends Error {
-	static name = "UnwrappedError";
-	name = "UnwrappedError";
-};
-/**
-* The reported length of the next data message was not a positive integer
-*/
-var InvalidMessageLengthError$2 = class extends Error {
-	name = "InvalidMessageLengthError";
-	code = "ERR_INVALID_MSG_LENGTH";
-};
-/**
-* The reported length of the next data message was larger than the configured
-* max allowable value
-*/
-var InvalidDataLengthError$1 = class extends Error {
-	name = "InvalidDataLengthError";
-	code = "ERR_MSG_DATA_TOO_LONG";
-};
-/**
-* The varint used to specify the length of the next data message contained more
-* bytes than the configured max allowable value
-*/
-var InvalidDataLengthLengthError$1 = class extends Error {
-	name = "InvalidDataLengthLengthError";
-	code = "ERR_MSG_LENGTH_TOO_LONG";
-};
-function isStream(obj) {
-	return typeof obj?.closeRead === "function";
-}
-function isMultiaddrConnection(obj) {
-	return typeof obj?.close === "function";
-}
-function isEOF(obj) {
-	if (isStream(obj)) return obj.remoteWriteStatus !== "writable" && obj.readBufferLength === 0;
-	if (isMultiaddrConnection(obj)) return obj.status !== "open";
-	return false;
-}
-function isValid(obj) {
-	return obj?.addEventListener != null && obj?.removeEventListener != null && obj?.send != null && obj?.push != null && obj?.log != null;
-}
-function byteStream(stream, opts) {
-	const maxBufferSize = opts?.maxBufferSize ?? DEFAULT_MAX_BUFFER_SIZE;
-	const readBuffer = new Uint8ArrayList();
-	let hasBytes;
-	let unwrapped = false;
-	if (!isValid(stream)) throw new InvalidParametersError$4("Argument should be a Stream or a Multiaddr");
-	const byteStreamOnMessageListener = (evt) => {
-		readBuffer.append(evt.data);
-		if (readBuffer.byteLength > maxBufferSize) {
-			const readBufferSize = readBuffer.byteLength;
-			readBuffer.consume(readBuffer.byteLength);
-			hasBytes?.reject(/* @__PURE__ */ new Error(`Read buffer overflow - ${readBufferSize} > ${maxBufferSize}`));
-		}
-		hasBytes?.resolve();
-	};
-	stream.addEventListener("message", byteStreamOnMessageListener);
-	const byteStreamOnCloseListener = (evt) => {
-		if (evt.error != null) hasBytes?.reject(evt.error);
-		else hasBytes?.resolve();
-	};
-	stream.addEventListener("close", byteStreamOnCloseListener);
-	const byteStreamOnRemoteCloseWrite = () => {
-		hasBytes?.resolve();
-	};
-	stream.addEventListener("remoteCloseWrite", byteStreamOnRemoteCloseWrite);
-	const byteStream = {
-		readBuffer,
-		async read(options) {
-			if (unwrapped === true) throw new UnwrappedError("Stream was unwrapped");
-			if (isEOF(stream)) {
-				if (readBuffer.byteLength === 0 && options?.bytes == null) return null;
-				if (options?.bytes != null && readBuffer.byteLength < options.bytes) {
-					stream.log.error("closed after reading %d/%d bytes", readBuffer.byteLength, options.bytes);
-					throw new UnexpectedEOFError$1(`Unexpected EOF - stream closed after reading ${readBuffer.byteLength}/${options.bytes} bytes`);
-				}
-			}
-			const bytesToRead = options?.bytes ?? 1;
-			hasBytes = Promise.withResolvers();
-			while (true) {
-				if (readBuffer.byteLength >= bytesToRead) {
-					hasBytes.resolve();
-					break;
-				}
-				await raceSignal(hasBytes.promise, options?.signal);
-				if (isEOF(stream)) {
-					if (readBuffer.byteLength === 0 && options?.bytes == null) return null;
-					break;
-				}
-				hasBytes = Promise.withResolvers();
-			}
-			const toRead = options?.bytes ?? readBuffer.byteLength;
-			if (readBuffer.byteLength < toRead) {
-				if (isEOF(stream)) {
-					stream.log.error("closed while reading %d/%d bytes", readBuffer.byteLength, toRead);
-					throw new UnexpectedEOFError$1(`Unexpected EOF - stream closed while reading ${readBuffer.byteLength}/${toRead} bytes`);
-				}
-				return byteStream.read(options);
-			}
-			const output = readBuffer.sublist(0, toRead);
-			readBuffer.consume(toRead);
-			return output;
-		},
-		async write(data, options) {
-			if (unwrapped === true) throw new UnwrappedError("Stream was unwrapped");
-			if (!stream.send(data)) await pEvent(stream, "drain", {
-				signal: options?.signal,
-				rejectionEvents: ["close"]
-			});
-		},
-		unwrap() {
-			if (unwrapped) return stream;
-			unwrapped = true;
-			stream.removeEventListener("message", byteStreamOnMessageListener);
-			stream.removeEventListener("close", byteStreamOnCloseListener);
-			stream.removeEventListener("remoteCloseWrite", byteStreamOnRemoteCloseWrite);
-			if (readBuffer.byteLength > 0) {
-				stream.log("stream unwrapped with %d unread bytes", readBuffer.byteLength);
-				stream.unshift(readBuffer);
-			}
-			return stream;
-		}
-	};
-	return byteStream;
-}
-function lpStream(stream, opts = {}) {
-	const bytes = byteStream(stream, opts);
-	if (opts.maxDataLength != null && opts.maxLengthLength == null) opts.maxLengthLength = encodingLength$1(opts.maxDataLength);
-	const decodeLength = opts?.lengthDecoder ?? decode$6;
-	const encodeLength = opts?.lengthEncoder ?? encode$5;
-	return {
-		async read(options) {
-			let dataLength = -1;
-			const lengthBuffer = new Uint8ArrayList();
-			while (true) {
-				const buf = await bytes.read({
-					...options,
-					bytes: 1
-				});
-				if (buf == null) break;
-				lengthBuffer.append(buf);
-				try {
-					dataLength = decodeLength(lengthBuffer);
-				} catch (err) {
-					if (err instanceof RangeError) continue;
-					throw err;
-				}
-				if (dataLength < 0) throw new InvalidMessageLengthError$2("Invalid message length");
-				if (opts?.maxLengthLength != null && lengthBuffer.byteLength > opts.maxLengthLength) throw new InvalidDataLengthLengthError$1(`Message length length too long - ${lengthBuffer.byteLength} > ${opts.maxLengthLength}`);
-				if (dataLength > -1) break;
-			}
-			if (opts?.maxDataLength != null && dataLength > opts.maxDataLength) throw new InvalidDataLengthError$1(`Message length too long - ${dataLength} > ${opts.maxDataLength}`);
-			const buf = await bytes.read({
-				...options,
-				bytes: dataLength
-			});
-			if (buf == null) {
-				stream.log.error("tried to read %d bytes but the stream closed", dataLength);
-				throw new UnexpectedEOFError$1(`Unexpected EOF - tried to read ${dataLength} bytes but the stream closed`);
-			}
-			if (buf.byteLength !== dataLength) {
-				stream.log.error("read %d/%d bytes before the stream closed", buf.byteLength, dataLength);
-				throw new UnexpectedEOFError$1(`Unexpected EOF - read ${buf.byteLength}/${dataLength} bytes before the stream closed`);
-			}
-			return buf;
-		},
-		async write(data, options) {
-			await bytes.write(new Uint8ArrayList(encodeLength(data.byteLength), data), options);
-		},
-		async writeV(data, options) {
-			const list = new Uint8ArrayList(...data.flatMap((buf) => [encodeLength(buf.byteLength), buf]));
-			await bytes.write(list, options);
-		},
-		unwrap() {
-			return bytes.unwrap();
-		}
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/errors.js
-/**
-* The reported length of the next data message was not a positive integer
-*/
-var InvalidMessageLengthError$1 = class extends Error {
-	name = "InvalidMessageLengthError";
-	code = "ERR_INVALID_MSG_LENGTH";
-};
-/**
-* The reported length of the next data message was larger than the configured
-* max allowable value
-*/
-var InvalidDataLengthError = class extends Error {
-	name = "InvalidDataLengthError";
-	code = "ERR_MSG_DATA_TOO_LONG";
-};
-/**
-* The varint used to specify the length of the next data message contained more
-* bytes than the configured max allowable value
-*/
-var InvalidDataLengthLengthError = class extends Error {
-	name = "InvalidDataLengthLengthError";
-	code = "ERR_MSG_LENGTH_TOO_LONG";
-};
-/**
-* The incoming stream ended before the expected number of bytes were read
-*/
-var UnexpectedEOFError = class extends Error {
-	name = "UnexpectedEOFError";
-	code = "ERR_UNEXPECTED_EOF";
-};
-//#endregion
-//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/utils.js
-function isAsyncIterable$8(thing) {
-	return thing[Symbol.asyncIterator] != null;
-}
-//#endregion
-//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/encode.js
-function validateMaxDataLength(chunk, maxDataLength) {
-	if (chunk.byteLength > maxDataLength) throw new InvalidDataLengthError("Message length too long");
-}
-const defaultEncoder = (length) => {
-	const lengthLength = encodingLength$1(length);
-	const lengthBuf = allocUnsafe$1(lengthLength);
-	encode$5(length, lengthBuf);
-	defaultEncoder.bytes = lengthLength;
-	return lengthBuf;
-};
-defaultEncoder.bytes = 0;
-function encode$4(source, options) {
-	options = options ?? {};
-	const encodeLength = options.lengthEncoder ?? defaultEncoder;
-	const maxDataLength = options?.maxDataLength ?? 4194304;
-	function* maybeYield(chunk) {
-		validateMaxDataLength(chunk, maxDataLength);
-		const length = encodeLength(chunk.byteLength);
-		if (length instanceof Uint8Array) yield length;
-		else yield* length;
-		if (chunk instanceof Uint8Array) yield chunk;
-		else yield* chunk;
-	}
-	if (isAsyncIterable$8(source)) return (async function* () {
-		for await (const chunk of source) yield* maybeYield(chunk);
-	})();
-	return (function* () {
-		for (const chunk of source) yield* maybeYield(chunk);
-	})();
-}
-encode$4.single = (chunk, options) => {
-	options = options ?? {};
-	const encodeLength = options.lengthEncoder ?? defaultEncoder;
-	validateMaxDataLength(chunk, options?.maxDataLength ?? 4194304);
-	return new Uint8ArrayList(encodeLength(chunk.byteLength), chunk);
-};
-//#endregion
-//#region node_modules/.pnpm/it-length-prefixed@10.0.2/node_modules/it-length-prefixed/dist/src/decode.js
-var ReadMode;
-(function(ReadMode) {
-	ReadMode[ReadMode["LENGTH"] = 0] = "LENGTH";
-	ReadMode[ReadMode["DATA"] = 1] = "DATA";
-})(ReadMode || (ReadMode = {}));
-const defaultDecoder = (buf) => {
-	const length = decode$6(buf);
-	defaultDecoder.bytes = encodingLength$1(length);
-	return length;
-};
-defaultDecoder.bytes = 0;
-function decode$4(source, options) {
-	const buffer = new Uint8ArrayList();
-	let mode = ReadMode.LENGTH;
-	let dataLength = -1;
-	const lengthDecoder = options?.lengthDecoder ?? defaultDecoder;
-	const maxLengthLength = options?.maxLengthLength ?? 8;
-	const maxDataLength = options?.maxDataLength ?? 4194304;
-	function* maybeYield() {
-		while (buffer.byteLength > 0) {
-			if (mode === ReadMode.LENGTH) try {
-				dataLength = lengthDecoder(buffer);
-				if (dataLength < 0) throw new InvalidMessageLengthError$1("Invalid message length");
-				if (dataLength > maxDataLength) throw new InvalidDataLengthError("Message length too long");
-				const dataLengthLength = lengthDecoder.bytes;
-				buffer.consume(dataLengthLength);
-				if (options?.onLength != null) options.onLength(dataLength);
-				mode = ReadMode.DATA;
-			} catch (err) {
-				if (err instanceof RangeError) {
-					if (buffer.byteLength > maxLengthLength) throw new InvalidDataLengthLengthError("Message length length too long");
-					break;
-				}
-				throw err;
-			}
-			if (mode === ReadMode.DATA) {
-				if (buffer.byteLength < dataLength) break;
-				const data = buffer.sublist(0, dataLength);
-				buffer.consume(dataLength);
-				if (options?.onData != null) options.onData(data);
-				yield data;
-				mode = ReadMode.LENGTH;
-			}
-		}
-	}
-	if (isAsyncIterable$8(source)) return (async function* () {
-		for await (const buf of source) {
-			buffer.append(buf);
-			yield* maybeYield();
-		}
-		if (buffer.byteLength > 0) throw new UnexpectedEOFError("Unexpected end of input");
-	})();
-	return (function* () {
-		for (const buf of source) {
-			buffer.append(buf);
-			yield* maybeYield();
-		}
-		if (buffer.byteLength > 0) throw new UnexpectedEOFError("Unexpected end of input");
-	})();
-}
-decode$4.fromReader = (reader, options) => {
-	let byteLength = 1;
-	const varByteSource = async function* () {
-		while (true) try {
-			const { done, value } = await reader.next(byteLength);
-			if (done === true) return;
-			if (value != null) yield value;
-		} catch (err) {
-			if (err.code === "ERR_UNDER_READ") return {
-				done: true,
-				value: null
-			};
-			throw err;
-		} finally {
-			byteLength = 1;
-		}
-	}();
-	/**
-	* Once the length has been parsed, read chunk for that length
-	*/
-	const onLength = (l) => {
-		byteLength = l;
-	};
-	return decode$4(varByteSource, {
-		...options ?? {},
-		onLength
-	});
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/peer-queue.js
-/**
-* Extends Queue to add support for querying queued jobs by peer id
-*/
-var PeerQueue = class extends Queue$1 {
-	has(peerId) {
-		return this.find(peerId) != null;
-	}
-	find(peerId) {
-		return this.queue.find((job) => {
-			return peerId.equals(job.options.peerId);
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/priority-queue.js
-var PriorityQueue$1 = class extends Queue$1 {
-	constructor(init = {}) {
-		super({
-			...init,
-			sort: (a, b) => {
-				if (a.options.priority > b.options.priority) return -1;
-				if (a.options.priority < b.options.priority) return 1;
-				return 0;
-			}
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/rate-limiter.js
-var RateLimiter = class {
-	memoryStorage;
-	points;
-	duration;
-	blockDuration;
-	keyPrefix;
-	constructor(opts = {}) {
-		this.points = opts.points ?? 4;
-		this.duration = opts.duration ?? 1;
-		this.blockDuration = opts.blockDuration ?? 0;
-		this.keyPrefix = opts.keyPrefix ?? "rlflx";
-		this.memoryStorage = new MemoryStorage();
-	}
-	consume(key, pointsToConsume = 1, options = {}) {
-		const rlKey = this.getKey(key);
-		const secDuration = this._getKeySecDuration(options);
-		let res = this.memoryStorage.incrby(rlKey, pointsToConsume, secDuration);
-		res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
-		if (res.consumedPoints > this.points) {
-			if (this.blockDuration > 0 && res.consumedPoints <= this.points + pointsToConsume) res = this.memoryStorage.set(rlKey, res.consumedPoints, this.blockDuration);
-			throw new RateLimitError("Rate limit exceeded", res);
-		}
-		return res;
-	}
-	penalty(key, points = 1, options = {}) {
-		const rlKey = this.getKey(key);
-		const secDuration = this._getKeySecDuration(options);
-		const res = this.memoryStorage.incrby(rlKey, points, secDuration);
-		res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
-		return res;
-	}
-	reward(key, points = 1, options = {}) {
-		const rlKey = this.getKey(key);
-		const secDuration = this._getKeySecDuration(options);
-		const res = this.memoryStorage.incrby(rlKey, -points, secDuration);
-		res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
-		return res;
-	}
-	/**
-	* Block any key for secDuration seconds
-	*
-	* @param key
-	* @param secDuration
-	*/
-	block(key, secDuration) {
-		const msDuration = secDuration * 1e3;
-		const initPoints = this.points + 1;
-		this.memoryStorage.set(this.getKey(key), initPoints, secDuration);
-		return {
-			remainingPoints: 0,
-			msBeforeNext: msDuration === 0 ? -1 : msDuration,
-			consumedPoints: initPoints,
-			isFirstInDuration: false
-		};
-	}
-	set(key, points, secDuration = 0) {
-		const msDuration = (secDuration >= 0 ? secDuration : this.duration) * 1e3;
-		this.memoryStorage.set(this.getKey(key), points, secDuration);
-		return {
-			remainingPoints: 0,
-			msBeforeNext: msDuration === 0 ? -1 : msDuration,
-			consumedPoints: points,
-			isFirstInDuration: false
-		};
-	}
-	get(key) {
-		const res = this.memoryStorage.get(this.getKey(key));
-		if (res != null) res.remainingPoints = Math.max(this.points - res.consumedPoints, 0);
-		return res;
-	}
-	delete(key) {
-		this.memoryStorage.delete(this.getKey(key));
-	}
-	_getKeySecDuration(options) {
-		if (options?.customDuration != null && options.customDuration >= 0) return options.customDuration;
-		return this.duration;
-	}
-	getKey(key) {
-		return this.keyPrefix.length > 0 ? `${this.keyPrefix}:${key}` : key;
-	}
-	parseKey(rlKey) {
-		return rlKey.substring(this.keyPrefix.length);
-	}
-};
-var MemoryStorage = class {
-	storage;
-	constructor() {
-		this.storage = /* @__PURE__ */ new Map();
-	}
-	incrby(key, value, durationSec) {
-		const existing = this.storage.get(key);
-		if (existing != null) {
-			const msBeforeExpires = existing.expiresAt != null ? existing.expiresAt.getTime() - (/* @__PURE__ */ new Date()).getTime() : -1;
-			if (existing.expiresAt == null || msBeforeExpires > 0) {
-				existing.value += value;
-				return {
-					remainingPoints: 0,
-					msBeforeNext: msBeforeExpires,
-					consumedPoints: existing.value,
-					isFirstInDuration: false
-				};
-			}
-			return this.set(key, value, durationSec);
-		}
-		return this.set(key, value, durationSec);
-	}
-	set(key, value, durationSec) {
-		const durationMs = durationSec * 1e3;
-		const existing = this.storage.get(key);
-		if (existing != null) clearTimeout(existing.timeoutId);
-		const record = {
-			value,
-			expiresAt: durationMs > 0 ? new Date(Date.now() + durationMs) : void 0
-		};
-		this.storage.set(key, record);
-		if (durationMs > 0) {
-			record.timeoutId = setTimeout(() => {
-				this.storage.delete(key);
-			}, durationMs);
-			if (record.timeoutId.unref != null) record.timeoutId.unref();
-		}
-		return {
-			remainingPoints: 0,
-			msBeforeNext: durationMs === 0 ? -1 : durationMs,
-			consumedPoints: record.value,
-			isFirstInDuration: true
-		};
-	}
-	get(key) {
-		const existing = this.storage.get(key);
-		if (existing != null) return {
-			remainingPoints: 0,
-			msBeforeNext: existing.expiresAt != null ? existing.expiresAt.getTime() - (/* @__PURE__ */ new Date()).getTime() : -1,
-			consumedPoints: existing.value,
-			isFirstInDuration: false
-		};
-	}
-	delete(key) {
-		const record = this.storage.get(key);
-		if (record != null) {
-			if (record.timeoutId != null) clearTimeout(record.timeoutId);
-			this.storage.delete(key);
-			return true;
-		}
-		return false;
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/tracked-map.js
-var TrackedMap = class extends Map {
-	metric;
-	constructor(init) {
-		super();
-		const { name, metrics } = init;
-		this.metric = metrics.registerMetric(name);
-		this.updateComponentMetric();
-	}
-	set(key, value) {
-		super.set(key, value);
-		this.updateComponentMetric();
-		return this;
-	}
-	delete(key) {
-		const deleted = super.delete(key);
-		this.updateComponentMetric();
-		return deleted;
-	}
-	clear() {
-		super.clear();
-		this.updateComponentMetric();
-	}
-	updateComponentMetric() {
-		this.metric.update(this.size);
-	}
-};
-function trackedMap(config) {
-	const { name, metrics } = config;
-	let map;
-	if (metrics != null) map = new TrackedMap({
-		name,
-		metrics
-	});
-	else map = /* @__PURE__ */ new Map();
-	return map;
-}
-//#endregion
-//#region node_modules/.pnpm/it-to-buffer@4.0.12/node_modules/it-to-buffer/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Collects all `Uint8Array` values from an (async)iterable and returns them as a single `Uint8Array`.
-*
-* @example
-*
-* ```javascript
-* import toBuffer from 'it-to-buffer'
-*
-* // This can also be an iterator, generator, etc
-* const values = [Buffer.from([0, 1]), Buffer.from([2, 3])]
-*
-* const result = toBuffer(values)
-*
-* console.info(result) // Buffer[0, 1, 2, 3]
-* ```
-*
-* Async sources must be awaited:
-*
-* ```javascript
-* import toBuffer from 'it-to-buffer'
-*
-* const values = async function * () {
-*   yield Buffer.from([0, 1])
-*   yield Buffer.from([2, 3])
-* }
-*
-* const result = await toBuffer(values())
-*
-* console.info(result) // Buffer[0, 1, 2, 3]
-* ```
-*/
-function isAsyncIterable$7(thing) {
-	return thing[Symbol.asyncIterator] != null;
-}
-function toBuffer(source) {
-	if (isAsyncIterable$7(source)) return (async () => {
-		let buffer = new Uint8Array(0);
-		for await (const buf of source) buffer = concat$1([buffer, buf], buffer.length + buf.length);
-		return buffer;
-	})();
-	const bufs = [];
-	let length = 0;
-	for (const buf of source) {
-		bufs.push(buf);
-		length += buf.byteLength;
-	}
-	return concat$1(bufs, length);
-}
-//#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/block.js
-function readonly({ enumerable = true, configurable = false } = {}) {
-	return {
-		enumerable,
-		configurable,
-		writable: false
-	};
-}
-function* linksWithin(path, value) {
-	if (value != null && typeof value === "object") if (Array.isArray(value)) for (const [index, element] of value.entries()) {
-		const elementPath = [...path, index];
-		const cid = CID$1.asCID(element);
-		if (cid != null) yield [elementPath.join("/"), cid];
-		else if (typeof element === "object") yield* links(element, elementPath);
-	}
-	else {
-		const cid = CID$1.asCID(value);
-		if (cid != null) yield [path.join("/"), cid];
-		else yield* links(value, path);
-	}
-}
-function* links(source, base) {
-	if (source == null || source instanceof Uint8Array) return;
-	const cid = CID$1.asCID(source);
-	if (cid != null) yield [base.join("/"), cid];
-	for (const [key, value] of Object.entries(source)) yield* linksWithin([...base, key], value);
-}
-function* treeWithin(path, value) {
-	if (Array.isArray(value)) for (const [index, element] of value.entries()) {
-		const elementPath = [...path, index];
-		yield elementPath.join("/");
-		if (typeof element === "object" && CID$1.asCID(element) == null) yield* tree(element, elementPath);
-	}
-	else yield* tree(value, path);
-}
-function* tree(source, base) {
-	if (source == null || typeof source !== "object") return;
-	for (const [key, value] of Object.entries(source)) {
-		const path = [...base, key];
-		yield path.join("/");
-		if (value != null && !(value instanceof Uint8Array) && typeof value === "object" && CID$1.asCID(value) == null) yield* treeWithin(path, value);
-	}
-}
-function get(source, path) {
-	let node = source;
-	for (const [index, key] of path.entries()) {
-		node = node[key];
-		if (node == null) throw new Error(`Object has no property at ${path.slice(0, index + 1).map((part) => `[${JSON.stringify(part)}]`).join("")}`);
-		const cid = CID$1.asCID(node);
-		if (cid != null) return {
-			value: cid,
-			remaining: path.slice(index + 1).join("/")
-		};
-	}
-	return { value: node };
-}
-/**
-* @template T - Logical type of the data encoded in the block
-* @template C - multicodec code corresponding to codec used to encode the block
-* @template A - multicodec code corresponding to the hashing algorithm used in CID creation.
-* @template V - CID version
-*/
-var Block = class {
-	cid;
-	bytes;
-	value;
-	asBlock;
-	constructor({ cid, bytes, value }) {
-		if (cid == null || bytes == null || typeof value === "undefined") throw new Error("Missing required argument");
-		this.cid = cid;
-		this.bytes = bytes;
-		this.value = value;
-		this.asBlock = this;
-		Object.defineProperties(this, {
-			cid: readonly(),
-			bytes: readonly(),
-			value: readonly(),
-			asBlock: readonly()
-		});
-	}
-	links() {
-		return links(this.value, []);
-	}
-	tree() {
-		return tree(this.value, []);
-	}
-	get(path = "/") {
-		return get(this.value, path.split("/").filter(Boolean));
-	}
-};
-/**
-* @template T - Logical type of the data encoded in the block
-* @template Code - multicodec code corresponding to codec used to encode the block
-* @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
-* @template V - CID version
-*/
-function createUnsafe({ bytes, cid, value: maybeValue, codec }) {
-	const value = maybeValue !== void 0 ? maybeValue : codec?.decode(bytes);
-	if (value === void 0) throw new Error("Missing required argument, must either provide \"value\" or \"codec\"");
-	return new Block({
-		cid,
-		bytes,
-		value
-	});
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/errors.js
-var AlreadyPinnedError = class extends Error {
-	static name = "AlreadyPinnedError";
-	name = "AlreadyPinnedError";
-};
-var BlockPinnedError = class extends Error {
-	static name = "BlockPinnedError";
-	name = "BlockPinnedError";
-};
-var InvalidDatastoreVersionError = class extends Error {
-	static name = "InvalidDatastoreVersionError";
-	name = "InvalidDatastoreVersionError";
-};
-var InvalidConfigurationError = class extends Error {
-	static name = "InvalidConfigurationError";
-	name = "InvalidConfigurationError";
-};
-var GetFailedError = class extends AggregateError {
-	static name = "GetFailedError";
-	name = "GetFailedError";
-};
-var LoadBlockFailedError = class extends AggregateError {
-	static name = "LoadBlockFailedError";
-	name = "LoadBlockFailedError";
-};
-var BlockNotFoundWhileOfflineError = class extends Error {
-	static name = "BlockNotFoundWhileOfflineError";
-	name = "BlockNotFoundWhileOfflineError";
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/pins.js
-const DATASTORE_PIN_PREFIX = "/pin/";
-const DATASTORE_BLOCK_PREFIX = "/pinned-block/";
-const DATASTORE_ENCODING = base36$1;
-const DAG_WALK_QUEUE_CONCURRENCY = 1;
-function toDSKey(cid) {
-	if (cid.version === 0) cid = cid.toV1();
-	return new Key(`${DATASTORE_PIN_PREFIX}${cid.toString(DATASTORE_ENCODING)}`);
-}
-var PinsImpl = class {
-	datastore;
-	blockstore;
-	getCodec;
-	constructor(datastore, blockstore, getCodec) {
-		this.datastore = datastore;
-		this.blockstore = blockstore;
-		this.getCodec = getCodec;
-	}
-	async *add(cid, options = {}) {
-		const pinKey = toDSKey(cid);
-		if (await this.datastore.has(pinKey)) throw new AlreadyPinnedError("Already pinned");
-		const depth = Math.round(options.depth ?? Infinity);
-		if (depth < 0) throw new InvalidParametersError$4("Depth must be greater than or equal to 0");
-		const queue = new Queue$1({ concurrency: DAG_WALK_QUEUE_CONCURRENCY });
-		for await (const childCid of this.#walkDag(cid, queue, {
-			...options,
-			depth
-		})) {
-			await this.#updatePinnedBlock(childCid, (pinnedBlock) => {
-				if (pinnedBlock.pinnedBy.find((c) => equals(c, cid.bytes)) != null) return false;
-				pinnedBlock.pinCount++;
-				pinnedBlock.pinnedBy.push(cid.bytes);
-				return true;
-			}, options);
-			yield childCid;
-		}
-		const pin = {
-			depth,
-			metadata: options.metadata ?? {}
-		};
-		await this.datastore.put(pinKey, encode$10(pin), options);
-	}
-	/**
-	* Walk a DAG in an iterable fashion
-	*/
-	async *#walkDag(cid, queue, options) {
-		if (options.depth === -1) return;
-		const codec = await this.getCodec(cid.code);
-		const block = createUnsafe({
-			bytes: await toBuffer(this.blockstore.get(cid, options)),
-			cid,
-			codec
-		});
-		yield cid;
-		for (const [, cid] of block.links()) yield* await queue.add(async () => {
-			return this.#walkDag(cid, queue, {
-				...options,
-				depth: options.depth - 1
-			});
-		});
-	}
-	/**
-	* Update the pin count for the CID
-	*/
-	async #updatePinnedBlock(cid, withPinnedBlock, options) {
-		const blockKey = new Key(`${DATASTORE_BLOCK_PREFIX}${DATASTORE_ENCODING.encode(cid.multihash.bytes)}`);
-		let pinnedBlock = {
-			pinCount: 0,
-			pinnedBy: []
-		};
-		try {
-			pinnedBlock = decode$12(await this.datastore.get(blockKey, options));
-		} catch (err) {
-			if (err.name !== "NotFoundError") throw err;
-		}
-		if (!withPinnedBlock(pinnedBlock)) return;
-		if (pinnedBlock.pinCount === 0) {
-			if (await this.datastore.has(blockKey)) {
-				await this.datastore.delete(blockKey);
-				return;
-			}
-		}
-		await this.datastore.put(blockKey, encode$10(pinnedBlock), options);
-		options.onProgress?.(new CustomProgressEvent("helia:pin:add", cid));
-	}
-	async *rm(cid, options = {}) {
-		const pinKey = toDSKey(cid);
-		const pin = decode$12(await this.datastore.get(pinKey, options));
-		await this.datastore.delete(pinKey, options);
-		const queue = new Queue$1({ concurrency: DAG_WALK_QUEUE_CONCURRENCY });
-		for await (const childCid of this.#walkDag(cid, queue, {
-			...options,
-			depth: pin.depth
-		})) {
-			await this.#updatePinnedBlock(childCid, (pinnedBlock) => {
-				pinnedBlock.pinCount--;
-				pinnedBlock.pinnedBy = pinnedBlock.pinnedBy.filter((c) => equals(c, cid.bytes));
-				return true;
-			}, {
-				...options,
-				depth: pin.depth
-			});
-			yield childCid;
-		}
-	}
-	async *ls(options = {}) {
-		for await (const { key, value } of this.datastore.query({ prefix: DATASTORE_PIN_PREFIX + (options.cid != null ? `${options.cid.toString(base36$1)}` : "") }, options)) yield {
-			cid: CID$1.parse(key.toString().substring(5), base36$1),
-			...decode$12(value)
-		};
-	}
-	async isPinned(cid, options = {}) {
-		const blockKey = new Key(`${DATASTORE_BLOCK_PREFIX}${DATASTORE_ENCODING.encode(cid.multihash.bytes)}`);
-		return this.datastore.has(blockKey, options);
-	}
-	async get(cid, options) {
-		const pinKey = toDSKey(cid);
-		return decode$12(await this.datastore.get(pinKey, options));
-	}
-	async setMetadata(cid, metadata, options) {
-		const pinKey = toDSKey(cid);
-		const pin = decode$12(await this.datastore.get(pinKey, options));
-		pin.metadata = metadata ?? {};
-		await this.datastore.put(pinKey, encode$10(pin), options);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+interface@6.2.1/node_modules/@helia/interface/dist/src/errors.js
-var InsufficientProvidersError = class extends Error {
-	static name = "InsufficientProvidersError";
-	constructor(message = "Insufficient providers found") {
-		super(message);
-		this.name = "InsufficientProvidersError";
-	}
-};
-var NoRoutersAvailableError = class extends Error {
-	static name = "NoRoutersAvailableError";
-	constructor(message = "No routers available") {
-		super(message);
-		this.name = "NoRoutersAvailableError";
-	}
-};
-var UnknownHashAlgorithmError = class extends Error {
-	static name = "UnknownHashAlgorithmError";
-	constructor(message = "Unknown hash algorithm") {
-		super(message);
-		this.name = "UnknownHashAlgorithmError";
-	}
-};
-var UnknownCodecError = class extends Error {
-	static name = "UnknownCodecError";
-	constructor(message = "Unknown codec") {
-		super(message);
-		this.name = "UnknownCodecError";
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/routing.js
-const DEFAULT_PROVIDER_LOOKUP_CONCURRENCY = 5;
-var Routing = class {
-	name;
-	log;
-	routers;
-	providerLookupConcurrency;
-	constructor(components, init) {
-		this.name = "helia";
-		this.log = components.logger.forComponent("helia:routing");
-		this.routers = init.routers ?? [];
-		this.providerLookupConcurrency = init.providerLookupConcurrency ?? DEFAULT_PROVIDER_LOOKUP_CONCURRENCY;
-		this.findProviders = components.metrics?.traceFunction("helia.routing.findProviders", this.findProviders.bind(this), { optionsIndex: 1 }) ?? this.findProviders;
-		this.provide = components.metrics?.traceFunction("helia.routing.provide", this.provide.bind(this), { optionsIndex: 1 }) ?? this.provide;
-		this.cancelReprovide = components.metrics?.traceFunction("helia.routing.cancelReprovide", this.cancelReprovide.bind(this), { optionsIndex: 1 }) ?? this.cancelReprovide;
-		this.put = components.metrics?.traceFunction("helia.routing.put", this.put.bind(this), { optionsIndex: 2 }) ?? this.put;
-		this.get = components.metrics?.traceFunction("helia.routing.get", this.get.bind(this), { optionsIndex: 1 }) ?? this.get;
-		this.findPeer = components.metrics?.traceFunction("helia.routing.findPeer", this.findPeer.bind(this), { optionsIndex: 1 }) ?? this.findPeer;
-		this.getClosestPeers = components.metrics?.traceFunction("helia.routing.getClosestPeers", this.getClosestPeers.bind(this), { optionsIndex: 1 }) ?? this.getClosestPeers;
-	}
-	async start() {
-		await start(...this.routers);
-	}
-	async stop() {
-		await stop$1(...this.routers);
-	}
-	/**
-	* Iterates over all content routers in parallel to find providers of the
-	* given key
-	*/
-	async *findProviders(key, options = {}) {
-		if (this.routers.length === 0) throw new NoRoutersAvailableError("No content routers available");
-		const queue = new PeerQueue({ concurrency: this.providerLookupConcurrency });
-		let foundProviders = 0;
-		const errors = [];
-		const self = this;
-		let routersFinished = 0;
-		this.log("findProviders for %c start using routers %s", key, this.routers.map((r) => r.toString()).join(", "));
-		const routers = supports(this.routers, "findProviders").map(async function* (router) {
-			let foundProviders = 0;
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:find-providers:start", {
-				routing: router.name,
-				cid: key
-			}));
-			try {
-				for await (const prov of router.findProviders(key, options)) {
-					foundProviders++;
-					options?.onProgress?.(new CustomProgressEvent("helia:routing:find-providers:provider", {
-						routing: router.name,
-						cid: key,
-						provider: prov
-					}));
-					yield prov;
-				}
-			} catch (err) {
-				errors.push(err);
-			} finally {
-				self.log("router %s found %d providers for %c", router, foundProviders, key);
-				options?.onProgress?.(new CustomProgressEvent("helia:routing:find-providers:end", {
-					routing: router.name,
-					cid: key,
-					found: foundProviders
-				}));
-				routersFinished++;
-				if (routersFinished === routers.length && queue.size === 0) queue.emitIdle();
-			}
-		});
-		for await (const peer of merge(queue.toGenerator(), ...routers)) {
-			if (peer == null) continue;
-			if (peer.multiaddrs.length === 0) {
-				if (queue.find(peer.id) != null) continue;
-				queue.add(async () => {
-					try {
-						const provider = await this.findPeer(peer.id, options);
-						if (provider.multiaddrs.length === 0) return null;
-						return {
-							...provider,
-							protocols: peer.protocols,
-							routing: peer.routing
-						};
-					} catch (err) {
-						this.log.error("could not load multiaddrs for peer %p - %e", peer.id, err);
-						return null;
-					}
-				}, {
-					peerId: peer.id,
-					signal: options.signal
-				}).catch((err) => {
-					this.log.error("could not load multiaddrs for peer %p - %e", peer.id, err);
-				});
-				continue;
-			}
-			foundProviders++;
-			yield peer;
-		}
-		this.log("findProviders finished, found %d providers for %c", foundProviders, key);
-	}
-	/**
-	* Iterates over all content routers in parallel to notify it is
-	* a provider of the given key
-	*/
-	async provide(key, options = {}) {
-		if (this.routers.length === 0) throw new NoRoutersAvailableError("No content routers available");
-		await Promise.all(supports(this.routers, "provide").map(async (router) => {
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:provide:start", {
-				routing: router.name,
-				cid: key
-			}));
-			await router.provide(key, options);
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:provide:end", {
-				routing: router.name,
-				cid: key
-			}));
-		}));
-	}
-	async cancelReprovide(key, options = {}) {
-		await Promise.all(supports(this.routers, "cancelReprovide").map(async (router) => {
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:cancel-reprovide:start", {
-				routing: router.name,
-				cid: key
-			}));
-			await router.cancelReprovide(key, options);
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:cancel-reprovide:end", {
-				routing: router.name,
-				cid: key
-			}));
-		}));
-	}
-	/**
-	* Store the given key/value pair in the available content routings
-	*/
-	async put(key, value, options) {
-		await Promise.all(supports(this.routers, "put").map(async (router) => {
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:put:start", {
-				routing: router.name,
-				key,
-				value
-			}));
-			await router.put(key, value, options);
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:put:end", {
-				routing: router.name,
-				key,
-				value
-			}));
-		}));
-	}
-	/**
-	* Get the value to the given key. The first value offered by any configured
-	* router will be returned.
-	*/
-	async get(key, options) {
-		const errors = [];
-		let result;
-		try {
-			result = await Promise.any(supports(this.routers, "get").map(async (router) => {
-				options?.onProgress?.(new CustomProgressEvent("helia:routing:get:start", {
-					routing: router.name,
-					key
-				}));
-				try {
-					return await router.get(key, options);
-				} catch (err) {
-					this.log("router %s failed with %e", router, err);
-					errors.push(err);
-				} finally {
-					options?.onProgress?.(new CustomProgressEvent("helia:routing:get:end", {
-						routing: router.name,
-						key
-					}));
-				}
-			}));
-		} catch {}
-		if (result == null) throw new GetFailedError(errors, `Failed to get value key ${toString$2(key, "base58btc")}`);
-		return result;
-	}
-	/**
-	* Iterates over all peer routers in parallel to find the given peer
-	*/
-	async findPeer(id, options) {
-		if (this.routers.length === 0) throw new NoRoutersAvailableError("No peer routers available");
-		const self = this;
-		const source = merge(...supports(this.routers, "findPeer").map((router) => (async function* () {
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:find-peer:start", {
-				routing: router.name,
-				peerId: id
-			}));
-			try {
-				yield await router.findPeer(id, options);
-			} catch (err) {
-				self.log.error(err);
-			} finally {
-				options?.onProgress?.(new CustomProgressEvent("helia:routing:find-peer:end", {
-					routing: router.name,
-					peerId: id
-				}));
-			}
-		})()));
-		for await (const peer of source) {
-			if (peer == null) continue;
-			return peer;
-		}
-		throw new NotFoundError$2("Could not find peer in routing");
-	}
-	/**
-	* Attempt to find the closest peers on the network to the given key
-	*/
-	async *getClosestPeers(key, options = {}) {
-		if (this.routers.length === 0) throw new NoRoutersAvailableError("No peer routers available");
-		for await (const peer of merge(...supports(this.routers, "getClosestPeers").map(async function* (router) {
-			options?.onProgress?.(new CustomProgressEvent("helia:routing:get-closest-peers:start", {
-				routing: router.name,
-				key
-			}));
-			try {
-				yield* router.getClosestPeers(key, options);
-			} finally {
-				options?.onProgress?.(new CustomProgressEvent("helia:routing:get-closest-peers:end", {
-					routing: router.name,
-					key
-				}));
-			}
-		}))) {
-			if (peer == null) continue;
-			yield peer;
-		}
-	}
-};
-function supports(routers, key) {
-	return routers.filter((router) => router[key] != null);
-}
-//#endregion
-//#region node_modules/.pnpm/abort-error@1.0.2/node_modules/abort-error/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* A simple error class and options interface that seems to get copied from
-* project to project.
-*
-* @example Using AbortError
-*
-* ```JavaScript
-* import { AbortError } from 'abort-error'
-*
-* // a promise that will be settled later
-* const deferred = Promise.withResolvers()
-*
-* const signal = AbortSignal.timeout(1000)
-* signal.addEventListener('abort', () => {
-*   deferred.reject(new AbortError())
-* })
-* ```
-*
-* @example Using AbortOptions
-*
-* ```TypeScript
-* import type { AbortOptions } from 'abort-error'
-*
-* async function myFunction (options?: AbortOptions) {
-*   return fetch('https://example.com', {
-*     signal: options?.signal
-*   })
-* }
-* ```
-*/
-var AbortError$1 = class extends Error {
-	static name = "AbortError";
-	name = "AbortError";
-	constructor(message = "The operation was aborted", ...rest) {
-		super(message, ...rest);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/race-event@1.6.1/node_modules/race-event/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Race an event against an AbortSignal, taking care to remove any event
-* listeners that were added.
-*
-* @example Getting started
-*
-* ```TypeScript
-* import { raceEvent } from 'race-event'
-*
-* const controller = new AbortController()
-* const emitter = new EventTarget()
-*
-* setTimeout(() => {
-*   controller.abort()
-* }, 500)
-*
-* setTimeout(() => {
-*   // too late
-*   emitter.dispatchEvent(new CustomEvent('event'))
-* }, 1000)
-*
-* // throws an AbortError
-* const resolve = await raceEvent(emitter, 'event', controller.signal)
-* ```
-*
-* @example Aborting the promise with an error event
-*
-* ```TypeScript
-* import { raceEvent } from 'race-event'
-*
-* const emitter = new EventTarget()
-*
-* setTimeout(() => {
-*   emitter.dispatchEvent(new CustomEvent('failure', {
-*     detail: new Error('Oh no!')
-*   }))
-* }, 1000)
-*
-* // throws 'Oh no!' error
-* const resolve = await raceEvent(emitter, 'success', AbortSignal.timeout(5000), {
-*   errorEvent: 'failure'
-* })
-* ```
-*
-* @example Customising the thrown AbortError
-*
-* The error message and `.code` property of the thrown `AbortError` can be
-* specified by passing options:
-*
-* ```TypeScript
-* import { raceEvent } from 'race-event'
-*
-* const controller = new AbortController()
-* const emitter = new EventTarget()
-*
-* setTimeout(() => {
-*   controller.abort()
-* }, 500)
-*
-* // throws a Error: Oh no!
-* const resolve = await raceEvent(emitter, 'event', controller.signal, {
-*   errorMessage: 'Oh no!',
-*   errorCode: 'ERR_OH_NO'
-* })
-* ```
-*
-* @example Only resolving on specific events
-*
-* Where multiple events with the same type are emitted, a `filter` function can
-* be passed to only resolve on one of them:
-*
-* ```TypeScript
-* import { raceEvent } from 'race-event'
-*
-* const controller = new AbortController()
-* const emitter = new EventTarget()
-*
-* // throws a Error: Oh no!
-* const resolve = await raceEvent(emitter, 'event', controller.signal, {
-*   filter: (evt: Event) => {
-*     return evt.detail.foo === 'bar'
-*   }
-* })
-* ```
-*
-* @example Terminating early by throwing from the filter
-*
-* You can cause listening for the event to cease and all event listeners to be
-* removed by throwing from the filter:
-*
-* ```TypeScript
-* import { raceEvent } from 'race-event'
-*
-* const controller = new AbortController()
-* const emitter = new EventTarget()
-*
-* // throws Error: Cannot continue
-* const resolve = await raceEvent(emitter, 'event', controller.signal, {
-*   filter: (evt) => {
-*     if (...reasons) {
-*       throw new Error('Cannot continue')
-*     }
-*
-*     return true
-*   }
-* })
-* ```
-*/
-/**
-* Race a promise against an abort signal
-*/
-async function raceEvent(emitter, eventName, signal, opts) {
-	const error = new AbortError$1(opts?.errorMessage);
-	if (opts?.errorCode != null) error.code = opts.errorCode;
-	const errorEvent = opts?.errorEvent ?? "error";
-	if (signal?.aborted === true) return Promise.reject(error);
-	return new Promise((resolve, reject) => {
-		function removeListeners() {
-			removeListener(signal, "abort", abortListener);
-			removeListener(emitter, eventName, eventListener);
-			removeListener(emitter, errorEvent, errorEventListener);
-		}
-		const eventListener = (evt) => {
-			try {
-				if (opts?.filter?.(evt) === false) return;
-			} catch (err) {
-				removeListeners();
-				reject(err);
-				return;
-			}
-			removeListeners();
-			resolve(evt);
-		};
-		const errorEventListener = (evt) => {
-			removeListeners();
-			if (evt instanceof Error) {
-				reject(evt);
-				return;
-			}
-			reject(evt.detail ?? opts?.error ?? /* @__PURE__ */ new Error(`The "${opts?.errorEvent}" event was emitted but the event had no '.detail' field. Pass an 'error' option to race-event to change this message.`));
-		};
-		const abortListener = () => {
-			removeListeners();
-			reject(error);
-		};
-		addListener(signal, "abort", abortListener);
-		addListener(emitter, eventName, eventListener);
-		addListener(emitter, errorEvent, errorEventListener);
-	});
-}
-function addListener(emitter, event, listener) {
-	if (emitter == null) return;
-	if (isEventTarget(emitter)) emitter.addEventListener(event, listener);
-	else emitter.addListener(event, listener);
-}
-function removeListener(emitter, event, listener) {
-	if (emitter == null) return;
-	if (isEventTarget(emitter)) emitter.removeEventListener(event, listener);
-	else emitter.removeListener(event, listener);
-}
-function isEventTarget(emitter) {
-	return typeof emitter.addEventListener === "function" && typeof emitter.removeEventListener === "function";
-}
-//#endregion
-//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/errors.js
-var QueueFullError = class extends Error {
-	static name = "QueueFullError";
-	constructor(message = "The queue was full") {
-		super(message);
-		this.name = "QueueFullError";
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/recipient.js
-var JobRecipient = class {
-	deferred;
-	signal;
-	constructor(signal) {
-		this.signal = signal;
-		this.deferred = Promise.withResolvers();
-		this.onAbort = this.onAbort.bind(this);
-		this.signal?.addEventListener("abort", this.onAbort);
-	}
-	onAbort() {
-		this.deferred.reject(this.signal?.reason ?? new AbortError$1());
-	}
-	cleanup() {
-		this.signal?.removeEventListener("abort", this.onAbort);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/job.js
-/**
-* Returns a random string
-*/
-function randomId() {
-	return `${parseInt(String(Math.random() * 1e9), 10).toString()}${Date.now()}`;
-}
-var Job = class {
-	id;
-	fn;
-	options;
-	recipients;
-	status;
-	timeline;
-	controller;
-	constructor(fn, options) {
-		this.id = randomId();
-		this.status = "queued";
-		this.fn = fn;
-		this.options = options;
-		this.recipients = [];
-		this.timeline = { created: Date.now() };
-		this.controller = new AbortController();
-		setMaxListeners$1(Infinity, this.controller.signal);
-		this.onAbort = this.onAbort.bind(this);
-	}
-	abort(err) {
-		this.controller.abort(err);
-	}
-	onAbort() {
-		if (this.recipients.reduce((acc, curr) => {
-			return acc && curr.signal?.aborted === true;
-		}, true)) {
-			this.controller.abort(new AbortError$1());
-			this.cleanup();
-		}
-	}
-	async join(options = {}) {
-		const recipient = new JobRecipient(options.signal);
-		this.recipients.push(recipient);
-		options.signal?.addEventListener("abort", this.onAbort);
-		return recipient.deferred.promise;
-	}
-	async run() {
-		this.status = "running";
-		this.timeline.started = Date.now();
-		try {
-			this.controller.signal.throwIfAborted();
-			const result = await raceSignal(this.fn({
-				...this.options ?? {},
-				signal: this.controller.signal
-			}), this.controller.signal);
-			this.recipients.forEach((recipient) => {
-				recipient.deferred.resolve(result);
-			});
-			this.status = "complete";
-		} catch (err) {
-			this.recipients.forEach((recipient) => {
-				recipient.deferred.reject(err);
-			});
-			this.status = "errored";
-		} finally {
-			this.timeline.finished = Date.now();
-			this.cleanup();
-		}
-	}
-	cleanup() {
-		this.recipients.forEach((recipient) => {
-			recipient.cleanup();
-			recipient.signal?.removeEventListener("abort", this.onAbort);
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/utils.js
-/**
-* Returns a function wrapper that will only call the passed function once
-*
-* Important - the passed function should not throw or reject
-*/
-function debounce(func, wait) {
-	let timeout;
-	const output = function() {
-		const later = function() {
-			timeout = void 0;
-			func();
-		};
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-	};
-	output.start = () => {};
-	output.stop = () => {
-		clearTimeout(timeout);
-	};
-	return output;
-}
-//#endregion
-//#region node_modules/.pnpm/it-queue@1.1.3/node_modules/it-queue/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Based on `p-queue` but with access to the underlying queue, aborting a task
-* removes it from the queue and you can iterate over the queue results.
-*
-* @example
-*
-* ```ts
-* import all from 'it-all'
-* import { Queue } from 'it-queue'
-*
-* const queue = new Queue({
-*   concurrency: Infinity
-* })
-* void queue.add(async () => {
-*   return 'hello'
-* })
-* void queue.add(async () => {
-*   return 'world'
-* })
-*
-* const results = await all(queue)
-* // ['hello', 'world']
-*
-* // how many items are in the queue (includes running items)
-* console.info(queue.size)
-*
-* // how many items are running
-* console.info(queue.running)
-*
-* // how many items have not started running yet
-* console.info(queue.queued)
-* ```
-*/
-/**
-* Heavily influence by `p-queue` with the following differences:
-*
-* 1. Items remain at the head of the queue while they are running so `queue.size` includes `queue.pending` items - this is so interested parties can join the results of a queue item while it is running
-* 2. The options for a job are stored separately to the job in order for them to be modified while they are still in the queue
-* 3. If a job's abort signal fires before execution begins, it is removed from the queue immediately
-* 4. 'success'/'failure' events are emitted instead of 'error'/'complete'
-*/
-var Queue = class extends TypedEventEmitter {
-	concurrency;
-	maxSize;
-	queue;
-	pending;
-	sort;
-	autoStart;
-	constructor(init = {}) {
-		super();
-		this.concurrency = init.concurrency ?? Number.POSITIVE_INFINITY;
-		this.maxSize = init.maxSize ?? Number.POSITIVE_INFINITY;
-		this.pending = 0;
-		this.autoStart = init.autoStart ?? true;
-		this.sort = init.sort;
-		this.queue = [];
-		this.emitEmpty = debounce(this.emitEmpty.bind(this), 1);
-		this.emitIdle = debounce(this.emitIdle.bind(this), 1);
-	}
-	[Symbol.asyncIterator]() {
-		return this.toGenerator();
-	}
-	emitEmpty() {
-		if (this.size !== 0) return;
-		this.safeDispatchEvent("empty");
-	}
-	emitIdle() {
-		if (this.running !== 0) return;
-		this.safeDispatchEvent("idle");
-	}
-	tryToStartAnother() {
-		if (this.size === 0) {
-			this.emitEmpty();
-			if (this.running === 0) this.emitIdle();
-			return false;
-		}
-		if (this.pending < this.concurrency) {
-			let job;
-			for (const j of this.queue) if (j.status === "queued") {
-				job = j;
-				break;
-			}
-			if (job == null) return false;
-			this.safeDispatchEvent("active");
-			this.pending++;
-			job.run().finally(() => {
-				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
-					this.queue.splice(i, 1);
-					break;
-				}
-				this.pending--;
-				this.safeDispatchEvent("next");
-				if (this.autoStart) this.tryToStartAnother();
-			});
-			return true;
-		}
-		return false;
-	}
-	enqueue(job) {
-		this.queue.push(job);
-		if (this.sort != null) this.queue.sort(this.sort);
-	}
-	/**
-	* Start the queue. If the `autoStart` parameter passed to the constructor was
-	* not `false` this is a no-op
-	*/
-	start() {
-		if (this.autoStart !== false) return;
-		this.autoStart = true;
-		this.tryToStartAnother();
-	}
-	/**
-	* Prevent further jobs from running - call `.start` to start the queue again
-	*/
-	pause() {
-		this.autoStart = false;
-	}
-	/**
-	* Adds a sync or async task to the queue. Always returns a promise.
-	*/
-	async add(fn, options) {
-		options?.signal?.throwIfAborted();
-		if (this.size === this.maxSize) throw new QueueFullError();
-		const job = new Job(fn, options);
-		this.enqueue(job);
-		this.safeDispatchEvent("add");
-		if (this.autoStart) this.tryToStartAnother();
-		return job.join(options).then((result) => {
-			this.safeDispatchEvent("success", { detail: {
-				job,
-				result
-			} });
-			return result;
-		}).catch((err) => {
-			if (job.status === "queued") {
-				for (let i = 0; i < this.queue.length; i++) if (this.queue[i] === job) {
-					this.queue.splice(i, 1);
-					break;
-				}
-			}
-			this.safeDispatchEvent("failure", { detail: {
-				job,
-				error: err
-			} });
-			throw err;
-		});
-	}
-	/**
-	* Clear the queue
-	*/
-	clear() {
-		this.queue.splice(0, this.queue.length);
-	}
-	/**
-	* Abort all jobs in the queue and clear it
-	*/
-	abort() {
-		this.queue.forEach((job) => {
-			job.abort(new AbortError$1());
-		});
-		this.clear();
-	}
-	/**
-	* Can be called multiple times. Useful if you for example add additional items at a later time.
-	*
-	* @returns A promise that settles when the queue becomes empty.
-	*/
-	async onEmpty(options) {
-		if (this.size === 0) return;
-		await raceEvent(this, "empty", options?.signal);
-	}
-	/**
-	* @returns A promise that settles when the queue size is less than the given
-	* limit: `queue.size < limit`.
-	*
-	* If you want to avoid having the queue grow beyond a certain size you can
-	* `await queue.onSizeLessThan()` before adding a new item.
-	*
-	* Note that this only limits the number of items waiting to start. There
-	* could still be up to `concurrency` jobs already running that this call does
-	* not include in its calculation.
-	*/
-	async onSizeLessThan(limit, options) {
-		if (this.size < limit) return;
-		await raceEvent(this, "next", options?.signal, { filter: () => this.size < limit });
-	}
-	/**
-	* The difference with `.onEmpty` is that `.onIdle` guarantees that all work
-	* from the queue has finished. `.onEmpty` merely signals that the queue is
-	* empty, but it could mean that some promises haven't completed yet.
-	*
-	* @returns A promise that settles when the queue becomes empty, and all
-	* promises have completed; `queue.size === 0 && queue.pending === 0`.
-	*/
-	async onIdle(options) {
-		if (this.pending === 0 && this.size === 0) return;
-		await raceEvent(this, "idle", options?.signal);
-	}
-	/**
-	* Size of the queue including running items
-	*/
-	get size() {
-		return this.queue.length;
-	}
-	/**
-	* The number of queued items waiting to run.
-	*/
-	get queued() {
-		return this.queue.length - this.pending;
-	}
-	/**
-	* The number of items currently running.
-	*/
-	get running() {
-		return this.pending;
-	}
-	/**
-	* Returns an async generator that makes it easy to iterate over the results
-	* of jobs added to the queue.
-	*
-	* The generator will end when the queue becomes idle, that is there are no
-	* jobs running and no jobs that have yet to run.
-	*
-	* If you need to keep the queue open indefinitely, consider using it-pushable
-	* instead.
-	*/
-	async *toGenerator(options) {
-		options?.signal?.throwIfAborted();
-		const stream = pushable({ objectMode: true });
-		const cleanup = (err) => {
-			if (err != null) this.abort();
-			else this.clear();
-			stream.end(err);
-		};
-		const onQueueJobComplete = (evt) => {
-			if (evt.detail != null) stream.push(evt.detail.result);
-		};
-		const onQueueError = (evt) => {
-			cleanup(evt.detail.error);
-		};
-		const onQueueIdle = () => {
-			cleanup();
-		};
-		const onSignalAbort = () => {
-			cleanup(new AbortError$1("Queue aborted"));
-		};
-		this.addEventListener("success", onQueueJobComplete);
-		this.addEventListener("failure", onQueueError);
-		this.addEventListener("idle", onQueueIdle);
-		options?.signal?.addEventListener("abort", onSignalAbort);
-		try {
-			yield* stream;
-		} finally {
-			this.removeEventListener("success", onQueueJobComplete);
-			this.removeEventListener("failure", onQueueError);
-			this.removeEventListener("idle", onQueueIdle);
-			options?.signal?.removeEventListener("abort", onSignalAbort);
-			cleanup();
-		}
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/constants.js
-const WORKER_REQUEST_READ_LOCK = "lock:worker:request-read";
-const WORKER_ABORT_READ_LOCK_REQUEST = "lock:worker:abort-read-request";
-const WORKER_RELEASE_READ_LOCK = "lock:worker:release-read";
-const MASTER_GRANT_READ_LOCK = "lock:master:grant-read";
-const MASTER_READ_LOCK_ERROR = "lock:master:error-read";
-const WORKER_REQUEST_WRITE_LOCK = "lock:worker:request-write";
-const WORKER_ABORT_WRITE_LOCK_REQUEST = "lock:worker:abort-write-request";
-const WORKER_RELEASE_WRITE_LOCK = "lock:worker:release-write";
-const MASTER_GRANT_WRITE_LOCK = "lock:master:grant-write";
-const MASTER_WRITE_LOCK_ERROR = "lock:master:error-write";
-const WORKER_FINALIZE = "lock:worker:finalize";
-const BROADCAST_CHANNEL_NAME = "mortice";
-const defaultOptions$6 = { singleProcess: false };
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/main/channel.js
-const handleChannelWorkerLockRequest = (emitter, channel, masterEvent, abortMasterEvent, requestType, abortType, errorType, releaseType, grantType) => {
-	return (event) => {
-		if (event.data == null) return;
-		const requestEvent = {
-			type: event.data.type,
-			name: event.data.name,
-			identifier: event.data.identifier
-		};
-		if (requestEvent.type === requestType) emitter.safeDispatchEvent(masterEvent, { detail: {
-			name: requestEvent.name,
-			identifier: requestEvent.identifier,
-			handler: async () => {
-				channel.postMessage({
-					type: grantType,
-					name: requestEvent.name,
-					identifier: requestEvent.identifier
-				});
-				await new Promise((resolve) => {
-					const releaseEventListener = (event) => {
-						if (event?.data == null) return;
-						const releaseEvent = {
-							type: event.data.type,
-							name: event.data.name,
-							identifier: event.data.identifier
-						};
-						if (releaseEvent.type === releaseType && releaseEvent.identifier === requestEvent.identifier) {
-							channel.removeEventListener("message", releaseEventListener);
-							resolve();
-						}
-					};
-					channel.addEventListener("message", releaseEventListener);
-				});
-			},
-			onError: (err) => {
-				channel.postMessage({
-					type: errorType,
-					name: requestEvent.name,
-					identifier: requestEvent.identifier,
-					error: {
-						message: err.message,
-						name: err.name,
-						stack: err.stack
-					}
-				});
-			}
-		} });
-		if (requestEvent.type === abortType) emitter.safeDispatchEvent(abortMasterEvent, { detail: {
-			name: requestEvent.name,
-			identifier: requestEvent.identifier
-		} });
-		if (requestEvent.type === "lock:worker:finalize") emitter.safeDispatchEvent("finalizeRequest", { detail: { name: requestEvent.name } });
-	};
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/main/cluster.js
-const handleClusterWorkerLockRequest = (emitter, masterEvent, abortMasterEvent, requestType, abortType, errorType, releaseType, grantType) => {
-	return (worker, requestEvent) => {
-		if (requestEvent == null) return;
-		if (requestEvent.type === requestType) emitter.safeDispatchEvent(masterEvent, { detail: {
-			name: requestEvent.name,
-			identifier: requestEvent.identifier,
-			handler: async () => {
-				worker.send({
-					type: grantType,
-					name: requestEvent.name,
-					identifier: requestEvent.identifier
-				});
-				await new Promise((resolve) => {
-					const releaseEventListener = (releaseEvent) => {
-						if (releaseEvent.type === releaseType && releaseEvent.identifier === requestEvent.identifier) {
-							worker.removeListener("message", releaseEventListener);
-							resolve();
-						}
-					};
-					worker.on("message", releaseEventListener);
-				});
-			},
-			onError: (err) => {
-				worker.send({
-					type: errorType,
-					name: requestEvent.name,
-					identifier: requestEvent.identifier,
-					error: {
-						message: err.message,
-						name: err.name,
-						stack: err.stack
-					}
-				});
-			}
-		} });
-		if (requestEvent.type === abortType) emitter.safeDispatchEvent(abortMasterEvent, { detail: {
-			name: requestEvent.name,
-			identifier: requestEvent.identifier
-		} });
-		if (requestEvent.type === "lock:worker:finalize") emitter.safeDispatchEvent("finalizeRequest", { detail: { name: requestEvent.name } });
-	};
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/utils.js
-const nanoid$1 = (size = 10) => {
-	return Math.random().toString().substring(2, size + 2);
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/workers/channel.js
-var MorticeChannelWorker = class {
-	name;
-	channel;
-	constructor(name) {
-		this.name = name;
-		this.channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
-	}
-	readLock(options) {
-		return this.sendRequest(WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_GRANT_READ_LOCK, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, options);
-	}
-	writeLock(options) {
-		return this.sendRequest(WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_GRANT_WRITE_LOCK, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, options);
-	}
-	finalize() {
-		this.channel.postMessage({
-			type: WORKER_FINALIZE,
-			name: this.name
-		});
-		this.channel.close();
-	}
-	async sendRequest(requestType, abortType, grantType, errorType, releaseType, options) {
-		options?.signal?.throwIfAborted();
-		const id = nanoid$1();
-		this.channel.postMessage({
-			type: requestType,
-			identifier: id,
-			name: this.name
-		});
-		return new Promise((resolve, reject) => {
-			const abortListener = () => {
-				this.channel.postMessage({
-					type: abortType,
-					identifier: id,
-					name: this.name
-				});
-			};
-			options?.signal?.addEventListener("abort", abortListener, { once: true });
-			const listener = (event) => {
-				if (event.data?.identifier !== id) return;
-				if (event.data?.type === grantType) {
-					this.channel.removeEventListener("message", listener);
-					options?.signal?.removeEventListener("abort", abortListener);
-					resolve(() => {
-						this.channel.postMessage({
-							type: releaseType,
-							identifier: id,
-							name: this.name
-						});
-					});
-				}
-				if (event.data.type === errorType) {
-					this.channel.removeEventListener("message", listener);
-					options?.signal?.removeEventListener("abort", abortListener);
-					const err = /* @__PURE__ */ new Error();
-					if (event.data.error != null) {
-						err.message = event.data.error.message;
-						err.name = event.data.error.name;
-						err.stack = event.data.error.stack;
-					}
-					reject(err);
-				}
-			};
-			this.channel.addEventListener("message", listener);
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/workers/cluster.js
-var MorticeClusterWorker = class {
-	name;
-	constructor(name) {
-		this.name = name;
-	}
-	readLock(options) {
-		return this.sendRequest(WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_GRANT_READ_LOCK, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, options);
-	}
-	writeLock(options) {
-		return this.sendRequest(WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_GRANT_WRITE_LOCK, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, options);
-	}
-	finalize() {
-		if (process.send == null) throw new Error("No send method on process - are we a cluster worker?");
-		process.send({
-			type: WORKER_FINALIZE,
-			identifier: nanoid$1(),
-			name: this.name
-		});
-	}
-	async sendRequest(requestType, abortType, grantType, errorType, releaseType, options) {
-		options?.signal?.throwIfAborted();
-		const id = nanoid$1();
-		if (process.send == null) throw new Error("No send method on process - are we a cluster worker?");
-		process.send({
-			type: requestType,
-			identifier: id,
-			name: this.name
-		});
-		return new Promise((resolve, reject) => {
-			const abortListener = () => {
-				process.send?.({
-					type: abortType,
-					identifier: id,
-					name: this.name
-				});
-			};
-			options?.signal?.addEventListener("abort", abortListener, { once: true });
-			const listener = (event) => {
-				if (event.identifier !== id) return;
-				if (event.type === grantType) {
-					process.removeListener("message", listener);
-					options?.signal?.removeEventListener("abort", abortListener);
-					resolve(() => {
-						process.send?.({
-							type: releaseType,
-							identifier: id,
-							name: this.name
-						});
-					});
-				}
-				if (event.type === errorType) {
-					process.removeListener("message", listener);
-					options?.signal?.removeEventListener("abort", abortListener);
-					const err = /* @__PURE__ */ new Error();
-					if (event.error != null) {
-						err.message = event.error.message;
-						err.name = event.error.name;
-						err.stack = event.error.stack;
-					}
-					reject(err);
-				}
-			};
-			process.on("message", listener);
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/node.js
-function isMain() {
-	if (worker.isMainThread === false) return false;
-	if (worker.isInternalThread === true) return false;
-	return cluster.isPrimary;
-}
-var node_default = (options) => {
-	options = Object.assign({}, defaultOptions$6, options);
-	if (isMain() || options.singleProcess) {
-		const emitter = new TypedEventEmitter();
-		cluster.on("message", handleClusterWorkerLockRequest(emitter, "requestReadLock", "abortReadLockRequest", WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, MASTER_GRANT_READ_LOCK));
-		cluster.on("message", handleClusterWorkerLockRequest(emitter, "requestWriteLock", "abortWriteLockRequest", WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, MASTER_GRANT_WRITE_LOCK));
-		const channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
-		channel.addEventListener("message", handleChannelWorkerLockRequest(emitter, channel, "requestReadLock", "abortReadLockRequest", WORKER_REQUEST_READ_LOCK, WORKER_ABORT_READ_LOCK_REQUEST, MASTER_READ_LOCK_ERROR, WORKER_RELEASE_READ_LOCK, MASTER_GRANT_READ_LOCK));
-		channel.addEventListener("message", handleChannelWorkerLockRequest(emitter, channel, "requestWriteLock", "abortWriteLockRequest", WORKER_REQUEST_WRITE_LOCK, WORKER_ABORT_WRITE_LOCK_REQUEST, MASTER_WRITE_LOCK_ERROR, WORKER_RELEASE_WRITE_LOCK, MASTER_GRANT_WRITE_LOCK));
-		channel.unref?.();
-		return emitter;
-	}
-	if (cluster.isWorker) return new MorticeClusterWorker(options.name);
-	if (worker.isMainThread === false) return new MorticeChannelWorker(options.name);
-	throw new Error("Not a cluster worker or worker thread");
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/mortice.js
-const mutexes = /* @__PURE__ */ new Map();
-let implementation;
-function isMortice(obj) {
-	return typeof obj?.readLock === "function" && typeof obj?.writeLock === "function";
-}
-function getImplementation(opts) {
-	if (implementation == null) {
-		implementation = node_default(opts);
-		if (!isMortice(implementation)) {
-			const emitter = implementation;
-			emitter.addEventListener("requestReadLock", (event) => {
-				const mutexName = event.detail.name;
-				const identifier = event.detail.identifier;
-				const mutex = mutexes.get(mutexName);
-				if (mutex == null) return;
-				const abortController = new AbortController();
-				const abortListener = (event) => {
-					if (event.detail.name !== mutexName || event.detail.identifier !== identifier) return;
-					abortController.abort();
-				};
-				emitter.addEventListener("abortReadLockRequest", abortListener);
-				mutex.readLock({ signal: abortController.signal }).then(async (release) => {
-					await event.detail.handler().finally(() => {
-						release();
-					});
-				}).catch((err) => {
-					event.detail.onError(err);
-				}).finally(() => {
-					emitter.removeEventListener("abortReadLockRequest", abortListener);
-				});
-			});
-			emitter.addEventListener("requestWriteLock", (event) => {
-				const mutexName = event.detail.name;
-				const identifier = event.detail.identifier;
-				const mutex = mutexes.get(mutexName);
-				if (mutex == null) return;
-				const abortController = new AbortController();
-				const abortListener = (event) => {
-					if (event.detail.name !== mutexName || event.detail.identifier !== identifier) return;
-					abortController.abort();
-				};
-				emitter.addEventListener("abortWriteLockRequest", abortListener);
-				mutex.writeLock({ signal: abortController.signal }).then(async (release) => {
-					await event.detail.handler().finally(() => {
-						release();
-					});
-				}).catch((err) => {
-					event.detail.onError(err);
-				}).finally(() => {
-					emitter.removeEventListener("abortWriteLockRequest", abortListener);
-				});
-			});
-			emitter.addEventListener("finalizeRequest", (event) => {
-				const mutexName = event.detail.name;
-				const mutex = mutexes.get(mutexName);
-				if (mutex == null) return;
-				mutex.finalize();
-			});
-		}
-	}
-	return implementation;
-}
-async function createReleasable(queue, options) {
-	let res;
-	let rej;
-	const p = new Promise((resolve, reject) => {
-		res = resolve;
-		rej = reject;
-	});
-	const listener = () => {
-		rej(new AbortError$1());
-	};
-	options?.signal?.addEventListener("abort", listener, { once: true });
-	queue.add(async () => {
-		await new Promise((resolve) => {
-			res(() => {
-				options?.signal?.removeEventListener("abort", listener);
-				resolve();
-			});
-		});
-	}, { signal: options?.signal }).catch((err) => {
-		rej(err);
-	});
-	return p;
-}
-const createMutex = (name, options) => {
-	let mutex = mutexes.get(name);
-	if (mutex != null) return mutex;
-	const implementation = getImplementation(options);
-	if (isMortice(implementation)) {
-		mutex = implementation;
-		mutexes.set(name, mutex);
-		return mutex;
-	}
-	const masterQueue = new Queue({ concurrency: 1 });
-	let readQueue;
-	mutex = {
-		async readLock(opts) {
-			if (readQueue != null) return createReleasable(readQueue, opts);
-			readQueue = new Queue({
-				concurrency: options.concurrency,
-				autoStart: false
-			});
-			const localReadQueue = readQueue;
-			const readPromise = createReleasable(readQueue, opts);
-			masterQueue.add(async () => {
-				localReadQueue.start();
-				await localReadQueue.onIdle().then(() => {
-					if (readQueue === localReadQueue) readQueue = null;
-				});
-			});
-			return readPromise;
-		},
-		async writeLock(opts) {
-			readQueue = null;
-			return createReleasable(masterQueue, opts);
-		},
-		finalize: () => {
-			mutexes.delete(name);
-		},
-		queue: masterQueue
-	};
-	mutexes.set(name, mutex);
-	if (options.autoFinalize === true) masterQueue.addEventListener("idle", () => {
-		mutex.finalize();
-	}, { once: true });
-	return mutex;
-};
-//#endregion
-//#region node_modules/.pnpm/mortice@3.3.1/node_modules/mortice/dist/src/index.js
-const defaultOptions$5 = {
-	name: "lock",
-	concurrency: Infinity,
-	singleProcess: false,
-	autoFinalize: false
-};
-function createMortice(options) {
-	const opts = Object.assign({}, defaultOptions$5, options);
-	return createMutex(opts.name, opts);
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/storage.js
-/**
-* BlockStorage is a hybrid blockstore that puts/gets blocks from a configured
-* blockstore (that may be on disk, s3, or something else). If the blocks are
-* not present Bitswap will be used to fetch them from network peers.
-*/
-var BlockStorage = class {
-	lock;
-	child;
-	pins;
-	routing;
-	started;
-	/**
-	* Create a new BlockStorage
-	*/
-	constructor(blockstore, pins, routing, options = {}) {
-		this.child = blockstore;
-		this.pins = pins;
-		this.routing = routing;
-		this.lock = createMortice({ singleProcess: options.holdGcLock });
-		this.started = false;
-	}
-	isStarted() {
-		return this.started;
-	}
-	async start() {
-		await start(this.child);
-		this.started = true;
-	}
-	async stop() {
-		await stop$1(this.child);
-		this.started = false;
-	}
-	unwrap() {
-		return this.child;
-	}
-	/**
-	* Put a block to the underlying datastore
-	*/
-	async put(cid, block, options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.readLock();
-		try {
-			return await this.child.put(cid, block, options);
-		} finally {
-			releaseLock();
-		}
-	}
-	/**
-	* Put a multiple blocks to the underlying datastore
-	*/
-	async *putMany(blocks, options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.readLock();
-		try {
-			yield* this.child.putMany(blocks, options);
-		} finally {
-			releaseLock();
-		}
-	}
-	/**
-	* Get a block by cid
-	*/
-	async *get(cid, options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.readLock();
-		try {
-			yield* this.child.get(cid, options);
-		} finally {
-			releaseLock();
-		}
-	}
-	/**
-	* Get multiple blocks back from an (async) iterable of cids
-	*/
-	async *getMany(cids, options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.readLock();
-		try {
-			yield* this.child.getMany(cids, options);
-		} finally {
-			releaseLock();
-		}
-	}
-	/**
-	* Delete a block from the blockstore
-	*/
-	async delete(cid, options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.writeLock();
-		try {
-			if (await this.pins.isPinned(cid)) throw new BlockPinnedError("Block was pinned - please unpin and try again");
-			await this.routing.cancelReprovide(cid, options);
-			await this.child.delete(cid, options);
-		} finally {
-			releaseLock();
-		}
-	}
-	/**
-	* Delete multiple blocks from the blockstore
-	*/
-	async *deleteMany(cids, options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.writeLock();
-		try {
-			const storage = this;
-			yield* this.child.deleteMany(async function* () {
-				for await (const cid of cids) {
-					if (await storage.pins.isPinned(cid)) throw new BlockPinnedError("Block was pinned - please unpin and try again");
-					await storage.routing.cancelReprovide(cid, options);
-					yield cid;
-				}
-			}(), options);
-		} finally {
-			releaseLock();
-		}
-	}
-	async has(cid, options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.readLock();
-		try {
-			return await this.child.has(cid, options);
-		} finally {
-			releaseLock();
-		}
-	}
-	async *getAll(options = {}) {
-		options?.signal?.throwIfAborted();
-		const releaseLock = await this.lock.readLock();
-		try {
-			yield* this.child.getAll(options);
-		} finally {
-			releaseLock();
-		}
-	}
-	createSession(root, options) {
-		options?.signal?.throwIfAborted();
-		return this.child.createSession(root, options);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/datastore-version.js
-const DS_VERSION_KEY = new Key("/version");
-const CURRENT_VERSION = 1;
-async function assertDatastoreVersionIsCurrent(datastore) {
-	if (!await datastore.has(DS_VERSION_KEY)) {
-		await datastore.put(DS_VERSION_KEY, fromString$2(`${CURRENT_VERSION}`));
-		return;
-	}
-	const str = toString$2(await datastore.get(DS_VERSION_KEY));
-	if (parseInt(str, 10) !== CURRENT_VERSION) throw new InvalidDatastoreVersionError("Invalid datastore version, a datastore migration may be required");
-}
-//#endregion
-//#region node_modules/.pnpm/@ipld+dag-cbor@9.2.7/node_modules/@ipld/dag-cbor/src/index.js
-var src_exports$2 = /* @__PURE__ */ __exportAll({
-	code: () => 113,
-	decode: () => decode$3,
-	decodeOptions: () => decodeOptions$1,
-	encode: () => encode$3,
-	encodeOptions: () => encodeOptions$1,
-	name: () => name$3,
-	toByteView: () => toByteView$2
-});
-const CID_CBOR_TAG = 42;
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
-*/
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
-*/
-/**
-* @template T
-* @param {ByteView<T> | ArrayBufferView<T>} buf
-* @returns {ByteView<T>}
-*/
-function toByteView$2(buf) {
-	if (buf instanceof ArrayBuffer) return new Uint8Array(buf, 0, buf.byteLength);
-	return buf;
-}
-/**
-* cidEncoder will receive all Objects during encode, it needs to filter out
-* anything that's not a CID and return `null` for that so it's encoded as
-* normal.
-*
-* @param {any} obj
-* @returns {cborg.Token[]|null}
-*/
-function cidEncoder$1(obj) {
-	if (obj.asCID !== obj && obj["/"] !== obj.bytes) return null;
-	const cid = CID$1.asCID(obj);
-	/* c8 ignore next 4 */
-	if (!cid) return null;
-	const bytes = new Uint8Array(cid.bytes.byteLength + 1);
-	bytes.set(cid.bytes, 1);
-	return [new Token(Type.tag, CID_CBOR_TAG), new Token(Type.bytes, bytes)];
-}
-/**
-* Intercept all `undefined` values from an object walk and reject the entire
-* object if we find one.
-*
-* @returns {null}
-*/
-function undefinedEncoder$1() {
-	throw new Error("`undefined` is not supported by the IPLD Data Model and cannot be encoded");
-}
-/**
-* Intercept all `number` values from an object walk and reject the entire
-* object if we find something that doesn't fit the IPLD data model (NaN &
-* Infinity).
-*
-* @param {number} num
-* @returns {null}
-*/
-function numberEncoder$1(num) {
-	if (Number.isNaN(num)) throw new Error("`NaN` is not supported by the IPLD Data Model and cannot be encoded");
-	if (num === Infinity || num === -Infinity) throw new Error("`Infinity` and `-Infinity` is not supported by the IPLD Data Model and cannot be encoded");
-	return null;
-}
-/**
-* @param {Map<any, any>} map
-* @returns {null}
-*/
-function mapEncoder(map) {
-	for (const key of map.keys()) if (typeof key !== "string" || key.length === 0) throw new Error("Non-string Map keys are not supported by the IPLD Data Model and cannot be encoded");
-	return null;
-}
-const _encodeOptions = {
-	float64: true,
-	typeEncoders: {
-		Map: mapEncoder,
-		Object: cidEncoder$1,
-		undefined: undefinedEncoder$1,
-		number: numberEncoder$1
-	}
-};
-const encodeOptions$1 = {
-	..._encodeOptions,
-	typeEncoders: { ..._encodeOptions.typeEncoders }
-};
-/**
-* @param {import('cborg').TagDecodeControl} decode
-* @returns {CID}
-*/
-function cidDecoder(decode) {
-	const bytes = decode();
-	if (bytes[0] !== 0) throw new Error("Invalid CID for CBOR tag 42; expected leading 0x00");
-	return CID$1.decode(bytes.subarray(1));
-}
-const _decodeOptions = {
-	allowIndefinite: false,
-	coerceUndefinedToNull: true,
-	allowNaN: false,
-	allowInfinity: false,
-	allowBigInt: true,
-	strict: true,
-	useMaps: false,
-	rejectDuplicateMapKeys: true,
-	/** @type {{ [tagNumber: number]: import('cborg').TagDecoder }} */
-	tags: { [CID_CBOR_TAG]: cidDecoder }
-};
-const decodeOptions$1 = {
-	..._decodeOptions,
-	tags: { ..._decodeOptions.tags }
-};
-const name$3 = "dag-cbor";
-/**
-* @template T
-* @param {T} node
-* @returns {ByteView<T>}
-*/
-const encode$3 = (node) => encode$10(node, _encodeOptions);
-/**
-* @template T
-* @param {ByteView<T> | ArrayBufferView<T>} data
-* @returns {T}
-*/
-const decode$3 = (data) => decode$12(toByteView$2(data), _decodeOptions);
-//#endregion
-//#region node_modules/.pnpm/cborg@5.1.1/node_modules/cborg/lib/json/encode.js
-/**
-* @typedef {import('../../interface.js').EncodeOptions} EncodeOptions
-* @typedef {import('../../interface.js').ByteWriter} ByteWriter
-* @typedef {import('../token.js').Token} Token
-*/
-var JSONEncoder = class extends Array {
-	constructor() {
-		super();
-		/** @type {{type:Type,elements:number}[]} */
-		this.inRecursive = [];
-	}
-	/**
-	* @param {ByteWriter} buf
-	*/
-	prefix(buf) {
-		const recurs = this.inRecursive[this.inRecursive.length - 1];
-		if (recurs) {
-			if (Type.equals(recurs.type, Type.array)) {
-				recurs.elements++;
-				if (recurs.elements !== 1) buf.push([44]);
-			}
-			if (Type.equals(recurs.type, Type.map)) {
-				recurs.elements++;
-				if (recurs.elements !== 1) if (recurs.elements % 2 === 1) buf.push([44]);
-				else buf.push([58]);
-			}
-		}
-	}
-	/**
-	* @param {ByteWriter} buf
-	* @param {Token} token
-	*/
-	[Type.uint.major](buf, token) {
-		this.prefix(buf);
-		const is = String(token.value);
-		const isa = [];
-		for (let i = 0; i < is.length; i++) isa[i] = is.charCodeAt(i);
-		buf.push(isa);
-	}
-	/**
-	* @param {ByteWriter} buf
-	* @param {Token} token
-	*/
-	[Type.negint.major](buf, token) {
-		this[Type.uint.major](buf, token);
-	}
-	/**
-	* @param {ByteWriter} _buf
-	* @param {Token} _token
-	*/
-	[Type.bytes.major](_buf, _token) {
-		throw new Error(`${encodeErrPrefix} unsupported type: Uint8Array`);
-	}
-	/**
-	* @param {ByteWriter} buf
-	* @param {Token} token
-	*/
-	[Type.string.major](buf, token) {
-		this.prefix(buf);
-		const byts = fromString$1(JSON.stringify(token.value));
-		buf.push(byts.length > 32 ? asU8A(byts) : byts);
-	}
-	/**
-	* @param {ByteWriter} buf
-	* @param {Token} _token
-	*/
-	[Type.array.major](buf, _token) {
-		this.prefix(buf);
-		this.inRecursive.push({
-			type: Type.array,
-			elements: 0
-		});
-		buf.push([91]);
-	}
-	/**
-	* @param {ByteWriter} buf
-	* @param {Token} _token
-	*/
-	[Type.map.major](buf, _token) {
-		this.prefix(buf);
-		this.inRecursive.push({
-			type: Type.map,
-			elements: 0
-		});
-		buf.push([123]);
-	}
-	/**
-	* @param {ByteWriter} _buf
-	* @param {Token} _token
-	*/
-	[Type.tag.major](_buf, _token) {}
-	/**
-	* @param {ByteWriter} buf
-	* @param {Token} token
-	*/
-	[Type.float.major](buf, token) {
-		if (token.type.name === "break") {
-			const recurs = this.inRecursive.pop();
-			if (recurs) {
-				if (Type.equals(recurs.type, Type.array)) buf.push([93]);
-				else if (Type.equals(recurs.type, Type.map)) buf.push([125]);
-				else throw new Error("Unexpected recursive type; this should not happen!");
-				return;
-			}
-			/* c8 ignore next 2 */
-			throw new Error("Unexpected break; this should not happen!");
-		}
-		if (token.value === void 0) throw new Error(`${encodeErrPrefix} unsupported type: undefined`);
-		this.prefix(buf);
-		if (token.type.name === "true") {
-			buf.push([
-				116,
-				114,
-				117,
-				101
-			]);
-			return;
-		} else if (token.type.name === "false") {
-			buf.push([
-				102,
-				97,
-				108,
-				115,
-				101
-			]);
-			return;
-		} else if (token.type.name === "null") {
-			buf.push([
-				110,
-				117,
-				108,
-				108
-			]);
-			return;
-		}
-		const is = String(token.value);
-		const isa = [];
-		let dp = false;
-		for (let i = 0; i < is.length; i++) {
-			isa[i] = is.charCodeAt(i);
-			if (!dp && (isa[i] === 46 || isa[i] === 101 || isa[i] === 69)) dp = true;
-		}
-		if (!dp) {
-			isa.push(46);
-			isa.push(48);
-		}
-		buf.push(isa);
-	}
-};
-/**
-* @param {(Token|Token[])[]} e1
-* @param {(Token|Token[])[]} e2
-* @returns {number}
-*/
-function mapSorter(e1, e2) {
-	if (Array.isArray(e1[0]) || Array.isArray(e2[0])) throw new Error(`${encodeErrPrefix} complex map keys are not supported`);
-	const keyToken1 = e1[0];
-	const keyToken2 = e2[0];
-	if (keyToken1.type !== Type.string || keyToken2.type !== Type.string) throw new Error(`${encodeErrPrefix} non-string map keys are not supported`);
-	if (keyToken1 < keyToken2) return -1;
-	if (keyToken1 > keyToken2) return 1;
-	/* c8 ignore next 1 */
-	throw new Error(`${encodeErrPrefix} unexpected duplicate map keys, this is not supported`);
-}
-const defaultEncodeOptions = {
-	addBreakTokens: true,
-	mapSorter
-};
-/**
-* @param {any} data
-* @param {EncodeOptions} [options]
-* @returns {Uint8Array}
-*/
-function encode$2(data, options) {
-	options = Object.assign({}, defaultEncodeOptions, options);
-	return encodeCustom(data, new JSONEncoder(), options);
-}
-//#endregion
-//#region node_modules/.pnpm/cborg@5.1.1/node_modules/cborg/lib/json/decode.js
-/**
-* @typedef {import('../../interface.js').DecodeOptions} DecodeOptions
-* @typedef {import('../../interface.js').DecodeTokenizer} DecodeTokenizer
-*/
-/**
-* @implements {DecodeTokenizer}
-*/
-var Tokenizer = class {
-	/**
-	* @param {Uint8Array} data
-	* @param {DecodeOptions} options
-	*/
-	constructor(data, options = {}) {
-		this._pos = 0;
-		this.data = data;
-		this.options = options;
-		/** @type {string[]} */
-		this.modeStack = ["value"];
-		this.lastToken = "";
-	}
-	pos() {
-		return this._pos;
-	}
-	/**
-	* @returns {boolean}
-	*/
-	done() {
-		return this._pos >= this.data.length;
-	}
-	/**
-	* @returns {number}
-	*/
-	ch() {
-		return this.data[this._pos];
-	}
-	/**
-	* @returns {string}
-	*/
-	currentMode() {
-		return this.modeStack[this.modeStack.length - 1];
-	}
-	skipWhitespace() {
-		let c = this.ch();
-		while (c === 32 || c === 9 || c === 13 || c === 10) c = this.data[++this._pos];
-	}
-	/**
-	* @param {number[]} str
-	*/
-	expect(str) {
-		if (this.data.length - this._pos < str.length) throw new Error(`${decodeErrPrefix} unexpected end of input at position ${this._pos}`);
-		for (let i = 0; i < str.length; i++) if (this.data[this._pos++] !== str[i]) throw new Error(`${decodeErrPrefix} unexpected token at position ${this._pos}, expected to find '${String.fromCharCode(...str)}'`);
-	}
-	parseNumber() {
-		const startPos = this._pos;
-		let negative = false;
-		let float = false;
-		/**
-		* @param {number[]} chars
-		*/
-		const swallow = (chars) => {
-			while (!this.done()) {
-				const ch = this.ch();
-				if (chars.includes(ch)) this._pos++;
-				else break;
-			}
-		};
-		if (this.ch() === 45) {
-			negative = true;
-			this._pos++;
-		}
-		if (this.ch() === 48) {
-			this._pos++;
-			if (this.ch() === 46) {
-				this._pos++;
-				float = true;
-			} else return new Token(Type.uint, 0, this._pos - startPos);
-		}
-		swallow([
-			48,
-			49,
-			50,
-			51,
-			52,
-			53,
-			54,
-			55,
-			56,
-			57
-		]);
-		if (negative && this._pos === startPos + 1) throw new Error(`${decodeErrPrefix} unexpected token at position ${this._pos}`);
-		if (!this.done() && this.ch() === 46) {
-			if (float) throw new Error(`${decodeErrPrefix} unexpected token at position ${this._pos}`);
-			float = true;
-			this._pos++;
-			swallow([
-				48,
-				49,
-				50,
-				51,
-				52,
-				53,
-				54,
-				55,
-				56,
-				57
-			]);
-		}
-		if (!this.done() && (this.ch() === 101 || this.ch() === 69)) {
-			float = true;
-			this._pos++;
-			if (!this.done() && (this.ch() === 43 || this.ch() === 45)) this._pos++;
-			swallow([
-				48,
-				49,
-				50,
-				51,
-				52,
-				53,
-				54,
-				55,
-				56,
-				57
-			]);
-		}
-		const numStr = String.fromCharCode.apply(null, this.data.subarray(startPos, this._pos));
-		const num = parseFloat(numStr);
-		if (float) return new Token(Type.float, num, this._pos - startPos);
-		if (this.options.allowBigInt !== true || Number.isSafeInteger(num)) return new Token(num >= 0 ? Type.uint : Type.negint, num, this._pos - startPos);
-		return new Token(num >= 0 ? Type.uint : Type.negint, BigInt(numStr), this._pos - startPos);
-	}
-	/**
-	* @returns {Token}
-	*/
-	parseString() {
-		/* c8 ignore next 4 */
-		if (this.ch() !== 34) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}; this shouldn't happen`);
-		this._pos++;
-		for (let i = this._pos, l = 0; i < this.data.length && l < 65536; i++, l++) {
-			const ch = this.data[i];
-			if (ch === 92 || ch < 32 || ch >= 128) break;
-			if (ch === 34) {
-				const str = String.fromCharCode.apply(null, this.data.subarray(this._pos, i));
-				this._pos = i + 1;
-				return new Token(Type.string, str, l);
-			}
-		}
-		const startPos = this._pos;
-		const chars = [];
-		const readu4 = () => {
-			if (this._pos + 4 >= this.data.length) throw new Error(`${decodeErrPrefix} unexpected end of unicode escape sequence at position ${this._pos}`);
-			let u4 = 0;
-			for (let i = 0; i < 4; i++) {
-				let ch = this.ch();
-				if (ch >= 48 && ch <= 57) ch -= 48;
-				else if (ch >= 97 && ch <= 102) ch = ch - 97 + 10;
-				else if (ch >= 65 && ch <= 70) ch = ch - 65 + 10;
-				else throw new Error(`${decodeErrPrefix} unexpected unicode escape character at position ${this._pos}`);
-				u4 = u4 * 16 + ch;
-				this._pos++;
-			}
-			return u4;
-		};
-		const readUtf8Char = () => {
-			const firstByte = this.ch();
-			let codePoint = null;
-			/* c8 ignore next 1 */
-			let bytesPerSequence = firstByte > 239 ? 4 : firstByte > 223 ? 3 : firstByte > 191 ? 2 : 1;
-			if (this._pos + bytesPerSequence > this.data.length) throw new Error(`${decodeErrPrefix} unexpected unicode sequence at position ${this._pos}`);
-			let secondByte, thirdByte, fourthByte, tempCodePoint;
-			switch (bytesPerSequence) {
-				/* c8 ignore next 6 */
-				case 1:
-					if (firstByte < 128) codePoint = firstByte;
-					break;
-				case 2:
-					secondByte = this.data[this._pos + 1];
-					if ((secondByte & 192) === 128) {
-						tempCodePoint = (firstByte & 31) << 6 | secondByte & 63;
-						if (tempCodePoint > 127) codePoint = tempCodePoint;
-					}
-					break;
-				case 3:
-					secondByte = this.data[this._pos + 1];
-					thirdByte = this.data[this._pos + 2];
-					if ((secondByte & 192) === 128 && (thirdByte & 192) === 128) {
-						tempCodePoint = (firstByte & 15) << 12 | (secondByte & 63) << 6 | thirdByte & 63;
-						/* c8 ignore next 3 */
-						if (tempCodePoint > 2047 && (tempCodePoint < 55296 || tempCodePoint > 57343)) codePoint = tempCodePoint;
-					}
-					break;
-				case 4:
-					secondByte = this.data[this._pos + 1];
-					thirdByte = this.data[this._pos + 2];
-					fourthByte = this.data[this._pos + 3];
-					if ((secondByte & 192) === 128 && (thirdByte & 192) === 128 && (fourthByte & 192) === 128) {
-						tempCodePoint = (firstByte & 15) << 18 | (secondByte & 63) << 12 | (thirdByte & 63) << 6 | fourthByte & 63;
-						if (tempCodePoint > 65535 && tempCodePoint < 1114112) codePoint = tempCodePoint;
-					}
-			}
-			/* c8 ignore next 5 */
-			if (codePoint === null) {
-				codePoint = 65533;
-				bytesPerSequence = 1;
-			} else if (codePoint > 65535) {
-				codePoint -= 65536;
-				chars.push(codePoint >>> 10 & 1023 | 55296);
-				codePoint = 56320 | codePoint & 1023;
-			}
-			chars.push(codePoint);
-			this._pos += bytesPerSequence;
-		};
-		while (!this.done()) {
-			const ch = this.ch();
-			let ch1;
-			switch (ch) {
-				case 92:
-					this._pos++;
-					if (this.done()) throw new Error(`${decodeErrPrefix} unexpected string termination at position ${this._pos}`);
-					ch1 = this.ch();
-					this._pos++;
-					switch (ch1) {
-						case 34:
-						case 39:
-						case 92:
-						case 47:
-							chars.push(ch1);
-							break;
-						case 98:
-							chars.push(8);
-							break;
-						case 116:
-							chars.push(9);
-							break;
-						case 110:
-							chars.push(10);
-							break;
-						case 102:
-							chars.push(12);
-							break;
-						case 114:
-							chars.push(13);
-							break;
-						case 117:
-							chars.push(readu4());
-							break;
-						default: throw new Error(`${decodeErrPrefix} unexpected string escape character at position ${this._pos}`);
-					}
-					break;
-				case 34:
-					this._pos++;
-					return new Token(Type.string, decodeCodePointsArray(chars), this._pos - startPos);
-				default: if (ch < 32) throw new Error(`${decodeErrPrefix} invalid control character at position ${this._pos}`);
-				else if (ch < 128) {
-					chars.push(ch);
-					this._pos++;
-				} else readUtf8Char();
-			}
-		}
-		throw new Error(`${decodeErrPrefix} unexpected end of string at position ${this._pos}`);
-	}
-	/**
-	* @returns {Token}
-	*/
-	parseValue() {
-		switch (this.ch()) {
-			case 123:
-				this.modeStack.push("obj-start");
-				this._pos++;
-				return new Token(Type.map, Infinity, 1);
-			case 91:
-				this.modeStack.push("array-start");
-				this._pos++;
-				return new Token(Type.array, Infinity, 1);
-			case 34: return this.parseString();
-			case 110:
-				this.expect([
-					110,
-					117,
-					108,
-					108
-				]);
-				return new Token(Type.null, null, 4);
-			case 102:
-				this.expect([
-					102,
-					97,
-					108,
-					115,
-					101
-				]);
-				return new Token(Type.false, false, 5);
-			case 116:
-				this.expect([
-					116,
-					114,
-					117,
-					101
-				]);
-				return new Token(Type.true, true, 4);
-			case 45:
-			case 48:
-			case 49:
-			case 50:
-			case 51:
-			case 52:
-			case 53:
-			case 54:
-			case 55:
-			case 56:
-			case 57: return this.parseNumber();
-			default: throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}`);
-		}
-	}
-	/**
-	* @returns {Token}
-	*/
-	next() {
-		this.skipWhitespace();
-		switch (this.currentMode()) {
-			case "value":
-				this.modeStack.pop();
-				return this.parseValue();
-			case "array-value":
-				this.modeStack.pop();
-				if (this.ch() === 93) {
-					this._pos++;
-					this.skipWhitespace();
-					return new Token(Type.break, void 0, 1);
-				}
-				if (this.ch() !== 44) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}, was expecting array delimiter but found '${String.fromCharCode(this.ch())}'`);
-				this._pos++;
-				this.modeStack.push("array-value");
-				this.skipWhitespace();
-				return this.parseValue();
-			case "array-start":
-				this.modeStack.pop();
-				if (this.ch() === 93) {
-					this._pos++;
-					this.skipWhitespace();
-					return new Token(Type.break, void 0, 1);
-				}
-				this.modeStack.push("array-value");
-				this.skipWhitespace();
-				return this.parseValue();
-			case "obj-key":
-				if (this.ch() === 125) {
-					this.modeStack.pop();
-					this._pos++;
-					this.skipWhitespace();
-					return new Token(Type.break, void 0, 1);
-				}
-				if (this.ch() !== 44) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}, was expecting object delimiter but found '${String.fromCharCode(this.ch())}'`);
-				this._pos++;
-				this.skipWhitespace();
-			case "obj-start": {
-				this.modeStack.pop();
-				if (this.ch() === 125) {
-					this._pos++;
-					this.skipWhitespace();
-					return new Token(Type.break, void 0, 1);
-				}
-				const token = this.parseString();
-				this.skipWhitespace();
-				if (this.ch() !== 58) throw new Error(`${decodeErrPrefix} unexpected character at position ${this._pos}, was expecting key/value delimiter ':' but found '${String.fromCharCode(this.ch())}'`);
-				this._pos++;
-				this.modeStack.push("obj-value");
-				return token;
-			}
-			case "obj-value":
-				this.modeStack.pop();
-				this.modeStack.push("obj-key");
-				this.skipWhitespace();
-				return this.parseValue();
-			/* c8 ignore next 2 */
-			default: throw new Error(`${decodeErrPrefix} unexpected parse state at position ${this._pos}; this shouldn't happen`);
-		}
-	}
-};
-/**
-* @param {Uint8Array} data
-* @param {DecodeOptions} [options]
-* @returns {any}
-*/
-function decode$2(data, options) {
-	options = Object.assign({ tokenizer: new Tokenizer(data, options) }, options);
-	return decode$12(data, options);
-}
-//#endregion
-//#region node_modules/.pnpm/@ipld+dag-json@10.2.9/node_modules/@ipld/dag-json/src/index.js
-var src_exports$1 = /* @__PURE__ */ __exportAll({
-	code: () => 297,
-	decode: () => decode$1,
-	encode: () => encode$1,
-	format: () => format,
-	name: () => name$2,
-	parse: () => parse$1,
-	stringify: () => format
-});
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
-*/
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
-*/
-/**
-* @template T
-* @typedef {import('multiformats').ToString<T>} ToString
-*/
-/**
-* @typedef {import('cborg/interface').DecodeTokenizer} DecodeTokenizer
-*/
-/**
-* @template T
-* @param {ByteView<T> | ArrayBufferView<T>} buf
-* @returns {ByteView<T>}
-*/
-function toByteView$1(buf) {
-	if (buf instanceof ArrayBuffer) return new Uint8Array(buf, 0, buf.byteLength);
-	return buf;
-}
-/**
-* cidEncoder will receive all Objects during encode, it needs to filter out
-* anything that's not a CID and return `null` for that so it's encoded as
-* normal. Encoding a CID means replacing it with a `{"/":"<CidString>}`
-* object as per the DAG-JSON spec.
-*
-* @param {any} obj
-* @returns {Token[]|null}
-*/
-function cidEncoder(obj) {
-	if (obj.asCID !== obj && obj["/"] !== obj.bytes) return null;
-	const cid = CID$1.asCID(obj);
-	/* c8 ignore next 4 */
-	if (!cid) return null;
-	const cidString = cid.toString();
-	return [
-		new Token(Type.map, Infinity, 1),
-		new Token(Type.string, "/", 1),
-		new Token(Type.string, cidString, cidString.length),
-		new Token(Type.break, void 0, 1)
-	];
-}
-/**
-* bytesEncoder will receive all Uint8Arrays (and friends) during encode, it
-* needs to replace it with a `{"/":{"bytes":"Base64ByteString"}}` object as
-* per the DAG-JSON spec.
-*
-* @param {Uint8Array} bytes
-* @returns {Token[]|null}
-*/
-function bytesEncoder(bytes) {
-	const bytesString = base64.encode(bytes).slice(1);
-	return [
-		new Token(Type.map, Infinity, 1),
-		new Token(Type.string, "/", 1),
-		new Token(Type.map, Infinity, 1),
-		new Token(Type.string, "bytes", 5),
-		new Token(Type.string, bytesString, bytesString.length),
-		new Token(Type.break, void 0, 1),
-		new Token(Type.break, void 0, 1)
-	];
-}
-/**
-* taBytesEncoder wraps bytesEncoder() but for the more exotic typed arrays so
-* that we access the underlying ArrayBuffer data
-*
-* @param {Int8Array|Uint16Array|Int16Array|Uint32Array|Int32Array|Float32Array|Float64Array|Uint8ClampedArray|BigInt64Array|BigUint64Array} obj
-* @returns {Token[]|null}
-*/
-function taBytesEncoder(obj) {
-	return bytesEncoder(new Uint8Array(obj.buffer, obj.byteOffset, obj.byteLength));
-}
-/**
-* abBytesEncoder wraps bytesEncoder() but for plain ArrayBuffers
-*
-* @param {ArrayBuffer} ab
-* @returns {Token[]|null}
-*/
-function abBytesEncoder(ab) {
-	return bytesEncoder(new Uint8Array(ab));
-}
-/**
-* Intercept all `undefined` values from an object walk and reject the entire
-* object if we find one.
-*
-* @returns {null}
-*/
-function undefinedEncoder() {
-	throw new Error("`undefined` is not supported by the IPLD Data Model and cannot be encoded");
-}
-/**
-* Intercept all `number` values from an object walk and reject the entire
-* object if we find something that doesn't fit the IPLD data model (NaN &
-* Infinity).
-*
-* @param {number} num
-* @returns {null}
-*/
-function numberEncoder(num) {
-	if (Number.isNaN(num)) throw new Error("`NaN` is not supported by the IPLD Data Model and cannot be encoded");
-	if (num === Infinity || num === -Infinity) throw new Error("`Infinity` and `-Infinity` is not supported by the IPLD Data Model and cannot be encoded");
-	return null;
-}
-const encodeOptions = { typeEncoders: {
-	Object: cidEncoder,
-	Buffer: bytesEncoder,
-	Uint8Array: bytesEncoder,
-	Int8Array: taBytesEncoder,
-	Uint16Array: taBytesEncoder,
-	Int16Array: taBytesEncoder,
-	Uint32Array: taBytesEncoder,
-	Int32Array: taBytesEncoder,
-	Float32Array: taBytesEncoder,
-	Float64Array: taBytesEncoder,
-	Uint8ClampedArray: taBytesEncoder,
-	BigInt64Array: taBytesEncoder,
-	BigUint64Array: taBytesEncoder,
-	DataView: taBytesEncoder,
-	ArrayBuffer: abBytesEncoder,
-	undefined: undefinedEncoder,
-	number: numberEncoder
-} };
-/**
-* @implements {DecodeTokenizer}
-*/
-var DagJsonTokenizer = class extends Tokenizer {
-	/**
-	* @param {Uint8Array} data
-	* @param {object} [options]
-	*/
-	constructor(data, options) {
-		super(data, options);
-		/** @type {Token[]} */
-		this.tokenBuffer = [];
-	}
-	/**
-	* @returns {boolean}
-	*/
-	done() {
-		return this.tokenBuffer.length === 0 && super.done();
-	}
-	/**
-	* @returns {Token}
-	*/
-	_next() {
-		if (this.tokenBuffer.length > 0) return this.tokenBuffer.pop();
-		return super.next();
-	}
-	/**
-	* Implements rules outlined in https://github.com/ipld/specs/pull/356
-	*
-	* @returns {Token}
-	*/
-	next() {
-		const token = this._next();
-		if (Type.equals(token.type, Type.map)) {
-			const keyToken = this._next();
-			if (Type.equals(keyToken.type, Type.string) && keyToken.value === "/") {
-				const valueToken = this._next();
-				if (Type.equals(valueToken.type, Type.string)) {
-					const breakToken = this._next();
-					if (!Type.equals(breakToken.type, Type.break)) throw new Error("Invalid encoded CID form");
-					this.tokenBuffer.push(valueToken);
-					return new Token(Type.tag, 42, 0);
-				}
-				if (Type.equals(valueToken.type, Type.map)) {
-					const innerKeyToken = this._next();
-					if (Type.equals(innerKeyToken.type, Type.string) && innerKeyToken.value === "bytes") {
-						const innerValueToken = this._next();
-						if (Type.equals(innerValueToken.type, Type.string)) {
-							for (let i = 0; i < 2; i++) {
-								const breakToken = this._next();
-								if (!Type.equals(breakToken.type, Type.break)) throw new Error("Invalid encoded Bytes form");
-							}
-							const bytes = base64.decode(`m${innerValueToken.value}`);
-							return new Token(Type.bytes, bytes, innerValueToken.value.length);
-						}
-						this.tokenBuffer.push(innerValueToken);
-					}
-					this.tokenBuffer.push(innerKeyToken);
-				}
-				this.tokenBuffer.push(valueToken);
-			}
-			this.tokenBuffer.push(keyToken);
-		}
-		return token;
-	}
-};
-const decodeOptions = {
-	allowIndefinite: false,
-	allowUndefined: false,
-	allowNaN: false,
-	allowInfinity: false,
-	allowBigInt: true,
-	strict: true,
-	useMaps: false,
-	rejectDuplicateMapKeys: true,
-	/** @type {{ [tagNumber: number]: import('cborg').TagDecoder }} */
-	tags: { 42: (decode) => CID$1.parse(decode()) }
-};
-const name$2 = "dag-json";
-/**
-* @template T
-* @param {T} node
-* @returns {ByteView<T>}
-*/
-const encode$1 = (node) => encode$2(node, encodeOptions);
-/**
-* @template T
-* @param {ByteView<T> | ArrayBufferView<T>} data
-* @returns {T}
-*/
-const decode$1 = (data) => {
-	const buf = toByteView$1(data);
-	return decode$2(buf, Object.assign(decodeOptions, { tokenizer: new DagJsonTokenizer(buf, decodeOptions) }));
-};
-/**
-* @template T
-* @param {T} node
-* @returns {ToString<T>}
-*/
-const format = (node) => utf8Decoder.decode(encode$1(node));
-const utf8Decoder = new TextDecoder();
-/**
-* @template T
-* @param {ToString<T>} data
-* @returns {T}
-*/
-const parse$1 = (data) => decode$1(utf8Encoder.encode(data));
-const utf8Encoder = new TextEncoder();
-//#endregion
-//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/pb-decode.js
-const textDecoder = new TextDecoder();
-/**
-* @typedef {import('./interface.js').RawPBLink} RawPBLink
-*/
-/**
-* @typedef {import('./interface.js').RawPBNode} RawPBNode
-*/
-/**
-* @param {Uint8Array} bytes
-* @param {number} offset
-* @returns {[number, number]}
-*/
-function decodeVarint(bytes, offset) {
-	let v = 0;
-	for (let shift = 0;; shift += 7) {
-		/* c8 ignore next 3 */
-		if (shift >= 64) throw new Error("protobuf: varint overflow");
-		/* c8 ignore next 3 */
-		if (offset >= bytes.length) throw new Error("protobuf: unexpected end of data");
-		const b = bytes[offset++];
-		v += shift < 28 ? (b & 127) << shift : (b & 127) * 2 ** shift;
-		if (b < 128) break;
-	}
-	return [v, offset];
-}
-/**
-* @param {Uint8Array} bytes
-* @param {number} offset
-* @returns {[Uint8Array, number]}
-*/
-function decodeBytes(bytes, offset) {
-	let byteLen;
-	[byteLen, offset] = decodeVarint(bytes, offset);
-	const postOffset = offset + byteLen;
-	/* c8 ignore next 3 */
-	if (byteLen < 0 || postOffset < 0) throw new Error("protobuf: invalid length");
-	/* c8 ignore next 3 */
-	if (postOffset > bytes.length) throw new Error("protobuf: unexpected end of data");
-	return [bytes.subarray(offset, postOffset), postOffset];
-}
-/**
-* @param {Uint8Array} bytes
-* @param {number} index
-* @returns {[number, number, number]}
-*/
-function decodeKey(bytes, index) {
-	let wire;
-	[wire, index] = decodeVarint(bytes, index);
-	return [
-		wire & 7,
-		wire >> 3,
-		index
-	];
-}
-/**
-* @param {Uint8Array} bytes
-* @returns {RawPBLink}
-*/
-function decodeLink(bytes) {
-	/** @type {RawPBLink} */
-	const link = {};
-	const l = bytes.length;
-	let index = 0;
-	while (index < l) {
-		let wireType, fieldNum;
-		[wireType, fieldNum, index] = decodeKey(bytes, index);
-		if (fieldNum === 1) {
-			if (link.Hash) throw new Error("protobuf: (PBLink) duplicate Hash section");
-			if (wireType !== 2) throw new Error(`protobuf: (PBLink) wrong wireType (${wireType}) for Hash`);
-			if (link.Name !== void 0) throw new Error("protobuf: (PBLink) invalid order, found Name before Hash");
-			if (link.Tsize !== void 0) throw new Error("protobuf: (PBLink) invalid order, found Tsize before Hash");
-			[link.Hash, index] = decodeBytes(bytes, index);
-		} else if (fieldNum === 2) {
-			if (link.Name !== void 0) throw new Error("protobuf: (PBLink) duplicate Name section");
-			if (wireType !== 2) throw new Error(`protobuf: (PBLink) wrong wireType (${wireType}) for Name`);
-			if (link.Tsize !== void 0) throw new Error("protobuf: (PBLink) invalid order, found Tsize before Name");
-			let byts;
-			[byts, index] = decodeBytes(bytes, index);
-			link.Name = textDecoder.decode(byts);
-		} else if (fieldNum === 3) {
-			if (link.Tsize !== void 0) throw new Error("protobuf: (PBLink) duplicate Tsize section");
-			if (wireType !== 0) throw new Error(`protobuf: (PBLink) wrong wireType (${wireType}) for Tsize`);
-			[link.Tsize, index] = decodeVarint(bytes, index);
-		} else throw new Error(`protobuf: (PBLink) invalid fieldNumber, expected 1, 2 or 3, got ${fieldNum}`);
-	}
-	/* c8 ignore next 3 */
-	if (index > l) throw new Error("protobuf: (PBLink) unexpected end of data");
-	return link;
-}
-/**
-* @param {Uint8Array} bytes
-* @returns {RawPBNode}
-*/
-function decodeNode(bytes) {
-	const l = bytes.length;
-	let index = 0;
-	/** @type {RawPBLink[]|void} */
-	let links = void 0;
-	let linksBeforeData = false;
-	/** @type {Uint8Array|void} */
-	let data = void 0;
-	while (index < l) {
-		let wireType, fieldNum;
-		[wireType, fieldNum, index] = decodeKey(bytes, index);
-		if (wireType !== 2) throw new Error(`protobuf: (PBNode) invalid wireType, expected 2, got ${wireType}`);
-		if (fieldNum === 1) {
-			if (data) throw new Error("protobuf: (PBNode) duplicate Data section");
-			[data, index] = decodeBytes(bytes, index);
-			if (links) linksBeforeData = true;
-		} else if (fieldNum === 2) {
-			if (linksBeforeData) throw new Error("protobuf: (PBNode) duplicate Links section");
-			else if (!links) links = [];
-			let byts;
-			[byts, index] = decodeBytes(bytes, index);
-			links.push(decodeLink(byts));
-		} else throw new Error(`protobuf: (PBNode) invalid fieldNumber, expected 1 or 2, got ${fieldNum}`);
-	}
-	/* c8 ignore next 3 */
-	if (index > l) throw new Error("protobuf: (PBNode) unexpected end of data");
-	/** @type {RawPBNode} */
-	const node = {};
-	if (data) node.Data = data;
-	node.Links = links || [];
-	return node;
-}
-//#endregion
-//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/pb-encode.js
-const textEncoder$1 = new TextEncoder();
-const maxInt32$1 = 2 ** 32;
-const maxUInt32 = 2 ** 31;
-/**
-* @typedef {import('./interface.js').RawPBLink} RawPBLink
-*/
-/**
-* @typedef {import('./interface.js').RawPBNode} RawPBNode
-*/
-/**
-* encodeLink() is passed a slice of the parent byte array that ends where this
-* link needs to end, so it packs to the right-most part of the passed `bytes`
-*
-* @param {RawPBLink} link
-* @param {Uint8Array} bytes
-* @returns {number}
-*/
-function encodeLink(link, bytes) {
-	let i = bytes.length;
-	if (typeof link.Tsize === "number") {
-		if (link.Tsize < 0) throw new Error("Tsize cannot be negative");
-		if (!Number.isSafeInteger(link.Tsize)) throw new Error("Tsize too large for encoding");
-		i = encodeVarint(bytes, i, link.Tsize) - 1;
-		bytes[i] = 24;
-	}
-	if (typeof link.Name === "string") {
-		const nameBytes = textEncoder$1.encode(link.Name);
-		i -= nameBytes.length;
-		bytes.set(nameBytes, i);
-		i = encodeVarint(bytes, i, nameBytes.length) - 1;
-		bytes[i] = 18;
-	}
-	if (link.Hash) {
-		i -= link.Hash.length;
-		bytes.set(link.Hash, i);
-		i = encodeVarint(bytes, i, link.Hash.length) - 1;
-		bytes[i] = 10;
-	}
-	return bytes.length - i;
-}
-/**
-* Encodes a PBNode into a new byte array of precisely the correct size
-*
-* @param {RawPBNode} node
-* @returns {Uint8Array}
-*/
-function encodeNode(node) {
-	const size = sizeNode(node);
-	const bytes = new Uint8Array(size);
-	let i = size;
-	if (node.Data) {
-		i -= node.Data.length;
-		bytes.set(node.Data, i);
-		i = encodeVarint(bytes, i, node.Data.length) - 1;
-		bytes[i] = 10;
-	}
-	if (node.Links) for (let index = node.Links.length - 1; index >= 0; index--) {
-		const size = encodeLink(node.Links[index], bytes.subarray(0, i));
-		i -= size;
-		i = encodeVarint(bytes, i, size) - 1;
-		bytes[i] = 18;
-	}
-	return bytes;
-}
-/**
-* work out exactly how many bytes this link takes up
-*
-* @param {RawPBLink} link
-* @returns
-*/
-function sizeLink(link) {
-	let n = 0;
-	if (link.Hash) {
-		const l = link.Hash.length;
-		n += 1 + l + sov(l);
-	}
-	if (typeof link.Name === "string") {
-		const l = textEncoder$1.encode(link.Name).length;
-		n += 1 + l + sov(l);
-	}
-	if (typeof link.Tsize === "number") n += 1 + sov(link.Tsize);
-	return n;
-}
-/**
-* Work out exactly how many bytes this node takes up
-*
-* @param {RawPBNode} node
-* @returns {number}
-*/
-function sizeNode(node) {
-	let n = 0;
-	if (node.Data) {
-		const l = node.Data.length;
-		n += 1 + l + sov(l);
-	}
-	if (node.Links) for (const link of node.Links) {
-		const l = sizeLink(link);
-		n += 1 + l + sov(l);
-	}
-	return n;
-}
-/**
-* @param {Uint8Array} bytes
-* @param {number} offset
-* @param {number} v
-* @returns {number}
-*/
-function encodeVarint(bytes, offset, v) {
-	offset -= sov(v);
-	const base = offset;
-	while (v >= maxUInt32) {
-		bytes[offset++] = v & 127 | 128;
-		v /= 128;
-	}
-	while (v >= 128) {
-		bytes[offset++] = v & 127 | 128;
-		v >>>= 7;
-	}
-	bytes[offset] = v;
-	return base;
-}
-/**
-* size of varint
-*
-* @param {number} x
-* @returns {number}
-*/
-function sov(x) {
-	if (x % 2 === 0) x++;
-	return Math.floor((len64$1(x) + 6) / 7);
-}
-/**
-* golang math/bits, how many bits does it take to represent this integer?
-*
-* @param {number} x
-* @returns {number}
-*/
-function len64$1(x) {
-	let n = 0;
-	if (x >= maxInt32$1) {
-		x = Math.floor(x / maxInt32$1);
-		n = 32;
-	}
-	if (x >= 65536) {
-		x >>>= 16;
-		n += 16;
-	}
-	if (x >= 256) {
-		x >>>= 8;
-		n += 8;
-	}
-	return n + len8tab$1[x];
-}
-const len8tab$1 = [
-	0,
-	1,
-	2,
-	2,
-	3,
-	3,
-	3,
-	3,
-	4,
-	4,
-	4,
-	4,
-	4,
-	4,
-	4,
-	4,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	5,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	6,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	7,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8,
-	8
-];
-//#endregion
-//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/util.js
-/**
-* @typedef {import('./interface.js').PBLink} PBLink
-* @typedef {import('./interface.js').PBNode} PBNode
-*/
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
-*/
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
-*/
-const pbNodeProperties = ["Data", "Links"];
-const pbLinkProperties = [
-	"Hash",
-	"Name",
-	"Tsize"
-];
-const textEncoder = new TextEncoder();
-/**
-* @param {PBLink} a
-* @param {PBLink} b
-* @returns {number}
-*/
-function linkComparator(a, b) {
-	if (a === b) return 0;
-	const abuf = a.Name ? textEncoder.encode(a.Name) : [];
-	const bbuf = b.Name ? textEncoder.encode(b.Name) : [];
-	let x = abuf.length;
-	let y = bbuf.length;
-	for (let i = 0, len = Math.min(x, y); i < len; ++i) if (abuf[i] !== bbuf[i]) {
-		x = abuf[i];
-		y = bbuf[i];
-		break;
-	}
-	return x < y ? -1 : y < x ? 1 : 0;
-}
-/**
-* @param {any} node
-* @param {string[]} properties
-* @returns {boolean}
-*/
-function hasOnlyProperties(node, properties) {
-	return !Object.keys(node).some((p) => !properties.includes(p));
-}
-/**
-* Converts a CID, or a PBLink-like object to a PBLink
-*
-* @param {any} link
-* @returns {PBLink}
-*/
-function asLink(link) {
-	if (typeof link.asCID === "object") {
-		const Hash = CID.asCID(link);
-		if (!Hash) throw new TypeError("Invalid DAG-PB form");
-		return { Hash };
-	}
-	if (typeof link !== "object" || Array.isArray(link)) throw new TypeError("Invalid DAG-PB form");
-	const pbl = {};
-	if (link.Hash) {
-		let cid = CID.asCID(link.Hash);
-		try {
-			if (!cid) {
-				if (typeof link.Hash === "string") cid = CID.parse(link.Hash);
-				else if (link.Hash instanceof Uint8Array) cid = CID.decode(link.Hash);
-			}
-		} catch (e) {
-			throw new TypeError(`Invalid DAG-PB form: ${e.message}`);
-		}
-		if (cid) pbl.Hash = cid;
-	}
-	if (!pbl.Hash) throw new TypeError("Invalid DAG-PB form");
-	if (typeof link.Name === "string") pbl.Name = link.Name;
-	if (typeof link.Tsize === "number") pbl.Tsize = link.Tsize;
-	return pbl;
-}
-/**
-* @param {any} node
-* @returns {PBNode}
-*/
-function prepare(node) {
-	if (node instanceof Uint8Array || typeof node === "string") node = { Data: node };
-	if (typeof node !== "object" || Array.isArray(node)) throw new TypeError("Invalid DAG-PB form");
-	/** @type {PBNode} */
-	const pbn = {};
-	if (node.Data !== void 0) if (typeof node.Data === "string") pbn.Data = textEncoder.encode(node.Data);
-	else if (node.Data instanceof Uint8Array) pbn.Data = node.Data;
-	else throw new TypeError("Invalid DAG-PB form");
-	if (node.Links !== void 0) if (Array.isArray(node.Links)) {
-		pbn.Links = node.Links.map(asLink);
-		pbn.Links.sort(linkComparator);
-	} else throw new TypeError("Invalid DAG-PB form");
-	else pbn.Links = [];
-	return pbn;
-}
-/**
-* @param {PBNode} node
-*/
-function validate$1(node) {
-	if (!node || typeof node !== "object" || Array.isArray(node) || node instanceof Uint8Array || node["/"] && node["/"] === node.bytes) throw new TypeError("Invalid DAG-PB form");
-	if (!hasOnlyProperties(node, pbNodeProperties)) throw new TypeError("Invalid DAG-PB form (extraneous properties)");
-	if (node.Data !== void 0 && !(node.Data instanceof Uint8Array)) throw new TypeError("Invalid DAG-PB form (Data must be bytes)");
-	if (!Array.isArray(node.Links)) throw new TypeError("Invalid DAG-PB form (Links must be a list)");
-	for (let i = 0; i < node.Links.length; i++) {
-		const link = node.Links[i];
-		if (!link || typeof link !== "object" || Array.isArray(link) || link instanceof Uint8Array || link["/"] && link["/"] === link.bytes) throw new TypeError("Invalid DAG-PB form (bad link)");
-		if (!hasOnlyProperties(link, pbLinkProperties)) throw new TypeError("Invalid DAG-PB form (extraneous properties on link)");
-		if (link.Hash === void 0) throw new TypeError("Invalid DAG-PB form (link must have a Hash)");
-		if (link.Hash == null || !link.Hash["/"] || link.Hash["/"] !== link.Hash.bytes) throw new TypeError("Invalid DAG-PB form (link Hash must be a CID)");
-		if (link.Name !== void 0 && typeof link.Name !== "string") throw new TypeError("Invalid DAG-PB form (link Name must be a string)");
-		if (link.Tsize !== void 0) {
-			if (typeof link.Tsize !== "number" || link.Tsize % 1 !== 0) throw new TypeError("Invalid DAG-PB form (link Tsize must be an integer)");
-			if (link.Tsize < 0) throw new TypeError("Invalid DAG-PB form (link Tsize cannot be negative)");
-		}
-		if (i > 0 && linkComparator(link, node.Links[i - 1]) === -1) throw new TypeError("Invalid DAG-PB form (links must be sorted by Name bytes)");
-	}
-}
-/**
-* @param {Uint8Array} data
-* @param {PBLink[]} [links]
-* @returns {PBNode}
-*/
-function createNode(data, links = []) {
-	return prepare({
-		Data: data,
-		Links: links
-	});
-}
-/**
-* @param {string} name
-* @param {number} size
-* @param {CID} cid
-* @returns {PBLink}
-*/
-function createLink(name, size, cid) {
-	return asLink({
-		Hash: cid,
-		Name: name,
-		Tsize: size
-	});
-}
-/**
-* @template T
-* @param {ByteView<T> | ArrayBufferView<T>} buf
-* @returns {ByteView<T>}
-*/
-function toByteView(buf) {
-	if (buf instanceof ArrayBuffer) return new Uint8Array(buf, 0, buf.byteLength);
-	return buf;
-}
-//#endregion
-//#region node_modules/.pnpm/@ipld+dag-pb@4.1.7/node_modules/@ipld/dag-pb/src/index.js
-var src_exports = /* @__PURE__ */ __exportAll({
-	code: () => 112,
-	createLink: () => createLink,
-	createNode: () => createNode,
-	decode: () => decode,
-	encode: () => encode,
-	name: () => name$1,
-	prepare: () => prepare,
-	validate: () => validate$1
-});
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ByteView<T>} ByteView
-*/
-/**
-* @template T
-* @typedef {import('multiformats/codecs/interface').ArrayBufferView<T>} ArrayBufferView
-*/
-/**
-* @typedef {import('./interface.js').PBLink} PBLink
-* @typedef {import('./interface.js').PBNode} PBNode
-*/
-const name$1 = "dag-pb";
-/**
-* @param {PBNode} node
-* @returns {ByteView<PBNode>}
-*/
-function encode(node) {
-	validate$1(node);
-	const pbn = {};
-	if (node.Links) pbn.Links = node.Links.map((l) => {
-		const link = {};
-		if (l.Hash) link.Hash = l.Hash.bytes;
-		if (l.Name !== void 0) link.Name = l.Name;
-		if (l.Tsize !== void 0) link.Tsize = l.Tsize;
-		return link;
-	});
-	if (node.Data) pbn.Data = node.Data;
-	return encodeNode(pbn);
-}
-/**
-* @param {ByteView<PBNode> | ArrayBufferView<PBNode>} bytes
-* @returns {PBNode}
-*/
-function decode(bytes) {
-	const pbn = decodeNode(toByteView(bytes));
-	const node = {};
-	if (pbn.Data) node.Data = pbn.Data;
-	if (pbn.Links) node.Links = pbn.Links.map((l) => {
-		const link = {};
-		try {
-			link.Hash = CID.decode(l.Hash);
-		} catch {}
-		if (!link.Hash) throw new Error("Invalid Hash field found in link, expected CID");
-		if (l.Name !== void 0) link.Name = l.Name;
-		if (l.Tsize !== void 0) link.Tsize = l.Tsize;
-		return link;
-	});
-	return node;
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/is-promise.js
-function isPromise$1(p) {
-	return p?.then != null;
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/get-codec.js
-function getCodec(initialCodecs = [], loadCodec) {
-	const codecs = {
-		[112]: src_exports,
-		[85]: raw_exports,
-		[113]: src_exports$2,
-		[297]: src_exports$1,
-		[512]: json_exports
-	};
-	initialCodecs.forEach((codec) => {
-		codecs[codec.code] = codec;
-	});
-	return async (code) => {
-		let codec = codecs[code];
-		if (codec == null && loadCodec != null) {
-			const res = loadCodec(code);
-			if (isPromise$1(res)) codec = await res;
-			else codec = res;
-			codecs[codec.code] = codec;
-		}
-		if (codec != null) return codec;
-		throw new UnknownCodecError(`Could not load codec for ${code}`);
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/get-hasher.js
-function getHasher(initialHashers = [], loadHasher) {
-	const hashers = {
-		[sha256$2.code]: sha256$2,
-		[sha512$2.code]: sha512$2,
-		[identity$2.code]: identity$2
-	};
-	initialHashers.forEach((hasher) => {
-		hashers[hasher.code] = hasher;
-	});
-	return async (code) => {
-		let hasher = hashers[code];
-		if (hasher == null && loadHasher != null) {
-			const res = loadHasher(code);
-			if (isPromise$1(res)) hasher = await res;
-			else hasher = res;
-			hashers[hasher.code] = hasher;
-		}
-		if (hasher != null) return hasher;
-		throw new UnknownHashAlgorithmError(`No hasher configured for multihash code 0x${code.toString(16)}, please configure one. You can look up which hash this is at https://github.com/multiformats/multicodec/blob/master/table.csv`);
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/identity.js
-const IDENTITY_CODEC$1 = 0;
-var IdentityHashDigestTooLongError = class extends Error {
-	static name = "IdentityHashDigestTooLongError";
-	name = "IdentityHashDigestTooLongError";
-};
-var IdentityBlockstore = class extends BaseBlockstore {
-	child;
-	maxDigestLength;
-	constructor(child, init) {
-		super();
-		this.child = child;
-		this.maxDigestLength = init?.maxDigestLength;
-	}
-	put(key, block, options) {
-		if (key.multihash.code === IDENTITY_CODEC$1) {
-			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
-			options?.signal?.throwIfAborted();
-			return key;
-		}
-		if (this.child == null) {
-			options?.signal?.throwIfAborted();
-			return key;
-		}
-		return this.child.put(key, block, options);
-	}
-	async *get(key, options) {
-		if (key.multihash.code === IDENTITY_CODEC$1) {
-			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
-			options?.signal?.throwIfAborted();
-			yield key.multihash.digest;
-			return;
-		}
-		if (this.child == null) {
-			options?.signal?.throwIfAborted();
-			throw new NotFoundError$3();
-		}
-		yield* this.child.get(key, options);
-	}
-	has(key, options) {
-		if (key.multihash.code === IDENTITY_CODEC$1) {
-			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
-			options?.signal?.throwIfAborted();
-			return true;
-		}
-		if (this.child == null) {
-			options?.signal?.throwIfAborted();
-			return false;
-		}
-		return this.child.has(key, options);
-	}
-	delete(key, options) {
-		if (key.code === IDENTITY_CODEC$1) {
-			if (this.maxDigestLength != null && key.multihash.digest.byteLength > this.maxDigestLength) throw new IdentityHashDigestTooLongError(`Identity digest too long - ${key.multihash.digest.byteLength} > this.maxDigestLength`);
-			options?.signal?.throwIfAborted();
-			return;
-		}
-		if (this.child != null) return this.child.delete(key, options);
-	}
-	async *getAll(options) {
-		if (this.child != null) yield* this.child.getAll(options);
-		options?.signal?.throwIfAborted();
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/it-foreach@2.1.7/node_modules/it-foreach/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Calls a function for each value in an (async)iterable.
-*
-* The function can be sync or async.
-*
-* Async functions can be awaited on so may slow down processing of the (async)iterable.
-*
-* @example
-*
-* ```javascript
-* import each from 'it-foreach'
-* import drain from 'it-drain'
-*
-* // This can also be an iterator, generator, etc
-* const values = [0, 1, 2, 3, 4]
-*
-* // prints [0, 0], [1, 1], [2, 2], [3, 3], [4, 4]
-* const arr = drain(
-*   each(values, console.info)
-* )
-* ```
-*
-* Async sources and callbacks must be awaited:
-*
-* ```javascript
-* import each from 'it-foreach'
-* import drain from 'it-drain'
-*
-* const values = async function * () {
-*   yield * [0, 1, 2, 3, 4]
-* }
-*
-* // prints [0, 0], [1, 1], [2, 2], [3, 3], [4, 4]
-* const arr = await drain(
-*   each(values(), console.info)
-* )
-* ```
-*/
-function isAsyncIterable$6(thing) {
-	return thing[Symbol.asyncIterator] != null;
-}
-function isPromise(thing) {
-	return thing?.then != null;
-}
-function forEach(source, fn) {
-	let index = 0;
-	if (isAsyncIterable$6(source)) return (async function* () {
-		for await (const val of source) {
-			const res = fn(val, index++);
-			if (isPromise(res)) await res;
-			yield val;
-		}
-	})();
-	const peekable$1 = peekable(source);
-	const { value, done } = peekable$1.next();
-	if (done === true) return function* () {}();
-	const res = fn(value, index++);
-	if (typeof res?.then === "function") return (async function* () {
-		await res;
-		yield value;
-		for (const val of peekable$1) {
-			const res = fn(val, index++);
-			if (isPromise(res)) await res;
-			yield val;
-		}
-	})();
-	const func = fn;
-	return (function* () {
-		yield value;
-		for (const val of peekable$1) {
-			func(val, index++);
-			yield val;
-		}
-	})();
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/storage.js
-const DEFAULT_MAX_IDENTITY_HASH_DIGEST_LENGTH = 128;
-var Storage = class {
-	child;
-	getHasher;
-	log;
-	logger;
-	blockBrokers;
-	/**
-	* Create a new BlockStorage
-	*/
-	constructor(components, init = {}) {
-		this.log = components.logger.forComponent("helia:networked-storage");
-		this.logger = components.logger;
-		this.blockBrokers = components.blockBrokers;
-		this.child = new IdentityBlockstore(components.blockstore, { maxDigestLength: init.maxIdentityHashDigestLength ?? DEFAULT_MAX_IDENTITY_HASH_DIGEST_LENGTH });
-		this.getHasher = components.getHasher;
-	}
-	/**
-	* Put a block to the underlying datastore
-	*/
-	async put(cid, block, options = {}) {
-		if (await this.child.has(cid, options)) {
-			options.onProgress?.(new CustomProgressEvent("blocks:put:duplicate", cid));
-			return cid;
-		}
-		options.onProgress?.(new CustomProgressEvent("blocks:put:providers:notify", cid));
-		await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
-		options.onProgress?.(new CustomProgressEvent("blocks:put:blockstore:put", cid));
-		return this.child.put(cid, block, options);
-	}
-	/**
-	* Put a multiple blocks to the underlying datastore
-	*/
-	async *putMany(blocks, options = {}) {
-		const notifyEach = forEach(filter(blocks, async ({ cid }) => {
-			const has = await this.child.has(cid, options);
-			if (has) options.onProgress?.(new CustomProgressEvent("blocks:put-many:duplicate", cid));
-			return !has;
-		}), async ({ cid }) => {
-			options.onProgress?.(new CustomProgressEvent("blocks:put-many:providers:notify", cid));
-			await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
-		});
-		options.onProgress?.(new CustomProgressEvent("blocks:put-many:blockstore:put-many"));
-		yield* this.child.putMany(notifyEach, options);
-	}
-	/**
-	* Get a block by cid
-	*/
-	async *get(cid, options = {}) {
-		const has = await this.child.has(cid, options);
-		const offline = options.offline === true;
-		if (!has) {
-			if (offline) throw new BlockNotFoundWhileOfflineError("The block was present in the blockstore and the node is running offline so cannot fetch it");
-			const hasher = await this.getHasher(cid.multihash.code);
-			options?.signal?.throwIfAborted();
-			options.onProgress?.(new CustomProgressEvent("blocks:get:providers:get", cid));
-			const block = await raceBlockRetrievers(cid, this.blockBrokers, hasher, {
-				...options,
-				log: this.log
-			});
-			options.onProgress?.(new CustomProgressEvent("blocks:get:blockstore:put", cid));
-			await this.child.put(cid, block, options);
-			options.onProgress?.(new CustomProgressEvent("blocks:get:providers:notify", cid));
-			await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
-			yield block;
-			return;
-		}
-		options.onProgress?.(new CustomProgressEvent("blocks:get:blockstore:get", cid));
-		yield* this.child.get(cid, options);
-	}
-	/**
-	* Get multiple blocks back from an (async) iterable of cids
-	*/
-	async *getMany(cids, options = {}) {
-		options.onProgress?.(new CustomProgressEvent("blocks:get-many:blockstore:get-many"));
-		yield* this.child.getMany(forEach(cids, async (cid) => {
-			const has = await this.child.has(cid, options);
-			const offline = options.offline === true;
-			if (!has) {
-				if (offline) throw new BlockNotFoundWhileOfflineError("The block was present in the blockstore and the node is running offline so cannot fetch it");
-				const hasher = await this.getHasher(cid.multihash.code);
-				options?.signal?.throwIfAborted();
-				options.onProgress?.(new CustomProgressEvent("blocks:get-many:providers:get", cid));
-				const block = await raceBlockRetrievers(cid, this.blockBrokers, hasher, {
-					...options,
-					log: this.log
-				});
-				options.onProgress?.(new CustomProgressEvent("blocks:get-many:blockstore:put", cid));
-				await this.child.put(cid, block, options);
-				options.onProgress?.(new CustomProgressEvent("blocks:get-many:providers:notify", cid));
-				await Promise.all(this.blockBrokers.map(async (broker) => broker.announce?.(cid, options)));
-			}
-		}));
-	}
-	/**
-	* Delete a block from the blockstore
-	*/
-	async delete(cid, options = {}) {
-		options.onProgress?.(new CustomProgressEvent("blocks:delete:blockstore:delete", cid));
-		await this.child.delete(cid, options);
-	}
-	/**
-	* Delete multiple blocks from the blockstore
-	*/
-	async *deleteMany(cids, options = {}) {
-		options.onProgress?.(new CustomProgressEvent("blocks:delete-many:blockstore:delete-many"));
-		yield* this.child.deleteMany(async function* () {
-			for await (const cid of cids) yield cid;
-		}(), options);
-	}
-	async has(cid, options = {}) {
-		return this.child.has(cid, options);
-	}
-	async *getAll(options = {}) {
-		options.onProgress?.(new CustomProgressEvent("blocks:get-all:blockstore:get-many"));
-		yield* this.child.getAll(options);
-	}
-};
-/**
-* Race block providers cancelling any pending requests once the block has been
-* found.
-*/
-async function raceBlockRetrievers(cid, blockBrokers, hasher, options) {
-	const validateFn = getCidBlockVerifierFunction(cid, hasher);
-	const controller = new AbortController();
-	const signal = anySignal([controller.signal, options.signal]);
-	setMaxListeners$1(Infinity, controller.signal, signal);
-	const retrievers = [];
-	for (const broker of blockBrokers) if (isRetrievingBlockBroker(broker)) retrievers.push(broker);
-	if (retrievers.length === 0) throw new InvalidConfigurationError(`No block brokers capable of retrieving blocks are configured, the CID ${cid} cannot be fetched from the network`);
-	try {
-		return await Promise.any(retrievers.map(async (retriever) => {
-			try {
-				let blocksWereValidated = false;
-				const block = await retriever.retrieve(cid, {
-					...options,
-					signal,
-					validateFn: async (block) => {
-						await validateFn(block);
-						options.signal?.throwIfAborted();
-						blocksWereValidated = true;
-					}
-				});
-				if (!blocksWereValidated) {
-					await validateFn(block);
-					options.signal?.throwIfAborted();
-				}
-				return block;
-			} catch (err) {
-				options.log.error("could not retrieve verified block for %c from %s - %e", cid, retriever.name, err);
-				throw err;
-			}
-		}));
-	} catch (err) {
-		throw new LoadBlockFailedError(err.errors, `Failed to load block for ${cid}`);
-	} finally {
-		controller.abort();
-		signal.clear();
-	}
-}
-function isRetrievingBlockBroker(broker) {
-	return typeof broker.retrieve === "function";
-}
-const getCidBlockVerifierFunction = (cid, hasher) => {
-	if (hasher == null) throw new InvalidParametersError$4(`No hasher configured for multihash code 0x${cid.multihash.code.toString(16)}, please configure one. You can look up which hash this is at https://github.com/multiformats/multicodec/blob/master/table.csv`);
-	return async (block) => {
-		let hash;
-		const res = hasher.digest(block, { truncate: cid.multihash.digest.byteLength });
-		if (isPromise$1(res)) hash = await res;
-		else hash = res;
-		if (!equals(hash.digest, cid.multihash.digest)) throw new InvalidMultihashError("Hash of downloaded block did not match multihash from passed CID");
-	};
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/session-storage.js
-/**
-* Storage subclass that can cancel any ongoing operation at any point.
-*/
-var SessionStorage = class extends Storage {
-	closeController;
-	constructor(components, init) {
-		super(components);
-		this.closeController = new AbortController();
-		setMaxListeners$1(Infinity, this.closeController.signal);
-		this.log = components.logger.forComponent(`helia:session-storage:${init.root}`);
-	}
-	close() {
-		this.closeController.abort();
-	}
-	async addPeer(peer, options) {
-		await Promise.all(this.blockBrokers.map((broker) => broker.addPeer(peer, options)));
-	}
-	/**
-	* Put a block to the underlying datastore
-	*/
-	async put(cid, block, options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			return await super.put(cid, block, {
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-	/**
-	* Put a multiple blocks to the underlying datastore
-	*/
-	async *putMany(blocks, options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			yield* super.putMany(blocks, {
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-	/**
-	* Get a block by cid
-	*/
-	async *get(cid, options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			yield* super.get(cid, {
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-	/**
-	* Get multiple blocks back from an (async) iterable of cids
-	*/
-	async *getMany(cids, options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			yield* super.getMany(cids, {
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-	/**
-	* Delete a block from the blockstore
-	*/
-	async delete(cid, options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			await super.delete(cid, {
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-	/**
-	* Delete multiple blocks from the blockstore
-	*/
-	async *deleteMany(cids, options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			yield* super.deleteMany(cids, {
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-	async has(cid, options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			return await super.has(cid, {
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-	async *getAll(options = {}) {
-		const signal = anySignal([this.closeController.signal, options.signal]);
-		setMaxListeners$1(Infinity, signal);
-		try {
-			yield* super.getAll({
-				...options,
-				signal
-			});
-		} finally {
-			signal.clear();
-		}
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/networked-storage.js
-/**
-* Networked storage wraps a regular blockstore - when getting blocks if the
-* blocks are not present, the configured BlockBrokers will be used to fetch them.
-*/
-var NetworkedStorage = class extends Storage {
-	started;
-	/**
-	* Create a new BlockStorage
-	*/
-	constructor(components, init = {}) {
-		super(components, init);
-		this.started = false;
-	}
-	isStarted() {
-		return this.started;
-	}
-	async start() {
-		await start(this.child, ...this.blockBrokers);
-		this.started = true;
-	}
-	async stop() {
-		await stop$1(this.child, ...this.blockBrokers);
-		this.started = false;
-	}
-	unwrap() {
-		return this.child;
-	}
-	createSession(root, options) {
-		if (this.blockBrokers.length === 0) throw new InvalidConfigurationError("No block brokers configured");
-		const blockBrokers = this.blockBrokers.map((broker) => broker.createSession?.(options)).filter((broker) => broker != null);
-		if (blockBrokers.length === 0) throw new InvalidConfigurationError(`No configured block brokers support sessions - tried ${this.blockBrokers.map((b) => b.name).join(", ")}`);
-		return new SessionStorage({
-			blockstore: this.child,
-			blockBrokers,
-			getHasher: this.getHasher,
-			logger: this.logger
-		}, { root });
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/abstract-session.js
-var AbstractSession = class extends TypedEventEmitter {
-	initialPeerSearchComplete;
-	requests;
-	logName;
-	log;
-	logger;
-	minProviders;
-	maxProviders;
-	providers;
-	evictionFilter;
-	initialProviders;
-	cidPeerFilterSize;
-	constructor(components, init) {
-		super();
-		setMaxListeners$1(Infinity, this);
-		this.logName = init.name;
-		this.logger = components.logger;
-		this.log = components.logger.forComponent(this.logName);
-		this.requests = /* @__PURE__ */ new Map();
-		this.minProviders = init.minProviders ?? 1;
-		this.maxProviders = init.maxProviders ?? 5;
-		this.cidPeerFilterSize = init.cidPeerFilterSize ?? 100;
-		this.providers = [];
-		this.evictionFilter = createScalableCuckooFilter(this.maxProviders);
-		this.initialProviders = [...init.providers ?? []];
-	}
-	async retrieve(cid, options = {}) {
-		const cidStr = base64.encode(cid.multihash.bytes);
-		const existingJob = this.requests.get(cidStr);
-		if (existingJob != null) {
-			this.log("join existing request for %c", cid);
-			existingJob.observers++;
-			return existingJob.promise;
-		}
-		const deferred = pDefer();
-		const request = {
-			promise: deferred.promise,
-			observers: 1,
-			queryFilter: createScalableCuckooFilter(this.cidPeerFilterSize)
-		};
-		this.requests.set(cidStr, request);
-		let first = false;
-		if (this.initialPeerSearchComplete == null) {
-			first = true;
-			this.log = this.logger.forComponent(`${this.logName}:${cid}`);
-			this.initialPeerSearchComplete = this.findProviders(cid, this.minProviders, options);
-		}
-		let foundBlock = false;
-		const queue = new Queue$1({ concurrency: this.maxProviders });
-		queue.addEventListener("failure", (evt) => {
-			this.log.error("error querying provider %s, evicting from session - %e", evt.detail.job.options.provider, evt.detail.error);
-			this.evict(evt.detail.job.options.provider);
-		});
-		queue.addEventListener("success", (evt) => {
-			foundBlock = true;
-			deferred.resolve(evt.detail.result);
-		});
-		queue.addEventListener("idle", () => {
-			if (foundBlock) {
-				this.log.trace("session idle, found block");
-				return;
-			}
-			if (options.signal?.aborted === true) {
-				this.log.trace("session idle, signal aborted");
-				return;
-			}
-			Promise.resolve().then(async () => {
-				this.log("no session peers had block for for %c, finding new providers", cid);
-				for (let i = 0; i < this.minProviders; i++) {
-					if (this.providers.length === 0) break;
-					const provider = this.providers[Math.floor(Math.random() * this.providers.length)];
-					this.evict(provider);
-				}
-				await this.findProviders(cid, this.minProviders, options);
-				this.log("found new providers re-retrieving %c", cid);
-				this.requests.delete(cidStr);
-				deferred.resolve(await this.retrieve(cid, options));
-			}).catch((err) => {
-				this.log.error("could not find new providers for %c - %e", cid, err);
-				deferred.reject(err);
-			});
-		});
-		const peerAddedToSessionListener = (event) => {
-			const filterKey = this.toFilterKey(event.detail);
-			if (request.queryFilter.has(filterKey)) return;
-			request.queryFilter.add(filterKey);
-			this.emitFoundProviderProgressEvent(cid, event.detail, options);
-			queue.add(async () => {
-				return this.queryProvider(cid, event.detail, options);
-			}, { provider: event.detail }).catch((err) => {
-				if (options.signal?.aborted === true) return;
-				this.log.error("error retrieving session block for %c - %e", cid, err);
-			});
-		};
-		this.addEventListener("provider", peerAddedToSessionListener);
-		if (first) try {
-			await raceSignal(this.initialPeerSearchComplete, options.signal);
-			if (first) this.log("found initial session peers for %c", cid);
-		} catch (err) {
-			if (first) this.log("failed to find initial session peers for %c - %e", cid, err);
-			this.requests.delete(cidStr);
-			if (request.observers > 1) deferred.reject(err);
-			throw err;
-		}
-		Promise.all([...this.providers].filter((provider) => {
-			const filterKey = this.toFilterKey(provider);
-			const has = request.queryFilter.has(filterKey);
-			if (!has) request.queryFilter.add(this.toFilterKey(provider));
-			return !has;
-		}).map(async (provider) => {
-			return queue.add(async () => this.queryProvider(cid, provider, options), { provider });
-		})).catch((err) => {
-			if (options.signal?.aborted === true) return;
-			this.log.error("error retrieving session block for %c - %e", cid, err);
-		});
-		const signalAbortedListener = () => {
-			deferred.reject(new AbortError$3(options.signal?.reason ?? "Session aborted"));
-			queue.abort();
-		};
-		options.signal?.addEventListener("abort", signalAbortedListener);
-		try {
-			return await deferred.promise;
-		} finally {
-			this.removeEventListener("provider", peerAddedToSessionListener);
-			options.signal?.removeEventListener("abort", signalAbortedListener);
-			queue.clear();
-			this.requests.delete(cidStr);
-		}
-	}
-	evict(provider) {
-		this.evictionFilter.add(this.toFilterKey(provider));
-		const index = this.providers.findIndex((prov) => this.equals(prov, provider));
-		if (index === -1) return;
-		this.providers.splice(index, 1);
-	}
-	isEvicted(provider) {
-		return this.evictionFilter.has(this.toFilterKey(provider));
-	}
-	hasProvider(provider) {
-		if (this.providers.find((prov) => this.equals(prov, provider)) != null) return true;
-		if (this.isEvicted(provider)) return true;
-		return false;
-	}
-	async addPeer(peer, options) {
-		const provider = await this.convertToProvider(peer, "manually-added", options);
-		if (provider == null || this.hasProvider(provider)) return;
-		this.providers.push(provider);
-		this.safeDispatchEvent("provider", { detail: provider });
-	}
-	async findProviders(cid, count, options) {
-		const deferred = pDefer();
-		let found = 0;
-		Promise.resolve().then(async () => {
-			this.log("finding %d-%d new provider(s) for %c - %d initial providers", count, this.maxProviders, cid, this.initialProviders.length);
-			const self = this;
-			const initialProviders = async function* () {
-				while (self.initialProviders.length > 0) {
-					const initialProvider = self.initialProviders.pop();
-					if (initialProvider == null) continue;
-					const provider = await self.convertToProvider(initialProvider, "manual", options);
-					if (provider == null) continue;
-					yield provider;
-				}
-			};
-			const providers = async function* () {
-				yield* initialProviders();
-				yield* self.findNewProviders(cid, options);
-			};
-			for await (const provider of providers()) {
-				if (this.providers.length === this.maxProviders || options.signal?.aborted === true) break;
-				if (this.hasProvider(provider)) continue;
-				this.log("found %d providers, %d in session", found, this.providers.length);
-				this.providers.push(provider);
-				this.safeDispatchEvent("provider", { detail: provider });
-				found++;
-				if (this.providers.length === count) {
-					this.log("session is ready with %d peer(s), new peers present", this.providers.length);
-					deferred.resolve();
-				}
-				if (this.providers.length === this.maxProviders) {
-					this.log("found max session peers %d", this.providers.length);
-					break;
-				}
-			}
-			this.log("found %d new session peers while trying to find %d, %d in session", found, count, this.providers.length);
-			if (this.providers.length < count) throw new InsufficientProvidersError(`Found ${found} of ${count} ${this.name} providers for ${cid}, ${this.providers.length} in session after evictions`);
-		}).catch((err) => {
-			this.log.error("error searching routing for potential session peers for %c - %e", cid, err);
-			deferred.reject(err);
-		});
-		return deferred.promise;
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/graph-walker.js
-/**
-* A depth-first walker descends into child blocks before processing successor
-* sibling blocks
-*/
-function depthFirstWalker(init) {
-	return (components) => new DepthFirstGraphWalker(components, init);
-}
-/**
-* A breadth-first walker processes sibling blocks before child blocks
-*/
-function breadthFirstWalker(init) {
-	return (components) => new BreadthFirstGraphWalker(components, init);
-}
-var AbstractGraphWalker = class {
-	components;
-	constructor(components, init = {}) {
-		this.components = components;
-	}
-	async *walk(cid, options) {
-		const queue = this.getQueue();
-		const gen = filter(queue.toGenerator(options), (node) => node != null);
-		let finished = false;
-		const job = async (opts) => {
-			const cid = opts.cid;
-			const block = createUnsafe({
-				cid,
-				bytes: await toBuffer(this.components.blockstore.get(cid, opts)),
-				codec: await this.components.getCodec(cid.code)
-			});
-			for (const [, linkedCid] of block.links()) {
-				if (options?.includeChild?.(linkedCid, block) === false) continue;
-				queue.add(job, {
-					...opts,
-					cid: linkedCid,
-					depth: opts.depth + 1,
-					path: [...opts.path, linkedCid]
-				}).catch((err) => {
-					if (!finished) gen.throw(err);
-				});
-			}
-			return {
-				block,
-				depth: opts.depth,
-				path: opts.path
-			};
-		};
-		queue.add(job, {
-			...options,
-			cid,
-			depth: 0,
-			path: [cid]
-		}).catch((err) => {
-			if (!finished) gen.throw(err);
-		});
-		try {
-			yield* gen;
-		} finally {
-			finished = true;
-			queue.abort();
-		}
-	}
-};
-var DepthFirstGraphWalker = class extends AbstractGraphWalker {
-	getQueue() {
-		return new Queue$1({
-			concurrency: 1,
-			sort: (a, b) => {
-				if (a.options.depth === b.options.depth) return 0;
-				if (a.options.depth < b.options.depth) return 1;
-				return -1;
-			}
-		});
-	}
-};
-var BreadthFirstGraphWalker = class extends AbstractGraphWalker {
-	getQueue() {
-		return new Queue$1({
-			concurrency: 1,
-			sort: (a, b) => {
-				if (a.options.depth === b.options.depth) return 0;
-				if (a.options.depth < b.options.depth) return -1;
-				return 1;
-			}
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* This module contains utility code that is shared between various Helia
-* modules such as `helia`, `@helia/http`, etc.
-*/
-var Helia = class {
-	libp2p;
-	blockstore;
-	datastore;
-	events;
-	pins;
-	logger;
-	routing;
-	getCodec;
-	getHasher;
-	dns;
-	metrics;
-	log;
-	constructor(init) {
-		this.logger = init.logger ?? init.libp2p.logger;
-		this.log = this.logger.forComponent("helia");
-		this.getHasher = getHasher(init.hashers, init.loadHasher);
-		this.getCodec = getCodec(init.codecs, init.loadCodec);
-		this.dns = init.dns ?? dns();
-		this.metrics = init.metrics;
-		this.libp2p = init.libp2p;
-		this.events = new TypedEventEmitter();
-		const components = {
-			blockstore: init.blockstore,
-			datastore: init.datastore,
-			logger: this.logger,
-			libp2p: this.libp2p,
-			blockBrokers: [],
-			getHasher: this.getHasher,
-			getCodec: this.getCodec,
-			dns: this.dns,
-			metrics: this.metrics,
-			...init.components ?? {}
-		};
-		this.routing = components.routing = new Routing(components, {
-			routers: (init.routers ?? []).flatMap((router) => {
-				if (typeof router === "function") router = router(components);
-				const routers = [router];
-				const contentRouting = asContentRouting(router);
-				if (contentRouting != null) routers.push(contentRouting);
-				const peerRouting = asPeerRouting(router);
-				if (peerRouting != null) routers.push(peerRouting);
-				return routers;
-			}),
-			providerLookupConcurrency: init.providerLookupConcurrency
-		});
-		components.blockBrokers = init.blockBrokers.map((fn) => {
-			return fn(components);
-		});
-		const networkedStorage = new NetworkedStorage(components, init);
-		this.pins = new PinsImpl(init.datastore, networkedStorage, this.getCodec);
-		this.blockstore = new BlockStorage(networkedStorage, this.pins, this.routing, { holdGcLock: init.holdGcLock ?? true });
-		this.datastore = init.datastore;
-	}
-	async start() {
-		await assertDatastoreVersionIsCurrent(this.datastore);
-		await start(this.blockstore, this.datastore, this.routing, this.libp2p);
-		this.events.dispatchEvent(new CustomEvent("start", { detail: this }));
-	}
-	async stop() {
-		await stop$1(this.blockstore, this.datastore, this.routing, this.libp2p);
-		this.events.dispatchEvent(new CustomEvent("stop", { detail: this }));
-	}
-	async gc(options = {}) {
-		const releaseLock = await this.blockstore.lock.writeLock();
-		try {
-			const helia = this;
-			const blockstore = this.blockstore.unwrap();
-			this.log("gc start");
-			await drain(blockstore.deleteMany(async function* () {
-				for await (const { cid } of blockstore.getAll()) try {
-					if (await helia.pins.isPinned(cid, options)) continue;
-					yield cid;
-					options.onProgress?.(new CustomProgressEvent("helia:gc:deleted", cid));
-				} catch (err) {
-					helia.log.error("error during gc - %e", err);
-					options.onProgress?.(new CustomProgressEvent("helia:gc:error", err));
-				}
-			}()));
-		} finally {
-			releaseLock();
-		}
-		this.log("gc finished");
-	}
-};
-function asContentRouting(obj) {
-	return obj?.[contentRoutingSymbol];
-}
-function asPeerRouting(obj) {
-	return obj?.[peerRoutingSymbol];
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/export-strategies/subgraph-exporter.js
-/**
-* Traverses the DAG breadth-first starting at the target CID and yields all
-* encountered blocks.
-*
-* Blocks linked to from the target block are traversed using codecs defined in
-* the helia config.
-*/
-var SubgraphExporter = class {
-	walker;
-	constructor(init) {
-		this.walker = init?.walker;
-	}
-	async *export(cid, blockstore, getCodec, options) {
-		let walker;
-		const components = {
-			blockstore,
-			getCodec
-		};
-		if (this.walker != null) walker = this.walker(components);
-		else walker = breadthFirstWalker()(components);
-		for await (const node of walker.walk(cid, options)) yield node.block;
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/car.js
-var Car = class {
-	components;
-	log;
-	constructor(components) {
-		this.components = components;
-		this.log = components.logger.forComponent("helia:car");
-	}
-	async import(reader, options) {
-		await drain(this.components.blockstore.putMany(map(reader.blocks(), ({ cid, bytes }) => ({
-			cid,
-			bytes
-		})), options));
-	}
-	async *export(root, options) {
-		const roots = Array.isArray(root) ? root : [root];
-		const { writer, out } = CarWriter.create(roots);
-		const iter = out[Symbol.asyncIterator]();
-		const controller = new AbortController();
-		this._export(roots, writer, options).catch((err) => {
-			this.log.error("error during streaming export - %e", err);
-			controller.abort(err);
-		});
-		while (true) {
-			const { done, value } = await raceSignal(iter.next(), controller.signal);
-			if (controller.signal.aborted) throw controller.signal.reason;
-			if (value != null) yield value;
-			if (done === true) break;
-		}
-	}
-	async _export(roots, writer, options) {
-		const traversalStrategy = options?.traversal;
-		for (const root of roots) {
-			if (root.multihash.code === 0) continue;
-			const exportStrategy = options?.exporter ?? (root.code === 112 ? new UnixFSExporter() : new SubgraphExporter());
-			let current = root;
-			let underRoot = false;
-			if (traversalStrategy != null) for await (const { cid, bytes } of traversalStrategy.traverse(current, this.components.blockstore, this.components.getCodec, options)) {
-				this.log.trace("next CID on path to %c is %c", root, cid);
-				current = cid;
-				if (root.equals(cid)) underRoot = true;
-				if (underRoot || options?.includeTraversalBlocks === true) {
-					if (options?.blockFilter?.has(cid.multihash.bytes) === true) continue;
-					options?.blockFilter?.add(cid.multihash.bytes);
-					await writer.put({
-						cid,
-						bytes
-					});
-				}
-			}
-			for await (const { cid, bytes } of exportStrategy.export(current, this.components.blockstore, this.components.getCodec, options)) {
-				if (options?.blockFilter?.has(cid.multihash.bytes) === true) continue;
-				if (cid.multihash.code === 0) continue;
-				if (underRoot && cid.equals(current)) continue;
-				options?.blockFilter?.add(cid.multihash.bytes);
-				await writer.put({
-					cid,
-					bytes
-				});
-			}
-		}
-		await writer.close();
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs@12.0.2/node_modules/ipfs-unixfs/dist/src/errors.js
-var InvalidTypeError = class InvalidTypeError extends Error {
-	static name = "InvalidTypeError";
-	static code = "ERR_INVALID_TYPE";
-	name = InvalidTypeError.name;
-	code = InvalidTypeError.code;
-	constructor(message = "Invalid type") {
-		super(message);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs@12.0.2/node_modules/ipfs-unixfs/dist/src/unixfs.js
-var Data;
-(function(Data) {
-	(function(DataType) {
-		DataType["Raw"] = "Raw";
-		DataType["Directory"] = "Directory";
-		DataType["File"] = "File";
-		DataType["Metadata"] = "Metadata";
-		DataType["Symlink"] = "Symlink";
-		DataType["HAMTShard"] = "HAMTShard";
-	})(Data.DataType || (Data.DataType = {}));
-	let __DataTypeValues;
-	(function(__DataTypeValues) {
-		__DataTypeValues[__DataTypeValues["Raw"] = 0] = "Raw";
-		__DataTypeValues[__DataTypeValues["Directory"] = 1] = "Directory";
-		__DataTypeValues[__DataTypeValues["File"] = 2] = "File";
-		__DataTypeValues[__DataTypeValues["Metadata"] = 3] = "Metadata";
-		__DataTypeValues[__DataTypeValues["Symlink"] = 4] = "Symlink";
-		__DataTypeValues[__DataTypeValues["HAMTShard"] = 5] = "HAMTShard";
-	})(__DataTypeValues || (__DataTypeValues = {}));
-	(function(DataType) {
-		DataType.codec = () => {
-			return enumeration(__DataTypeValues);
-		};
-	})(Data.DataType || (Data.DataType = {}));
-	let _codec;
-	Data.codec = () => {
-		if (_codec == null) _codec = message((obj, w, opts = {}) => {
-			if (opts.lengthDelimited !== false) w.fork();
-			if (obj.Type != null) {
-				w.uint32(8);
-				Data.DataType.codec().encode(obj.Type, w);
-			}
-			if (obj.Data != null) {
-				w.uint32(18);
-				w.bytes(obj.Data);
-			}
-			if (obj.filesize != null) {
-				w.uint32(24);
-				w.uint64(obj.filesize);
-			}
-			if (obj.blocksizes != null && obj.blocksizes.length > 0) for (const value of obj.blocksizes) {
-				w.uint32(32);
-				w.uint64(value);
-			}
-			if (obj.hashType != null) {
-				w.uint32(40);
-				w.uint64(obj.hashType);
-			}
-			if (obj.fanout != null) {
-				w.uint32(48);
-				w.uint64(obj.fanout);
-			}
-			if (obj.mode != null) {
-				w.uint32(56);
-				w.uint32(obj.mode);
-			}
-			if (obj.mtime != null) {
-				w.uint32(66);
-				UnixTime.codec().encode(obj.mtime, w);
-			}
-			if (opts.lengthDelimited !== false) w.ldelim();
-		}, (reader, length, opts = {}) => {
-			const obj = { blocksizes: [] };
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						obj.Type = Data.DataType.codec().decode(reader);
-						break;
-					case 2:
-						obj.Data = reader.bytes();
-						break;
-					case 3:
-						obj.filesize = reader.uint64();
-						break;
-					case 4:
-						if (opts.limits?.blocksizes != null && obj.blocksizes.length === opts.limits.blocksizes) throw new MaxLengthError("Decode error - repeated field \"blocksizes\" had too many elements");
-						obj.blocksizes.push(reader.uint64());
-						break;
-					case 5:
-						obj.hashType = reader.uint64();
-						break;
-					case 6:
-						obj.fanout = reader.uint64();
-						break;
-					case 7:
-						obj.mode = reader.uint32();
-						break;
-					case 8:
-						obj.mtime = UnixTime.codec().decode(reader, reader.uint32(), { limits: opts.limits?.mtime });
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-			return obj;
-		}, function* (reader, length, prefix, opts = {}) {
-			const obj = { blocksizes: 0 };
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						yield {
-							field: `${prefix}.Type`,
-							value: Data.DataType.codec().decode(reader)
-						};
-						break;
-					case 2:
-						yield {
-							field: `${prefix}.Data`,
-							value: reader.bytes()
-						};
-						break;
-					case 3:
-						yield {
-							field: `${prefix}.filesize`,
-							value: reader.uint64()
-						};
-						break;
-					case 4:
-						if (opts.limits?.blocksizes != null && obj.blocksizes === opts.limits.blocksizes) throw new MaxLengthError("Streaming decode error - repeated field \"blocksizes\" had too many elements");
-						yield {
-							field: `${prefix}.blocksizes[]`,
-							index: obj.blocksizes,
-							value: reader.uint64()
-						};
-						obj.blocksizes++;
-						break;
-					case 5:
-						yield {
-							field: `${prefix}.hashType`,
-							value: reader.uint64()
-						};
-						break;
-					case 6:
-						yield {
-							field: `${prefix}.fanout`,
-							value: reader.uint64()
-						};
-						break;
-					case 7:
-						yield {
-							field: `${prefix}.mode`,
-							value: reader.uint32()
-						};
-						break;
-					case 8:
-						yield* UnixTime.codec().stream(reader, reader.uint32(), `${prefix}.mtime`, { limits: opts.limits?.mtime });
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-		});
-		return _codec;
-	};
-	function encode(obj) {
-		return encodeMessage(obj, Data.codec());
-	}
-	Data.encode = encode;
-	function decode(buf, opts) {
-		return decodeMessage(buf, Data.codec(), opts);
-	}
-	Data.decode = decode;
-	function stream(buf, opts) {
-		return streamMessage(buf, Data.codec(), opts);
-	}
-	Data.stream = stream;
-})(Data || (Data = {}));
-var UnixTime;
-(function(UnixTime) {
-	let _codec;
-	UnixTime.codec = () => {
-		if (_codec == null) _codec = message((obj, w, opts = {}) => {
-			if (opts.lengthDelimited !== false) w.fork();
-			if (obj.Seconds != null) {
-				w.uint32(8);
-				w.int64(obj.Seconds);
-			}
-			if (obj.FractionalNanoseconds != null) {
-				w.uint32(21);
-				w.fixed32(obj.FractionalNanoseconds);
-			}
-			if (opts.lengthDelimited !== false) w.ldelim();
-		}, (reader, length, opts = {}) => {
-			const obj = {};
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						obj.Seconds = reader.int64();
-						break;
-					case 2:
-						obj.FractionalNanoseconds = reader.fixed32();
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-			return obj;
-		}, function* (reader, length, prefix, opts = {}) {
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						yield {
-							field: `${prefix}.Seconds`,
-							value: reader.int64()
-						};
-						break;
-					case 2:
-						yield {
-							field: `${prefix}.FractionalNanoseconds`,
-							value: reader.fixed32()
-						};
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-		});
-		return _codec;
-	};
-	function encode(obj) {
-		return encodeMessage(obj, UnixTime.codec());
-	}
-	UnixTime.encode = encode;
-	function decode(buf, opts) {
-		return decodeMessage(buf, UnixTime.codec(), opts);
-	}
-	UnixTime.decode = decode;
-	function stream(buf, opts) {
-		return streamMessage(buf, UnixTime.codec(), opts);
-	}
-	UnixTime.stream = stream;
-})(UnixTime || (UnixTime = {}));
-var Metadata;
-(function(Metadata) {
-	let _codec;
-	Metadata.codec = () => {
-		if (_codec == null) _codec = message((obj, w, opts = {}) => {
-			if (opts.lengthDelimited !== false) w.fork();
-			if (obj.MimeType != null) {
-				w.uint32(10);
-				w.string(obj.MimeType);
-			}
-			if (opts.lengthDelimited !== false) w.ldelim();
-		}, (reader, length, opts = {}) => {
-			const obj = {};
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						obj.MimeType = reader.string();
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-			return obj;
-		}, function* (reader, length, prefix, opts = {}) {
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						yield {
-							field: `${prefix}.MimeType`,
-							value: reader.string()
-						};
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-		});
-		return _codec;
-	};
-	function encode(obj) {
-		return encodeMessage(obj, Metadata.codec());
-	}
-	Metadata.encode = encode;
-	function decode(buf, opts) {
-		return decodeMessage(buf, Metadata.codec(), opts);
-	}
-	Metadata.decode = decode;
-	function stream(buf, opts) {
-		return streamMessage(buf, Metadata.codec(), opts);
-	}
-	Metadata.stream = stream;
-})(Metadata || (Metadata = {}));
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs@12.0.2/node_modules/ipfs-unixfs/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* This module contains the protobuf definition of the UnixFS data structure found at the root of all UnixFS DAGs.
-*
-* The UnixFS spec can be found in the [ipfs/specs repository](http://github.com/ipfs/specs)
-*
-* @example Create a file composed of several blocks
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const data = new UnixFS({ type: 'file' })
-* data.addBlockSize(256n) // add the size of each block
-* data.addBlockSize(256n)
-* // ...
-* ```
-*
-* @example Create a directory that contains several files
-*
-* Creating a directory that contains several files is achieve by creating a unixfs element that identifies a MerkleDAG node as a directory. The links of that MerkleDAG node are the files that are contained in this directory.
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const data = new UnixFS({ type: 'directory' })
-* ```
-*
-* @example Create an unixfs Data element
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const data = new UnixFS({
-*   // ...options
-* })
-* ```
-*
-* `options` is an optional object argument that might include the following keys:
-*
-* - type (string, default `file`): The type of UnixFS entry.  Can be:
-*   - `raw`
-*   - `directory`
-*   - `file`
-*   - `metadata`
-*   - `symlink`
-*   - `hamt-sharded-directory`
-* - data (Uint8Array): The optional data field for this node
-* - blockSizes (Array, default: `[]`): If this is a `file` node that is made up of multiple blocks, `blockSizes` is a list numbers that represent the size of the file chunks stored in each child node. It is used to calculate the total file size.
-* - mode (Number, default `0644` for files, `0755` for directories/hamt-sharded-directories) file mode
-* - mtime (`Date`, `{ secs, nsecs }`, `{ Seconds, FractionalNanoseconds }`, `[ secs, nsecs ]`): The modification time of this node
-*
-* @example Add and remove a block size to the block size list
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const data = new UnixFS({ type: 'file' })
-* const sizeInBytes = 100n
-* data.addBlockSize(sizeInBytes)
-* ```
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const data = new UnixFS({ type: 'file' })
-*
-* const index = 0
-* data.removeBlockSize(index)
-* ```
-*
-* @example Get total fileSize
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const data = new UnixFS({ type: 'file' })
-* data.fileSize() // => size in bytes
-* ```
-*
-* @example Marshal and unmarshal
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const data = new UnixFS({ type: 'file' })
-* const marshaled = data.marshal()
-* const unmarshaled = UnixFS.unmarshal(marshaled)
-* ```
-*
-* @example Is this UnixFS entry a directory?
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const dir = new UnixFS({ type: 'directory' })
-* dir.isDirectory() // true
-*
-* const file = new UnixFS({ type: 'file' })
-* file.isDirectory() // false
-* ```
-*
-* @example Has an mtime been set?
-*
-* If no modification time has been set, no `mtime` property will be present on the `Data` instance:
-*
-* ```TypeScript
-* import { UnixFS } from 'ipfs-unixfs'
-*
-* const file = new UnixFS({ type: 'file' })
-* file.mtime // undefined
-*
-* Object.prototype.hasOwnProperty.call(file, 'mtime') // false
-*
-* const dir = new UnixFS({ type: 'directory', mtime: { secs: 5n } })
-* dir.mtime // { secs: Number, nsecs: Number }
-* ```
-*/
-const types = {
-	Raw: "raw",
-	Directory: "directory",
-	File: "file",
-	Metadata: "metadata",
-	Symlink: "symlink",
-	HAMTShard: "hamt-sharded-directory"
-};
-const dirTypes = ["directory", "hamt-sharded-directory"];
-const DEFAULT_FILE_MODE$1 = parseInt("0644", 8);
-const DEFAULT_DIRECTORY_MODE = parseInt("0755", 8);
-var UnixFS$1 = class UnixFS$1 {
-	/**
-	* Decode from protobuf https://github.com/ipfs/specs/blob/master/UNIXFS.md
-	*/
-	static unmarshal(marshaled) {
-		const message = Data.decode(marshaled);
-		const data = new UnixFS$1({
-			type: types[message.Type != null ? message.Type.toString() : "File"],
-			data: message.Data,
-			blockSizes: message.blocksizes,
-			mode: message.mode,
-			mtime: message.mtime != null ? {
-				secs: message.mtime.Seconds ?? 0n,
-				nsecs: message.mtime.FractionalNanoseconds
-			} : void 0,
-			fanout: message.fanout
-		});
-		data._originalMode = message.mode ?? 0;
-		return data;
-	}
-	type;
-	data;
-	blockSizes;
-	hashType;
-	fanout;
-	mtime;
-	_mode;
-	_originalMode;
-	constructor(options = { type: "file" }) {
-		const { type, data, blockSizes, hashType, fanout, mtime, mode } = options;
-		if (type != null && !Object.values(types).includes(type)) throw new InvalidTypeError("Type: " + type + " is not valid");
-		this.type = type ?? "file";
-		this.data = data;
-		this.hashType = hashType;
-		this.fanout = fanout;
-		this.blockSizes = blockSizes ?? [];
-		this._originalMode = 0;
-		this.mode = mode;
-		this.mtime = mtime;
-	}
-	set mode(mode) {
-		if (mode == null) this._mode = this.isDirectory() ? DEFAULT_DIRECTORY_MODE : DEFAULT_FILE_MODE$1;
-		else this._mode = mode & 4095;
-	}
-	get mode() {
-		return this._mode;
-	}
-	isDirectory() {
-		return dirTypes.includes(this.type);
-	}
-	addBlockSize(size) {
-		this.blockSizes.push(size);
-	}
-	removeBlockSize(index) {
-		this.blockSizes.splice(index, 1);
-	}
-	/**
-	* Returns `0n` for directories or `data.length + sum(blockSizes)` for everything else
-	*/
-	fileSize() {
-		if (this.isDirectory()) return 0n;
-		let sum = 0n;
-		this.blockSizes.forEach((size) => {
-			sum += size;
-		});
-		if (this.data != null) sum += BigInt(this.data.length);
-		return sum;
-	}
-	/**
-	* encode to protobuf Uint8Array
-	*/
-	marshal() {
-		let type;
-		switch (this.type) {
-			case "raw":
-				type = Data.DataType.Raw;
-				break;
-			case "directory":
-				type = Data.DataType.Directory;
-				break;
-			case "file":
-				type = Data.DataType.File;
-				break;
-			case "metadata":
-				type = Data.DataType.Metadata;
-				break;
-			case "symlink":
-				type = Data.DataType.Symlink;
-				break;
-			case "hamt-sharded-directory":
-				type = Data.DataType.HAMTShard;
-				break;
-			default: throw new InvalidTypeError(`Type: ${type} is not valid`);
-		}
-		let data = this.data;
-		if (this.data == null || this.data.length === 0) data = void 0;
-		let mode;
-		if (this.mode != null) {
-			mode = this._originalMode & 4294963200 | (this.mode ?? 0);
-			if (mode === DEFAULT_FILE_MODE$1 && !this.isDirectory()) mode = void 0;
-			if (mode === DEFAULT_DIRECTORY_MODE && this.isDirectory()) mode = void 0;
-		}
-		let mtime;
-		if (this.mtime != null) mtime = {
-			Seconds: this.mtime.secs,
-			FractionalNanoseconds: this.mtime.nsecs
-		};
-		return Data.encode({
-			Type: type,
-			Data: data,
-			filesize: this.isDirectory() ? void 0 : this.fileSize(),
-			blocksizes: this.blockSizes,
-			hashType: this.hashType,
-			fanout: this.fanout,
-			mode,
-			mtime
-		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/errors.js
-var NotUnixFSError$2 = class extends Error {
-	static code = "ERR_NOT_UNIXFS";
-	static message = "Not a UnixFS node";
-	static name = "NotUnixFSError";
-	code = "ERR_NOT_UNIXFS";
-	message = "Not a UnixFS node";
-	name = "NotUnixFSError";
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/export-strategies/unixfs-exporter.js
-function isRawBlock(block) {
-	return block.cid.code === 85;
-}
-function isDagPBBlock(block) {
-	return block.cid.code === 112;
-}
-function isFile(block) {
-	if (isRawBlock(block)) return true;
-	else if (isDagPBBlock(block) && block.value.Data != null) {
-		const u = UnixFS$1.unmarshal(block.value.Data);
-		return u.type === "file" || u.type === "raw";
-	} else throw new NotUnixFSError$2("Encountered non raw/dag-pb CID in UnixFS DAG");
-}
-/**
-* Traverses the DAG depth-first starting at the target CID and yields all
-* encountered blocks.
-*
-* Blocks linked to from the target block are traversed using codecs defined in
-* the helia config.
-*/
-var UnixFSExporter = class {
-	options;
-	constructor(options) {
-		this.options = options;
-	}
-	async *export(cid, blockstore, getCodec, options) {
-		if (cid.code !== 112 && cid.code !== 85) throw new NotUnixFSError$2("Target CID was not UnixFS - use the SubGraphExporter to export arbitrary graphs");
-		const walker = depthFirstWalker()({
-			blockstore,
-			getCodec
-		});
-		const offset = this.options?.offset ?? 0;
-		const length = this.options?.length ?? Infinity;
-		const listingOnly = this.options?.listingOnly ?? false;
-		if (offset < 0) throw new InvalidParametersError$4("Offset cannot be negative");
-		if (length < 0) throw new InvalidParametersError$4("Length cannot be negative");
-		let exportingFile;
-		const abortController = new AbortController();
-		const signal = anySignal([abortController.signal, options?.signal]);
-		setMaxListeners$1(Infinity, abortController.signal, signal);
-		function includeChild(child, parent) {
-			if (exportingFile == null) exportingFile = isFile(parent);
-			if (!exportingFile) {
-				const link = parent.value.Links.find((l) => l.Hash.equals(child));
-				const u = UnixFS$1.unmarshal(parent.value.Data ?? new Uint8Array());
-				if (u.type === "directory") return !listingOnly;
-				if (u.type === "hamt-sharded-directory" && listingOnly) return link?.Name?.length === 2;
-				return true;
-			}
-			const childIndex = parent.value.Links.findIndex((link) => link.Hash.equals(child));
-			const layout = UnixFS$1.unmarshal(parent.value.Data ?? new Uint8Array());
-			const start = offset;
-			const end = start + length;
-			const childStart = Number([...layout.blockSizes].slice(0, childIndex).reduce((curr, acc) => curr + acc, 0n));
-			const childEnd = childStart + Number(layout.blockSizes[childIndex]);
-			if (start >= childStart && start < childEnd) return true;
-			if (end >= childStart && end < childEnd) return true;
-			if (start <= childStart && end >= childEnd) return true;
-			return false;
-		}
-		try {
-			for await (const node of walker.walk(cid, {
-				...options,
-				includeChild,
-				signal
-			})) yield node.block;
-		} finally {
-			abortController.abort();
-			signal.clear();
-		}
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/errors.js
-var BadPathError = class BadPathError extends Error {
-	static name = "BadPathError";
-	static code = "ERR_BAD_PATH";
-	name = BadPathError.name;
-	code = BadPathError.code;
-	constructor(message = "Bad path") {
-		super(message);
-	}
-};
-var NotFoundError$1 = class NotFoundError$1 extends Error {
-	static name = "NotFoundError";
-	static code = "ERR_NOT_FOUND";
-	name = NotFoundError$1.name;
-	code = NotFoundError$1.code;
-	constructor(message = "Not found") {
-		super(message);
-	}
-};
-var NoResolverError = class NoResolverError extends Error {
-	static name = "NoResolverError";
-	static code = "ERR_NO_RESOLVER";
-	name = NoResolverError.name;
-	code = NoResolverError.code;
-	constructor(message = "No resolver") {
-		super(message);
-	}
-};
-var NotUnixFSError$1 = class NotUnixFSError$1 extends Error {
-	static name = "NotUnixFSError";
-	static code = "ERR_NOT_UNIXFS";
-	name = NotUnixFSError$1.name;
-	code = NotUnixFSError$1.code;
-	constructor(message = "Not UnixFS") {
-		super(message);
-	}
-};
-var OverReadError = class OverReadError extends Error {
-	static name = "OverReadError";
-	static code = "ERR_OVER_READ";
-	name = OverReadError.name;
-	code = OverReadError.code;
-	constructor(message = "Over read") {
-		super(message);
-	}
-};
-var UnderReadError = class UnderReadError extends Error {
-	static name = "UnderReadError";
-	static code = "ERR_UNDER_READ";
-	name = UnderReadError.name;
-	code = UnderReadError.code;
-	constructor(message = "Under read") {
-		super(message);
-	}
-};
-var InvalidParametersError$2 = class InvalidParametersError$2 extends Error {
-	static name = "InvalidParametersError";
-	static code = "ERR_INVALID_PARAMS";
-	name = InvalidParametersError$2.name;
-	code = InvalidParametersError$2.code;
-	constructor(message = "Invalid parameters") {
-		super(message);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/is-cid.js
-function isCID(obj) {
-	if (obj == null) return false;
-	return CID$1.asCID(obj) === obj;
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/resolve-object-path.js
-function resolveObjectPath(object, path) {
-	let value;
-	let i = 0;
-	let resolved = "";
-	while (i < path.length) {
-		const key = path[i];
-		i++;
-		if (!Object.hasOwnProperty.call(object, key)) throw new BadPathError(`Object did not have key "${key}"`);
-		resolved += `/${key}`;
-		value = object[key];
-		object = value;
-		if (isCID(value)) break;
-	}
-	return {
-		value,
-		rest: path.slice(i),
-		path: resolved.substring(1)
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/dag-cbor.js
-async function* dagCborResolver$1(root, path, blockstore, options) {
-	const result = resolveObjectPath(decode$3(await toBuffer(blockstore.get(root, options))), path);
-	yield {
-		cid: isCID(result.value) ? result.value : root,
-		name: result.path,
-		rest: result.rest
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/dag-json.js
-async function* dagJsonResolver$1(root, path, blockstore, options) {
-	const result = resolveObjectPath(decode$1(await toBuffer(blockstore.get(root, options))), path);
-	yield {
-		cid: isCID(result.value) ? result.value : root,
-		name: result.path,
-		rest: result.rest
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/@multiformats+murmur3@2.2.5/node_modules/@multiformats/murmur3/src/vendor/murmur.js
-/**
-* Based on https://github.com/timepp/murmurhash
-*/
-/**
-* @typedef {{lo: number, hi: number}} u64
-*/
-/**
-* @param {u64} a
-* @param {u64} b
-* @returns {u64}
-*/
-function add64(a, b) {
-	const lo = a.lo + b.lo >>> 0;
-	return {
-		lo,
-		hi: a.hi + b.hi + (lo < a.lo ? 1 : 0) >>> 0
-	};
-}
-/**
-* @param {number} a
-* @param {number} b
-* @returns {number}
-*/
-function add32(a, b) {
-	return a + b >>> 0;
-}
-/**
-* @param {u64} a
-* @param {u64} b
-* @returns {u64}
-*/
-function mul64(a, b) {
-	const al = a.lo & 65535;
-	const ah = a.lo >>> 16;
-	const bl = b.lo & 65535;
-	const bh = b.lo >>> 16;
-	const p0 = al * bl;
-	const p1 = al * bh;
-	const p2 = ah * bl;
-	const p3 = ah * bh;
-	const lo1 = (p0 >>> 16) + (p1 & 65535) + (p2 & 65535) >>> 0;
-	const lo = (lo1 << 16 | p0 & 65535) >>> 0;
-	const hi0 = p3 + (p1 >>> 16) + (p2 >>> 16) + (lo1 >>> 16);
-	const hi1 = Math.imul(a.lo, b.hi);
-	const hi2 = Math.imul(a.hi, b.lo);
-	return {
-		lo,
-		hi: hi0 + hi1 + hi2 >>> 0
-	};
-}
-/**
-* @param {number} a
-* @param {number} b
-* @returns {number}
-*/
-function mul32(a, b) {
-	return Math.imul(a, b) >>> 0;
-}
-/**
-* @param {u64} x
-* @param {number} n
-* @returns {u64}
-*/
-function rotl64(x, n) {
-	if (n === 0) return x;
-	if (n === 32) return {
-		lo: x.hi,
-		hi: x.lo
-	};
-	if (n < 32) return {
-		lo: (x.lo << n | x.hi >>> 32 - n) >>> 0,
-		hi: (x.hi << n | x.lo >>> 32 - n) >>> 0
-	};
-	n -= 32;
-	return {
-		lo: (x.hi << n | x.lo >>> 32 - n) >>> 0,
-		hi: (x.lo << n | x.hi >>> 32 - n) >>> 0
-	};
-}
-/**
-* @param {u64} a
-* @param {u64} b
-* @returns {u64}
-*/
-function xor64(a, b) {
-	return {
-		lo: (a.lo ^ b.lo) >>> 0,
-		hi: (a.hi ^ b.hi) >>> 0
-	};
-}
-/**
-* @param {u64} x
-* @param {number} n
-* @returns {u64}
-*/
-function shr64(x, n) {
-	if (n === 0) return x;
-	if (n < 32) return {
-		lo: (x.lo >>> n | x.hi << 32 - n) >>> 0,
-		hi: x.hi >>> n
-	};
-	return {
-		lo: x.hi >>> n - 32,
-		hi: 0
-	};
-}
-/**
-* @param {number} lo
-* @param {number} hi
-* @returns {u64}
-*/
-function u64(lo, hi) {
-	return {
-		lo: lo >>> 0,
-		hi: hi >>> 0
-	};
-}
-/**
-* @param {number} x
-* @param {number} r
-* @returns {number}
-*/
-function rotl32(x, r) {
-	return (x << r | x >>> 32 - r) >>> 0;
-}
-/**
-* @param {Uint8Array} key
-* @param {number} i
-* @returns {u64}
-*/
-function getBlock64(key, i) {
-	const offset = i * 8;
-	const lo = key[offset] | key[offset + 1] << 8 | key[offset + 2] << 16 | key[offset + 3] << 24;
-	const hi = key[offset + 4] | key[offset + 5] << 8 | key[offset + 6] << 16 | key[offset + 7] << 24;
-	return {
-		lo: lo >>> 0,
-		hi: hi >>> 0
-	};
-}
-/**
-* @param {Uint8Array} key
-* @param {number} i
-* @returns {number}
-*/
-function getBlock32(key, i) {
-	const offset = i * 4;
-	return (key[offset] | key[offset + 1] << 8 | key[offset + 2] << 16 | key[offset + 3] << 24) >>> 0;
-}
-/**
-* @param {u64} k
-* @returns {u64}
-*/
-function fmix64(k) {
-	k = xor64(k, shr64(k, 33));
-	k = mul64(k, u64(3981806797, 4283543511));
-	k = xor64(k, shr64(k, 33));
-	k = mul64(k, u64(444984403, 3301882366));
-	k = xor64(k, shr64(k, 33));
-	return k;
-}
-/**
-* @param {number} k
-* @returns {number}
-*/
-function fmix32(k) {
-	k ^= k >>> 16;
-	k = mul32(k, 2246822507);
-	k ^= k >>> 13;
-	k = mul32(k, 3266489909);
-	k ^= k >>> 16;
-	return k;
-}
-/**
-* Generate murmurhash3 x64 128-bit hash
-*
-* @param {Uint8Array} key - original data
-* @param {number} [seed] - seed value (defaults to 0)
-* @returns {Uint8Array<ArrayBuffer>} the hash value as 16 bytes
-*/
-function murmurHash3_x64_128(key, seed = 0) {
-	let h1 = u64(seed, 0);
-	let h2 = u64(seed, 0);
-	const length = key.length;
-	const blocks = Math.floor(length / 16);
-	const c1 = u64(289559509, 2277735313);
-	const c2 = u64(658871167, 1291169091);
-	for (let i = 0; i < blocks; i++) {
-		let k1 = getBlock64(key, i * 2);
-		let k2 = getBlock64(key, i * 2 + 1);
-		k1 = mul64(k1, c1);
-		k1 = rotl64(k1, 31);
-		k1 = mul64(k1, c2);
-		h1 = xor64(h1, k1);
-		h1 = rotl64(h1, 27);
-		h1 = add64(h1, h2);
-		h1 = add64(mul64(h1, u64(5, 0)), u64(1390208809, 0));
-		k2 = mul64(k2, c2);
-		k2 = rotl64(k2, 33);
-		k2 = mul64(k2, c1);
-		h2 = xor64(h2, k2);
-		h2 = rotl64(h2, 31);
-		h2 = add64(h2, h1);
-		h2 = add64(mul64(h2, u64(5, 0)), u64(944331445, 0));
-	}
-	let k1 = u64(0, 0);
-	let k2 = u64(0, 0);
-	const tail = key.slice(blocks * 16);
-	switch (tail.length) {
-		case 15: k2 = xor64(k2, u64(0, tail[14] << 16));
-		case 14: k2 = xor64(k2, u64(0, tail[13] << 8));
-		case 13: k2 = xor64(k2, u64(0, tail[12]));
-		case 12: k2 = xor64(k2, u64(tail[11] << 24, 0));
-		case 11: k2 = xor64(k2, u64(tail[10] << 16, 0));
-		case 10: k2 = xor64(k2, u64(tail[9] << 8, 0));
-		case 9:
-			k2 = xor64(k2, u64(tail[8], 0));
-			k2 = mul64(k2, c2);
-			k2 = rotl64(k2, 33);
-			k2 = mul64(k2, c1);
-			h2 = xor64(h2, k2);
-		case 8: k1 = xor64(k1, u64(0, tail[7] << 24));
-		case 7: k1 = xor64(k1, u64(0, tail[6] << 16));
-		case 6: k1 = xor64(k1, u64(0, tail[5] << 8));
-		case 5: k1 = xor64(k1, u64(0, tail[4]));
-		case 4: k1 = xor64(k1, u64(tail[3] << 24, 0));
-		case 3: k1 = xor64(k1, u64(tail[2] << 16, 0));
-		case 2: k1 = xor64(k1, u64(tail[1] << 8, 0));
-		case 1:
-			k1 = xor64(k1, u64(tail[0], 0));
-			k1 = mul64(k1, c1);
-			k1 = rotl64(k1, 31);
-			k1 = mul64(k1, c2);
-			h1 = xor64(h1, k1);
-	}
-	const len64 = u64(length, 0);
-	h1 = xor64(h1, len64);
-	h2 = xor64(h2, len64);
-	h1 = add64(h1, h2);
-	h2 = add64(h2, h1);
-	h1 = fmix64(h1);
-	h2 = fmix64(h2);
-	h1 = add64(h1, h2);
-	h2 = add64(h2, h1);
-	return new Uint8Array([
-		h1.hi >>> 24 & 255,
-		h1.hi >>> 16 & 255,
-		h1.hi >>> 8 & 255,
-		h1.hi & 255,
-		h1.lo >>> 24 & 255,
-		h1.lo >>> 16 & 255,
-		h1.lo >>> 8 & 255,
-		h1.lo & 255,
-		h2.hi >>> 24 & 255,
-		h2.hi >>> 16 & 255,
-		h2.hi >>> 8 & 255,
-		h2.hi & 255,
-		h2.lo >>> 24 & 255,
-		h2.lo >>> 16 & 255,
-		h2.lo >>> 8 & 255,
-		h2.lo & 255
-	]);
-}
-/**
-* Generate murmurhash3 x86 32-bit hash
-*
-* @param {Uint8Array} key - original data
-* @param {number} [seed] - seed value (defaults to 0)
-* @returns {number} the hash value as a number
-*/
-function murmurHash3_x86_32(key, seed = 0) {
-	let h1 = seed >>> 0;
-	const length = key.length;
-	const blocks = Math.floor(length / 4);
-	const c1 = 3432918353;
-	const c2 = 461845907;
-	for (let i = 0; i < blocks; i++) {
-		let k1 = getBlock32(key, i);
-		k1 = mul32(k1, c1);
-		k1 = rotl32(k1, 15);
-		k1 = mul32(k1, c2);
-		h1 ^= k1;
-		h1 = rotl32(h1, 13);
-		h1 = add32(mul32(h1, 5), 3864292196);
-	}
-	const tail = key.slice(blocks * 4);
-	let k1 = 0;
-	switch (tail.length) {
-		case 3: k1 ^= tail[2] << 16;
-		case 2: k1 ^= tail[1] << 8;
-		case 1:
-			k1 ^= tail[0];
-			k1 = mul32(k1, c1);
-			k1 = rotl32(k1, 15);
-			k1 = mul32(k1, c2);
-			h1 ^= k1;
-	}
-	h1 ^= length;
-	h1 = fmix32(h1);
-	return h1;
-}
-//#endregion
-//#region node_modules/.pnpm/@multiformats+murmur3@2.2.5/node_modules/@multiformats/murmur3/src/index.js
-/**
-* @param {number} number
-* @returns {Uint8Array<ArrayBuffer>}
-*/
-function fromNumberTo32BitBuf(number) {
-	const bytes = new Array(4);
-	for (let i = 0; i < 4; i++) {
-		bytes[i] = number & 255;
-		number = number >> 8;
-	}
-	return new Uint8Array(bytes);
-}
-from({
-	name: "murmur3-32",
-	code: 35,
-	encode: (input) => fromNumberTo32BitBuf(murmurHash3_x86_32(input))
-});
-const murmur3128 = from({
-	name: "murmur3-128",
-	code: 34,
-	encode: (input) => murmurHash3_x64_128(input)
-});
-from({
-	name: "murmur3-x64-64",
-	code: 34,
-	encode: (input) => murmurHash3_x64_128(input).subarray(0, 8)
-});
-//#endregion
-//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/bucket.js
-var import_sparse_array = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
-	const BITS_PER_BYTE = 7;
-	module.exports = class SparseArray {
-		constructor() {
-			this._bitArrays = [];
-			this._data = [];
-			this._length = 0;
-			this._changedLength = false;
-			this._changedData = false;
-		}
-		set(index, value) {
-			let pos = this._internalPositionFor(index, false);
-			if (value === void 0) {
-				if (pos !== -1) {
-					this._unsetInternalPos(pos);
-					this._unsetBit(index);
-					this._changedLength = true;
-					this._changedData = true;
-				}
-			} else {
-				let needsSort = false;
-				if (pos === -1) {
-					pos = this._data.length;
-					this._setBit(index);
-					this._changedData = true;
-				} else needsSort = true;
-				this._setInternalPos(pos, index, value, needsSort);
-				this._changedLength = true;
-			}
-		}
-		unset(index) {
-			this.set(index, void 0);
-		}
-		get(index) {
-			this._sortData();
-			const pos = this._internalPositionFor(index, true);
-			if (pos === -1) return;
-			return this._data[pos][1];
-		}
-		push(value) {
-			this.set(this.length, value);
-			return this.length;
-		}
-		get length() {
-			this._sortData();
-			if (this._changedLength) {
-				const last = this._data[this._data.length - 1];
-				this._length = last ? last[0] + 1 : 0;
-				this._changedLength = false;
-			}
-			return this._length;
-		}
-		forEach(iterator) {
-			let i = 0;
-			while (i < this.length) {
-				iterator(this.get(i), i, this);
-				i++;
-			}
-		}
-		map(iterator) {
-			let i = 0;
-			let mapped = new Array(this.length);
-			while (i < this.length) {
-				mapped[i] = iterator(this.get(i), i, this);
-				i++;
-			}
-			return mapped;
-		}
-		reduce(reducer, initialValue) {
-			let i = 0;
-			let acc = initialValue;
-			while (i < this.length) {
-				const value = this.get(i);
-				acc = reducer(acc, value, i);
-				i++;
-			}
-			return acc;
-		}
-		find(finder) {
-			let i = 0, found, last;
-			while (i < this.length && !found) {
-				last = this.get(i);
-				found = finder(last);
-				i++;
-			}
-			return found ? last : void 0;
-		}
-		_internalPositionFor(index, noCreate) {
-			const bytePos = this._bytePosFor(index, noCreate);
-			if (bytePos >= this._bitArrays.length) return -1;
-			const byte = this._bitArrays[bytePos];
-			const bitPos = index - bytePos * BITS_PER_BYTE;
-			if (!((byte & 1 << bitPos) > 0)) return -1;
-			return this._bitArrays.slice(0, bytePos).reduce(popCountReduce, 0) + popCount(byte & ~(4294967295 << bitPos + 1)) - 1;
-		}
-		_bytePosFor(index, noCreate) {
-			const bytePos = Math.floor(index / BITS_PER_BYTE);
-			const targetLength = bytePos + 1;
-			while (!noCreate && this._bitArrays.length < targetLength) this._bitArrays.push(0);
-			return bytePos;
-		}
-		_setBit(index) {
-			const bytePos = this._bytePosFor(index, false);
-			this._bitArrays[bytePos] |= 1 << index - bytePos * BITS_PER_BYTE;
-		}
-		_unsetBit(index) {
-			const bytePos = this._bytePosFor(index, false);
-			this._bitArrays[bytePos] &= ~(1 << index - bytePos * BITS_PER_BYTE);
-		}
-		_setInternalPos(pos, index, value, needsSort) {
-			const data = this._data;
-			const elem = [index, value];
-			if (needsSort) {
-				this._sortData();
-				data[pos] = elem;
-			} else {
-				if (data.length) if (data[data.length - 1][0] >= index) data.push(elem);
-				else if (data[0][0] <= index) data.unshift(elem);
-				else {
-					const randomIndex = Math.round(data.length / 2);
-					this._data = data.slice(0, randomIndex).concat(elem).concat(data.slice(randomIndex));
-				}
-				else this._data.push(elem);
-				this._changedData = true;
-				this._changedLength = true;
-			}
-		}
-		_unsetInternalPos(pos) {
-			this._data.splice(pos, 1);
-		}
-		_sortData() {
-			if (this._changedData) this._data.sort(sortInternal);
-			this._changedData = false;
-		}
-		bitField() {
-			const bytes = [];
-			let pendingBitsForResultingByte = 8;
-			let pendingBitsForNewByte = 0;
-			let resultingByte = 0;
-			let newByte;
-			const pending = this._bitArrays.slice();
-			while (pending.length || pendingBitsForNewByte) {
-				if (pendingBitsForNewByte === 0) {
-					newByte = pending.shift();
-					pendingBitsForNewByte = 7;
-				}
-				const usingBits = Math.min(pendingBitsForNewByte, pendingBitsForResultingByte);
-				const mask = ~(255 << usingBits);
-				const masked = newByte & mask;
-				resultingByte |= masked << 8 - pendingBitsForResultingByte;
-				newByte = newByte >>> usingBits;
-				pendingBitsForNewByte -= usingBits;
-				pendingBitsForResultingByte -= usingBits;
-				if (!pendingBitsForResultingByte || !pendingBitsForNewByte && !pending.length) {
-					bytes.push(resultingByte);
-					resultingByte = 0;
-					pendingBitsForResultingByte = 8;
-				}
-			}
-			for (var i = bytes.length - 1; i > 0; i--) if (bytes[i] === 0) bytes.pop();
-			else break;
-			return bytes;
-		}
-		compactArray() {
-			this._sortData();
-			return this._data.map(valueOnly);
-		}
-	};
-	function popCountReduce(count, byte) {
-		return count + popCount(byte);
-	}
-	function popCount(_v) {
-		let v = _v;
-		v = v - (v >> 1 & 1431655765);
-		v = (v & 858993459) + (v >> 2 & 858993459);
-		return (v + (v >> 4) & 252645135) * 16843009 >> 24;
-	}
-	function sortInternal(a, b) {
-		return a[0] - b[0];
-	}
-	function valueOnly(elem) {
-		return elem[1];
-	}
-})))(), 1);
-var Bucket = class Bucket {
-	_options;
-	_popCount;
-	_parent;
-	_posAtParent;
-	_children;
-	key;
-	constructor(options, parent, posAtParent = 0) {
-		this._options = options;
-		this._popCount = 0;
-		this._parent = parent;
-		this._posAtParent = posAtParent;
-		this._children = new import_sparse_array.default();
-		this.key = null;
-	}
-	async put(key, value) {
-		const place = await this._findNewBucketAndPos(key);
-		place.bucket._putAt(place, key, value);
-	}
-	async get(key) {
-		const child = await this._findChild(key);
-		if (child != null) return child.value;
-	}
-	async del(key) {
-		const place = await this._findPlace(key);
-		const child = place.bucket._at(place.pos);
-		if (child != null && child.key === key) place.bucket._delAt(place.pos);
-	}
-	leafCount() {
-		return this._children.compactArray().reduce((acc, child) => {
-			if (child instanceof Bucket) return acc + child.leafCount();
-			return acc + 1;
-		}, 0);
-	}
-	childrenCount() {
-		return this._children.length;
-	}
-	onlyChild() {
-		return this._children.get(0);
-	}
-	*eachLeafSeries() {
-		const children = this._children.compactArray();
-		for (const child of children) if (child instanceof Bucket) yield* child.eachLeafSeries();
-		else yield child;
-	}
-	serialize(map, reduce) {
-		return reduce(this._children.reduce((acc, child, index) => {
-			if (child != null) if (child instanceof Bucket) acc.push(child.serialize(map, reduce));
-			else acc.push(map(child, index));
-			return acc;
-		}, []));
-	}
-	async asyncTransform(asyncMap, asyncReduce) {
-		return asyncTransformBucket(this, asyncMap, asyncReduce);
-	}
-	toJSON() {
-		return this.serialize(mapNode, reduceNodes);
-	}
-	prettyPrint() {
-		return JSON.stringify(this.toJSON(), null, "  ");
-	}
-	tableSize() {
-		return Math.pow(2, this._options.bits);
-	}
-	async _findChild(key) {
-		const result = await this._findPlace(key);
-		const child = result.bucket._at(result.pos);
-		if (child instanceof Bucket) return;
-		if (child != null && child.key === key) return child;
-	}
-	async _findPlace(key) {
-		const hashValue = this._options.hash(typeof key === "string" ? fromString(key) : key);
-		const index = await hashValue.take(this._options.bits);
-		const child = this._children.get(index);
-		if (child instanceof Bucket) return child._findPlace(hashValue);
-		return {
-			bucket: this,
-			pos: index,
-			hash: hashValue,
-			existingChild: child
-		};
-	}
-	async _findNewBucketAndPos(key) {
-		const place = await this._findPlace(key);
-		if (place.existingChild != null && place.existingChild.key !== key) {
-			const bucket = new Bucket(this._options, place.bucket, place.pos);
-			place.bucket._putObjectAt(place.pos, bucket);
-			const newPlace = await bucket._findPlace(place.existingChild.hash);
-			newPlace.bucket._putAt(newPlace, place.existingChild.key, place.existingChild.value);
-			return bucket._findNewBucketAndPos(place.hash);
-		}
-		return place;
-	}
-	_putAt(place, key, value) {
-		this._putObjectAt(place.pos, {
-			key,
-			value,
-			hash: place.hash
-		});
-	}
-	_putObjectAt(pos, object) {
-		if (this._children.get(pos) == null) this._popCount++;
-		this._children.set(pos, object);
-	}
-	_delAt(pos) {
-		if (pos === -1) throw new Error("Invalid position");
-		if (this._children.get(pos) != null) this._popCount--;
-		this._children.unset(pos);
-		this._level();
-	}
-	_level() {
-		if (this._parent != null && this._popCount <= 1) if (this._popCount === 1) {
-			const onlyChild = this._children.find(exists$1);
-			if (onlyChild != null && !(onlyChild instanceof Bucket)) {
-				const hash = onlyChild.hash;
-				hash.untake(this._options.bits);
-				const place = {
-					pos: this._posAtParent,
-					hash,
-					bucket: this._parent
-				};
-				this._parent._putAt(place, onlyChild.key, onlyChild.value);
-			}
-		} else this._parent._delAt(this._posAtParent);
-	}
-	_at(index) {
-		return this._children.get(index);
-	}
-};
-function exists$1(o) {
-	return Boolean(o);
-}
-function mapNode(node, _) {
-	return node.key;
-}
-function reduceNodes(nodes) {
-	return nodes;
-}
-async function asyncTransformBucket(bucket, asyncMap, asyncReduce) {
-	const output = [];
-	for (const child of bucket._children.compactArray()) if (child instanceof Bucket) await asyncTransformBucket(child, asyncMap, asyncReduce);
-	else {
-		const mappedChildren = await asyncMap(child);
-		output.push({
-			bitField: bucket._children.bitField(),
-			children: mappedChildren
-		});
-	}
-	return asyncReduce(output);
-}
-//#endregion
-//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/consumable-buffer.js
-const START_MASKS$1 = [
-	255,
-	254,
-	252,
-	248,
-	240,
-	224,
-	192,
-	128
-];
-const STOP_MASKS$1 = [
-	1,
-	3,
-	7,
-	15,
-	31,
-	63,
-	127,
-	255
-];
-var ConsumableBuffer$1 = class {
-	_value;
-	_currentBytePos;
-	_currentBitPos;
-	constructor(value) {
-		this._value = value;
-		this._currentBytePos = value.length - 1;
-		this._currentBitPos = 7;
-	}
-	availableBits() {
-		return this._currentBitPos + 1 + this._currentBytePos * 8;
-	}
-	totalBits() {
-		return this._value.length * 8;
-	}
-	take(bits) {
-		let pendingBits = bits;
-		let result = 0;
-		while (pendingBits > 0 && this._haveBits()) {
-			const byte = this._value[this._currentBytePos];
-			const availableBits = this._currentBitPos + 1;
-			const taking = Math.min(availableBits, pendingBits);
-			const value = byteBitsToInt$1(byte, availableBits - taking, taking);
-			result = (result << taking) + value;
-			pendingBits -= taking;
-			this._currentBitPos -= taking;
-			if (this._currentBitPos < 0) {
-				this._currentBitPos = 7;
-				this._currentBytePos--;
-			}
-		}
-		return result;
-	}
-	untake(bits) {
-		this._currentBitPos += bits;
-		while (this._currentBitPos > 7) {
-			this._currentBitPos -= 8;
-			this._currentBytePos += 1;
-		}
-	}
-	_haveBits() {
-		return this._currentBytePos >= 0;
-	}
-};
-function byteBitsToInt$1(byte, start, length) {
-	return (byte & maskFor$1(start, length)) >>> start;
-}
-function maskFor$1(start, length) {
-	return START_MASKS$1[start] & STOP_MASKS$1[Math.min(length + start - 1, 7)];
-}
-//#endregion
-//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/consumable-hash.js
-function wrapHash$1(hashFn) {
-	function hashing(value) {
-		if (value instanceof InfiniteHash$1) return value;
-		else return new InfiniteHash$1(value, hashFn);
-	}
-	return hashing;
-}
-var InfiniteHash$1 = class {
-	_value;
-	_hashFn;
-	_depth;
-	_availableBits;
-	_currentBufferIndex;
-	_buffers;
-	constructor(value, hashFn) {
-		if (!(value instanceof Uint8Array)) throw new Error("can only hash Uint8Arrays");
-		this._value = value;
-		this._hashFn = hashFn;
-		this._depth = -1;
-		this._availableBits = 0;
-		this._currentBufferIndex = 0;
-		this._buffers = [];
-	}
-	async take(bits) {
-		let pendingBits = bits;
-		while (this._availableBits < pendingBits) await this._produceMoreBits();
-		let result = 0;
-		while (pendingBits > 0) {
-			const hash = this._buffers[this._currentBufferIndex];
-			const available = Math.min(hash.availableBits(), pendingBits);
-			const took = hash.take(available);
-			result = (result << available) + took;
-			pendingBits -= available;
-			this._availableBits -= available;
-			if (hash.availableBits() === 0) this._currentBufferIndex++;
-		}
-		return result;
-	}
-	untake(bits) {
-		let pendingBits = bits;
-		while (pendingBits > 0) {
-			const hash = this._buffers[this._currentBufferIndex];
-			const availableForUntake = Math.min(hash.totalBits() - hash.availableBits(), pendingBits);
-			hash.untake(availableForUntake);
-			pendingBits -= availableForUntake;
-			this._availableBits += availableForUntake;
-			if (this._currentBufferIndex > 0 && hash.totalBits() === hash.availableBits()) {
-				this._depth--;
-				this._currentBufferIndex--;
-			}
-		}
-	}
-	async _produceMoreBits() {
-		this._depth++;
-		const value = this._depth > 0 ? concat([this._value, Uint8Array.from([this._depth])]) : this._value;
-		const buffer = new ConsumableBuffer$1(await this._hashFn(value));
-		this._buffers.push(buffer);
-		this._availableBits += buffer.availableBits();
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* A [Hash Mapped Trie](https://en.wikipedia.org/wiki/Hash_array_mapped_trie) implementation for JavaScript.
-*
-* This is used by [@helia/unixfs](https://www.npmjs.com/package/@helia/unixfs) for it's HAMT-sharded directory implementation.
-*
-* @example
-*
-* ```TypeScript
-* import { createHAMT } from 'hamt-sharding'
-* import crypto from 'crypto-promise'
-*
-* // decide how to hash buffers made from keys, can return a Promise
-* const hashFn = async (buf) => {
-*   return crypto
-*     .createHash('sha256')
-*     .update(buf)
-*     .digest()
-* }
-*
-* const bucket = createHAMT({
-*   hashFn: hashFn
-* })
-*
-* await bucket.put('key', 'value')
-*
-* const output = await bucket.get('key')
-* // output === 'value'
-* ```
-*/
-function createHAMT(options) {
-	if (options == null || options.hashFn == null) throw new Error("please define an options.hashFn");
-	return new Bucket({
-		bits: options.bits ?? 8,
-		hash: wrapHash$1(options.hashFn)
-	});
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/find-cid-in-shard.js
-const hashFn = async function(buf) {
-	return (await murmur3128.encode(buf)).slice(0, 8).reverse();
-};
-const addLinksToHamtBucket = async (links, bucket, rootBucket) => {
-	const padLength = (bucket.tableSize() - 1).toString(16).length;
-	await Promise.all(links.map(async (link) => {
-		if (link.Name == null) throw new Error("Unexpected Link without a Name");
-		if (link.Name.length === padLength) {
-			const pos = parseInt(link.Name, 16);
-			bucket._putObjectAt(pos, new Bucket({
-				hash: rootBucket._options.hash,
-				bits: rootBucket._options.bits
-			}, bucket, pos));
-			return;
-		}
-		await rootBucket.put(link.Name.substring(2), true);
-	}));
-};
-const toPrefix$1 = (position, padLength) => {
-	return position.toString(16).toUpperCase().padStart(padLength, "0").substring(0, padLength);
-};
-const toBucketPath = (position) => {
-	let bucket = position.bucket;
-	const path = [];
-	while (bucket._parent != null) {
-		path.push(bucket);
-		bucket = bucket._parent;
-	}
-	path.push(bucket);
-	return path.reverse();
-};
-async function* findShardCid(node, name, rest, blockstore, context, options) {
-	if (context == null) {
-		if (node.Data == null) throw new NotUnixFSError$1("No data in PBNode");
-		let dir;
-		try {
-			dir = UnixFS$1.unmarshal(node.Data);
-		} catch (err) {
-			throw new NotUnixFSError$1(err.message);
-		}
-		if (dir.type !== "hamt-sharded-directory") throw new NotUnixFSError$1("Not a HAMT");
-		if (dir.fanout == null) throw new NotUnixFSError$1("Missing fanout");
-		const rootBucket = createHAMT({
-			hashFn,
-			bits: Math.log2(Number(dir.fanout))
-		});
-		context = {
-			rootBucket,
-			hamtDepth: 1,
-			lastBucket: rootBucket
-		};
-	}
-	const padLength = (context.lastBucket.tableSize() - 1).toString(16).length;
-	await addLinksToHamtBucket(node.Links, context.lastBucket, context.rootBucket);
-	const position = await context.rootBucket._findNewBucketAndPos(name);
-	let prefix = toPrefix$1(position.pos, padLength);
-	const bucketPath = toBucketPath(position);
-	if (bucketPath.length > context.hamtDepth) {
-		context.lastBucket = bucketPath[context.hamtDepth];
-		prefix = toPrefix$1(context.lastBucket._posAtParent, padLength);
-	}
-	const link = node.Links.find((link) => {
-		if (link.Name == null) return false;
-		const entryPrefix = link.Name.substring(0, padLength);
-		const entryName = link.Name.substring(padLength);
-		if (entryPrefix !== prefix) return false;
-		if (entryName !== "" && entryName !== name) return false;
-		return true;
-	});
-	if (link == null) return;
-	if (link.Name != null && link.Name.substring(padLength) === name) {
-		yield {
-			cid: link.Hash,
-			name: link.Name.substring(padLength),
-			rest
-		};
-		return;
-	}
-	context.hamtDepth++;
-	node = decode(await toBuffer(blockstore.get(link.Hash, options)));
-	if (options?.yieldSubShards === true) yield {
-		cid: link.Hash,
-		name: link.Name ?? "",
-		rest: [name, ...rest]
-	};
-	yield* findShardCid(node, name, rest, blockstore, context, options);
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/dag-pb.js
-async function* dagPbResolver$1(root, path, blockstore, options) {
-	const block = await toBuffer(blockstore.get(root, options));
-	let pbNode;
-	try {
-		pbNode = decode(block);
-	} catch (err) {
-		throw new NotUnixFSError$1(err.message);
-	}
-	if (pbNode.Data == null) throw new NotUnixFSError$1("no data in PBNode");
-	let unixfs;
-	try {
-		unixfs = UnixFS$1.unmarshal(pbNode.Data);
-	} catch (err) {
-		throw new NotUnixFSError$1(err.message);
-	}
-	if (unixfs.type === "directory" || unixfs.type === "hamt-sharded-directory" && options?.translateHAMTPath === false) {
-		const link = pbNode.Links.find((link) => link.Name === path[0]);
-		if (link == null) throw new NotFoundError$1(`No link "${path[0]}" found under ${root}`);
-		yield {
-			cid: link.Hash,
-			name: path[0],
-			rest: path.slice(1)
-		};
-	} else if (unixfs.type === "hamt-sharded-directory") {
-		let foundPath = false;
-		for await (const entry of findShardCid(pbNode, path[0], path.slice(1), blockstore, void 0, options)) {
-			if (entry.name === path[0]) foundPath = true;
-			yield entry;
-		}
-		if (!foundPath) throw new NotFoundError$1(`No link "${path[0]}" found under ${root}`);
-	}
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/identity.js
-async function* identityResolver$1(root, path, blockstore, options) {
-	if (path.length === 0) return;
-	throw new BadPathError(`Cannot load path /${path.join("/")} from identity block`);
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/json.js
-async function* jsonResolver$1(root, path, blockstore, options) {
-	const result = resolveObjectPath(decode$13(await toBuffer(blockstore.get(root, options))), path);
-	yield {
-		cid: root,
-		name: result.path,
-		rest: result.rest
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/raw.js
-async function* rawResolver$1(root, path, blockstore, options) {
-	if (path.length === 0) return;
-	throw new NotFoundError$1(`Cannot load path /${path.join("/")} from raw block`);
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/index.js
-const resolvers$1 = {
-	[112]: dagPbResolver$1,
-	[85]: rawResolver$1,
-	[113]: dagCborResolver$1,
-	[81]: dagCborResolver$1,
-	[297]: dagJsonResolver$1,
-	[identity$2.code]: identityResolver$1,
-	[512]: jsonResolver$1
-};
-/**
-* Returns an async iterator that yields entries for all segments in a path
-*
-* @example
-*
-* ```TypeScript
-* import { walkPath } from 'ipfs-unixfs-exporter'
-*
-* const entries = []
-*
-* for await (const entry of walkPath('Qmfoo/foo/bar/baz.txt', blockstore)) {
-*   entries.push(entry)
-* }
-*
-* // entries contains 4x `entry` objects
-* ```
-*/
-async function* walkPath(path, blockstore, options = {}) {
-	path = path.toString();
-	if (path.startsWith("/ipfs/")) path = path.substring(6);
-	while (path.endsWith("/")) path = path.substring(0, path.length - 1);
-	let [root, ...rest] = path.split(/(?<!\\)\//g).filter(Boolean);
-	let cid = CID$1.parse(root);
-	let roots = [cid];
-	let location = `${cid}`;
-	yield {
-		cid,
-		name: location,
-		path: location,
-		roots,
-		remainder: rest
-	};
-	while (rest.length > 0) {
-		const resolver = resolvers$1[cid.code];
-		if (resolver == null) throw new NoResolverError(`No resolver for code ${cid.code}`);
-		let traversedDeeper = false;
-		for await (const result of resolver(cid, rest, blockstore, options)) {
-			cid = result.cid;
-			traversedDeeper = !roots[roots.length - 1].equals(cid);
-			rest = result.rest;
-			if (!traversedDeeper) break;
-			roots = [...roots, result.cid];
-			location = `${location}/${result.name}`;
-			yield {
-				cid: result.cid,
-				name: result.name,
-				path: location,
-				roots,
-				remainder: result.rest
-			};
-		}
-		if (!traversedDeeper) break;
-	}
-	options?.signal?.throwIfAborted();
-	if (rest.length !== 0) throw new NotFoundError$1(`Could not resolve path /${rest.join("/")} under ${path}`);
-}
-//#endregion
-//#region node_modules/.pnpm/it-last@3.0.11/node_modules/it-last/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Return the last value from an (async)iterable.
-*
-* @example
-*
-* ```javascript
-* import last from 'it-last'
-*
-* // This can also be an iterator, generator, etc
-* const values = [0, 1, 2, 3, 4]
-*
-* const res = last(values)
-*
-* console.info(res) // 4
-* ```
-*
-* Async sources must be awaited:
-*
-* ```javascript
-* import last from 'it-last'
-*
-* const values = async function * () {
-*   yield * [0, 1, 2, 3, 4]
-* }
-*
-* const res = await last(values())
-*
-* console.info(res) // 4
-* ```
-*/
-function isAsyncIterable$5(thing) {
-	return thing[Symbol.asyncIterator] != null;
-}
-function last(source) {
-	if (isAsyncIterable$5(source)) return (async () => {
-		let res;
-		for await (const entry of source) res = entry;
-		return res;
-	})();
-	let res;
-	for (const entry of source) res = entry;
-	return res;
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/dag-cbor.js
-async function dagCborResolver(cid, name, path, blockstore, options) {
-	const block = await toBuffer(blockstore.get(cid, options));
-	return {
-		type: "object",
-		cid,
-		name,
-		path,
-		object: decode$3(block),
-		node: block
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/dag-json.js
-async function dagJsonResolver(cid, name, path, blockstore, options) {
-	const block = await toBuffer(blockstore.get(cid, options));
-	return {
-		type: "object",
-		cid,
-		name,
-		path,
-		object: decode$1(block),
-		node: block
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/utils/extract-data-from-block.js
-function extractDataFromBlock(block, blockStart, requestedStart, requestedEnd) {
-	const blockLength = BigInt(block.length);
-	const blockEnd = BigInt(blockStart + blockLength);
-	if (requestedStart >= blockEnd || requestedEnd < blockStart) return new Uint8Array(0);
-	if (requestedEnd >= blockStart && requestedEnd < blockEnd) block = block.subarray(0, Number(requestedEnd - blockStart));
-	if (requestedStart >= blockStart && requestedStart < blockEnd) block = block.subarray(Number(requestedStart - blockStart));
-	return block;
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/utils/validate-offset-and-length.js
-const validateOffsetAndLength = (size, offset = 0, length = size) => {
-	const fileSize = BigInt(size);
-	const start = BigInt(offset ?? 0);
-	let end = BigInt(length);
-	if (end !== fileSize) end = start + end;
-	if (end > fileSize) end = fileSize;
-	if (start < 0n) throw new InvalidParametersError$2("Offset must be greater than or equal to 0");
-	if (start > fileSize) throw new InvalidParametersError$2("Offset must be less than the file size");
-	if (end < 0n) throw new InvalidParametersError$2("Length must be greater than or equal to 0");
-	if (end > fileSize) throw new InvalidParametersError$2("Length must be less than the file size");
-	return {
-		start,
-		end
-	};
-};
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/utils/raw-content.js
-function rawContent(node, event) {
-	async function* contentGenerator(options = {}) {
-		const { start, end } = validateOffsetAndLength(node.length, options.offset, options.length);
-		const buf = extractDataFromBlock(node, 0n, start, end);
-		options.onProgress?.(new CustomProgressEvent(event, {
-			bytesRead: BigInt(buf.byteLength),
-			totalBytes: end - start,
-			fileSize: BigInt(node.byteLength)
-		}));
-		yield buf;
-	}
-	return contentGenerator;
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/identity.js
-async function identityResolver(cid, name, path, blockstore, options) {
-	const block = decode$17(cid.multihash.bytes);
-	return {
-		type: "identity",
-		cid,
-		name,
-		path,
-		content: rawContent(block.digest, "unixfs:exporter:progress:identity"),
-		size: BigInt(block.bytes.length),
-		node: block.bytes
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/json.js
-async function jsonResolver(cid, name, path, blockstore, options) {
-	const block = await toBuffer(blockstore.get(cid, options));
-	return {
-		type: "object",
-		cid,
-		name,
-		path,
-		object: decode$13(block),
-		node: block
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/raw.js
-async function rawResolver(cid, name, path, blockstore, options) {
-	const block = await toBuffer(blockstore.get(cid, options));
-	return {
-		type: "raw",
-		cid,
-		name,
-		path,
-		content: rawContent(block, "unixfs:exporter:progress:raw"),
-		size: BigInt(block.length),
-		node: block
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/content/directory.js
-function directoryContent(cid, node, unixfs, path) {
-	async function* yieldDirectoryContent(options = {}) {
-		const offset = options.offset ?? 0;
-		const length = options.length ?? node.Links.length;
-		const links = node.Links.slice(offset, length);
-		options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:directory", { cid }));
-		yield* links.map((link) => ({
-			cid: link.Hash,
-			name: link.Name ?? "",
-			path: `${path}/${link.Name ?? ""}`
-		}));
-	}
-	return yieldDirectoryContent;
-}
-//#endregion
-//#region node_modules/.pnpm/it-parallel@3.0.15/node_modules/it-parallel/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Takes an (async) iterable that emits promise-returning functions, invokes them in parallel up to the concurrency limit and emits the results as they become available, optionally in the same order as the input
-*
-* @example
-*
-* ```javascript
-* import parallel from 'it-parallel'
-* import all from 'it-all'
-* import delay from 'delay'
-*
-* // This can also be an iterator, async iterator, generator, etc
-* const input = [
-*   async () => {
-*     console.info('start 1')
-*     await delay(500)
-*
-*     console.info('end 1')
-*     return 1
-*   },
-*   async () => {
-*     console.info('start 2')
-*     await delay(200)
-*
-*     console.info('end 2')
-*     return 2
-*   },
-*   async () => {
-*     console.info('start 3')
-*     await delay(100)
-*
-*     console.info('end 3')
-*     return 3
-*   }
-* ]
-*
-* const result = await all(parallel(input, {
-*   concurrency: 2
-* }))
-*
-* // output:
-* // start 1
-* // start 2
-* // end 2
-* // start 3
-* // end 3
-* // end 1
-*
-* console.info(result) // [2, 3, 1]
-* ```
-*
-* If order is important, pass `ordered: true` as an option:
-*
-* ```javascript
-* const result = await all(parallel(input, {
-*   concurrency: 2,
-*   ordered: true
-* }))
-*
-* // output:
-* // start 1
-* // start 2
-* // end 2
-* // start 3
-* // end 3
-* // end 1
-*
-* console.info(result) // [1, 2, 3]
-* ```
-*/
-const CustomEvent$1 = globalThis.CustomEvent ?? Event;
-/**
-* Takes an (async) iterator that emits promise-returning functions,
-* invokes them in parallel and emits the results as they become available but
-* in the same order as the input
-*/
-async function* parallel(source, options = {}) {
-	let concurrency = options.concurrency ?? Infinity;
-	if (concurrency < 1) concurrency = Infinity;
-	const ordered = options.ordered ?? false;
-	const emitter = new EventTarget();
-	const ops = [];
-	let slotAvailable = pDefer();
-	let resultAvailable = pDefer();
-	let sourceFinished = false;
-	let sourceErr;
-	let opErred = false;
-	emitter.addEventListener("task-complete", () => {
-		resultAvailable.resolve();
-	});
-	Promise.resolve().then(async () => {
-		try {
-			for await (const task of source) {
-				if (ops.length === concurrency) {
-					slotAvailable = pDefer();
-					await slotAvailable.promise;
-				}
-				if (opErred) break;
-				const op = { done: false };
-				ops.push(op);
-				task().then((result) => {
-					op.done = true;
-					op.ok = true;
-					op.value = result;
-					emitter.dispatchEvent(new CustomEvent$1("task-complete"));
-				}, (err) => {
-					op.done = true;
-					op.err = err;
-					emitter.dispatchEvent(new CustomEvent$1("task-complete"));
-				});
-			}
-			sourceFinished = true;
-			emitter.dispatchEvent(new CustomEvent$1("task-complete"));
-		} catch (err) {
-			sourceErr = err;
-			emitter.dispatchEvent(new CustomEvent$1("task-complete"));
-		}
-	});
-	function valuesAvailable() {
-		if (ordered) return ops[0]?.done;
-		return Boolean(ops.find((op) => op.done));
-	}
-	function* yieldOrderedValues() {
-		while (ops.length > 0 && ops[0].done) {
-			const op = ops[0];
-			ops.shift();
-			if (op.ok) yield op.value;
-			else {
-				opErred = true;
-				slotAvailable.resolve();
-				throw op.err;
-			}
-			slotAvailable.resolve();
-		}
-	}
-	function* yieldUnOrderedValues() {
-		while (valuesAvailable()) for (let i = 0; i < ops.length; i++) if (ops[i].done) {
-			const op = ops[i];
-			ops.splice(i, 1);
-			i--;
-			if (op.ok) yield op.value;
-			else {
-				opErred = true;
-				slotAvailable.resolve();
-				throw op.err;
-			}
-			slotAvailable.resolve();
-		}
-	}
-	while (true) {
-		if (!valuesAvailable()) {
-			resultAvailable = pDefer();
-			await resultAvailable.promise;
-		}
-		if (sourceErr != null) throw sourceErr;
-		if (ordered) yield* yieldOrderedValues();
-		else yield* yieldUnOrderedValues();
-		if (sourceErr != null) throw sourceErr;
-		if (sourceFinished && ops.length === 0) break;
-	}
-}
-//#endregion
-//#region node_modules/.pnpm/eventemitter3@5.0.4/node_modules/eventemitter3/index.mjs
-var import_eventemitter3 = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var has = Object.prototype.hasOwnProperty, prefix = "~";
-	/**
-	* Constructor to create a storage for our `EE` objects.
-	* An `Events` instance is a plain object whose properties are event names.
-	*
-	* @constructor
-	* @private
-	*/
-	function Events() {}
-	if (Object.create) {
-		Events.prototype = Object.create(null);
-		if (!new Events().__proto__) prefix = false;
-	}
-	/**
-	* Representation of a single event listener.
-	*
-	* @param {Function} fn The listener function.
-	* @param {*} context The context to invoke the listener with.
-	* @param {Boolean} [once=false] Specify if the listener is a one-time listener.
-	* @constructor
-	* @private
-	*/
-	function EE(fn, context, once) {
-		this.fn = fn;
-		this.context = context;
-		this.once = once || false;
-	}
-	/**
-	* Add a listener for a given event.
-	*
-	* @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
-	* @param {(String|Symbol)} event The event name.
-	* @param {Function} fn The listener function.
-	* @param {*} context The context to invoke the listener with.
-	* @param {Boolean} once Specify if the listener is a one-time listener.
-	* @returns {EventEmitter}
-	* @private
-	*/
-	function addListener(emitter, event, fn, context, once) {
-		if (typeof fn !== "function") throw new TypeError("The listener must be a function");
-		var listener = new EE(fn, context || emitter, once), evt = prefix ? prefix + event : event;
-		if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
-		else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
-		else emitter._events[evt] = [emitter._events[evt], listener];
-		return emitter;
-	}
-	/**
-	* Clear event by name.
-	*
-	* @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
-	* @param {(String|Symbol)} evt The Event name.
-	* @private
-	*/
-	function clearEvent(emitter, evt) {
-		if (--emitter._eventsCount === 0) emitter._events = new Events();
-		else delete emitter._events[evt];
-	}
-	/**
-	* Minimal `EventEmitter` interface that is molded against the Node.js
-	* `EventEmitter` interface.
-	*
-	* @constructor
-	* @public
-	*/
-	function EventEmitter() {
-		this._events = new Events();
-		this._eventsCount = 0;
-	}
-	/**
-	* Return an array listing the events for which the emitter has registered
-	* listeners.
-	*
-	* @returns {Array}
-	* @public
-	*/
-	EventEmitter.prototype.eventNames = function eventNames() {
-		var names = [], events, name;
-		if (this._eventsCount === 0) return names;
-		for (name in events = this._events) if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
-		if (Object.getOwnPropertySymbols) return names.concat(Object.getOwnPropertySymbols(events));
-		return names;
-	};
-	/**
-	* Return the listeners registered for a given event.
-	*
-	* @param {(String|Symbol)} event The event name.
-	* @returns {Array} The registered listeners.
-	* @public
-	*/
-	EventEmitter.prototype.listeners = function listeners(event) {
-		var evt = prefix ? prefix + event : event, handlers = this._events[evt];
-		if (!handlers) return [];
-		if (handlers.fn) return [handlers.fn];
-		for (var i = 0, l = handlers.length, ee = new Array(l); i < l; i++) ee[i] = handlers[i].fn;
-		return ee;
-	};
-	/**
-	* Return the number of listeners listening to a given event.
-	*
-	* @param {(String|Symbol)} event The event name.
-	* @returns {Number} The number of listeners.
-	* @public
-	*/
-	EventEmitter.prototype.listenerCount = function listenerCount(event) {
-		var evt = prefix ? prefix + event : event, listeners = this._events[evt];
-		if (!listeners) return 0;
-		if (listeners.fn) return 1;
-		return listeners.length;
-	};
-	/**
-	* Calls each of the listeners registered for a given event.
-	*
-	* @param {(String|Symbol)} event The event name.
-	* @returns {Boolean} `true` if the event had listeners, else `false`.
-	* @public
-	*/
-	EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
-		var evt = prefix ? prefix + event : event;
-		if (!this._events[evt]) return false;
-		var listeners = this._events[evt], len = arguments.length, args, i;
-		if (listeners.fn) {
-			if (listeners.once) this.removeListener(event, listeners.fn, void 0, true);
-			switch (len) {
-				case 1: return listeners.fn.call(listeners.context), true;
-				case 2: return listeners.fn.call(listeners.context, a1), true;
-				case 3: return listeners.fn.call(listeners.context, a1, a2), true;
-				case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
-				case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
-				case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
-			}
-			for (i = 1, args = new Array(len - 1); i < len; i++) args[i - 1] = arguments[i];
-			listeners.fn.apply(listeners.context, args);
-		} else {
-			var length = listeners.length, j;
-			for (i = 0; i < length; i++) {
-				if (listeners[i].once) this.removeListener(event, listeners[i].fn, void 0, true);
-				switch (len) {
-					case 1:
-						listeners[i].fn.call(listeners[i].context);
-						break;
-					case 2:
-						listeners[i].fn.call(listeners[i].context, a1);
-						break;
-					case 3:
-						listeners[i].fn.call(listeners[i].context, a1, a2);
-						break;
-					case 4:
-						listeners[i].fn.call(listeners[i].context, a1, a2, a3);
-						break;
-					default:
-						if (!args) for (j = 1, args = new Array(len - 1); j < len; j++) args[j - 1] = arguments[j];
-						listeners[i].fn.apply(listeners[i].context, args);
-				}
-			}
-		}
-		return true;
-	};
-	/**
-	* Add a listener for a given event.
-	*
-	* @param {(String|Symbol)} event The event name.
-	* @param {Function} fn The listener function.
-	* @param {*} [context=this] The context to invoke the listener with.
-	* @returns {EventEmitter} `this`.
-	* @public
-	*/
-	EventEmitter.prototype.on = function on(event, fn, context) {
-		return addListener(this, event, fn, context, false);
-	};
-	/**
-	* Add a one-time listener for a given event.
-	*
-	* @param {(String|Symbol)} event The event name.
-	* @param {Function} fn The listener function.
-	* @param {*} [context=this] The context to invoke the listener with.
-	* @returns {EventEmitter} `this`.
-	* @public
-	*/
-	EventEmitter.prototype.once = function once(event, fn, context) {
-		return addListener(this, event, fn, context, true);
-	};
-	/**
-	* Remove the listeners of a given event.
-	*
-	* @param {(String|Symbol)} event The event name.
-	* @param {Function} fn Only remove the listeners that match this function.
-	* @param {*} context Only remove the listeners that have this context.
-	* @param {Boolean} once Only remove one-time listeners.
-	* @returns {EventEmitter} `this`.
-	* @public
-	*/
-	EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
-		var evt = prefix ? prefix + event : event;
-		if (!this._events[evt]) return this;
-		if (!fn) {
-			clearEvent(this, evt);
-			return this;
-		}
-		var listeners = this._events[evt];
-		if (listeners.fn) {
-			if (listeners.fn === fn && (!once || listeners.once) && (!context || listeners.context === context)) clearEvent(this, evt);
-		} else {
-			for (var i = 0, events = [], length = listeners.length; i < length; i++) if (listeners[i].fn !== fn || once && !listeners[i].once || context && listeners[i].context !== context) events.push(listeners[i]);
-			if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
-			else clearEvent(this, evt);
-		}
-		return this;
-	};
-	/**
-	* Remove all listeners, or those of the specified event.
-	*
-	* @param {(String|Symbol)} [event] The event name.
-	* @returns {EventEmitter} `this`.
-	* @public
-	*/
-	EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
-		var evt;
-		if (event) {
-			evt = prefix ? prefix + event : event;
-			if (this._events[evt]) clearEvent(this, evt);
-		} else {
-			this._events = new Events();
-			this._eventsCount = 0;
-		}
-		return this;
-	};
-	EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
-	EventEmitter.prototype.addListener = EventEmitter.prototype.on;
-	EventEmitter.prefixed = prefix;
-	EventEmitter.EventEmitter = EventEmitter;
-	if ("undefined" !== typeof module) module.exports = EventEmitter;
-})))(), 1);
-//#endregion
-//#region node_modules/.pnpm/p-queue@9.3.0/node_modules/p-queue/dist/lower-bound.js
-function lowerBound(array, value, comparator) {
-	let first = 0;
-	let count = array.length;
-	while (count > 0) {
-		const step = Math.trunc(count / 2);
-		let it = first + step;
-		if (comparator(array[it], value) <= 0) {
-			first = ++it;
-			count -= step + 1;
-		} else count = step;
-	}
-	return first;
-}
-//#endregion
-//#region node_modules/.pnpm/p-queue@9.3.0/node_modules/p-queue/dist/priority-queue.js
-const compactionThreshold = 100;
-var PriorityQueue = class {
-	#queue = [];
-	#head = 0;
-	enqueue(run, options) {
-		const { priority = 0, id } = options ?? {};
-		const { size } = this;
-		const element = {
-			priority,
-			id,
-			run
-		};
-		if (size === 0) {
-			this.#queue.length = 0;
-			this.#head = 0;
-			this.#queue.push(element);
-			return;
-		}
-		if (this.#queue.at(-1).priority >= priority) {
-			this.#queue.push(element);
-			return;
-		}
-		this.#compact();
-		const index = lowerBound(this.#queue, element, (a, b) => b.priority - a.priority);
-		this.#queue.splice(index, 0, element);
-	}
-	setPriority(id, priority) {
-		const index = this.#queue.findIndex((element, index) => index >= this.#head && element.id === id);
-		if (index === -1) throw new ReferenceError(`No promise function with the id "${id}" exists in the queue.`);
-		const [item] = this.#queue.splice(index, 1);
-		this.enqueue(item.run, {
-			priority,
-			id
-		});
-	}
-	remove(idOrRun) {
-		const index = this.#queue.findIndex((element, index) => {
-			if (index < this.#head) return false;
-			if (typeof idOrRun === "string") return element.id === idOrRun;
-			return element.run === idOrRun;
-		});
-		if (index !== -1) this.#queue.splice(index, 1);
-	}
-	dequeue() {
-		if (this.#head === this.#queue.length) return;
-		const item = this.#queue[this.#head];
-		this.#head++;
-		if (this.#head === this.#queue.length) {
-			this.#queue.length = 0;
-			this.#head = 0;
-		} else if (this.#head > compactionThreshold && this.#head > this.#queue.length / 2) this.#compact();
-		return item?.run;
-	}
-	filter(options) {
-		const result = [];
-		for (let index = this.#head; index < this.#queue.length; index++) {
-			const element = this.#queue[index];
-			if (element.priority === options.priority) result.push(element.run);
-		}
-		return result;
-	}
-	get size() {
-		return this.#queue.length - this.#head;
-	}
-	#compact() {
-		if (this.#head === 0) return;
-		this.#queue.splice(0, this.#head);
-		this.#head = 0;
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/p-queue@9.3.0/node_modules/p-queue/dist/index.js
-/**
-Promise queue with concurrency control.
-*/
-var PQueue = class extends import_eventemitter3.default {
-	#carryoverIntervalCount;
-	#isIntervalIgnored;
-	#intervalCount = 0;
-	#intervalCap;
-	#rateLimitedInInterval = false;
-	#rateLimitFlushScheduled = false;
-	#interval;
-	#intervalEnd = 0;
-	#lastExecutionTime = 0;
-	#intervalId;
-	#timeoutId;
-	#strict;
-	#strictTicks = [];
-	#strictTicksStartIndex = 0;
-	#queue;
-	#queueClass;
-	#pending = 0;
-	#concurrency;
-	#isPaused;
-	#idAssigner = 1n;
-	#runningTasks = /* @__PURE__ */ new Map();
-	#queueAbortListenerCleanupFunctions = /* @__PURE__ */ new Set();
-	/**
-	Get or set the default timeout for all tasks. Can be changed at runtime.
-	
-	Operations will throw a `TimeoutError` if they don't complete within the specified time.
-	
-	The timeout begins when the operation is dequeued and starts execution, not while it's waiting in the queue.
-	
-	@example
-	```
-	const queue = new PQueue({timeout: 5000});
-	
-	// Change timeout for all future tasks
-	queue.timeout = 10000;
-	```
-	*/
-	timeout;
-	constructor(options) {
-		super();
-		options = {
-			carryoverIntervalCount: false,
-			intervalCap: Number.POSITIVE_INFINITY,
-			interval: 0,
-			concurrency: Number.POSITIVE_INFINITY,
-			autoStart: true,
-			queueClass: PriorityQueue,
-			strict: false,
-			...options
-		};
-		if (!(typeof options.intervalCap === "number" && options.intervalCap >= 1)) throw new TypeError(`Expected \`intervalCap\` to be a number from 1 and up, got \`${options.intervalCap?.toString() ?? ""}\` (${typeof options.intervalCap})`);
-		if (options.interval === void 0 || !(Number.isFinite(options.interval) && options.interval >= 0)) throw new TypeError(`Expected \`interval\` to be a finite number >= 0, got \`${options.interval?.toString() ?? ""}\` (${typeof options.interval})`);
-		if (options.strict && options.interval === 0) throw new TypeError("The `strict` option requires a non-zero `interval`");
-		if (options.strict && options.intervalCap === Number.POSITIVE_INFINITY) throw new TypeError("The `strict` option requires a finite `intervalCap`");
-		this.#carryoverIntervalCount = options.carryoverIntervalCount ?? options.carryoverConcurrencyCount ?? false;
-		this.#isIntervalIgnored = options.intervalCap === Number.POSITIVE_INFINITY || options.interval === 0;
-		this.#intervalCap = options.intervalCap;
-		this.#interval = options.interval;
-		this.#strict = options.strict;
-		this.#queue = new options.queueClass();
-		this.#queueClass = options.queueClass;
-		this.concurrency = options.concurrency;
-		if (options.timeout !== void 0 && !(Number.isFinite(options.timeout) && options.timeout > 0)) throw new TypeError(`Expected \`timeout\` to be a positive finite number, got \`${options.timeout}\` (${typeof options.timeout})`);
-		this.timeout = options.timeout;
-		this.#isPaused = options.autoStart === false;
-		this.#setupRateLimitTracking();
-	}
-	#cleanupStrictTicks(now) {
-		while (this.#strictTicksStartIndex < this.#strictTicks.length) {
-			const oldestTick = this.#strictTicks[this.#strictTicksStartIndex];
-			if (oldestTick !== void 0 && now - oldestTick >= this.#interval) this.#strictTicksStartIndex++;
-			else break;
-		}
-		if (this.#strictTicksStartIndex > 100 && this.#strictTicksStartIndex > this.#strictTicks.length / 2 || this.#strictTicksStartIndex === this.#strictTicks.length) {
-			this.#strictTicks = this.#strictTicks.slice(this.#strictTicksStartIndex);
-			this.#strictTicksStartIndex = 0;
-		}
-	}
-	#consumeIntervalSlot(now) {
-		if (this.#strict) this.#strictTicks.push(now);
-		else this.#intervalCount++;
-	}
-	#rollbackIntervalSlot() {
-		if (this.#strict) {
-			if (this.#strictTicks.length > this.#strictTicksStartIndex) this.#strictTicks.pop();
-		} else if (this.#intervalCount > 0) this.#intervalCount--;
-	}
-	#getActiveTicksCount() {
-		return this.#strictTicks.length - this.#strictTicksStartIndex;
-	}
-	get #doesIntervalAllowAnother() {
-		if (this.#isIntervalIgnored) return true;
-		if (this.#strict) return this.#getActiveTicksCount() < this.#intervalCap;
-		return this.#intervalCount < this.#intervalCap;
-	}
-	get #doesConcurrentAllowAnother() {
-		return this.#pending < this.#concurrency;
-	}
-	#next() {
-		this.#pending--;
-		if (this.#pending === 0) this.emit("pendingZero");
-		this.#tryToStartAnother();
-		this.emit("next");
-	}
-	#onResumeInterval() {
-		this.#timeoutId = void 0;
-		this.#onInterval();
-		this.#initializeIntervalIfNeeded();
-	}
-	#isIntervalPausedAt(now) {
-		if (this.#strict) {
-			this.#cleanupStrictTicks(now);
-			if (this.#getActiveTicksCount() >= this.#intervalCap) {
-				const oldestTick = this.#strictTicks[this.#strictTicksStartIndex];
-				const delay = this.#interval - (now - oldestTick);
-				this.#createIntervalTimeout(delay);
-				return true;
-			}
-			return false;
-		}
-		if (this.#intervalId === void 0) {
-			const delay = this.#intervalEnd - now;
-			if (delay < 0) {
-				if (this.#lastExecutionTime > 0) {
-					const timeSinceLastExecution = now - this.#lastExecutionTime;
-					if (timeSinceLastExecution < this.#interval) {
-						this.#createIntervalTimeout(this.#interval - timeSinceLastExecution);
-						return true;
-					}
-				}
-				this.#intervalCount = this.#carryoverIntervalCount ? this.#pending : 0;
-			} else {
-				this.#createIntervalTimeout(delay);
-				return true;
-			}
-		}
-		return false;
-	}
-	#createIntervalTimeout(delay) {
-		if (this.#timeoutId !== void 0) return;
-		this.#timeoutId = setTimeout(() => {
-			this.#onResumeInterval();
-		}, delay);
-	}
-	#clearIntervalTimer() {
-		if (this.#intervalId) {
-			clearInterval(this.#intervalId);
-			this.#intervalId = void 0;
-		}
-	}
-	#clearTimeoutTimer() {
-		if (this.#timeoutId) {
-			clearTimeout(this.#timeoutId);
-			this.#timeoutId = void 0;
-		}
-	}
-	#tryToStartAnother() {
-		if (this.#queue.size === 0) {
-			this.#clearIntervalTimer();
-			this.emit("empty");
-			if (this.#pending === 0) {
-				this.#clearTimeoutTimer();
-				if (this.#strict && this.#strictTicksStartIndex > 0) {
-					const now = Date.now();
-					this.#cleanupStrictTicks(now);
-				}
-				this.emit("idle");
-			}
-			return false;
-		}
-		let taskStarted = false;
-		if (!this.#isPaused) {
-			const now = Date.now();
-			const canInitializeInterval = !this.#isIntervalPausedAt(now);
-			if (this.#doesIntervalAllowAnother && this.#doesConcurrentAllowAnother) {
-				const job = this.#queue.dequeue();
-				if (!this.#isIntervalIgnored) {
-					this.#consumeIntervalSlot(now);
-					this.#scheduleRateLimitUpdate();
-				}
-				this.emit("active");
-				job();
-				if (canInitializeInterval) this.#initializeIntervalIfNeeded();
-				taskStarted = true;
-			}
-		}
-		return taskStarted;
-	}
-	#initializeIntervalIfNeeded() {
-		if (this.#isIntervalIgnored || this.#intervalId !== void 0) return;
-		if (this.#strict) return;
-		this.#intervalId = setInterval(() => {
-			this.#onInterval();
-		}, this.#interval);
-		this.#intervalEnd = Date.now() + this.#interval;
-	}
-	#onInterval() {
-		if (!this.#strict) {
-			if (this.#intervalCount === 0 && this.#pending === 0 && this.#intervalId) this.#clearIntervalTimer();
-			this.#intervalCount = this.#carryoverIntervalCount ? this.#pending : 0;
-		}
-		this.#processQueue();
-		this.#scheduleRateLimitUpdate();
-	}
-	/**
-	Executes all queued functions until it reaches the limit.
-	*/
-	#processQueue() {
-		while (this.#tryToStartAnother());
-	}
-	get concurrency() {
-		return this.#concurrency;
-	}
-	set concurrency(newConcurrency) {
-		if (!(typeof newConcurrency === "number" && newConcurrency >= 1)) throw new TypeError(`Expected \`concurrency\` to be a number from 1 and up, got \`${newConcurrency}\` (${typeof newConcurrency})`);
-		this.#concurrency = newConcurrency;
-		this.#processQueue();
-	}
-	/**
-	Updates the priority of a promise function by its id, affecting its execution order. Requires a defined concurrency limit to take effect.
-	
-	For example, this can be used to prioritize a promise function to run earlier.
-	
-	```js
-	import PQueue from 'p-queue';
-	
-	const queue = new PQueue({concurrency: 1});
-	
-	queue.add(async () => '🦄', {priority: 1});
-	queue.add(async () => '🦀', {priority: 0, id: '🦀'});
-	queue.add(async () => '🦄', {priority: 1});
-	queue.add(async () => '🦄', {priority: 1});
-	
-	queue.setPriority('🦀', 2);
-	```
-	
-	In this case, the promise function with `id: '🦀'` runs second.
-	
-	You can also deprioritize a promise function to delay its execution:
-	
-	```js
-	import PQueue from 'p-queue';
-	
-	const queue = new PQueue({concurrency: 1});
-	
-	queue.add(async () => '🦄', {priority: 1});
-	queue.add(async () => '🦀', {priority: 1, id: '🦀'});
-	queue.add(async () => '🦄');
-	queue.add(async () => '🦄', {priority: 0});
-	
-	queue.setPriority('🦀', -1);
-	```
-	Here, the promise function with `id: '🦀'` executes last.
-	*/
-	setPriority(id, priority) {
-		if (typeof priority !== "number" || !Number.isFinite(priority)) throw new TypeError(`Expected \`priority\` to be a finite number, got \`${priority}\` (${typeof priority})`);
-		this.#queue.setPriority(id, priority);
-	}
-	async add(function_, options = {}) {
-		options = {
-			timeout: this.timeout,
-			...options,
-			id: options.id ?? (this.#idAssigner++).toString()
-		};
-		return new Promise((resolve, reject) => {
-			const taskSymbol = Symbol(`task-${options.id}`);
-			let cleanupQueueAbortHandler = () => void 0;
-			const run = async () => {
-				cleanupQueueAbortHandler();
-				this.#pending++;
-				this.#runningTasks.set(taskSymbol, {
-					id: options.id,
-					priority: options.priority ?? 0,
-					startTime: Date.now(),
-					timeout: options.timeout
-				});
-				let eventListener;
-				try {
-					try {
-						options.signal?.throwIfAborted();
-					} catch (error) {
-						this.#rollbackIntervalConsumption();
-						this.#runningTasks.delete(taskSymbol);
-						throw error;
-					}
-					this.#lastExecutionTime = Date.now();
-					let operation = function_({ signal: options.signal });
-					if (options.timeout) operation = pTimeout(Promise.resolve(operation), {
-						milliseconds: options.timeout,
-						message: `Task timed out after ${options.timeout}ms (queue has ${this.#pending} running, ${this.#queue.size} waiting)`
-					});
-					if (options.signal) {
-						const { signal } = options;
-						operation = Promise.race([operation, new Promise((_resolve, reject) => {
-							eventListener = () => {
-								reject(signal.reason);
-							};
-							signal.addEventListener("abort", eventListener, { once: true });
-						})]);
-					}
-					const result = await operation;
-					resolve(result);
-					this.emit("completed", result);
-				} catch (error) {
-					reject(error);
-					this.emit("error", error);
-				} finally {
-					if (eventListener) options.signal?.removeEventListener("abort", eventListener);
-					this.#runningTasks.delete(taskSymbol);
-					queueMicrotask(() => {
-						this.#next();
-					});
-				}
-			};
-			this.#queue.enqueue(run, options);
-			const removeQueuedTask = () => {
-				if (this.#queue instanceof PriorityQueue) {
-					this.#queue.remove(run);
-					return;
-				}
-				this.#queue.remove?.(options.id);
-			};
-			if (options.signal) {
-				const { signal } = options;
-				const queueAbortHandler = () => {
-					cleanupQueueAbortHandler();
-					removeQueuedTask();
-					reject(signal.reason);
-					this.#tryToStartAnother();
-					this.emit("next");
-				};
-				cleanupQueueAbortHandler = () => {
-					signal.removeEventListener("abort", queueAbortHandler);
-					this.#queueAbortListenerCleanupFunctions.delete(cleanupQueueAbortHandler);
-				};
-				if (signal.aborted) {
-					queueAbortHandler();
-					return;
-				}
-				signal.addEventListener("abort", queueAbortHandler, { once: true });
-				this.#queueAbortListenerCleanupFunctions.add(cleanupQueueAbortHandler);
-			}
-			this.emit("add");
-			this.#tryToStartAnother();
-		});
-	}
-	async addAll(functions, options) {
-		return Promise.all(functions.map(async (function_) => this.add(function_, options)));
-	}
-	/**
-	Start (or resume) executing enqueued tasks within concurrency limit. No need to call this if queue is not paused (via `options.autoStart = false` or by `.pause()` method.)
-	*/
-	start() {
-		if (!this.#isPaused) return this;
-		this.#isPaused = false;
-		this.#processQueue();
-		return this;
-	}
-	/**
-	Put queue execution on hold.
-	*/
-	pause() {
-		this.#isPaused = true;
-	}
-	/**
-	Clear the queue.
-	*/
-	clear() {
-		for (const cleanupQueueAbortHandler of this.#queueAbortListenerCleanupFunctions) cleanupQueueAbortHandler();
-		this.#queue = new this.#queueClass();
-		this.#clearIntervalTimer();
-		this.#updateRateLimitState();
-		this.emit("empty");
-		if (this.#pending === 0) {
-			this.#clearTimeoutTimer();
-			this.emit("idle");
-		}
-		this.emit("next");
-	}
-	/**
-	Can be called multiple times. Useful if you for example add additional items at a later time.
-	
-	@returns A promise that settles when the queue becomes empty.
-	*/
-	async onEmpty() {
-		if (this.#queue.size === 0) return;
-		await this.#onEvent("empty");
-	}
-	/**
-	@returns A promise that settles when the queue size is less than the given limit: `queue.size < limit`.
-	
-	If you want to avoid having the queue grow beyond a certain size you can `await queue.onSizeLessThan()` before adding a new item.
-	
-	Note that this only limits the number of items waiting to start. There could still be up to `concurrency` jobs already running that this call does not include in its calculation.
-	*/
-	async onSizeLessThan(limit) {
-		if (this.#queue.size < limit) return;
-		await this.#onEvent("next", () => this.#queue.size < limit);
-	}
-	/**
-	The difference with `.onEmpty` is that `.onIdle` guarantees that all work from the queue has finished. `.onEmpty` merely signals that the queue is empty, but it could mean that some promises haven't completed yet.
-	
-	@returns A promise that settles when the queue becomes empty, and all promises have completed; `queue.size === 0 && queue.pending === 0`.
-	*/
-	async onIdle() {
-		if (this.#pending === 0 && this.#queue.size === 0) return;
-		await this.#onEvent("idle");
-	}
-	/**
-	The difference with `.onIdle` is that `.onPendingZero` only waits for currently running tasks to finish, ignoring queued tasks.
-	
-	@returns A promise that settles when all currently running tasks have completed; `queue.pending === 0`.
-	*/
-	async onPendingZero() {
-		if (this.#pending === 0) return;
-		await this.#onEvent("pendingZero");
-	}
-	/**
-	@returns A promise that settles when the queue becomes rate-limited due to intervalCap.
-	*/
-	async onRateLimit() {
-		if (this.isRateLimited) return;
-		await this.#onEvent("rateLimit");
-	}
-	/**
-	@returns A promise that settles when the queue is no longer rate-limited.
-	*/
-	async onRateLimitCleared() {
-		if (!this.isRateLimited) return;
-		await this.#onEvent("rateLimitCleared");
-	}
-	/**
-	@returns A promise that rejects when any task in the queue errors.
-	
-	Use with `Promise.race([queue.onError(), queue.onIdle()])` to fail fast on the first error while still resolving normally when the queue goes idle.
-	
-	Important: The promise returned by `add()` still rejects. You must handle each `add()` promise (for example, `.catch(() => {})`) to avoid unhandled rejections.
-	
-	@example
-	```
-	import PQueue from 'p-queue';
-	
-	const queue = new PQueue({concurrency: 2});
-	
-	queue.add(() => fetchData(1)).catch(() => {});
-	queue.add(() => fetchData(2)).catch(() => {});
-	queue.add(() => fetchData(3)).catch(() => {});
-	
-	// Stop processing on first error
-	try {
-	await Promise.race([
-	queue.onError(),
-	queue.onIdle()
-	]);
-	} catch (error) {
-	queue.pause(); // Stop processing remaining tasks
-	console.error('Queue failed:', error);
-	}
-	```
-	*/
-	onError() {
-		return new Promise((_resolve, reject) => {
-			const handleError = (error) => {
-				this.off("error", handleError);
-				reject(error);
-			};
-			this.on("error", handleError);
-		});
-	}
-	async #onEvent(event, filter) {
-		return new Promise((resolve) => {
-			const listener = () => {
-				if (filter && !filter()) return;
-				this.off(event, listener);
-				resolve();
-			};
-			this.on(event, listener);
-		});
-	}
-	/**
-	Size of the queue, the number of queued items waiting to run.
-	*/
-	get size() {
-		return this.#queue.size;
-	}
-	/**
-	Size of the queue, filtered by the given options.
-	
-	For example, this can be used to find the number of items remaining in the queue with a specific priority level.
-	*/
-	sizeBy(options) {
-		return this.#queue.filter(options).length;
-	}
-	/**
-	Number of running items (no longer in the queue).
-	*/
-	get pending() {
-		return this.#pending;
-	}
-	/**
-	Whether the queue is currently paused.
-	*/
-	get isPaused() {
-		return this.#isPaused;
-	}
-	#setupRateLimitTracking() {
-		if (this.#isIntervalIgnored) return;
-		this.on("add", () => {
-			if (this.#queue.size > 0) this.#scheduleRateLimitUpdate();
-		});
-		this.on("next", () => {
-			this.#scheduleRateLimitUpdate();
-		});
-	}
-	#scheduleRateLimitUpdate() {
-		if (this.#isIntervalIgnored || this.#rateLimitFlushScheduled) return;
-		this.#rateLimitFlushScheduled = true;
-		queueMicrotask(() => {
-			this.#rateLimitFlushScheduled = false;
-			this.#updateRateLimitState();
-		});
-	}
-	#rollbackIntervalConsumption() {
-		if (this.#isIntervalIgnored) return;
-		this.#rollbackIntervalSlot();
-		this.#scheduleRateLimitUpdate();
-	}
-	#updateRateLimitState() {
-		const previous = this.#rateLimitedInInterval;
-		if (this.#isIntervalIgnored || this.#queue.size === 0) {
-			if (previous) {
-				this.#rateLimitedInInterval = false;
-				this.emit("rateLimitCleared");
-			}
-			return;
-		}
-		let count;
-		if (this.#strict) {
-			const now = Date.now();
-			this.#cleanupStrictTicks(now);
-			count = this.#getActiveTicksCount();
-		} else count = this.#intervalCount;
-		const shouldBeRateLimited = count >= this.#intervalCap;
-		if (shouldBeRateLimited !== previous) {
-			this.#rateLimitedInInterval = shouldBeRateLimited;
-			this.emit(shouldBeRateLimited ? "rateLimit" : "rateLimitCleared");
-		}
-	}
-	/**
-	Whether the queue is currently rate-limited due to intervalCap.
-	*/
-	get isRateLimited() {
-		return this.#rateLimitedInInterval;
-	}
-	/**
-	Whether the queue is saturated. Returns `true` when:
-	- All concurrency slots are occupied and tasks are waiting, OR
-	- The queue is rate-limited and tasks are waiting
-	
-	Useful for detecting backpressure and potential hanging tasks.
-	
-	```js
-	import PQueue from 'p-queue';
-	
-	const queue = new PQueue({concurrency: 2});
-	
-	// Backpressure handling
-	if (queue.isSaturated) {
-	console.log('Queue is saturated, waiting for capacity...');
-	await queue.onSizeLessThan(queue.concurrency);
-	}
-	
-	// Monitoring for stuck tasks
-	setInterval(() => {
-	if (queue.isSaturated) {
-	console.warn(`Queue saturated: ${queue.pending} running, ${queue.size} waiting`);
-	}
-	}, 60000);
-	```
-	*/
-	get isSaturated() {
-		return this.#pending === this.#concurrency && this.#queue.size > 0 || this.isRateLimited && this.#queue.size > 0;
-	}
-	/**
-	The tasks currently being executed. Each task includes its `id`, `priority`, `startTime`, `timeout` (if set), and `timeoutRemaining` (milliseconds until the task times out, or `undefined` if no timeout is set).
-	
-	Returns an array of task info objects.
-	
-	```js
-	import PQueue from 'p-queue';
-	
-	const queue = new PQueue({concurrency: 2, timeout: 10000});
-	
-	// Add tasks with IDs for better debugging
-	queue.add(() => fetchUser(123), {id: 'user-123'});
-	queue.add(() => fetchPosts(456), {id: 'posts-456', priority: 1});
-	
-	// Check what's running
-	console.log(queue.runningTasks);
-	// => [{
-	//   id: 'user-123',
-	//   priority: 0,
-	//   startTime: 1759253001716,
-	//   timeout: 10000,
-	//   timeoutRemaining: 9700
-	// }, {
-	//   id: 'posts-456',
-	//   priority: 1,
-	//   startTime: 1759253001916,
-	//   timeout: 10000,
-	//   timeoutRemaining: 9900
-	// }]
-	```
-	*/
-	get runningTasks() {
-		return [...this.#runningTasks.values()].map((task) => ({
-			...task,
-			timeoutRemaining: task.timeout ? Math.max(0, task.startTime + task.timeout - Date.now()) : void 0
-		}));
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/content/file.js
-async function walkDAG(blockstore, node, queue, streamPosition, start, end, options) {
-	if (node instanceof Uint8Array) {
-		const buf = extractDataFromBlock(node, streamPosition, start, end);
-		queue.push(buf);
-		return;
-	}
-	if (node.Data == null) throw new NotUnixFSError$1("no data in PBNode");
-	let file;
-	try {
-		file = UnixFS$1.unmarshal(node.Data);
-	} catch (err) {
-		throw new NotUnixFSError$1(err.message);
-	}
-	if (file.data != null) {
-		const data = file.data;
-		const buf = extractDataFromBlock(data, streamPosition, start, end);
-		queue.push(buf);
-		streamPosition += BigInt(buf.byteLength);
-	}
-	const childOps = [];
-	if (node.Links.length !== file.blockSizes.length) throw new NotUnixFSError$1("Inconsistent block sizes and dag links");
-	for (let i = 0; i < node.Links.length; i++) {
-		const childLink = node.Links[i];
-		const childStart = streamPosition;
-		const childEnd = childStart + file.blockSizes[i];
-		if (start >= childStart && start < childEnd || end >= childStart && end <= childEnd || start < childStart && end > childEnd) childOps.push({
-			link: childLink,
-			blockStart: streamPosition
-		});
-		streamPosition = childEnd;
-		if (streamPosition > end) break;
-	}
-	await pipe(childOps, (source) => map(source, (op) => {
-		return async () => {
-			const block = await toBuffer(blockstore.get(op.link.Hash, options));
-			return {
-				...op,
-				block
-			};
-		};
-	}), (source) => parallel(source, {
-		ordered: true,
-		concurrency: options.blockReadConcurrency
-	}), async (source) => {
-		for await (const { link, block, blockStart } of source) {
-			let child;
-			switch (link.Hash.code) {
-				case 112:
-					child = decode(block);
-					break;
-				case 85:
-					child = block;
-					break;
-				default:
-					queue.end(new NotUnixFSError$1(`Unsupported codec: ${link.Hash.code}`));
-					return;
-			}
-			const childQueue = new PQueue({ concurrency: 1 });
-			childQueue.on("error", (error) => {
-				queue.end(error);
-			});
-			childQueue.add(async () => {
-				options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:file", { cid: link.Hash }));
-				await walkDAG(blockstore, child, queue, blockStart, start, end, options);
-			});
-			await childQueue.onIdle();
-		}
-	});
-	if (streamPosition >= end) queue.end();
-}
-function fileContent(cid, node, unixfs, path, blockstore) {
-	async function* yieldFileContent(options = {}) {
-		const fileSize = unixfs.fileSize();
-		if (fileSize === void 0) throw new Error("File was a directory");
-		const { start, end } = validateOffsetAndLength(fileSize, options.offset, options.length);
-		if (end === 0n) return;
-		let read = 0n;
-		const wanted = end - start;
-		const queue = pushable();
-		options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:file", { cid }));
-		walkDAG(blockstore, node, queue, 0n, start, end, options).catch((err) => {
-			queue.end(err);
-		});
-		for await (const buf of queue) {
-			if (buf == null) continue;
-			read += BigInt(buf.byteLength);
-			if (read > wanted) {
-				queue.end();
-				throw new OverReadError("Read too many bytes - the file size reported by the UnixFS data in the root node may be incorrect");
-			}
-			if (read === wanted) queue.end();
-			options.onProgress?.(new CustomProgressEvent("unixfs:exporter:progress:unixfs:file", {
-				bytesRead: read,
-				totalBytes: wanted,
-				fileSize
-			}));
-			yield buf;
-		}
-		if (read < wanted) throw new UnderReadError("Traversed entire DAG but did not read enough bytes");
-	}
-	return yieldFileContent;
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/content/hamt-sharded-directory.js
-async function* listDirectory(node, path, blockstore, options) {
-	const links = node.Links;
-	if (node.Data == null) throw new NotUnixFSError$1("no data in PBNode");
-	let dir;
-	try {
-		dir = UnixFS$1.unmarshal(node.Data);
-	} catch (err) {
-		throw new NotUnixFSError$1(err.message);
-	}
-	if (dir.fanout == null) throw new NotUnixFSError$1("missing fanout");
-	const padLength = (dir.fanout - 1n).toString(16).length;
-	const results = pipe(links, (source) => map(source, (link) => {
-		return async () => {
-			const name = link.Name != null ? link.Name.substring(padLength) : null;
-			if (name != null && name !== "") return { entries: [{
-				cid: link.Hash,
-				name,
-				path: `${path}/${name}`
-			}] };
-			else {
-				node = decode(await toBuffer(blockstore.get(link.Hash, options)));
-				options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:hamt-sharded-directory", { cid: link.Hash }));
-				return { entries: listDirectory(node, path, blockstore, options) };
-			}
-		};
-	}), (source) => parallel(source, {
-		ordered: true,
-		concurrency: options.blockReadConcurrency
-	}));
-	for await (const { entries } of results) yield* entries;
-}
-function hamtShardedDirectoryContent(cid, node, unixfs, path, blockstore) {
-	function yieldHamtDirectoryContent(options = {}) {
-		options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:hamt-sharded-directory", { cid }));
-		return listDirectory(node, path, blockstore, options);
-	}
-	return yieldHamtDirectoryContent;
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/index.js
-const contentExporters = {
-	raw: fileContent,
-	file: fileContent,
-	directory: directoryContent,
-	"hamt-sharded-directory": hamtShardedDirectoryContent,
-	metadata: (cid, node, unixfs, blockstore) => {
-		return () => [];
-	},
-	symlink: (cid, node, unixfs, blockstore) => {
-		return () => [];
-	}
-};
-async function dagPbResolver(cid, name, path, blockstore, options) {
-	const block = await toBuffer(blockstore.get(cid, options));
-	let node;
-	try {
-		node = decode(block);
-	} catch (err) {
-		throw new NotUnixFSError$1(err.message);
-	}
-	if (node.Data == null) throw new NotUnixFSError$1("no data in PBNode");
-	let unixfs;
-	try {
-		unixfs = UnixFS$1.unmarshal(node.Data);
-	} catch (err) {
-		throw new NotUnixFSError$1(err.message);
-	}
-	const content = contentExporters[unixfs.type](cid, node, unixfs, path, blockstore);
-	if (content == null) throw new NotFoundError$1("could not find content exporter");
-	if (unixfs.isDirectory()) return {
-		type: "directory",
-		cid,
-		name,
-		path,
-		entries: content,
-		unixfs,
-		node
-	};
-	return {
-		type: "file",
-		cid,
-		name,
-		path,
-		content,
-		unixfs,
-		node,
-		size: unixfs.fileSize()
-	};
-}
-//#endregion
-//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/index.js
-const resolvers = {
-	[112]: dagPbResolver,
-	[85]: rawResolver,
-	[113]: dagCborResolver,
-	[81]: dagCborResolver,
-	[297]: dagJsonResolver,
-	[identity$2.code]: identityResolver,
-	[512]: jsonResolver
-};
-/**
-* Uses the given blockstore instance to fetch an IPFS node by a CID or path.
-*
-* Returns a {@link Promise} which resolves to a {@link UnixFSEntry}.
-*
-* @example
-*
-* ```typescript
-* import { exporter } from 'ipfs-unixfs-exporter'
-* import { CID } from 'multiformats/cid'
-*
-* const cid = CID.parse('QmFoo')
-*
-* const entry = await exporter(cid, blockstore, {
-*   signal: AbortSignal.timeout(50000)
-* })
-*
-* if (entry.type === 'file') {
-*   for await (const chunk of entry.content()) {
-*     // chunk is a Uint8Array
-*   }
-* }
-* ```
-*/
-async function exporter$1(path, blockstore, options = {}) {
-	let cid;
-	let name;
-	if (path instanceof String || typeof path === "string") {
-		const entry = await last(walkPath(path, blockstore, options));
-		if (entry == null) throw new NotFoundError$1(`Could not walk path to ${path}`);
-		cid = entry.cid;
-		name = entry.name;
-		path = entry.path;
-	} else if (CID$1.asCID(path) === path || path instanceof CID$1) {
-		cid = path;
-		name = path = cid.toString();
-	} else throw new InvalidParametersError$2("Path must be string or CID");
-	const resolver = resolvers[cid.code];
-	if (resolver == null) throw new NoResolverError(`No resolver for code ${cid.code}`);
-	return resolver(cid, name, path, blockstore, options);
-}
-/**
-* Returns an async iterator that yields all entries beneath a given CID or IPFS
-* path, as well as the containing directory.
-*
-* @example
-*
-* ```typescript
-* import { recursive } from 'ipfs-unixfs-exporter'
-*
-* const entries = []
-*
-* for await (const child of recursive(CID.parse('Qmfoo'), blockstore)) {
-*   entries.push(entry)
-* }
-*
-* // entries contains all children of the `Qmfoo` directory and it's children
-* ```
-*/
-async function* recursive(path, blockstore, options = {}) {
-	const node = await exporter$1(path, blockstore, options);
-	if (node == null) return;
-	yield {
-		cid: node.cid,
-		name: node.name,
-		path: node.path,
-		depth: 0
-	};
-	if (node.type === "directory") for await (const child of recurse(node, 0, `${path}`, options)) yield child;
-	async function* recurse(node, depth, path, options) {
-		depth++;
-		for await (const entry of node.entries(options)) {
-			const entryPath = `${path}/${entry.name}`;
-			yield {
-				...entry,
-				depth,
-				path: entryPath
-			};
-			const file = await exporter$1(entry.cid, blockstore, options);
-			if (file.type === "directory") yield* recurse(file, depth, entryPath, options);
-		}
-	}
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+car@5.4.2/node_modules/@helia/car/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* `@helia/car` provides `import` and `export` methods to read/write Car files
-* to {@link https://github.com/ipfs/helia Helia}'s blockstore.
-*
-* See the {@link Car} interface for all available operations.
-*
-* By default it supports `dag-pb`, `dag-cbor`, `dag-json` and `raw` CIDs, more
-* esoteric DAG walkers can be passed as an init option.
-*
-* @example Exporting a DAG as a CAR file
-*
-* ```typescript
-* import { createHelia } from 'helia'
-* import { car } from '@helia/car'
-* import { CID } from 'multiformats/cid'
-* import nodeFs from 'node:fs'
-*
-* const helia = await createHelia()
-* const cid = CID.parse('QmFoo...')
-*
-* const c = car(helia)
-* const out = nodeFs.createWriteStream('example.car')
-*
-* for await (const buf of c.export(cid, {
-*   signal: AbortSignal.timeout(5_000)
-* })) {
-*   out.write(buf)
-* }
-*
-* out.end()
-* ```
-*
-* @example Exporting a part of a UnixFS DAG as a CAR file
-*
-* Here the graph traversal will start at `root` and include the blocks for
-* `root`, `/foo`, `/bar`, and all the blocks that make up `baz.txt`.
-*
-* If there are other files/directories in the UnixFS DAG under `root`, they
-* will not be included.
-*
-* `root` will be the only entry in the CAR file roots.
-*
-* ```typescript
-* import { createHelia } from 'helia'
-* import { car, UnixFSPath } from '@helia/car'
-* import { CID } from 'multiformats/cid'
-* import nodeFs from 'node:fs'
-*
-* const helia = await createHelia()
-* const root = CID.parse('QmFoo...')
-*
-* const c = car(helia)
-* const out = nodeFs.createWriteStream('example.car')
-*
-* for await (const buf of c.export(root, {
-*   signal: AbortSignal.timeout(5_000),
-*   traversal: new UnixFSPath('/foo/bar/baz.txt')
-* })) {
-*   out.write(buf)
-* }
-*
-* out.end()
-* ```
-*
-* @example Including traversal path above the root in a CAR
-*
-* The `includeTraversalBlocks` option will include the traversal blocks in the
-* CAR when they would otherwise be excluded (for example when the traversal
-* starts in a parent of the export root).
-*
-* Here `baz` is the CID for `baz.txt`.
-*
-* The CAR file will include the blocks for `parent`, `/foo`, `/bar`, and
-* `/baz.txt`.
-*
-* `baz` will be the only entry in the CAR file roots.
-*
-* ```typescript
-* import { createHelia } from 'helia'
-* import { car, UnixFSPath } from '@helia/car'
-* import { CID } from 'multiformats/cid'
-* import nodeFs from 'node:fs'
-*
-* const helia = await createHelia()
-* const parent = CID.parse('QmFoo...')
-* const baz = CID.parse('QmBar...')
-*
-* const c = car(helia)
-* const out = nodeFs.createWriteStream('example.car')
-*
-* for await (const buf of c.export(baz, {
-*   signal: AbortSignal.timeout(5_000),
-*   traversal: new UnixFSPath(parent, '/foo/bar/baz.txt'),
-*   includeTraversalBlocks: true
-* })) {
-*   out.write(buf)
-* }
-*
-* out.end()
-* ```
-*
-* @example Importing all blocks from a CAR file
-*
-* ```typescript
-* import { createHelia } from 'helia'
-* import { unixfs } from '@helia/unixfs'
-* import { car } from '@helia/car'
-* import { CarReader } from '@ipld/car'
-* import { Readable } from 'node:stream'
-* import nodeFs from 'node:fs'
-*
-* const helia = await createHelia({
-*   // ... helia config
-* })
-*
-* // import the car
-* const inStream = nodeFs.createReadStream('example.car')
-* const reader = await CarReader.fromIterable(inStream)
-*
-* const c = car(helia)
-* await c.import(reader, {
-*   signal: AbortSignal.timeout(5_000)
-* })
-* ```
-*/
-/**
-* Create a {@link Car} instance for use with {@link https://github.com/ipfs/helia Helia}
-*/
-function car(helia) {
-	return new Car(helia);
-}
-//#endregion
-//#region node_modules/.pnpm/it-take@3.0.11/node_modules/it-take/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* For when you only want a few values out of an (async)iterable.
-*
-* @example
-*
-* ```javascript
-* import take from 'it-take'
-* import all from 'it-all'
-*
-* // This can also be an iterator, generator, etc
-* const values = [0, 1, 2, 3, 4]
-*
-* const arr = all(take(values, 2))
-*
-* console.info(arr) // 0, 1
-* ```
-*
-* Async sources must be awaited:
-*
-* ```javascript
-* import take from 'it-take'
-* import all from 'it-all'
-*
-* const values = async function * () {
-*   yield * [0, 1, 2, 3, 4]
-* }
-*
-* const arr = await all(take(values(), 2))
-*
-* console.info(arr) // 0, 1
-* ```
-*/
-function isAsyncIterable$4(thing) {
-	return thing[Symbol.asyncIterator] != null;
-}
-function take(source, limit) {
-	if (isAsyncIterable$4(source)) return (async function* () {
-		let items = 0;
-		if (limit < 1) return;
-		for await (const entry of source) {
-			yield entry;
-			items++;
-			if (items === limit) return;
-		}
-	})();
-	return (function* () {
-		let items = 0;
-		if (limit < 1) return;
-		for (const entry of source) {
-			yield entry;
-			items++;
-			if (items === limit) return;
-		}
-	})();
-}
-//#endregion
 //#region node_modules/.pnpm/@libp2p+peer-id@6.0.10/node_modules/@libp2p/peer-id/dist/src/peer-id.js
 /**
 * @packageDocumentation
@@ -45926,7 +42586,7 @@ var URLPeerId = class {
 	url;
 	constructor(url) {
 		this.url = url.toString();
-		this.multihash = identity$1.digest(fromString(this.url));
+		this.multihash = identity.digest(fromString(this.url));
 	}
 	[inspect]() {
 		return `PeerId(${this.url})`;
@@ -46024,7 +42684,7 @@ function peerIdFromCID(cid) {
 	return peerIdFromMultihash(cid.multihash);
 }
 function isIdentityMultihash(multihash) {
-	return multihash.code === identity$1.code;
+	return multihash.code === identity.code;
 }
 function isSha256Multihash(multihash) {
 	return multihash.code === sha256$1.code;
@@ -47039,1453 +43699,6 @@ function trustlessGateway(init = {}) {
 	return (components) => new TrustlessGatewayBlockBroker(components, init);
 }
 //#endregion
-//#region node_modules/.pnpm/browser-readablestream-to-it@2.0.12/node_modules/browser-readablestream-to-it/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Allows treating a browser readable stream as an async iterator.
-*
-* @example
-*
-* ```javascript
-* import toIt from 'browser-readablestream-to-it'
-* import all from 'it-all'
-*
-* const content = [0, 1, 2, 3, 4]
-*
-* const stream = new ReadableStream({
-*   start(controller) {
-*     for (let i = 0; i < content.length; i++) {
-*       controller.enqueue(content[i])
-*     }
-*
-*     controller.close()
-*   }
-* })
-*
-* const arr = await all(toIt(stream))
-*
-* console.info(arr) // 0, 1, 2, 3, 4
-* ```
-*
-* ## preventCancel
-*
-* By default a readable stream will have [.cancel](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream/cancel) called on it once it has ended or
-* reading has stopped prematurely.
-*
-* To prevent this behaviour, pass `preventCancel: true` as an option:
-*
-* ```javascript
-* const arr = await all(toIt(stream, { preventCancel: true }))
-*
-* console.info(arr) // 0, 1, 2, 3, 4
-* ```
-*/
-/**
-* Turns a browser readable stream into an async iterable. Async iteration over
-* returned iterable will lock give stream, preventing any other consumer from
-* acquiring a reader. The lock will be released if iteration loop is broken. To
-* prevent stream cancelling optional `{ preventCancel: true }` could be passed
-* as a second argument.
-*/
-async function* browserReadableStreamToIt(stream, options = {}) {
-	const reader = stream.getReader();
-	try {
-		while (true) {
-			const result = await reader.read();
-			if (result.done) return;
-			yield result.value;
-		}
-	} finally {
-		if (options.preventCancel !== true) await reader.cancel();
-		reader.releaseLock();
-	}
-}
-/**
-* Timestamp for 64-bit time_t, nanosecond precision and strftime
-*
-* @author Yusuke Kawasaki
-* @license MIT
-* @see https://github.com/kawanet/timestamp-nano
-*/
-//#endregion
-//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/errors.js
-var import_timestamp = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
-	(function() {
-		if ("undefined" !== typeof module) module.exports = Timestamp;
-		var SEC_DAY = 24 * 3600;
-		var YEAR_SLOT = 3200;
-		var DAY_SLOT = 146097 * YEAR_SLOT / 400;
-		var SEC_SLOT = SEC_DAY * DAY_SLOT;
-		var MSEC_SLOT = SEC_SLOT * 1e3;
-		var MAX_MSEC = 1e3 * 1e4 * 1e4 * SEC_DAY;
-		var BIT24 = 16777216;
-		var BIT32 = 65536 * 65536;
-		var DEC6 = 1e3 * 1e3;
-		var DEC9 = 1e3 * 1e3 * 1e3;
-		var ZERO9 = "000000000";
-		var trunc = Math.trunc || Math_trunc;
-		var P = Timestamp.prototype;
-		Timestamp.fromDate = fromDate;
-		Timestamp.fromInt64BE = buildFromInt64(0, 1, 2, 3, 0, 4);
-		Timestamp.fromInt64LE = buildFromInt64(3, 2, 1, 0, 4, 0);
-		Timestamp.fromString = fromString;
-		Timestamp.fromTimeT = fromTimeT;
-		P.year = 0;
-		P.time = 0;
-		P.nano = 0;
-		P.addNano = addNano;
-		P.getNano = getNano;
-		P.getTimeT = getTimeT;
-		P.getYear = getYear;
-		P.toDate = toDate;
-		P.toJSON = toJSON;
-		P.toString = toString;
-		P.writeInt64BE = buildWriteInt64(0, 1, 2, 3, 0, 4);
-		P.writeInt64LE = buildWriteInt64(3, 2, 1, 0, 4, 0);
-		var FMT_JSON = "%Y-%m-%dT%H:%M:%S.%NZ";
-		var FMT_MONTH = [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jun",
-			"Jul",
-			"Aug",
-			"Sep",
-			"Oct",
-			"Nov",
-			"Dec"
-		];
-		var FMT_DAY = [
-			"Sun",
-			"Mon",
-			"Tue",
-			"Wed",
-			"Thu",
-			"Fri",
-			"Sat"
-		];
-		var FMT_STRING = {
-			"%": "%",
-			F: "%Y-%m-%d",
-			n: "\n",
-			R: "%H:%M",
-			T: "%H:%M:%S",
-			t: "	",
-			X: "%T",
-			Z: "GMT",
-			z: "+0000"
-		};
-		return Timestamp;
-		function Timestamp(time, nano, year) {
-			var ts = this;
-			if (!(ts instanceof Timestamp)) return new Timestamp(time, nano, year);
-			ts.time = +time || 0;
-			ts.nano = +nano || 0;
-			ts.year = +year || 0;
-			normalize(ts);
-		}
-		function getYear() {
-			return this.toDate().getUTCFullYear() + this.year;
-		}
-		function normalize(ts) {
-			var year = ts.year;
-			var time = ts.time;
-			var nano = ts.nano;
-			var changed;
-			var slot;
-			if (nano < 0 || DEC6 <= nano) {
-				var n = Math.floor(nano / DEC6);
-				nano -= n * DEC6;
-				time += n;
-				changed = 1;
-			}
-			var y = year % YEAR_SLOT;
-			if (time < -MAX_MSEC || MAX_MSEC < time || y) {
-				slot = trunc(time / MSEC_SLOT);
-				if (slot) {
-					year += slot * YEAR_SLOT;
-					time -= slot * MSEC_SLOT;
-				}
-				var dt = newDate(time);
-				dt.setUTCFullYear(y + dt.getUTCFullYear());
-				year -= y;
-				time = +dt;
-				slot = trunc(year / YEAR_SLOT);
-				var total = time + slot * MSEC_SLOT;
-				if (slot && -MAX_MSEC <= total && total <= MAX_MSEC) {
-					year -= slot * YEAR_SLOT;
-					time = total;
-				}
-				changed = 1;
-			}
-			if (changed) {
-				ts.year = year;
-				ts.time = time;
-				ts.nano = nano;
-			}
-			return ts;
-		}
-		function toDate() {
-			return newDate(normalize(this).time);
-		}
-		function newDate(time) {
-			var dt = /* @__PURE__ */ new Date(0);
-			dt.setTime(time);
-			return dt;
-		}
-		function addNano(nano) {
-			this.nano += +nano || 0;
-			return this;
-		}
-		function getNano() {
-			var ts = normalize(this);
-			return (ts.time % 1e3 * DEC6 + +ts.nano + DEC9) % DEC9;
-		}
-		function fromString(string) {
-			var time;
-			var ts = new Timestamp();
-			string += "";
-			var array = string.replace(/^\s*[+\-]?\d+/, function(match) {
-				var year = +match;
-				var y = 1970 + (year - 1970) % 400;
-				ts.year = year - y;
-				return y;
-			}).replace(/(?:Z|([+\-]\d{2}):?(\d{2}))$/, function(match, hour, min) {
-				if (hour < 0) min *= -1;
-				time = (+hour * 60 + +min) * 6e4;
-				return "";
-			}).replace(/\.\d+$/, function(match) {
-				ts.nano = +(match + ZERO9).substr(1, 9);
-				return "";
-			}).split(/\D+/);
-			if (array.length > 1) array[1]--;
-			else array[1] = 0;
-			ts.time = time = Date.UTC.apply(Date, array) - (time || 0);
-			if (isNaN(time)) throw new TypeError("Invalid Date");
-			return normalize(ts);
-		}
-		function fromDate(date) {
-			return new Timestamp(+date);
-		}
-		function fromTimeT(time) {
-			return fromTime(time, 0);
-		}
-		function fromTime(low, high) {
-			high |= 0;
-			high *= BIT32;
-			low = +low || 0;
-			var slot = trunc(high / SEC_SLOT) + trunc(low / SEC_SLOT);
-			var second = high % SEC_SLOT + low % SEC_SLOT;
-			var offset = trunc(second / SEC_SLOT);
-			if (offset) {
-				slot += offset;
-				second -= offset * SEC_SLOT;
-			}
-			return new Timestamp(second * 1e3, 0, slot * YEAR_SLOT);
-		}
-		function getTimeT() {
-			var ts = normalize(this);
-			var time = Math.floor(ts.time / 1e3);
-			var year = ts.year;
-			if (year) time += year * DAY_SLOT * SEC_DAY / YEAR_SLOT;
-			return time;
-		}
-		function toJSON() {
-			return this.toString().replace(/0{1,6}Z$/, "Z");
-		}
-		function toString(format) {
-			var ts = this;
-			var dt = ts.toDate();
-			var map = {
-				H,
-				L,
-				M,
-				N,
-				S,
-				Y,
-				a,
-				b,
-				d,
-				e,
-				m,
-				s
-			};
-			return strftime(format || FMT_JSON);
-			function strftime(format) {
-				return format.replace(/%./g, function(match) {
-					var m = match[1];
-					var c = FMT_STRING[m];
-					var f = map[m];
-					return c ? strftime(c) : f ? f() : match;
-				});
-			}
-			function Y() {
-				var year = ts.getYear();
-				if (year > 999999) return "+" + year;
-				else if (year > 9999) return "+" + pad(year, 6);
-				else if (year >= 0) return pad(year, 4);
-				else if (year >= -999999) return "-" + pad(-year, 6);
-				else return year;
-			}
-			function m() {
-				return pad2(dt.getUTCMonth() + 1);
-			}
-			function d() {
-				return pad2(dt.getUTCDate());
-			}
-			function e() {
-				return padS(dt.getUTCDate());
-			}
-			function H() {
-				return pad2(dt.getUTCHours());
-			}
-			function M() {
-				return pad2(dt.getUTCMinutes());
-			}
-			function S() {
-				return pad2(dt.getUTCSeconds());
-			}
-			function L() {
-				return pad(dt.getUTCMilliseconds(), 3);
-			}
-			function N() {
-				return pad(ts.getNano(), 9);
-			}
-			function a() {
-				return FMT_DAY[dt.getUTCDay()];
-			}
-			function b() {
-				return FMT_MONTH[dt.getUTCMonth()];
-			}
-			function s() {
-				return ts.getTimeT();
-			}
-		}
-		function buildWriteInt64(pos0, pos1, pos2, pos3, posH, posL) {
-			return writeInt64;
-			function writeInt64(buffer, offset) {
-				var ts = normalize(this);
-				if (!buffer) buffer = new Array(8);
-				checkRange(buffer, offset |= 0);
-				var second = Math.floor(ts.time / 1e3);
-				var day = ts.year * (DAY_SLOT * SEC_DAY / YEAR_SLOT);
-				var high = trunc(day / BIT32) + trunc(second / BIT32);
-				var low = day % BIT32 + second % BIT32;
-				var slot = Math.floor(low / BIT32);
-				if (slot) {
-					high += slot;
-					low -= slot * BIT32;
-				}
-				writeUint32(buffer, offset + posH, high);
-				writeUint32(buffer, offset + posL, low);
-				return buffer;
-			}
-			function writeUint32(buffer, offset, value) {
-				buffer[offset + pos0] = value >> 24 & 255;
-				buffer[offset + pos1] = value >> 16 & 255;
-				buffer[offset + pos2] = value >> 8 & 255;
-				buffer[offset + pos3] = value & 255;
-			}
-		}
-		function buildFromInt64(pos0, pos1, pos2, pos3, posH, posL) {
-			return fromInt64;
-			function fromInt64(buffer, offset) {
-				checkRange(buffer, offset |= 0);
-				var high = readUint32(buffer, offset + posH);
-				return fromTime(readUint32(buffer, offset + posL), high);
-			}
-			function readUint32(buffer, offset) {
-				return buffer[offset + pos0] * BIT24 + (buffer[offset + pos1] << 16 | buffer[offset + pos2] << 8 | buffer[offset + pos3]);
-			}
-		}
-		function checkRange(buffer, offset) {
-			var last = buffer && buffer.length;
-			if (last == null) throw new TypeError("Invalid Buffer");
-			if (last < offset + 8) throw new RangeError("Out of range");
-		}
-		function Math_trunc(x) {
-			var n = x - x % 1;
-			return n === 0 && (x < 0 || x === 0 && 1 / x !== Infinity) ? -0 : n;
-		}
-		function padS(v) {
-			return (v > 9 ? "" : " ") + (v | 0);
-		}
-		function pad2(v) {
-			return (v > 9 ? "" : "0") + (v | 0);
-		}
-		function pad(v, len) {
-			return (ZERO9 + (v | 0)).substr(-len);
-		}
-	})();
-})))(), 1);
-var SignatureVerificationError = class extends Error {
-	static name = "SignatureVerificationError";
-	constructor(message = "Record signature verification failed") {
-		super(message);
-		this.name = "SignatureVerificationError";
-	}
-};
-var RecordExpiredError = class extends Error {
-	static name = "RecordExpiredError";
-	constructor(message = "Record has expired") {
-		super(message);
-		this.name = "RecordExpiredError";
-	}
-};
-var UnsupportedValidityError = class extends Error {
-	static name = "UnsupportedValidityError";
-	constructor(message = "The validity type is unsupported") {
-		super(message);
-		this.name = "UnsupportedValidityError";
-	}
-};
-var RecordTooLargeError = class extends Error {
-	static name = "RecordTooLargeError";
-	constructor(message = "The record is too large") {
-		super(message);
-		this.name = "RecordTooLargeError";
-	}
-};
-var InvalidValueError = class extends Error {
-	static name = "InvalidValueError";
-	constructor(message = "Value must be a valid content path starting with /") {
-		super(message);
-		this.name = "InvalidValueError";
-	}
-};
-var InvalidRecordDataError = class extends Error {
-	static name = "InvalidRecordDataError";
-	constructor(message = "Invalid record data") {
-		super(message);
-		this.name = "InvalidRecordDataError";
-	}
-};
-var InvalidEmbeddedPublicKeyError = class extends Error {
-	static name = "InvalidEmbeddedPublicKeyError";
-	constructor(message = "Invalid embedded public key") {
-		super(message);
-		this.name = "InvalidEmbeddedPublicKeyError";
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/pb/ipns.js
-var IpnsEntry;
-(function(IpnsEntry) {
-	(function(ValidityType) {
-		ValidityType["EOL"] = "EOL";
-	})(IpnsEntry.ValidityType || (IpnsEntry.ValidityType = {}));
-	let __ValidityTypeValues;
-	(function(__ValidityTypeValues) {
-		__ValidityTypeValues[__ValidityTypeValues["EOL"] = 0] = "EOL";
-	})(__ValidityTypeValues || (__ValidityTypeValues = {}));
-	(function(ValidityType) {
-		ValidityType.codec = () => {
-			return enumeration(__ValidityTypeValues);
-		};
-	})(IpnsEntry.ValidityType || (IpnsEntry.ValidityType = {}));
-	let _codec;
-	IpnsEntry.codec = () => {
-		if (_codec == null) _codec = message((obj, w, opts = {}) => {
-			if (opts.lengthDelimited !== false) w.fork();
-			if (obj.value != null) {
-				w.uint32(10);
-				w.bytes(obj.value);
-			}
-			if (obj.signatureV1 != null) {
-				w.uint32(18);
-				w.bytes(obj.signatureV1);
-			}
-			if (obj.validityType != null) {
-				w.uint32(24);
-				IpnsEntry.ValidityType.codec().encode(obj.validityType, w);
-			}
-			if (obj.validity != null) {
-				w.uint32(34);
-				w.bytes(obj.validity);
-			}
-			if (obj.sequence != null) {
-				w.uint32(40);
-				w.uint64(obj.sequence);
-			}
-			if (obj.ttl != null) {
-				w.uint32(48);
-				w.uint64(obj.ttl);
-			}
-			if (obj.pubKey != null) {
-				w.uint32(58);
-				w.bytes(obj.pubKey);
-			}
-			if (obj.signatureV2 != null) {
-				w.uint32(66);
-				w.bytes(obj.signatureV2);
-			}
-			if (obj.data != null) {
-				w.uint32(74);
-				w.bytes(obj.data);
-			}
-			if (opts.lengthDelimited !== false) w.ldelim();
-		}, (reader, length, opts = {}) => {
-			const obj = {};
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						obj.value = reader.bytes();
-						break;
-					case 2:
-						obj.signatureV1 = reader.bytes();
-						break;
-					case 3:
-						obj.validityType = IpnsEntry.ValidityType.codec().decode(reader);
-						break;
-					case 4:
-						obj.validity = reader.bytes();
-						break;
-					case 5:
-						obj.sequence = reader.uint64();
-						break;
-					case 6:
-						obj.ttl = reader.uint64();
-						break;
-					case 7:
-						obj.pubKey = reader.bytes();
-						break;
-					case 8:
-						obj.signatureV2 = reader.bytes();
-						break;
-					case 9:
-						obj.data = reader.bytes();
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-			return obj;
-		}, function* (reader, length, prefix, opts = {}) {
-			const end = length == null ? reader.len : reader.pos + length;
-			while (reader.pos < end) {
-				const tag = reader.uint32();
-				switch (tag >>> 3) {
-					case 1:
-						yield {
-							field: `${prefix}.value`,
-							value: reader.bytes()
-						};
-						break;
-					case 2:
-						yield {
-							field: `${prefix}.signatureV1`,
-							value: reader.bytes()
-						};
-						break;
-					case 3:
-						yield {
-							field: `${prefix}.validityType`,
-							value: IpnsEntry.ValidityType.codec().decode(reader)
-						};
-						break;
-					case 4:
-						yield {
-							field: `${prefix}.validity`,
-							value: reader.bytes()
-						};
-						break;
-					case 5:
-						yield {
-							field: `${prefix}.sequence`,
-							value: reader.uint64()
-						};
-						break;
-					case 6:
-						yield {
-							field: `${prefix}.ttl`,
-							value: reader.uint64()
-						};
-						break;
-					case 7:
-						yield {
-							field: `${prefix}.pubKey`,
-							value: reader.bytes()
-						};
-						break;
-					case 8:
-						yield {
-							field: `${prefix}.signatureV2`,
-							value: reader.bytes()
-						};
-						break;
-					case 9:
-						yield {
-							field: `${prefix}.data`,
-							value: reader.bytes()
-						};
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-		});
-		return _codec;
-	};
-	function encode(obj) {
-		return encodeMessage(obj, IpnsEntry.codec());
-	}
-	IpnsEntry.encode = encode;
-	function decode(buf, opts) {
-		return decodeMessage(buf, IpnsEntry.codec(), opts);
-	}
-	IpnsEntry.decode = decode;
-	function stream(buf, opts) {
-		return streamMessage(buf, IpnsEntry.codec(), opts);
-	}
-	IpnsEntry.stream = stream;
-})(IpnsEntry || (IpnsEntry = {}));
-//#endregion
-//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/utils.js
-const log$12 = logger("ipns:utils");
-const IPNS_PREFIX$1 = fromString$2("/ipns/");
-const IDENTITY_CODEC = 0;
-const SHA2_256_CODEC = 18;
-/**
-* Extracts a public key from the passed PeerId, falling back to the pubKey
-* embedded in the ipns record
-*/
-function extractPublicKeyFromIPNSRecord(record) {
-	let pubKey;
-	if (record.pubKey != null) try {
-		pubKey = publicKeyFromProtobuf(record.pubKey);
-	} catch (err) {
-		log$12.error(err);
-		throw err;
-	}
-	if (pubKey != null) return pubKey;
-}
-/**
-* Utility for creating the record data for being signed
-*/
-function ipnsRecordDataForV2Sig(data) {
-	return concat$1([fromString$2("ipns-signature:"), data]);
-}
-function marshalIPNSRecord(obj) {
-	if ("signatureV1" in obj) return IpnsEntry.encode({
-		value: fromString$2(obj.value),
-		signatureV1: obj.signatureV1,
-		validityType: obj.validityType,
-		validity: fromString$2(obj.validity),
-		sequence: obj.sequence,
-		ttl: obj.ttl,
-		pubKey: obj.pubKey,
-		signatureV2: obj.signatureV2,
-		data: obj.data
-	});
-	else return IpnsEntry.encode({
-		pubKey: obj.pubKey,
-		signatureV2: obj.signatureV2,
-		data: obj.data
-	});
-}
-function unmarshalIPNSRecord(buf) {
-	const message = IpnsEntry.decode(buf);
-	if (message.sequence != null) message.sequence = BigInt(message.sequence);
-	if (message.ttl != null) message.ttl = BigInt(message.ttl);
-	if (message.signatureV2 == null || message.data == null) throw new SignatureVerificationError("Missing data or signatureV2");
-	const data = parseCborData(message.data);
-	const value = normalizeByteValue(data.Value);
-	const validity = toString$2(data.Validity);
-	if (message.value != null && message.signatureV1 != null) {
-		validateCborDataMatchesPbData(message);
-		return {
-			value,
-			validityType: IpnsEntry.ValidityType.EOL,
-			validity,
-			sequence: data.Sequence,
-			ttl: data.TTL,
-			pubKey: message.pubKey,
-			signatureV1: message.signatureV1,
-			signatureV2: message.signatureV2,
-			data: message.data
-		};
-	} else if (message.signatureV2 != null) return {
-		value,
-		validityType: IpnsEntry.ValidityType.EOL,
-		validity,
-		sequence: data.Sequence,
-		ttl: data.TTL,
-		pubKey: message.pubKey,
-		signatureV2: message.signatureV2,
-		data: message.data
-	};
-	else throw new Error("invalid record: does not include signatureV1 or signatureV2");
-}
-function multihashToIPNSRoutingKey(digest) {
-	return concat$1([IPNS_PREFIX$1, digest.bytes]);
-}
-function multihashFromIPNSRoutingKey(key) {
-	const digest = decode$17(key.slice(IPNS_PREFIX$1.length));
-	if (!isCodec(digest, IDENTITY_CODEC) && !isCodec(digest, SHA2_256_CODEC)) throw new InvalidMultihashError("Multihash in IPNS key was not identity or sha2-256");
-	return digest;
-}
-function parseCborData(buf) {
-	const data = decode$12(buf);
-	if (data.ValidityType === 0) data.ValidityType = IpnsEntry.ValidityType.EOL;
-	else throw new UnsupportedValidityError("The validity type is unsupported");
-	if (Number.isInteger(data.Sequence)) data.Sequence = BigInt(data.Sequence);
-	if (Number.isInteger(data.TTL)) data.TTL = BigInt(data.TTL);
-	return data;
-}
-function normalizeByteValue(value) {
-	const string = toString$2(value).trim();
-	if (string.startsWith("/")) return string;
-	try {
-		return `/ipfs/${CID$1.decode(value).toV1().toString()}`;
-	} catch {}
-	try {
-		return `/ipfs/${CID$1.parse(string).toV1().toString()}`;
-	} catch {}
-	throw new InvalidValueError("Value must be a valid content path starting with /");
-}
-function validateCborDataMatchesPbData(entry) {
-	if (entry.data == null) throw new InvalidRecordDataError("Record data is missing");
-	const data = parseCborData(entry.data);
-	if (!equals(data.Value, entry.value ?? new Uint8Array(0))) throw new SignatureVerificationError("Field \"value\" did not match between protobuf and CBOR");
-	if (!equals(data.Validity, entry.validity ?? new Uint8Array(0))) throw new SignatureVerificationError("Field \"validity\" did not match between protobuf and CBOR");
-	if (data.ValidityType !== entry.validityType) throw new SignatureVerificationError("Field \"validityType\" did not match between protobuf and CBOR");
-	if (data.Sequence !== entry.sequence) throw new SignatureVerificationError("Field \"sequence\" did not match between protobuf and CBOR");
-	if (data.TTL !== entry.ttl) throw new SignatureVerificationError("Field \"ttl\" did not match between protobuf and CBOR");
-}
-function isCodec(digest, codec) {
-	return digest.code === codec;
-}
-//#endregion
-//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/validator.js
-const log$11 = logger("ipns:validator");
-/**
-* Limit valid IPNS record sizes to 10kb
-*/
-const MAX_RECORD_SIZE = 1024 * 10;
-/**
-* Validates the given IPNS Record against the given public key. We need a "raw"
-* record in order to be able to access to all of its fields.
-*/
-async function validate(publicKey, marshalledRecord) {
-	const record = unmarshalIPNSRecord(marshalledRecord);
-	let isValid;
-	try {
-		const dataForSignature = ipnsRecordDataForV2Sig(record.data);
-		isValid = await publicKey.verify(dataForSignature, record.signatureV2);
-	} catch (err) {
-		isValid = false;
-	}
-	if (!isValid) {
-		log$11.error("record signature verification failed");
-		throw new SignatureVerificationError("Record signature verification failed");
-	}
-	if (record.validityType === IpnsEntry.ValidityType.EOL) {
-		if (import_timestamp.default.fromString(record.validity).toDate().getTime() < Date.now()) {
-			log$11.error("record has expired");
-			throw new RecordExpiredError("record has expired");
-		}
-	} else if (record.validityType != null) {
-		log$11.error("the validity type is unsupported");
-		throw new UnsupportedValidityError("The validity type is unsupported");
-	}
-	log$11("ipns record for %s is valid", record.value);
-}
-/**
-* Validate the given IPNS record against the given routing key.
-*
-* @see https://specs.ipfs.tech/ipns/ipns-record/#routing-record for the binary format of the routing key
-*
-* @param routingKey - The routing key in binary format: binary(ascii(IPNS_PREFIX) + multihash(public key))
-* @param marshalledRecord - The marshalled record to validate.
-*/
-async function ipnsValidator(routingKey, marshalledRecord) {
-	if (marshalledRecord.byteLength > MAX_RECORD_SIZE) throw new RecordTooLargeError("The record is too large");
-	const routingMultihash = multihashFromIPNSRoutingKey(routingKey);
-	let routingPubKey;
-	if (isCodec(routingMultihash, 0)) routingPubKey = publicKeyFromMultihash(routingMultihash);
-	const recordPubKey = extractPublicKeyFromIPNSRecord(unmarshalIPNSRecord(marshalledRecord)) ?? routingPubKey;
-	if (recordPubKey == null) throw new InvalidEmbeddedPublicKeyError("Could not extract public key from IPNS record or routing key");
-	if (!equals(multihashToIPNSRoutingKey(recordPubKey.toMultihash()), routingKey)) throw new InvalidEmbeddedPublicKeyError("Embedded public key did not match routing key");
-	await validate(recordPubKey, marshalledRecord);
-}
-//#endregion
-//#region node_modules/.pnpm/it-ndjson@1.1.6/node_modules/it-ndjson/dist/src/errors.js
-/**
-* A serialized message was received that was too large
-*/
-var InvalidMessageLengthError = class extends Error {
-	name = "InvalidMessageLengthError";
-	code = "ERR_INVALID_MESSAGE_LENGTH";
-};
-//#endregion
-//#region node_modules/.pnpm/it-ndjson@1.1.6/node_modules/it-ndjson/dist/src/parse.js
-async function* parse(source, opts = {}) {
-	const matcher = /\r?\n/;
-	const decoder = new TextDecoder("utf8");
-	let buffer = "";
-	for await (let chunk of source) {
-		if (typeof chunk === "string") chunk = new TextEncoder().encode(chunk);
-		if (isUint8ArrayList(chunk)) chunk = chunk.subarray();
-		buffer += decoder.decode(chunk, { stream: true });
-		if (buffer.length > (opts?.maxMessageLength ?? buffer.length)) throw new InvalidMessageLengthError("Incoming message too long");
-		const parts = buffer.split(matcher);
-		buffer = parts.pop() ?? "";
-		for (let i = 0; i < parts.length; i++) yield JSON.parse(parts[i]);
-	}
-	buffer += decoder.decode();
-	if (buffer !== "") yield JSON.parse(buffer);
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/errors.js
-var InvalidRequestError = class extends Error {
-	static name = "InvalidRequestError";
-	constructor(message = "Invalid request") {
-		super(message);
-		this.name = "InvalidRequestError";
-	}
-};
-var BadResponseError = class extends Error {
-	static name = "BadResponseError";
-	constructor(message = "Bad response") {
-		super(message);
-		this.name = "BadResponseError";
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/it-first@3.0.11/node_modules/it-first/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* Return the first value in an (async)iterable
-*
-* @example
-*
-* ```javascript
-* import first from 'it-first'
-*
-* // This can also be an iterator, generator, etc
-* const values = [0, 1, 2, 3, 4]
-*
-* const res = first(values)
-*
-* console.info(res) // 0
-* ```
-*
-* Async sources must be awaited:
-*
-* ```javascript
-* import first from 'it-first'
-*
-* const values = async function * () {
-*   yield * [0, 1, 2, 3, 4]
-* }
-*
-* const res = await first(values())
-*
-* console.info(res) // 0
-* ```
-*/
-function isAsyncIterable$3(thing) {
-	return thing[Symbol.asyncIterator] != null;
-}
-function first(source) {
-	if (isAsyncIterable$3(source)) return (async () => {
-		for await (const entry of source) return entry;
-	})();
-	for (const entry of source) return entry;
-}
-//#endregion
-//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/routings.js
-const IPNS_PREFIX = fromString$2("/ipns/");
-function isIPNSKey(key) {
-	return equals(key.subarray(0, IPNS_PREFIX.byteLength), IPNS_PREFIX);
-}
-/**
-* Wrapper class to convert [http-routing-v1 content events](https://specs.ipfs.tech/routing/http-routing-v1/#response-body) into returned values
-*/
-var DelegatedRoutingV1HttpApiClientContentRouting = class {
-	client;
-	constructor(client) {
-		this.client = client;
-	}
-	async *findProviders(cid, options = {}) {
-		try {
-			yield* map(this.client.getProviders(cid, options), (record) => {
-				return {
-					id: record.ID,
-					multiaddrs: record.Addrs ?? [],
-					routing: "delegated-http-routing-v1"
-				};
-			});
-		} catch (err) {
-			if (err instanceof NotFoundError$2) return;
-			throw err;
-		}
-	}
-	async provide() {}
-	async cancelReprovide() {}
-	async put(key, value, options) {
-		if (!isIPNSKey(key)) return;
-		const digest = multihashFromIPNSRoutingKey(key);
-		const cid = CID$1.createV1(114, digest);
-		const record = unmarshalIPNSRecord(value);
-		await this.client.putIPNS(cid, record, options);
-	}
-	async get(key, options) {
-		if (!isIPNSKey(key)) throw new NotFoundError$2("Not found");
-		const digest = multihashFromIPNSRoutingKey(key);
-		const cid = CID$1.createV1(114, digest);
-		try {
-			return marshalIPNSRecord(await this.client.getIPNS(cid, options));
-		} catch (err) {
-			if (err.name === "BadResponseError") throw new NotFoundError$2("Not found");
-			throw err;
-		}
-	}
-	toString() {
-		return `DelegatedRoutingV1HttpApiClientContentRouting(${this.client.url})`;
-	}
-};
-/**
-* Wrapper class to convert [http-routing-v1](https://specs.ipfs.tech/routing/http-routing-v1/#response-body-0) events into expected libp2p values
-*/
-var DelegatedRoutingV1HttpApiClientPeerRouting = class {
-	client;
-	constructor(client) {
-		this.client = client;
-	}
-	async findPeer(peerId, options = {}) {
-		const peer = await first(this.client.getPeers(peerId, options));
-		if (peer != null) return {
-			id: peer.ID,
-			multiaddrs: peer.Addrs ?? []
-		};
-		throw new NotFoundError$2("Not found");
-	}
-	async *getClosestPeers(key, options = {}) {
-		let cidOrPeer;
-		try {
-			cidOrPeer = CID$1.decode(key);
-		} catch {
-			try {
-				cidOrPeer = peerIdFromMultihash(decode$17(key));
-			} catch {
-				cidOrPeer = CID$1.createV1(85, identity$2.digest(key));
-			}
-		}
-		for await (const peer of this.client.getClosestPeers(cidOrPeer, options)) yield {
-			id: peer.ID,
-			multiaddrs: peer.Addrs ?? []
-		};
-	}
-	toString() {
-		return `DelegatedRoutingV1HttpApiClientPeerRouting(${this.client.url})`;
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/client.js
-const defaultValues$3 = {
-	concurrentRequests: 4,
-	timeout: 3e4,
-	cacheTTL: 300 * 1e3,
-	cacheName: "delegated-routing-v1-cache"
-};
-var DelegatedRoutingV1HttpApiClient = class {
-	url;
-	started;
-	httpQueue;
-	shutDownController;
-	timeout;
-	contentRouting;
-	peerRouting;
-	filterAddrs;
-	filterProtocols;
-	inFlightRequests;
-	cacheName;
-	cache;
-	cacheTTL;
-	log;
-	/**
-	* Create a new DelegatedContentRouting instance
-	*/
-	constructor(components, init) {
-		this.log = components.logger.forComponent("delegated-routing-v1-http-api-client");
-		this.started = false;
-		this.shutDownController = new AbortController();
-		setMaxListeners$1(Infinity, this.shutDownController.signal);
-		this.httpQueue = new PQueue({ concurrency: init.concurrentRequests ?? defaultValues$3.concurrentRequests });
-		this.inFlightRequests = /* @__PURE__ */ new Map();
-		this.url = init.url instanceof URL ? init.url : new URL(init.url);
-		this.timeout = init.timeout ?? defaultValues$3.timeout;
-		this.filterAddrs = init.filterAddrs;
-		this.filterProtocols = init.filterProtocols;
-		this.contentRouting = new DelegatedRoutingV1HttpApiClientContentRouting(this);
-		this.peerRouting = new DelegatedRoutingV1HttpApiClientPeerRouting(this);
-		this.cacheName = init.cacheName ?? defaultValues$3.cacheName;
-		this.cacheTTL = init.cacheTTL ?? defaultValues$3.cacheTTL;
-	}
-	get [contentRoutingSymbol]() {
-		return this.contentRouting;
-	}
-	get [peerRoutingSymbol]() {
-		return this.peerRouting;
-	}
-	isStarted() {
-		return this.started;
-	}
-	async start() {
-		if (this.started) return;
-		this.started = true;
-		if (this.cacheTTL > 0) {
-			this.cache = await globalThis.caches?.open(this.cacheName);
-			if (this.cache != null) this.log("cache enabled with ttl %d", this.cacheTTL);
-		}
-	}
-	async stop() {
-		this.httpQueue.clear();
-		this.shutDownController.abort();
-		await globalThis.caches?.delete(this.cacheName);
-		this.started = false;
-	}
-	async *getProviders(cid, options = {}) {
-		this.log("getProviders starts: %c", cid);
-		const timeoutSignal = AbortSignal.timeout(this.timeout);
-		const signal = anySignal([
-			this.shutDownController.signal,
-			timeoutSignal,
-			options.signal
-		]);
-		setMaxListeners$1(Infinity, timeoutSignal, signal);
-		const onStart = pDefer();
-		const onFinish = pDefer();
-		let found = 0;
-		this.httpQueue.add(async () => {
-			onStart.resolve();
-			return onFinish.promise;
-		});
-		try {
-			await onStart.promise;
-			const url = new URL(`${this.url}routing/v1/providers/${cid}`);
-			this.#addFilterParams(url, options.filterAddrs, options.filterProtocols);
-			const getOptions = {
-				headers: { accept: "application/x-ndjson, application/json;q=0.8" },
-				signal
-			};
-			const res = await this.#makeRequest(url.toString(), getOptions);
-			if (!res.ok) {
-				if (res.status === 404) return;
-				if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
-				throw new BadResponseError(`Unexpected status code: ${res.status}`);
-			}
-			const contentType = res.headers.get("Content-Type");
-			if (contentType == null) throw new BadResponseError("No Content-Type header received");
-			if (res.body == null) {
-				if (contentType !== "application/x-ndjson") throw new BadResponseError("Routing response had no body");
-				return;
-			}
-			if (contentType.startsWith("application/json")) {
-				const providers = (await res.json()).Providers ?? [];
-				for (const provider of providers) {
-					const record = this.#conformToPeerSchema(provider);
-					if (record != null) {
-						found++;
-						yield record;
-					}
-				}
-			} else if (contentType.includes("application/x-ndjson")) for await (const provider of parse(browserReadableStreamToIt(res.body))) {
-				const record = this.#conformToPeerSchema(provider);
-				if (record != null) {
-					found++;
-					yield record;
-				}
-			}
-			else throw new BadResponseError(`Unsupported Content-Type: ${contentType}`);
-		} finally {
-			signal.clear();
-			onFinish.resolve();
-			this.log("getProviders finished found %d providers for %c", found, cid);
-		}
-	}
-	async *getPeers(peerId, options = {}) {
-		this.log("getPeers starts: %c", peerId);
-		const timeoutSignal = AbortSignal.timeout(this.timeout);
-		const signal = anySignal([
-			this.shutDownController.signal,
-			timeoutSignal,
-			options.signal
-		]);
-		setMaxListeners$1(Infinity, timeoutSignal, signal);
-		const onStart = pDefer();
-		const onFinish = pDefer();
-		this.httpQueue.add(async () => {
-			onStart.resolve();
-			return onFinish.promise;
-		});
-		try {
-			await onStart.promise;
-			const url = new URL(`${this.url}routing/v1/peers/${peerId.toCID().toString()}`);
-			this.#addFilterParams(url, options.filterAddrs, options.filterProtocols);
-			const getOptions = {
-				headers: { Accept: "application/x-ndjson" },
-				signal
-			};
-			const res = await this.#makeRequest(url.toString(), getOptions);
-			if (res.status === 404) return;
-			if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
-			if (res.body == null) throw new BadResponseError("Routing response had no body");
-			if (res.headers.get("Content-Type")?.startsWith("application/json")) {
-				const peers = (await res.json()).Peers ?? [];
-				for (const peer of peers) {
-					const record = this.#conformToPeerSchema(peer);
-					if (record != null) yield record;
-				}
-			} else for await (const peer of parse(browserReadableStreamToIt(res.body))) {
-				const record = this.#conformToPeerSchema(peer);
-				if (record != null) yield record;
-			}
-		} catch (err) {
-			this.log.error("getPeers errored - %e", err);
-		} finally {
-			signal.clear();
-			onFinish.resolve();
-			this.log("getPeers finished: %c", peerId);
-		}
-	}
-	async *getClosestPeers(key, options = {}) {
-		let target;
-		if (isPeerId(key)) target = key.toCID().toString();
-		else if (CID$1.asCID(key) === key || key instanceof CID$1) target = key.toV1().toString();
-		else throw new InvalidParametersError$4("Key must be CID or PeerId");
-		this.log("getClosestPeers starts: %s", target);
-		const timeoutSignal = AbortSignal.timeout(this.timeout);
-		const signal = anySignal([
-			this.shutDownController.signal,
-			timeoutSignal,
-			options.signal
-		]);
-		setMaxListeners$1(Infinity, timeoutSignal, signal);
-		const onStart = pDefer();
-		const onFinish = pDefer();
-		this.httpQueue.add(async () => {
-			onStart.resolve();
-			return onFinish.promise;
-		});
-		try {
-			await onStart.promise;
-			const url = new URL(`${this.url}routing/v1/dht/closest/peers/${target}`);
-			this.#addFilterParams(url, options.filterAddrs, options.filterProtocols);
-			const getOptions = {
-				headers: { Accept: "application/x-ndjson" },
-				signal
-			};
-			const res = await this.#makeRequest(url.toString(), getOptions);
-			if (res.status === 404) return;
-			if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
-			if (res.body == null) throw new BadResponseError("Routing response had no body");
-			if (res.headers.get("Content-Type")?.startsWith("application/json")) {
-				const peers = (await res.json()).Peers ?? [];
-				for (const peer of peers) {
-					const record = this.#conformToPeerSchema(peer);
-					if (record != null) yield record;
-				}
-			} else for await (const peer of parse(browserReadableStreamToIt(res.body))) {
-				const record = this.#conformToPeerSchema(peer);
-				if (record != null) yield record;
-			}
-		} catch (err) {
-			this.log.error("getClosestPeers errored - %e", err);
-		} finally {
-			signal.clear();
-			onFinish.resolve();
-			this.log("getClosestPeers finished: %s", target);
-		}
-	}
-	async getIPNS(libp2pKey, options = {}) {
-		this.log("getIPNS starts: %s", libp2pKey);
-		const timeoutSignal = AbortSignal.timeout(this.timeout);
-		const signal = anySignal([
-			this.shutDownController.signal,
-			timeoutSignal,
-			options.signal
-		]);
-		setMaxListeners$1(Infinity, timeoutSignal, signal);
-		const onStart = pDefer();
-		const onFinish = pDefer();
-		this.httpQueue.add(async () => {
-			onStart.resolve();
-			return onFinish.promise;
-		});
-		const resource = `${this.url}routing/v1/ipns/${libp2pKey}`;
-		try {
-			await onStart.promise;
-			const getOptions = {
-				headers: { Accept: "application/vnd.ipfs.ipns-record" },
-				signal
-			};
-			const res = await this.#makeRequest(resource, getOptions);
-			this.log("getIPNS GET %s %d", resource, res.status);
-			if (res.status === 404) throw new NotFoundError$2("No matching records found");
-			if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
-			if (!res.ok) throw new BadResponseError(`Unexpected status code: ${res.status}`);
-			const contentType = res.headers.get("Content-Type");
-			if (contentType == null || !contentType.includes("application/vnd.ipfs.ipns-record")) throw new NotFoundError$2("No matching records found");
-			if (res.body == null) throw new BadResponseError("GET ipns response had no body");
-			const buf = await res.arrayBuffer();
-			const body = new Uint8Array(buf, 0, buf.byteLength);
-			if (options.validate !== false) await ipnsValidator(multihashToIPNSRoutingKey(libp2pKey.multihash), body);
-			return unmarshalIPNSRecord(body);
-		} catch (err) {
-			this.log.error("getIPNS GET %s error - %e", resource, err);
-			throw err;
-		} finally {
-			signal.clear();
-			onFinish.resolve();
-			this.log("getIPNS finished: %s", libp2pKey);
-		}
-	}
-	async putIPNS(libp2pKey, record, options = {}) {
-		this.log("putIPNS starts: %c", libp2pKey);
-		const timeoutSignal = AbortSignal.timeout(this.timeout);
-		const signal = anySignal([
-			this.shutDownController.signal,
-			timeoutSignal,
-			options.signal
-		]);
-		setMaxListeners$1(Infinity, timeoutSignal, signal);
-		const onStart = pDefer();
-		const onFinish = pDefer();
-		this.httpQueue.add(async () => {
-			onStart.resolve();
-			return onFinish.promise;
-		});
-		const resource = `${this.url}routing/v1/ipns/${libp2pKey}`;
-		try {
-			await onStart.promise;
-			const getOptions = {
-				method: "PUT",
-				headers: { "Content-Type": "application/vnd.ipfs.ipns-record" },
-				body: marshalIPNSRecord(record),
-				signal
-			};
-			const res = await this.#makeRequest(resource, getOptions);
-			this.log("putIPNS PUT %s %d", resource, res.status);
-			if (res.status !== 200) throw new BadResponseError("PUT ipns response had status other than 200");
-		} catch (err) {
-			this.log.error("putIPNS PUT %s error - %e", resource, err.stack);
-			throw err;
-		} finally {
-			signal.clear();
-			onFinish.resolve();
-			this.log("putIPNS finished: %c", libp2pKey);
-		}
-	}
-	#conformToPeerSchema(record) {
-		try {
-			const protocols = [];
-			const multiaddrs = record.Addrs?.map(multiaddr) ?? [];
-			if (record.Protocols != null) protocols.push(...record.Protocols);
-			if (record.Protocol != null) {
-				protocols.push(record.Protocol);
-				delete record.Protocol;
-			}
-			return {
-				...record,
-				Schema: "peer",
-				ID: peerIdFromString$1(record.ID),
-				Addrs: multiaddrs,
-				Protocols: protocols
-			};
-		} catch (err) {
-			this.log.error("could not conform record to peer schema - %e", err);
-		}
-	}
-	#addFilterParams(url, filterAddrs, filterProtocols) {
-		if (filterAddrs != null || this.filterAddrs != null) {
-			const adressFilter = filterAddrs?.join(",") ?? this.filterAddrs?.join(",") ?? "";
-			if (adressFilter !== "") url.searchParams.set("filter-addrs", adressFilter);
-		}
-		if (filterProtocols != null || this.filterProtocols != null) {
-			const protocolFilter = filterProtocols?.join(",") ?? this.filterProtocols?.join(",") ?? "";
-			if (protocolFilter !== "") url.searchParams.set("filter-protocols", protocolFilter);
-		}
-	}
-	/**
-	* makeRequest has two features:
-	* - Ensures only one concurrent request is made for the same URL
-	* - Caches GET requests if the Cache API is available
-	*/
-	async #makeRequest(url, options) {
-		const requestMethod = options.method ?? "GET";
-		const key = `${requestMethod}-${url}`;
-		if (requestMethod === "GET") {
-			const cachedResponse = await this.cache?.match(url);
-			if (cachedResponse != null) if (parseInt(cachedResponse.headers.get("x-cache-expires") ?? "0", 10) > Date.now()) {
-				this.log("returning cached response for %s", key);
-				this.logResponse(cachedResponse);
-				return cachedResponse;
-			} else {
-				this.log("evicting cached response for %s", key);
-				await this.cache?.delete(url);
-			}
-			else if (this.cache != null) this.log("cache miss for %s", key);
-		}
-		const existingRequest = this.inFlightRequests.get(key);
-		if (existingRequest != null) {
-			const response = await existingRequest;
-			this.log("deduplicating outgoing request for %s", key);
-			return response.clone();
-		}
-		this.log("outgoing request:");
-		this.logRequest(url, options);
-		const requestPromise = fetch(url, options).then(async (response) => {
-			this.log("incoming response:");
-			this.logResponse(response);
-			if (this.cache != null && response.ok && requestMethod === "GET") {
-				const expires = Date.now() + this.cacheTTL;
-				const headers = new Headers(response.headers);
-				headers.set("x-cache-expires", expires.toString());
-				const cachedResponse = new Response(response.clone().body, {
-					status: response.status,
-					statusText: response.statusText,
-					headers
-				});
-				await this.cache.put(url, cachedResponse);
-			}
-			return response;
-		}).finally(() => {
-			this.inFlightRequests.delete(key);
-		});
-		this.inFlightRequests.set(key, requestPromise);
-		return await requestPromise;
-	}
-	toString() {
-		return `DefaultDelegatedRoutingV1HttpApiClient(${this.url})`;
-	}
-	logRequest(url, init) {
-		const headers = new Headers(init.headers);
-		this.log("%s %s HTTP/1.1", init.method ?? "GET", url);
-		for (const [key, value] of headers.entries()) this.log("%s: %s", key, value);
-	}
-	logResponse(response) {
-		this.log("HTTP/1.1 %d %s", response.status, response.statusText);
-		for (const [key, value] of response.headers.entries()) this.log("%s: %s", key, value);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/index.js
-/**
-* @packageDocumentation
-*
-* A client implementation of the IPFS [Delegated Routing V1 HTTP API](https://specs.ipfs.tech/routing/http-routing-v1/) that can be used to interact with any compliant server implementation.
-*
-* @example
-*
-* ```typescript
-* import { delegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
-* import { CID } from 'multiformats/cid'
-* import { defaultLogger } from '@libp2p/logger'
-*
-* const client = delegatedRoutingV1HttpApiClient({
-*   url: 'https://example.org'
-* })({
-*   logger: defaultLogger()
-* })
-*
-* for await (const prov of client.getProviders(CID.parse('QmFoo'))) {
-*   // ...
-* }
-* ```
-*
-* ### How to use with libp2p
-*
-* The client can be configured as a libp2p service, this will enable it as both a {@link https://libp2p.github.io/js-libp2p/interfaces/_libp2p_interface.content_routing.ContentRouting.html | ContentRouting} and a {@link https://libp2p.github.io/js-libp2p/interfaces/_libp2p_interface.peer_routing.PeerRouting.html | PeerRouting} implementation
-*
-* @example
-*
-* ```typescript
-* import { delegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
-* import { createLibp2p } from 'libp2p'
-* import { peerIdFromString } from '@libp2p/peer-id'
-*
-* const libp2p = await createLibp2p({
-*   // other config here
-*   services: {
-*     delegatedRouting: delegatedRoutingV1HttpApiClient({
-*       url: 'https://example.org'
-*     })
-*   }
-* })
-*
-* // later this will use the configured HTTP gateway
-* await libp2p.peerRouting.findPeer(peerIdFromString('QmFoo'))
-* ```
-*
-* ### Caching
-*
-* By default, the client caches successful (200) delegated routing responses in browser environments (that support the [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache)) for a duration of 5 minutes. The client does this by adding an `x-cache-expires` header to the response object.
-*
-* If caching is enabled, the client will cache responses for the duration of `cacheTTL` milliseconds.
-* If `cacheTTL` is 0, caching is disabled:
-*
-* @example
-*
-* ```typescript
-* // disable caching
-* const client = delegatedRoutingV1HttpApiClient({
-*   url: 'https://example.org'
-*   cacheTTL: 0
-* })({
-*   logger: defaultLogger()
-* })
-* ```
-*
-* ### Filtering with IPIP-484
-*
-* The client can be configured to pass filter options to the delegated routing server as defined in IPIP-484.
-* The filter options be set globally, by passing them to the client constructor, or on a per-request basis.
-*
-* @see https://github.com/ipfs/specs/pull/484
-*
-* @example
-*
-* ```typescript
-* import { delegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
-* import { createLibp2p } from 'libp2p'
-* import { peerIdFromString } from '@libp2p/peer-id'
-* import { defaultLogger } from '@libp2p/logger'
-*
-* // globally set filter options
-* const client = delegatedRoutingV1HttpApiClient({
-*   url: 'https://delegated-ipfs.dev',
-*   filterProtocols: ['transport-bitswap', 'unknown', 'transport-ipfs-gateway-http'],
-*   filterAddrs: ['webtransport', 'webrtc-direct', 'wss']
-* })({
-*   logger: defaultLogger()
-* })
-*
-* // per-request filter options
-* for await (const prov of client.getProviders(CID.parse('bafy'), {
-*   filterProtocols: ['transport-ipfs-gateway-http'],
-*   filterAddrs: ['!p2p-circuit']
-* })) {
-*   // ...
-* }
-* ```
-*/
-/**
-* Create and return a client to use with a Routing V1 HTTP API server
-*/
-function delegatedRoutingV1HttpApiClient(init) {
-	return (components) => new DelegatedRoutingV1HttpApiClient(components, init);
-}
-//#endregion
 //#region node_modules/.pnpm/@helia+routers@5.1.1/node_modules/@helia/routers/dist/src/http-gateway-routing.js
 const DEFAULT_TRUSTLESS_GATEWAYS = ["https://trustless-gateway.link", "https://4everland.io"];
 const TRANSPORT_IPFS_GATEWAY_HTTP_CODE = 2336;
@@ -48609,11 +43822,11 @@ const SHARDING_FN = "SHARDING";
 * console.info(arr) // 'bar', 'foo'
 * ```
 */
-function isAsyncIterable$2(thing) {
+function isAsyncIterable$4(thing) {
 	return thing[Symbol.asyncIterator] != null;
 }
 function sort(source, sorter) {
-	if (isAsyncIterable$2(source)) return (async function* () {
+	if (isAsyncIterable$4(source)) return (async function* () {
 		yield* (await all(source)).sort(sorter);
 	})();
 	return (function* () {
@@ -50431,7 +45644,7 @@ var IPMappings = class {
 };
 //#endregion
 //#region node_modules/.pnpm/libp2p@3.3.3/node_modules/libp2p/dist/src/address-manager/observed-addresses.js
-const defaultValues$2 = { maxObservedAddresses: 10 };
+const defaultValues$3 = { maxObservedAddresses: 10 };
 var ObservedAddresses = class {
 	log;
 	addresses;
@@ -50442,7 +45655,7 @@ var ObservedAddresses = class {
 			name: "libp2p_address_manager_observed_addresses",
 			metrics: components.metrics
 		});
-		this.maxObservedAddresses = init.maxObservedAddresses ?? defaultValues$2.maxObservedAddresses;
+		this.maxObservedAddresses = init.maxObservedAddresses ?? defaultValues$3.maxObservedAddresses;
 	}
 	has(ma) {
 		return this.addresses.has(ma.toString());
@@ -50492,7 +45705,7 @@ var ObservedAddresses = class {
 };
 //#endregion
 //#region node_modules/.pnpm/libp2p@3.3.3/node_modules/libp2p/dist/src/address-manager/transport-addresses.js
-const defaultValues$1 = { maxObservedAddresses: 10 };
+const defaultValues$2 = { maxObservedAddresses: 10 };
 var TransportAddresses = class {
 	log;
 	addresses;
@@ -50503,7 +45716,7 @@ var TransportAddresses = class {
 			name: "libp2p_address_manager_transport_addresses",
 			metrics: components.metrics
 		});
-		this.maxObservedAddresses = init.maxObservedAddresses ?? defaultValues$1.maxObservedAddresses;
+		this.maxObservedAddresses = init.maxObservedAddresses ?? defaultValues$2.maxObservedAddresses;
 	}
 	get(multiaddr, ttl) {
 		if (isPrivate(multiaddr)) return {
@@ -50576,7 +45789,7 @@ var TransportAddresses = class {
 //#endregion
 //#region node_modules/.pnpm/libp2p@3.3.3/node_modules/libp2p/dist/src/address-manager/index.js
 const ONE_MINUTE = 6e4;
-const defaultValues = {
+const defaultValues$1 = {
 	maxObservedAddresses: 10,
 	addressVerificationTTL: ONE_MINUTE * 10,
 	addressVerificationRetry: ONE_MINUTE * 5
@@ -50625,8 +45838,8 @@ var AddressManager = class {
 		this.transportAddresses = new TransportAddresses(components, init);
 		this.announceFilter = init.announceFilter ?? defaultAddressFilter;
 		this.observedAddressFilter = createScalableCuckooFilter(1024);
-		this.addressVerificationTTL = init.addressVerificationTTL ?? defaultValues.addressVerificationTTL;
-		this.addressVerificationRetry = init.addressVerificationRetry ?? defaultValues.addressVerificationRetry;
+		this.addressVerificationTTL = init.addressVerificationTTL ?? defaultValues$1.addressVerificationTTL;
+		this.addressVerificationRetry = init.addressVerificationRetry ?? defaultValues$1.addressVerificationRetry;
 		this._updatePeerStoreAddresses = debounce$1(this._updatePeerStoreAddresses.bind(this), 1e3);
 		components.events.addEventListener("transport:listening", () => {
 			this._updatePeerStoreAddresses();
@@ -51072,6 +46285,366 @@ function getPeerAddress(peer) {
 		multiaddrs
 	};
 }
+//#endregion
+//#region node_modules/.pnpm/@chainsafe+is-ip@2.1.0/node_modules/@chainsafe/is-ip/lib/parser.js
+var Parser = class {
+	index = 0;
+	input = "";
+	new(input) {
+		this.index = 0;
+		this.input = input;
+		return this;
+	}
+	/** Run a parser, and restore the pre-parse state if it fails. */
+	readAtomically(fn) {
+		const index = this.index;
+		const result = fn();
+		if (result === void 0) this.index = index;
+		return result;
+	}
+	/** Run a parser, but fail if the entire input wasn't consumed. Doesn't run atomically. */
+	parseWith(fn) {
+		const result = fn();
+		if (this.index !== this.input.length) return;
+		return result;
+	}
+	/** Peek the next character from the input */
+	peekChar() {
+		if (this.index >= this.input.length) return;
+		return this.input[this.index];
+	}
+	/** Read the next character from the input */
+	readChar() {
+		if (this.index >= this.input.length) return;
+		return this.input[this.index++];
+	}
+	/** Read the next character from the input if it matches the target. */
+	readGivenChar(target) {
+		return this.readAtomically(() => {
+			const char = this.readChar();
+			if (char !== target) return;
+			return char;
+		});
+	}
+	/**
+	* Helper for reading separators in an indexed loop. Reads the separator
+	* character iff index > 0, then runs the parser. When used in a loop,
+	* the separator character will only be read on index > 0 (see
+	* readIPv4Addr for an example)
+	*/
+	readSeparator(sep, index, inner) {
+		return this.readAtomically(() => {
+			if (index > 0) {
+				if (this.readGivenChar(sep) === void 0) return;
+			}
+			return inner();
+		});
+	}
+	/**
+	* Read a number off the front of the input in the given radix, stopping
+	* at the first non-digit character or eof. Fails if the number has more
+	* digits than max_digits or if there is no number.
+	*/
+	readNumber(radix, maxDigits, allowZeroPrefix, maxBytes) {
+		return this.readAtomically(() => {
+			let result = 0;
+			let digitCount = 0;
+			const leadingChar = this.peekChar();
+			if (leadingChar === void 0) return;
+			const hasLeadingZero = leadingChar === "0";
+			const maxValue = 2 ** (8 * maxBytes) - 1;
+			while (true) {
+				const digit = this.readAtomically(() => {
+					const char = this.readChar();
+					if (char === void 0) return;
+					const num = Number.parseInt(char, radix);
+					if (Number.isNaN(num)) return;
+					return num;
+				});
+				if (digit === void 0) break;
+				result *= radix;
+				result += digit;
+				if (result > maxValue) return;
+				digitCount += 1;
+				if (maxDigits !== void 0) {
+					if (digitCount > maxDigits) return;
+				}
+			}
+			if (digitCount === 0) return;
+			else if (!allowZeroPrefix && hasLeadingZero && digitCount > 1) return;
+			else return result;
+		});
+	}
+	/** Read an IPv4 address. */
+	readIPv4Addr() {
+		return this.readAtomically(() => {
+			const out = new Uint8Array(4);
+			for (let i = 0; i < out.length; i++) {
+				const ix = this.readSeparator(".", i, () => this.readNumber(10, 3, false, 1));
+				if (ix === void 0) return;
+				out[i] = ix;
+			}
+			return out;
+		});
+	}
+	/** Read an IPv6 Address. */
+	readIPv6Addr() {
+		/**
+		* Read a chunk of an IPv6 address into `groups`. Returns the number
+		* of groups read, along with a bool indicating if an embedded
+		* trailing IPv4 address was read. Specifically, read a series of
+		* colon-separated IPv6 groups (0x0000 - 0xFFFF), with an optional
+		* trailing embedded IPv4 address.
+		*/
+		const readGroups = (groups) => {
+			for (let i = 0; i < groups.length / 2; i++) {
+				const ix = i * 2;
+				if (i < groups.length - 3) {
+					const ipv4 = this.readSeparator(":", i, () => this.readIPv4Addr());
+					if (ipv4 !== void 0) {
+						groups[ix] = ipv4[0];
+						groups[ix + 1] = ipv4[1];
+						groups[ix + 2] = ipv4[2];
+						groups[ix + 3] = ipv4[3];
+						return [ix + 4, true];
+					}
+				}
+				const group = this.readSeparator(":", i, () => this.readNumber(16, 4, true, 2));
+				if (group === void 0) return [ix, false];
+				groups[ix] = group >> 8;
+				groups[ix + 1] = group & 255;
+			}
+			return [groups.length, false];
+		};
+		return this.readAtomically(() => {
+			const head = new Uint8Array(16);
+			const [headSize, headIp4] = readGroups(head);
+			if (headSize === 16) return head;
+			if (headIp4) return;
+			if (this.readGivenChar(":") === void 0) return;
+			if (this.readGivenChar(":") === void 0) return;
+			const tail = new Uint8Array(14);
+			const limit = 16 - (headSize + 2);
+			const [tailSize] = readGroups(tail.subarray(0, limit));
+			head.set(tail.subarray(0, tailSize), 16 - tailSize);
+			return head;
+		});
+	}
+	/** Read an IP Address, either IPv4 or IPv6. */
+	readIPAddr() {
+		return this.readIPv4Addr() ?? this.readIPv6Addr();
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@chainsafe+is-ip@2.1.0/node_modules/@chainsafe/is-ip/lib/parse.js
+const MAX_IPV6_LENGTH = 45;
+const MAX_IPV4_LENGTH = 15;
+const parser = new Parser();
+/** Parse `input` into IPv4 bytes. */
+function parseIPv4(input) {
+	if (input.length > MAX_IPV4_LENGTH) return;
+	return parser.new(input).parseWith(() => parser.readIPv4Addr());
+}
+/** Parse `input` into IPv6 bytes. */
+function parseIPv6(input) {
+	if (input.includes("%")) input = input.split("%")[0];
+	if (input.length > MAX_IPV6_LENGTH) return;
+	return parser.new(input).parseWith(() => parser.readIPv6Addr());
+}
+/** Parse `input` into IPv4 or IPv6 bytes. */
+function parseIP(input, mapIPv4ToIPv6 = false) {
+	if (input.includes("%")) input = input.split("%")[0];
+	if (input.length > MAX_IPV6_LENGTH) return;
+	const addr = parser.new(input).parseWith(() => parser.readIPAddr());
+	if (!addr) return;
+	if (mapIPv4ToIPv6 && addr.length === 4) return Uint8Array.from([
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		255,
+		255,
+		addr[0],
+		addr[1],
+		addr[2],
+		addr[3]
+	]);
+	return addr;
+}
+//#endregion
+//#region node_modules/.pnpm/@chainsafe+netmask@2.0.0/node_modules/@chainsafe/netmask/dist/src/util.js
+function allFF(a, from, to) {
+	let i = 0;
+	for (const e of a) {
+		if (i < from) continue;
+		if (i > to) break;
+		if (e !== 255) return false;
+		i++;
+	}
+	return true;
+}
+function deepEqual(a, b, from, to) {
+	let i = 0;
+	for (const e of a) {
+		if (i < from) continue;
+		if (i > to) break;
+		if (e !== b[i]) return false;
+		i++;
+	}
+	return true;
+}
+/***
+* Returns long ip format
+*/
+function ipToString(ip) {
+	switch (ip.length) {
+		case 4: return ip.join(".");
+		case 16: {
+			const result = [];
+			for (let i = 0; i < ip.length; i++) if (i % 2 === 0) result.push(ip[i].toString(16).padStart(2, "0") + ip[i + 1].toString(16).padStart(2, "0"));
+			return result.join(":");
+		}
+		default: throw new Error("Invalid ip length");
+	}
+}
+/**
+* If mask is a sequence of 1 bits followed by 0 bits, return number of 1 bits else -1
+*/
+function simpleMaskLength(mask) {
+	let ones = 0;
+	for (let [index, byte] of mask.entries()) {
+		if (byte === 255) {
+			ones += 8;
+			continue;
+		}
+		while ((byte & 128) != 0) {
+			ones++;
+			byte = byte << 1;
+		}
+		if ((byte & 128) != 0) return -1;
+		for (let i = index + 1; i < mask.length; i++) if (mask[i] != 0) return -1;
+		break;
+	}
+	return ones;
+}
+function maskToHex(mask) {
+	let hex = "0x";
+	for (const byte of mask) hex += (byte >> 4).toString(16) + (byte & 15).toString(16);
+	return hex;
+}
+const ipv4Prefix = new Uint8Array([
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	255,
+	255
+]);
+function maskIp(ip, mask) {
+	if (mask.length === 16 && ip.length === 4 && allFF(mask, 0, 11)) mask = mask.slice(12);
+	if (mask.length === 4 && ip.length === 16 && deepEqual(ip, ipv4Prefix, 0, 11)) ip = ip.slice(12);
+	const n = ip.length;
+	if (n != mask.length) throw new Error("Failed to mask ip");
+	const out = new Uint8Array(n);
+	for (let i = 0; i < n; i++) out[i] = ip[i] & mask[i];
+	return out;
+}
+function containsIp(net, ip) {
+	if (typeof ip === "string") ip = parseIP(ip);
+	if (ip == null) throw new Error("Invalid ip");
+	if (ip.length !== net.network.length) return false;
+	for (let i = 0; i < ip.length; i++) if ((net.network[i] & net.mask[i]) !== (ip[i] & net.mask[i])) return false;
+	return true;
+}
+//#endregion
+//#region node_modules/.pnpm/@chainsafe+netmask@2.0.0/node_modules/@chainsafe/netmask/dist/src/cidr.js
+function parseCidr(s) {
+	const [address, maskString] = s.split("/");
+	if (!address || !maskString) throw new Error("Failed to parse given CIDR: " + s);
+	let ipLength = 4;
+	let ip = parseIPv4(address);
+	if (ip == null) {
+		ipLength = 16;
+		ip = parseIPv6(address);
+		if (ip == null) throw new Error("Failed to parse given CIDR: " + s);
+	}
+	const m = parseInt(maskString, 10);
+	if (Number.isNaN(m) || String(m).length !== maskString.length || m < 0 || m > ipLength * 8) throw new Error("Failed to parse given CIDR: " + s);
+	const mask = cidrMask(m, 8 * ipLength);
+	return {
+		network: maskIp(ip, mask),
+		mask
+	};
+}
+function cidrMask(ones, bits) {
+	if (bits !== 32 && bits !== 128) throw new Error("Invalid CIDR mask");
+	if (ones < 0 || ones > bits) throw new Error("Invalid CIDR mask");
+	const l = bits / 8;
+	const m = new Uint8Array(l);
+	for (let i = 0; i < l; i++) {
+		if (ones >= 8) {
+			m[i] = 255;
+			ones -= 8;
+			continue;
+		}
+		m[i] = 255 - (255 >> ones);
+		ones = 0;
+	}
+	return m;
+}
+//#endregion
+//#region node_modules/.pnpm/@chainsafe+netmask@2.0.0/node_modules/@chainsafe/netmask/dist/src/ipnet.js
+var IpNet = class {
+	/**
+	*
+	* @param ipOrCidr either network ip or full cidr address
+	* @param mask in case ipOrCidr is network this can be either mask in decimal format or as ip address
+	*/
+	constructor(ipOrCidr, mask) {
+		if (mask == null) ({network: this.network, mask: this.mask} = parseCidr(ipOrCidr));
+		else {
+			const ipResult = parseIP(ipOrCidr);
+			if (ipResult == null) throw new Error("Failed to parse network");
+			mask = String(mask);
+			const m = parseInt(mask, 10);
+			if (Number.isNaN(m) || String(m).length !== mask.length || m < 0 || m > ipResult.length * 8) {
+				const maskResult = parseIP(mask);
+				if (maskResult == null) throw new Error("Failed to parse mask");
+				this.mask = maskResult;
+			} else this.mask = cidrMask(m, 8 * ipResult.length);
+			this.network = maskIp(ipResult, this.mask);
+		}
+	}
+	/**
+	* Checks if netmask contains ip address
+	* @param ip
+	* @returns
+	*/
+	contains(ip) {
+		return containsIp({
+			network: this.network,
+			mask: this.mask
+		}, ip);
+	}
+	/**Serializes back to string format */
+	toString() {
+		const l = simpleMaskLength(this.mask);
+		const mask = l !== -1 ? String(l) : maskToHex(this.mask);
+		return ipToString(this.network) + "/" + mask;
+	}
+};
 //#endregion
 //#region node_modules/.pnpm/libp2p@3.3.3/node_modules/libp2p/dist/src/connection-manager/utils.js
 /**
@@ -52221,6 +47794,247 @@ var DefaultConnectionManager = class {
 	}
 };
 //#endregion
+//#region node_modules/.pnpm/@noble+hashes@2.2.0/node_modules/@noble/hashes/legacy.js
+/**
+
+SHA1 (RFC 3174), MD5 (RFC 1321), and RIPEMD160 legacy, weak hash functions.
+RFC 2286 only covers HMAC-RIPEMD160 wrapper material and test vectors,
+not the base RIPEMD-160 compression spec.
+Don't use them in a new protocol. What "weak" means:
+
+- Collisions can be made with 2^18 effort in MD5, 2^60 in SHA1, 2^80 in RIPEMD160.
+- No practical pre-image attacks (only theoretical, 2^123.4)
+- HMAC seems kinda ok: https://www.rfc-editor.org/rfc/rfc6151
+* @module
+*/
+/** Initial SHA-1 state from RFC 3174 §6.1. */
+const SHA1_IV = /* @__PURE__ */ Uint32Array.from([
+	1732584193,
+	4023233417,
+	2562383102,
+	271733878,
+	3285377520
+]);
+const SHA1_W = /* @__PURE__ */ new Uint32Array(80);
+/** Internal SHA1 legacy hash class. */
+var _SHA1 = class extends HashMD {
+	A = SHA1_IV[0] | 0;
+	B = SHA1_IV[1] | 0;
+	C = SHA1_IV[2] | 0;
+	D = SHA1_IV[3] | 0;
+	E = SHA1_IV[4] | 0;
+	constructor() {
+		super(64, 20, 8, false);
+	}
+	get() {
+		const { A, B, C, D, E } = this;
+		return [
+			A,
+			B,
+			C,
+			D,
+			E
+		];
+	}
+	set(A, B, C, D, E) {
+		this.A = A | 0;
+		this.B = B | 0;
+		this.C = C | 0;
+		this.D = D | 0;
+		this.E = E | 0;
+	}
+	process(view, offset) {
+		for (let i = 0; i < 16; i++, offset += 4) SHA1_W[i] = view.getUint32(offset, false);
+		for (let i = 16; i < 80; i++) SHA1_W[i] = rotl(SHA1_W[i - 3] ^ SHA1_W[i - 8] ^ SHA1_W[i - 14] ^ SHA1_W[i - 16], 1);
+		let { A, B, C, D, E } = this;
+		for (let i = 0; i < 80; i++) {
+			let F, K;
+			if (i < 20) {
+				F = Chi(B, C, D);
+				K = 1518500249;
+			} else if (i < 40) {
+				F = B ^ C ^ D;
+				K = 1859775393;
+			} else if (i < 60) {
+				F = Maj(B, C, D);
+				K = 2400959708;
+			} else {
+				F = B ^ C ^ D;
+				K = 3395469782;
+			}
+			const T = rotl(A, 5) + F + E + K + SHA1_W[i] | 0;
+			E = D;
+			D = C;
+			C = rotl(B, 30);
+			B = A;
+			A = T;
+		}
+		A = A + this.A | 0;
+		B = B + this.B | 0;
+		C = C + this.C | 0;
+		D = D + this.D | 0;
+		E = E + this.E | 0;
+		this.set(A, B, C, D, E);
+	}
+	roundClean() {
+		clean(SHA1_W);
+	}
+	destroy() {
+		this.destroyed = true;
+		this.set(0, 0, 0, 0, 0);
+		clean(this.buffer);
+	}
+};
+/**
+* SHA1 (RFC 3174) legacy hash function. It was cryptographically broken.
+* @param msg - message bytes to hash
+* @returns Digest bytes.
+* @example
+* Hash a message with SHA1.
+* ```ts
+* sha1(new Uint8Array([97, 98, 99]));
+* ```
+*/
+const sha1 = /* @__PURE__ */ createHasher(() => new _SHA1());
+//#endregion
+//#region node_modules/.pnpm/@noble+hashes@2.2.0/node_modules/@noble/hashes/pbkdf2.js
+/**
+* PBKDF (RFC 2898). Can be used to create a key from password and salt.
+* @module
+*/
+function pbkdf2Init(hash, _password, _salt, _opts) {
+	ahash(hash);
+	const { c, dkLen, asyncTick } = checkOpts({
+		dkLen: 32,
+		asyncTick: 10
+	}, _opts);
+	anumber$1(c, "c");
+	anumber$1(dkLen, "dkLen");
+	anumber$1(asyncTick, "asyncTick");
+	if (c < 1) throw new Error("iterations (c) must be >= 1");
+	if (dkLen < 1) throw new Error("\"dkLen\" must be >= 1");
+	if (dkLen > (2 ** 32 - 1) * hash.outputLen) throw new Error("derived key too long");
+	const password = kdfInputToBytes(_password, "password");
+	const salt = kdfInputToBytes(_salt, "salt");
+	const DK = new Uint8Array(dkLen);
+	const PRF = hmac.create(hash, password);
+	return {
+		c,
+		dkLen,
+		asyncTick,
+		DK,
+		PRF,
+		PRFSalt: PRF._cloneInto().update(salt)
+	};
+}
+function pbkdf2Output(PRF, PRFSalt, DK, prfW, u) {
+	PRF.destroy();
+	PRFSalt.destroy();
+	if (prfW) prfW.destroy();
+	clean(u);
+	return DK;
+}
+/**
+* PBKDF2-HMAC: RFC 8018 key derivation function.
+* @param hash - hash function that would be used e.g. sha256
+* @param password - password from which a derived key is generated;
+*   JS string inputs are UTF-8 encoded first
+* @param salt - cryptographic salt; JS string inputs are UTF-8 encoded first
+* @param opts - PBKDF2 work factor and output settings. `dkLen`, if provided,
+*   must be `>= 1` per RFC 8018 §5.2. See {@link Pbkdf2Opt}.
+* @returns Derived key bytes.
+* @throws If the PBKDF2 iteration count or derived-key settings are invalid. {@link Error}
+* @example
+* PBKDF2-HMAC: RFC 2898 key derivation function.
+* ```ts
+* import { pbkdf2 } from '@noble/hashes/pbkdf2.js';
+* import { sha256 } from '@noble/hashes/sha2.js';
+* const key = pbkdf2(sha256, 'password', 'salt', { dkLen: 32, c: Math.pow(2, 18) });
+* ```
+*/
+function pbkdf2$1(hash, password, salt, opts) {
+	const { c, dkLen, DK, PRF, PRFSalt } = pbkdf2Init(hash, password, salt, opts);
+	let prfW;
+	const arr = new Uint8Array(4);
+	const view = createView(arr);
+	const u = new Uint8Array(PRF.outputLen);
+	for (let ti = 1, pos = 0; pos < dkLen; ti++, pos += PRF.outputLen) {
+		const Ti = DK.subarray(pos, pos + PRF.outputLen);
+		view.setInt32(0, ti, false);
+		(prfW = PRFSalt._cloneInto(prfW)).update(arr).digestInto(u);
+		Ti.set(u.subarray(0, Ti.length));
+		for (let ui = 1; ui < c; ui++) {
+			PRF._cloneInto(prfW).update(u).digestInto(u);
+			for (let i = 0; i < Ti.length; i++) Ti[i] ^= u[i];
+		}
+	}
+	return pbkdf2Output(PRF, PRFSalt, DK, prfW, u);
+}
+/**
+* PBKDF2-HMAC: RFC 8018 key derivation function. Async version.
+* @param hash - hash function that would be used e.g. sha256
+* @param password - password from which a derived key is generated;
+*   JS string inputs are UTF-8 encoded first
+* @param salt - cryptographic salt; JS string inputs are UTF-8 encoded first
+* @param opts - PBKDF2 work factor and output settings. `dkLen`, if provided,
+*   must be `>= 1` per RFC 8018 §5.2. `asyncTick` is only a local
+*   scheduler-yield knob for this JS wrapper, not part of RFC 8018.
+*   See {@link Pbkdf2Opt}.
+* @returns Promise resolving to derived key bytes.
+* @throws If the PBKDF2 iteration count or derived-key settings are invalid. {@link Error}
+* @example
+* PBKDF2-HMAC: RFC 2898 key derivation function.
+* ```ts
+* import { pbkdf2Async } from '@noble/hashes/pbkdf2.js';
+* import { sha256 } from '@noble/hashes/sha2.js';
+* const key = await pbkdf2Async(sha256, 'password', 'salt', { dkLen: 32, c: 500_000 });
+* ```
+*/
+async function pbkdf2Async(hash, password, salt, opts) {
+	const { c, dkLen, asyncTick, DK, PRF, PRFSalt } = pbkdf2Init(hash, password, salt, opts);
+	let prfW;
+	const arr = new Uint8Array(4);
+	const view = createView(arr);
+	const u = new Uint8Array(PRF.outputLen);
+	for (let ti = 1, pos = 0; pos < dkLen; ti++, pos += PRF.outputLen) {
+		const Ti = DK.subarray(pos, pos + PRF.outputLen);
+		view.setInt32(0, ti, false);
+		(prfW = PRFSalt._cloneInto(prfW)).update(arr).digestInto(u);
+		Ti.set(u.subarray(0, Ti.length));
+		await asyncLoop(c - 1, asyncTick, () => {
+			PRF._cloneInto(prfW).update(u).digestInto(u);
+			for (let i = 0; i < Ti.length; i++) Ti[i] ^= u[i];
+		});
+	}
+	return pbkdf2Output(PRF, PRFSalt, DK, prfW, u);
+}
+//#endregion
+//#region node_modules/.pnpm/@libp2p+crypto@5.1.19/node_modules/@libp2p/crypto/dist/src/pbkdf2.js
+/**
+* Maps an IPFS hash name to its @noble/hashes equivalent.
+*
+* See https://github.com/multiformats/multicodec/blob/master/table.csv
+*
+* @private
+*/
+const hashName = {
+	sha1,
+	"sha2-256": sha256,
+	"sha2-512": sha512
+};
+/**
+* Computes the Password-Based Key Derivation Function 2.
+*/
+function pbkdf2(password, salt, iterations, keySize, hash) {
+	if (hash !== "sha1" && hash !== "sha2-256" && hash !== "sha2-512") throw new InvalidParametersError$4(`Hash '${hash}' is unknown or not supported. Must be ${Object.keys(hashName).join(" / ")}`);
+	const hasher = hashName[hash];
+	const dek = pbkdf2$1(hasher, password, salt, {
+		c: iterations,
+		dkLen: keySize
+	});
+	return base64$1.encode(dek).substring(1);
+}
+//#endregion
 //#region node_modules/.pnpm/libp2p@3.3.3/node_modules/libp2p/dist/src/connection-monitor.js
 const DEFAULT_PING_INTERVAL_MS = 1e4;
 const PROTOCOL_VERSION = "1.0.0";
@@ -52412,6 +48226,170 @@ var CompoundContentRouting = class {
 		}));
 	}
 };
+//#endregion
+//#region node_modules/.pnpm/it-parallel@3.0.15/node_modules/it-parallel/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Takes an (async) iterable that emits promise-returning functions, invokes them in parallel up to the concurrency limit and emits the results as they become available, optionally in the same order as the input
+*
+* @example
+*
+* ```javascript
+* import parallel from 'it-parallel'
+* import all from 'it-all'
+* import delay from 'delay'
+*
+* // This can also be an iterator, async iterator, generator, etc
+* const input = [
+*   async () => {
+*     console.info('start 1')
+*     await delay(500)
+*
+*     console.info('end 1')
+*     return 1
+*   },
+*   async () => {
+*     console.info('start 2')
+*     await delay(200)
+*
+*     console.info('end 2')
+*     return 2
+*   },
+*   async () => {
+*     console.info('start 3')
+*     await delay(100)
+*
+*     console.info('end 3')
+*     return 3
+*   }
+* ]
+*
+* const result = await all(parallel(input, {
+*   concurrency: 2
+* }))
+*
+* // output:
+* // start 1
+* // start 2
+* // end 2
+* // start 3
+* // end 3
+* // end 1
+*
+* console.info(result) // [2, 3, 1]
+* ```
+*
+* If order is important, pass `ordered: true` as an option:
+*
+* ```javascript
+* const result = await all(parallel(input, {
+*   concurrency: 2,
+*   ordered: true
+* }))
+*
+* // output:
+* // start 1
+* // start 2
+* // end 2
+* // start 3
+* // end 3
+* // end 1
+*
+* console.info(result) // [1, 2, 3]
+* ```
+*/
+const CustomEvent$1 = globalThis.CustomEvent ?? Event;
+/**
+* Takes an (async) iterator that emits promise-returning functions,
+* invokes them in parallel and emits the results as they become available but
+* in the same order as the input
+*/
+async function* parallel(source, options = {}) {
+	let concurrency = options.concurrency ?? Infinity;
+	if (concurrency < 1) concurrency = Infinity;
+	const ordered = options.ordered ?? false;
+	const emitter = new EventTarget();
+	const ops = [];
+	let slotAvailable = pDefer();
+	let resultAvailable = pDefer();
+	let sourceFinished = false;
+	let sourceErr;
+	let opErred = false;
+	emitter.addEventListener("task-complete", () => {
+		resultAvailable.resolve();
+	});
+	Promise.resolve().then(async () => {
+		try {
+			for await (const task of source) {
+				if (ops.length === concurrency) {
+					slotAvailable = pDefer();
+					await slotAvailable.promise;
+				}
+				if (opErred) break;
+				const op = { done: false };
+				ops.push(op);
+				task().then((result) => {
+					op.done = true;
+					op.ok = true;
+					op.value = result;
+					emitter.dispatchEvent(new CustomEvent$1("task-complete"));
+				}, (err) => {
+					op.done = true;
+					op.err = err;
+					emitter.dispatchEvent(new CustomEvent$1("task-complete"));
+				});
+			}
+			sourceFinished = true;
+			emitter.dispatchEvent(new CustomEvent$1("task-complete"));
+		} catch (err) {
+			sourceErr = err;
+			emitter.dispatchEvent(new CustomEvent$1("task-complete"));
+		}
+	});
+	function valuesAvailable() {
+		if (ordered) return ops[0]?.done;
+		return Boolean(ops.find((op) => op.done));
+	}
+	function* yieldOrderedValues() {
+		while (ops.length > 0 && ops[0].done) {
+			const op = ops[0];
+			ops.shift();
+			if (op.ok) yield op.value;
+			else {
+				opErred = true;
+				slotAvailable.resolve();
+				throw op.err;
+			}
+			slotAvailable.resolve();
+		}
+	}
+	function* yieldUnOrderedValues() {
+		while (valuesAvailable()) for (let i = 0; i < ops.length; i++) if (ops[i].done) {
+			const op = ops[i];
+			ops.splice(i, 1);
+			i--;
+			if (op.ok) yield op.value;
+			else {
+				opErred = true;
+				slotAvailable.resolve();
+				throw op.err;
+			}
+			slotAvailable.resolve();
+		}
+	}
+	while (true) {
+		if (!valuesAvailable()) {
+			resultAvailable = pDefer();
+			await resultAvailable.promise;
+		}
+		if (sourceErr != null) throw sourceErr;
+		if (ordered) yield* yieldOrderedValues();
+		else yield* yieldUnOrderedValues();
+		if (sourceErr != null) throw sourceErr;
+		if (sourceFinished && ops.length === 0) break;
+	}
+}
 //#endregion
 //#region node_modules/.pnpm/libp2p@3.3.3/node_modules/libp2p/dist/src/peer-routing.js
 var DefaultPeerRouting = class {
@@ -53157,7 +49135,7 @@ async function handle(stream, protocols, options = {}) {
 			return protocol;
 		}
 		if (protocol === "ls") {
-			const protos = new Uint8ArrayList(...protocols.map((p) => encode$4.single(fromString(`${p}\n`))), fromString("\n"));
+			const protos = new Uint8ArrayList(...protocols.map((p) => encode.single(fromString(`${p}\n`))), fromString("\n"));
 			log.trace("respond with \"%s\" for %s", protocols, protocol);
 			await lp.write(protos, options);
 			log.trace("responded with \"%s\" for %s", protocols, protocol);
@@ -53851,7 +49829,7 @@ var Libp2p = class extends TypedEventEmitter {
 		} catch (err) {
 			if (err.name !== "NotFoundError") throw err;
 		}
-		const peerKey = concat([fromString("/pk/"), peer.toMultihash().bytes]);
+		const peerKey = concat$1([fromString("/pk/"), peer.toMultihash().bytes]);
 		const publicKey = publicKeyFromProtobuf(await this.contentRouting.get(peerKey, options));
 		await this.peerStore.patch(peer, { publicKey }, options);
 		return publicKey;
@@ -54085,9 +50063,9 @@ function create(opts) {
 	function encryptWithKey(data, key) {
 		const nonce = crypto$1.randomBytes(nonceLength);
 		const cipher = crypto$1.createCipheriv(algorithm, key, nonce);
-		return concat([
+		return concat$1([
 			nonce,
-			concat([cipher.update(data), cipher.final()]),
+			concat$1([cipher.update(data), cipher.final()]),
 			cipher.getAuthTag()
 		]);
 	}
@@ -54099,7 +50077,7 @@ function create(opts) {
 		const salt = crypto$1.randomBytes(saltLength);
 		if (typeof password === "string") password = fromString(password);
 		const key = crypto$1.pbkdf2Sync(password, salt, iterations, keyLength, digest);
-		return concat([salt, encryptWithKey(Uint8Array.from(data), key)]);
+		return concat$1([salt, encryptWithKey(Uint8Array.from(data), key)]);
 	}
 	/**
 	* Decrypts the given cipher text with the provided key. The `key` should
@@ -54114,7 +50092,7 @@ function create(opts) {
 		const tag = ciphertextAndNonce.subarray(ciphertext.length + nonceLength);
 		const cipher = crypto$1.createDecipheriv(algorithm, key, nonce);
 		cipher.setAuthTag(tag);
-		return concat([cipher.update(ciphertext), cipher.final()]);
+		return concat$1([cipher.update(ciphertext), cipher.final()]);
 	}
 	/**
 	* Uses the provided password to derive a pbkdf2 key. The key
@@ -57182,7 +53160,7 @@ const ITERATIONS = 1e4;
 * The PrivateKey is encrypted via a password derived PBKDF2 key
 * leveraging the aes-gcm cipher algorithm.
 */
-async function exporter(privateKey, password) {
+async function exporter$1(privateKey, password) {
 	const encryptedKey = await create().encrypt(privateKey, password);
 	return base64$1.encode(encryptedKey);
 }
@@ -57202,21 +53180,21 @@ async function exportPrivateKey(key, password, format) {
 * Exports the key into a password protected `format`
 */
 async function exportEd25519PrivateKey(key, password, format = "libp2p-key") {
-	if (format === "libp2p-key") return exporter(privateKeyToProtobuf(key), password);
+	if (format === "libp2p-key") return exporter$1(privateKeyToProtobuf(key), password);
 	else throw new InvalidParametersError$4(`export format '${format}' is not supported`);
 }
 /**
 * Exports the key into a password protected `format`
 */
 async function exportSecp256k1PrivateKey(key, password, format = "libp2p-key") {
-	if (format === "libp2p-key") return exporter(privateKeyToProtobuf(key), password);
+	if (format === "libp2p-key") return exporter$1(privateKeyToProtobuf(key), password);
 	else throw new InvalidParametersError$4("Export format is not supported");
 }
 /**
 * Exports the key into a password protected `format`
 */
 async function exportECDSAPrivateKey(key, password, format = "libp2p-key") {
-	if (format === "libp2p-key") return exporter(privateKeyToProtobuf(key), password);
+	if (format === "libp2p-key") return exporter$1(privateKeyToProtobuf(key), password);
 	else throw new InvalidParametersError$4(`export format '${format}' is not supported`);
 }
 /**
@@ -57228,7 +53206,7 @@ async function exportECDSAPrivateKey(key, password, format = "libp2p-key") {
 */
 async function exportRSAPrivateKey(key, password, format = "pkcs-8") {
 	if (format === "pkcs-8") return exportToPem(key, password);
-	else if (format === "libp2p-key") return exporter(privateKeyToProtobuf(key), password);
+	else if (format === "libp2p-key") return exporter$1(privateKeyToProtobuf(key), password);
 	else throw new InvalidParametersError$4("Export format is not supported");
 }
 async function exportToPem(privateKey, password) {
@@ -57703,6 +53681,2402 @@ async function loadOrCreateSelfKey(datastore, init = {}) {
 	return privateKey;
 }
 //#endregion
+//#region node_modules/.pnpm/browser-readablestream-to-it@2.0.12/node_modules/browser-readablestream-to-it/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Allows treating a browser readable stream as an async iterator.
+*
+* @example
+*
+* ```javascript
+* import toIt from 'browser-readablestream-to-it'
+* import all from 'it-all'
+*
+* const content = [0, 1, 2, 3, 4]
+*
+* const stream = new ReadableStream({
+*   start(controller) {
+*     for (let i = 0; i < content.length; i++) {
+*       controller.enqueue(content[i])
+*     }
+*
+*     controller.close()
+*   }
+* })
+*
+* const arr = await all(toIt(stream))
+*
+* console.info(arr) // 0, 1, 2, 3, 4
+* ```
+*
+* ## preventCancel
+*
+* By default a readable stream will have [.cancel](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream/cancel) called on it once it has ended or
+* reading has stopped prematurely.
+*
+* To prevent this behaviour, pass `preventCancel: true` as an option:
+*
+* ```javascript
+* const arr = await all(toIt(stream, { preventCancel: true }))
+*
+* console.info(arr) // 0, 1, 2, 3, 4
+* ```
+*/
+/**
+* Turns a browser readable stream into an async iterable. Async iteration over
+* returned iterable will lock give stream, preventing any other consumer from
+* acquiring a reader. The lock will be released if iteration loop is broken. To
+* prevent stream cancelling optional `{ preventCancel: true }` could be passed
+* as a second argument.
+*/
+async function* browserReadableStreamToIt(stream, options = {}) {
+	const reader = stream.getReader();
+	try {
+		while (true) {
+			const result = await reader.read();
+			if (result.done) return;
+			yield result.value;
+		}
+	} finally {
+		if (options.preventCancel !== true) await reader.cancel();
+		reader.releaseLock();
+	}
+}
+//#endregion
+//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/errors.js
+var SignatureVerificationError = class extends Error {
+	static name = "SignatureVerificationError";
+	constructor(message = "Record signature verification failed") {
+		super(message);
+		this.name = "SignatureVerificationError";
+	}
+};
+var RecordExpiredError = class extends Error {
+	static name = "RecordExpiredError";
+	constructor(message = "Record has expired") {
+		super(message);
+		this.name = "RecordExpiredError";
+	}
+};
+var UnsupportedValidityError = class extends Error {
+	static name = "UnsupportedValidityError";
+	constructor(message = "The validity type is unsupported") {
+		super(message);
+		this.name = "UnsupportedValidityError";
+	}
+};
+var RecordTooLargeError = class extends Error {
+	static name = "RecordTooLargeError";
+	constructor(message = "The record is too large") {
+		super(message);
+		this.name = "RecordTooLargeError";
+	}
+};
+var InvalidValueError = class extends Error {
+	static name = "InvalidValueError";
+	constructor(message = "Value must be a valid content path starting with /") {
+		super(message);
+		this.name = "InvalidValueError";
+	}
+};
+var InvalidRecordDataError = class extends Error {
+	static name = "InvalidRecordDataError";
+	constructor(message = "Invalid record data") {
+		super(message);
+		this.name = "InvalidRecordDataError";
+	}
+};
+var InvalidEmbeddedPublicKeyError = class extends Error {
+	static name = "InvalidEmbeddedPublicKeyError";
+	constructor(message = "Invalid embedded public key") {
+		super(message);
+		this.name = "InvalidEmbeddedPublicKeyError";
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/pb/ipns.js
+var IpnsEntry;
+(function(IpnsEntry) {
+	(function(ValidityType) {
+		ValidityType["EOL"] = "EOL";
+	})(IpnsEntry.ValidityType || (IpnsEntry.ValidityType = {}));
+	let __ValidityTypeValues;
+	(function(__ValidityTypeValues) {
+		__ValidityTypeValues[__ValidityTypeValues["EOL"] = 0] = "EOL";
+	})(__ValidityTypeValues || (__ValidityTypeValues = {}));
+	(function(ValidityType) {
+		ValidityType.codec = () => {
+			return enumeration(__ValidityTypeValues);
+		};
+	})(IpnsEntry.ValidityType || (IpnsEntry.ValidityType = {}));
+	let _codec;
+	IpnsEntry.codec = () => {
+		if (_codec == null) _codec = message((obj, w, opts = {}) => {
+			if (opts.lengthDelimited !== false) w.fork();
+			if (obj.value != null) {
+				w.uint32(10);
+				w.bytes(obj.value);
+			}
+			if (obj.signatureV1 != null) {
+				w.uint32(18);
+				w.bytes(obj.signatureV1);
+			}
+			if (obj.validityType != null) {
+				w.uint32(24);
+				IpnsEntry.ValidityType.codec().encode(obj.validityType, w);
+			}
+			if (obj.validity != null) {
+				w.uint32(34);
+				w.bytes(obj.validity);
+			}
+			if (obj.sequence != null) {
+				w.uint32(40);
+				w.uint64(obj.sequence);
+			}
+			if (obj.ttl != null) {
+				w.uint32(48);
+				w.uint64(obj.ttl);
+			}
+			if (obj.pubKey != null) {
+				w.uint32(58);
+				w.bytes(obj.pubKey);
+			}
+			if (obj.signatureV2 != null) {
+				w.uint32(66);
+				w.bytes(obj.signatureV2);
+			}
+			if (obj.data != null) {
+				w.uint32(74);
+				w.bytes(obj.data);
+			}
+			if (opts.lengthDelimited !== false) w.ldelim();
+		}, (reader, length, opts = {}) => {
+			const obj = {};
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						obj.value = reader.bytes();
+						break;
+					case 2:
+						obj.signatureV1 = reader.bytes();
+						break;
+					case 3:
+						obj.validityType = IpnsEntry.ValidityType.codec().decode(reader);
+						break;
+					case 4:
+						obj.validity = reader.bytes();
+						break;
+					case 5:
+						obj.sequence = reader.uint64();
+						break;
+					case 6:
+						obj.ttl = reader.uint64();
+						break;
+					case 7:
+						obj.pubKey = reader.bytes();
+						break;
+					case 8:
+						obj.signatureV2 = reader.bytes();
+						break;
+					case 9:
+						obj.data = reader.bytes();
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+			return obj;
+		}, function* (reader, length, prefix, opts = {}) {
+			const end = length == null ? reader.len : reader.pos + length;
+			while (reader.pos < end) {
+				const tag = reader.uint32();
+				switch (tag >>> 3) {
+					case 1:
+						yield {
+							field: `${prefix}.value`,
+							value: reader.bytes()
+						};
+						break;
+					case 2:
+						yield {
+							field: `${prefix}.signatureV1`,
+							value: reader.bytes()
+						};
+						break;
+					case 3:
+						yield {
+							field: `${prefix}.validityType`,
+							value: IpnsEntry.ValidityType.codec().decode(reader)
+						};
+						break;
+					case 4:
+						yield {
+							field: `${prefix}.validity`,
+							value: reader.bytes()
+						};
+						break;
+					case 5:
+						yield {
+							field: `${prefix}.sequence`,
+							value: reader.uint64()
+						};
+						break;
+					case 6:
+						yield {
+							field: `${prefix}.ttl`,
+							value: reader.uint64()
+						};
+						break;
+					case 7:
+						yield {
+							field: `${prefix}.pubKey`,
+							value: reader.bytes()
+						};
+						break;
+					case 8:
+						yield {
+							field: `${prefix}.signatureV2`,
+							value: reader.bytes()
+						};
+						break;
+					case 9:
+						yield {
+							field: `${prefix}.data`,
+							value: reader.bytes()
+						};
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+		});
+		return _codec;
+	};
+	function encode(obj) {
+		return encodeMessage(obj, IpnsEntry.codec());
+	}
+	IpnsEntry.encode = encode;
+	function decode(buf, opts) {
+		return decodeMessage(buf, IpnsEntry.codec(), opts);
+	}
+	IpnsEntry.decode = decode;
+	function stream(buf, opts) {
+		return streamMessage(buf, IpnsEntry.codec(), opts);
+	}
+	IpnsEntry.stream = stream;
+})(IpnsEntry || (IpnsEntry = {}));
+//#endregion
+//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/utils.js
+const log$11 = logger("ipns:utils");
+const IPNS_PREFIX$1 = fromString$2("/ipns/");
+const IDENTITY_CODEC = 0;
+const SHA2_256_CODEC = 18;
+/**
+* Extracts a public key from the passed PeerId, falling back to the pubKey
+* embedded in the ipns record
+*/
+function extractPublicKeyFromIPNSRecord(record) {
+	let pubKey;
+	if (record.pubKey != null) try {
+		pubKey = publicKeyFromProtobuf(record.pubKey);
+	} catch (err) {
+		log$11.error(err);
+		throw err;
+	}
+	if (pubKey != null) return pubKey;
+}
+/**
+* Utility for creating the record data for being signed
+*/
+function ipnsRecordDataForV2Sig(data) {
+	return concat([fromString$2("ipns-signature:"), data]);
+}
+function marshalIPNSRecord(obj) {
+	if ("signatureV1" in obj) return IpnsEntry.encode({
+		value: fromString$2(obj.value),
+		signatureV1: obj.signatureV1,
+		validityType: obj.validityType,
+		validity: fromString$2(obj.validity),
+		sequence: obj.sequence,
+		ttl: obj.ttl,
+		pubKey: obj.pubKey,
+		signatureV2: obj.signatureV2,
+		data: obj.data
+	});
+	else return IpnsEntry.encode({
+		pubKey: obj.pubKey,
+		signatureV2: obj.signatureV2,
+		data: obj.data
+	});
+}
+function unmarshalIPNSRecord(buf) {
+	const message = IpnsEntry.decode(buf);
+	if (message.sequence != null) message.sequence = BigInt(message.sequence);
+	if (message.ttl != null) message.ttl = BigInt(message.ttl);
+	if (message.signatureV2 == null || message.data == null) throw new SignatureVerificationError("Missing data or signatureV2");
+	const data = parseCborData(message.data);
+	const value = normalizeByteValue(data.Value);
+	const validity = toString$2(data.Validity);
+	if (message.value != null && message.signatureV1 != null) {
+		validateCborDataMatchesPbData(message);
+		return {
+			value,
+			validityType: IpnsEntry.ValidityType.EOL,
+			validity,
+			sequence: data.Sequence,
+			ttl: data.TTL,
+			pubKey: message.pubKey,
+			signatureV1: message.signatureV1,
+			signatureV2: message.signatureV2,
+			data: message.data
+		};
+	} else if (message.signatureV2 != null) return {
+		value,
+		validityType: IpnsEntry.ValidityType.EOL,
+		validity,
+		sequence: data.Sequence,
+		ttl: data.TTL,
+		pubKey: message.pubKey,
+		signatureV2: message.signatureV2,
+		data: message.data
+	};
+	else throw new Error("invalid record: does not include signatureV1 or signatureV2");
+}
+function multihashToIPNSRoutingKey(digest) {
+	return concat([IPNS_PREFIX$1, digest.bytes]);
+}
+function multihashFromIPNSRoutingKey(key) {
+	const digest = decode$17(key.slice(IPNS_PREFIX$1.length));
+	if (!isCodec(digest, IDENTITY_CODEC) && !isCodec(digest, SHA2_256_CODEC)) throw new InvalidMultihashError("Multihash in IPNS key was not identity or sha2-256");
+	return digest;
+}
+function parseCborData(buf) {
+	const data = decode$12(buf);
+	if (data.ValidityType === 0) data.ValidityType = IpnsEntry.ValidityType.EOL;
+	else throw new UnsupportedValidityError("The validity type is unsupported");
+	if (Number.isInteger(data.Sequence)) data.Sequence = BigInt(data.Sequence);
+	if (Number.isInteger(data.TTL)) data.TTL = BigInt(data.TTL);
+	return data;
+}
+function normalizeByteValue(value) {
+	const string = toString$2(value).trim();
+	if (string.startsWith("/")) return string;
+	try {
+		return `/ipfs/${CID$1.decode(value).toV1().toString()}`;
+	} catch {}
+	try {
+		return `/ipfs/${CID$1.parse(string).toV1().toString()}`;
+	} catch {}
+	throw new InvalidValueError("Value must be a valid content path starting with /");
+}
+function validateCborDataMatchesPbData(entry) {
+	if (entry.data == null) throw new InvalidRecordDataError("Record data is missing");
+	const data = parseCborData(entry.data);
+	if (!equals(data.Value, entry.value ?? new Uint8Array(0))) throw new SignatureVerificationError("Field \"value\" did not match between protobuf and CBOR");
+	if (!equals(data.Validity, entry.validity ?? new Uint8Array(0))) throw new SignatureVerificationError("Field \"validity\" did not match between protobuf and CBOR");
+	if (data.ValidityType !== entry.validityType) throw new SignatureVerificationError("Field \"validityType\" did not match between protobuf and CBOR");
+	if (data.Sequence !== entry.sequence) throw new SignatureVerificationError("Field \"sequence\" did not match between protobuf and CBOR");
+	if (data.TTL !== entry.ttl) throw new SignatureVerificationError("Field \"ttl\" did not match between protobuf and CBOR");
+}
+function isCodec(digest, codec) {
+	return digest.code === codec;
+}
+/**
+* Timestamp for 64-bit time_t, nanosecond precision and strftime
+*
+* @author Yusuke Kawasaki
+* @license MIT
+* @see https://github.com/kawanet/timestamp-nano
+*/
+//#endregion
+//#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/validator.js
+var import_timestamp = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	(function() {
+		if ("undefined" !== typeof module) module.exports = Timestamp;
+		var SEC_DAY = 24 * 3600;
+		var YEAR_SLOT = 3200;
+		var DAY_SLOT = 146097 * YEAR_SLOT / 400;
+		var SEC_SLOT = SEC_DAY * DAY_SLOT;
+		var MSEC_SLOT = SEC_SLOT * 1e3;
+		var MAX_MSEC = 1e3 * 1e4 * 1e4 * SEC_DAY;
+		var BIT24 = 16777216;
+		var BIT32 = 65536 * 65536;
+		var DEC6 = 1e3 * 1e3;
+		var DEC9 = 1e3 * 1e3 * 1e3;
+		var ZERO9 = "000000000";
+		var trunc = Math.trunc || Math_trunc;
+		var P = Timestamp.prototype;
+		Timestamp.fromDate = fromDate;
+		Timestamp.fromInt64BE = buildFromInt64(0, 1, 2, 3, 0, 4);
+		Timestamp.fromInt64LE = buildFromInt64(3, 2, 1, 0, 4, 0);
+		Timestamp.fromString = fromString;
+		Timestamp.fromTimeT = fromTimeT;
+		P.year = 0;
+		P.time = 0;
+		P.nano = 0;
+		P.addNano = addNano;
+		P.getNano = getNano;
+		P.getTimeT = getTimeT;
+		P.getYear = getYear;
+		P.toDate = toDate;
+		P.toJSON = toJSON;
+		P.toString = toString;
+		P.writeInt64BE = buildWriteInt64(0, 1, 2, 3, 0, 4);
+		P.writeInt64LE = buildWriteInt64(3, 2, 1, 0, 4, 0);
+		var FMT_JSON = "%Y-%m-%dT%H:%M:%S.%NZ";
+		var FMT_MONTH = [
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec"
+		];
+		var FMT_DAY = [
+			"Sun",
+			"Mon",
+			"Tue",
+			"Wed",
+			"Thu",
+			"Fri",
+			"Sat"
+		];
+		var FMT_STRING = {
+			"%": "%",
+			F: "%Y-%m-%d",
+			n: "\n",
+			R: "%H:%M",
+			T: "%H:%M:%S",
+			t: "	",
+			X: "%T",
+			Z: "GMT",
+			z: "+0000"
+		};
+		return Timestamp;
+		function Timestamp(time, nano, year) {
+			var ts = this;
+			if (!(ts instanceof Timestamp)) return new Timestamp(time, nano, year);
+			ts.time = +time || 0;
+			ts.nano = +nano || 0;
+			ts.year = +year || 0;
+			normalize(ts);
+		}
+		function getYear() {
+			return this.toDate().getUTCFullYear() + this.year;
+		}
+		function normalize(ts) {
+			var year = ts.year;
+			var time = ts.time;
+			var nano = ts.nano;
+			var changed;
+			var slot;
+			if (nano < 0 || DEC6 <= nano) {
+				var n = Math.floor(nano / DEC6);
+				nano -= n * DEC6;
+				time += n;
+				changed = 1;
+			}
+			var y = year % YEAR_SLOT;
+			if (time < -MAX_MSEC || MAX_MSEC < time || y) {
+				slot = trunc(time / MSEC_SLOT);
+				if (slot) {
+					year += slot * YEAR_SLOT;
+					time -= slot * MSEC_SLOT;
+				}
+				var dt = newDate(time);
+				dt.setUTCFullYear(y + dt.getUTCFullYear());
+				year -= y;
+				time = +dt;
+				slot = trunc(year / YEAR_SLOT);
+				var total = time + slot * MSEC_SLOT;
+				if (slot && -MAX_MSEC <= total && total <= MAX_MSEC) {
+					year -= slot * YEAR_SLOT;
+					time = total;
+				}
+				changed = 1;
+			}
+			if (changed) {
+				ts.year = year;
+				ts.time = time;
+				ts.nano = nano;
+			}
+			return ts;
+		}
+		function toDate() {
+			return newDate(normalize(this).time);
+		}
+		function newDate(time) {
+			var dt = /* @__PURE__ */ new Date(0);
+			dt.setTime(time);
+			return dt;
+		}
+		function addNano(nano) {
+			this.nano += +nano || 0;
+			return this;
+		}
+		function getNano() {
+			var ts = normalize(this);
+			return (ts.time % 1e3 * DEC6 + +ts.nano + DEC9) % DEC9;
+		}
+		function fromString(string) {
+			var time;
+			var ts = new Timestamp();
+			string += "";
+			var array = string.replace(/^\s*[+\-]?\d+/, function(match) {
+				var year = +match;
+				var y = 1970 + (year - 1970) % 400;
+				ts.year = year - y;
+				return y;
+			}).replace(/(?:Z|([+\-]\d{2}):?(\d{2}))$/, function(match, hour, min) {
+				if (hour < 0) min *= -1;
+				time = (+hour * 60 + +min) * 6e4;
+				return "";
+			}).replace(/\.\d+$/, function(match) {
+				ts.nano = +(match + ZERO9).substr(1, 9);
+				return "";
+			}).split(/\D+/);
+			if (array.length > 1) array[1]--;
+			else array[1] = 0;
+			ts.time = time = Date.UTC.apply(Date, array) - (time || 0);
+			if (isNaN(time)) throw new TypeError("Invalid Date");
+			return normalize(ts);
+		}
+		function fromDate(date) {
+			return new Timestamp(+date);
+		}
+		function fromTimeT(time) {
+			return fromTime(time, 0);
+		}
+		function fromTime(low, high) {
+			high |= 0;
+			high *= BIT32;
+			low = +low || 0;
+			var slot = trunc(high / SEC_SLOT) + trunc(low / SEC_SLOT);
+			var second = high % SEC_SLOT + low % SEC_SLOT;
+			var offset = trunc(second / SEC_SLOT);
+			if (offset) {
+				slot += offset;
+				second -= offset * SEC_SLOT;
+			}
+			return new Timestamp(second * 1e3, 0, slot * YEAR_SLOT);
+		}
+		function getTimeT() {
+			var ts = normalize(this);
+			var time = Math.floor(ts.time / 1e3);
+			var year = ts.year;
+			if (year) time += year * DAY_SLOT * SEC_DAY / YEAR_SLOT;
+			return time;
+		}
+		function toJSON() {
+			return this.toString().replace(/0{1,6}Z$/, "Z");
+		}
+		function toString(format) {
+			var ts = this;
+			var dt = ts.toDate();
+			var map = {
+				H,
+				L,
+				M,
+				N,
+				S,
+				Y,
+				a,
+				b,
+				d,
+				e,
+				m,
+				s
+			};
+			return strftime(format || FMT_JSON);
+			function strftime(format) {
+				return format.replace(/%./g, function(match) {
+					var m = match[1];
+					var c = FMT_STRING[m];
+					var f = map[m];
+					return c ? strftime(c) : f ? f() : match;
+				});
+			}
+			function Y() {
+				var year = ts.getYear();
+				if (year > 999999) return "+" + year;
+				else if (year > 9999) return "+" + pad(year, 6);
+				else if (year >= 0) return pad(year, 4);
+				else if (year >= -999999) return "-" + pad(-year, 6);
+				else return year;
+			}
+			function m() {
+				return pad2(dt.getUTCMonth() + 1);
+			}
+			function d() {
+				return pad2(dt.getUTCDate());
+			}
+			function e() {
+				return padS(dt.getUTCDate());
+			}
+			function H() {
+				return pad2(dt.getUTCHours());
+			}
+			function M() {
+				return pad2(dt.getUTCMinutes());
+			}
+			function S() {
+				return pad2(dt.getUTCSeconds());
+			}
+			function L() {
+				return pad(dt.getUTCMilliseconds(), 3);
+			}
+			function N() {
+				return pad(ts.getNano(), 9);
+			}
+			function a() {
+				return FMT_DAY[dt.getUTCDay()];
+			}
+			function b() {
+				return FMT_MONTH[dt.getUTCMonth()];
+			}
+			function s() {
+				return ts.getTimeT();
+			}
+		}
+		function buildWriteInt64(pos0, pos1, pos2, pos3, posH, posL) {
+			return writeInt64;
+			function writeInt64(buffer, offset) {
+				var ts = normalize(this);
+				if (!buffer) buffer = new Array(8);
+				checkRange(buffer, offset |= 0);
+				var second = Math.floor(ts.time / 1e3);
+				var day = ts.year * (DAY_SLOT * SEC_DAY / YEAR_SLOT);
+				var high = trunc(day / BIT32) + trunc(second / BIT32);
+				var low = day % BIT32 + second % BIT32;
+				var slot = Math.floor(low / BIT32);
+				if (slot) {
+					high += slot;
+					low -= slot * BIT32;
+				}
+				writeUint32(buffer, offset + posH, high);
+				writeUint32(buffer, offset + posL, low);
+				return buffer;
+			}
+			function writeUint32(buffer, offset, value) {
+				buffer[offset + pos0] = value >> 24 & 255;
+				buffer[offset + pos1] = value >> 16 & 255;
+				buffer[offset + pos2] = value >> 8 & 255;
+				buffer[offset + pos3] = value & 255;
+			}
+		}
+		function buildFromInt64(pos0, pos1, pos2, pos3, posH, posL) {
+			return fromInt64;
+			function fromInt64(buffer, offset) {
+				checkRange(buffer, offset |= 0);
+				var high = readUint32(buffer, offset + posH);
+				return fromTime(readUint32(buffer, offset + posL), high);
+			}
+			function readUint32(buffer, offset) {
+				return buffer[offset + pos0] * BIT24 + (buffer[offset + pos1] << 16 | buffer[offset + pos2] << 8 | buffer[offset + pos3]);
+			}
+		}
+		function checkRange(buffer, offset) {
+			var last = buffer && buffer.length;
+			if (last == null) throw new TypeError("Invalid Buffer");
+			if (last < offset + 8) throw new RangeError("Out of range");
+		}
+		function Math_trunc(x) {
+			var n = x - x % 1;
+			return n === 0 && (x < 0 || x === 0 && 1 / x !== Infinity) ? -0 : n;
+		}
+		function padS(v) {
+			return (v > 9 ? "" : " ") + (v | 0);
+		}
+		function pad2(v) {
+			return (v > 9 ? "" : "0") + (v | 0);
+		}
+		function pad(v, len) {
+			return (ZERO9 + (v | 0)).substr(-len);
+		}
+	})();
+})))(), 1);
+const log$10 = logger("ipns:validator");
+/**
+* Limit valid IPNS record sizes to 10kb
+*/
+const MAX_RECORD_SIZE = 1024 * 10;
+/**
+* Validates the given IPNS Record against the given public key. We need a "raw"
+* record in order to be able to access to all of its fields.
+*/
+async function validate(publicKey, marshalledRecord) {
+	const record = unmarshalIPNSRecord(marshalledRecord);
+	let isValid;
+	try {
+		const dataForSignature = ipnsRecordDataForV2Sig(record.data);
+		isValid = await publicKey.verify(dataForSignature, record.signatureV2);
+	} catch (err) {
+		isValid = false;
+	}
+	if (!isValid) {
+		log$10.error("record signature verification failed");
+		throw new SignatureVerificationError("Record signature verification failed");
+	}
+	if (record.validityType === IpnsEntry.ValidityType.EOL) {
+		if (import_timestamp.default.fromString(record.validity).toDate().getTime() < Date.now()) {
+			log$10.error("record has expired");
+			throw new RecordExpiredError("record has expired");
+		}
+	} else if (record.validityType != null) {
+		log$10.error("the validity type is unsupported");
+		throw new UnsupportedValidityError("The validity type is unsupported");
+	}
+	log$10("ipns record for %s is valid", record.value);
+}
+/**
+* Validate the given IPNS record against the given routing key.
+*
+* @see https://specs.ipfs.tech/ipns/ipns-record/#routing-record for the binary format of the routing key
+*
+* @param routingKey - The routing key in binary format: binary(ascii(IPNS_PREFIX) + multihash(public key))
+* @param marshalledRecord - The marshalled record to validate.
+*/
+async function ipnsValidator(routingKey, marshalledRecord) {
+	if (marshalledRecord.byteLength > MAX_RECORD_SIZE) throw new RecordTooLargeError("The record is too large");
+	const routingMultihash = multihashFromIPNSRoutingKey(routingKey);
+	let routingPubKey;
+	if (isCodec(routingMultihash, 0)) routingPubKey = publicKeyFromMultihash(routingMultihash);
+	const recordPubKey = extractPublicKeyFromIPNSRecord(unmarshalIPNSRecord(marshalledRecord)) ?? routingPubKey;
+	if (recordPubKey == null) throw new InvalidEmbeddedPublicKeyError("Could not extract public key from IPNS record or routing key");
+	if (!equals(multihashToIPNSRoutingKey(recordPubKey.toMultihash()), routingKey)) throw new InvalidEmbeddedPublicKeyError("Embedded public key did not match routing key");
+	await validate(recordPubKey, marshalledRecord);
+}
+//#endregion
+//#region node_modules/.pnpm/it-ndjson@1.1.6/node_modules/it-ndjson/dist/src/errors.js
+/**
+* A serialized message was received that was too large
+*/
+var InvalidMessageLengthError = class extends Error {
+	name = "InvalidMessageLengthError";
+	code = "ERR_INVALID_MESSAGE_LENGTH";
+};
+//#endregion
+//#region node_modules/.pnpm/it-ndjson@1.1.6/node_modules/it-ndjson/dist/src/parse.js
+async function* parse(source, opts = {}) {
+	const matcher = /\r?\n/;
+	const decoder = new TextDecoder("utf8");
+	let buffer = "";
+	for await (let chunk of source) {
+		if (typeof chunk === "string") chunk = new TextEncoder().encode(chunk);
+		if (isUint8ArrayList(chunk)) chunk = chunk.subarray();
+		buffer += decoder.decode(chunk, { stream: true });
+		if (buffer.length > (opts?.maxMessageLength ?? buffer.length)) throw new InvalidMessageLengthError("Incoming message too long");
+		const parts = buffer.split(matcher);
+		buffer = parts.pop() ?? "";
+		for (let i = 0; i < parts.length; i++) yield JSON.parse(parts[i]);
+	}
+	buffer += decoder.decode();
+	if (buffer !== "") yield JSON.parse(buffer);
+}
+//#endregion
+//#region node_modules/.pnpm/eventemitter3@5.0.4/node_modules/eventemitter3/index.mjs
+var import_eventemitter3 = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var has = Object.prototype.hasOwnProperty, prefix = "~";
+	/**
+	* Constructor to create a storage for our `EE` objects.
+	* An `Events` instance is a plain object whose properties are event names.
+	*
+	* @constructor
+	* @private
+	*/
+	function Events() {}
+	if (Object.create) {
+		Events.prototype = Object.create(null);
+		if (!new Events().__proto__) prefix = false;
+	}
+	/**
+	* Representation of a single event listener.
+	*
+	* @param {Function} fn The listener function.
+	* @param {*} context The context to invoke the listener with.
+	* @param {Boolean} [once=false] Specify if the listener is a one-time listener.
+	* @constructor
+	* @private
+	*/
+	function EE(fn, context, once) {
+		this.fn = fn;
+		this.context = context;
+		this.once = once || false;
+	}
+	/**
+	* Add a listener for a given event.
+	*
+	* @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
+	* @param {(String|Symbol)} event The event name.
+	* @param {Function} fn The listener function.
+	* @param {*} context The context to invoke the listener with.
+	* @param {Boolean} once Specify if the listener is a one-time listener.
+	* @returns {EventEmitter}
+	* @private
+	*/
+	function addListener(emitter, event, fn, context, once) {
+		if (typeof fn !== "function") throw new TypeError("The listener must be a function");
+		var listener = new EE(fn, context || emitter, once), evt = prefix ? prefix + event : event;
+		if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
+		else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
+		else emitter._events[evt] = [emitter._events[evt], listener];
+		return emitter;
+	}
+	/**
+	* Clear event by name.
+	*
+	* @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
+	* @param {(String|Symbol)} evt The Event name.
+	* @private
+	*/
+	function clearEvent(emitter, evt) {
+		if (--emitter._eventsCount === 0) emitter._events = new Events();
+		else delete emitter._events[evt];
+	}
+	/**
+	* Minimal `EventEmitter` interface that is molded against the Node.js
+	* `EventEmitter` interface.
+	*
+	* @constructor
+	* @public
+	*/
+	function EventEmitter() {
+		this._events = new Events();
+		this._eventsCount = 0;
+	}
+	/**
+	* Return an array listing the events for which the emitter has registered
+	* listeners.
+	*
+	* @returns {Array}
+	* @public
+	*/
+	EventEmitter.prototype.eventNames = function eventNames() {
+		var names = [], events, name;
+		if (this._eventsCount === 0) return names;
+		for (name in events = this._events) if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
+		if (Object.getOwnPropertySymbols) return names.concat(Object.getOwnPropertySymbols(events));
+		return names;
+	};
+	/**
+	* Return the listeners registered for a given event.
+	*
+	* @param {(String|Symbol)} event The event name.
+	* @returns {Array} The registered listeners.
+	* @public
+	*/
+	EventEmitter.prototype.listeners = function listeners(event) {
+		var evt = prefix ? prefix + event : event, handlers = this._events[evt];
+		if (!handlers) return [];
+		if (handlers.fn) return [handlers.fn];
+		for (var i = 0, l = handlers.length, ee = new Array(l); i < l; i++) ee[i] = handlers[i].fn;
+		return ee;
+	};
+	/**
+	* Return the number of listeners listening to a given event.
+	*
+	* @param {(String|Symbol)} event The event name.
+	* @returns {Number} The number of listeners.
+	* @public
+	*/
+	EventEmitter.prototype.listenerCount = function listenerCount(event) {
+		var evt = prefix ? prefix + event : event, listeners = this._events[evt];
+		if (!listeners) return 0;
+		if (listeners.fn) return 1;
+		return listeners.length;
+	};
+	/**
+	* Calls each of the listeners registered for a given event.
+	*
+	* @param {(String|Symbol)} event The event name.
+	* @returns {Boolean} `true` if the event had listeners, else `false`.
+	* @public
+	*/
+	EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+		var evt = prefix ? prefix + event : event;
+		if (!this._events[evt]) return false;
+		var listeners = this._events[evt], len = arguments.length, args, i;
+		if (listeners.fn) {
+			if (listeners.once) this.removeListener(event, listeners.fn, void 0, true);
+			switch (len) {
+				case 1: return listeners.fn.call(listeners.context), true;
+				case 2: return listeners.fn.call(listeners.context, a1), true;
+				case 3: return listeners.fn.call(listeners.context, a1, a2), true;
+				case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
+				case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+				case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+			}
+			for (i = 1, args = new Array(len - 1); i < len; i++) args[i - 1] = arguments[i];
+			listeners.fn.apply(listeners.context, args);
+		} else {
+			var length = listeners.length, j;
+			for (i = 0; i < length; i++) {
+				if (listeners[i].once) this.removeListener(event, listeners[i].fn, void 0, true);
+				switch (len) {
+					case 1:
+						listeners[i].fn.call(listeners[i].context);
+						break;
+					case 2:
+						listeners[i].fn.call(listeners[i].context, a1);
+						break;
+					case 3:
+						listeners[i].fn.call(listeners[i].context, a1, a2);
+						break;
+					case 4:
+						listeners[i].fn.call(listeners[i].context, a1, a2, a3);
+						break;
+					default:
+						if (!args) for (j = 1, args = new Array(len - 1); j < len; j++) args[j - 1] = arguments[j];
+						listeners[i].fn.apply(listeners[i].context, args);
+				}
+			}
+		}
+		return true;
+	};
+	/**
+	* Add a listener for a given event.
+	*
+	* @param {(String|Symbol)} event The event name.
+	* @param {Function} fn The listener function.
+	* @param {*} [context=this] The context to invoke the listener with.
+	* @returns {EventEmitter} `this`.
+	* @public
+	*/
+	EventEmitter.prototype.on = function on(event, fn, context) {
+		return addListener(this, event, fn, context, false);
+	};
+	/**
+	* Add a one-time listener for a given event.
+	*
+	* @param {(String|Symbol)} event The event name.
+	* @param {Function} fn The listener function.
+	* @param {*} [context=this] The context to invoke the listener with.
+	* @returns {EventEmitter} `this`.
+	* @public
+	*/
+	EventEmitter.prototype.once = function once(event, fn, context) {
+		return addListener(this, event, fn, context, true);
+	};
+	/**
+	* Remove the listeners of a given event.
+	*
+	* @param {(String|Symbol)} event The event name.
+	* @param {Function} fn Only remove the listeners that match this function.
+	* @param {*} context Only remove the listeners that have this context.
+	* @param {Boolean} once Only remove one-time listeners.
+	* @returns {EventEmitter} `this`.
+	* @public
+	*/
+	EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
+		var evt = prefix ? prefix + event : event;
+		if (!this._events[evt]) return this;
+		if (!fn) {
+			clearEvent(this, evt);
+			return this;
+		}
+		var listeners = this._events[evt];
+		if (listeners.fn) {
+			if (listeners.fn === fn && (!once || listeners.once) && (!context || listeners.context === context)) clearEvent(this, evt);
+		} else {
+			for (var i = 0, events = [], length = listeners.length; i < length; i++) if (listeners[i].fn !== fn || once && !listeners[i].once || context && listeners[i].context !== context) events.push(listeners[i]);
+			if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
+			else clearEvent(this, evt);
+		}
+		return this;
+	};
+	/**
+	* Remove all listeners, or those of the specified event.
+	*
+	* @param {(String|Symbol)} [event] The event name.
+	* @returns {EventEmitter} `this`.
+	* @public
+	*/
+	EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
+		var evt;
+		if (event) {
+			evt = prefix ? prefix + event : event;
+			if (this._events[evt]) clearEvent(this, evt);
+		} else {
+			this._events = new Events();
+			this._eventsCount = 0;
+		}
+		return this;
+	};
+	EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+	EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+	EventEmitter.prefixed = prefix;
+	EventEmitter.EventEmitter = EventEmitter;
+	if ("undefined" !== typeof module) module.exports = EventEmitter;
+})))(), 1);
+//#endregion
+//#region node_modules/.pnpm/p-queue@9.3.0/node_modules/p-queue/dist/lower-bound.js
+function lowerBound(array, value, comparator) {
+	let first = 0;
+	let count = array.length;
+	while (count > 0) {
+		const step = Math.trunc(count / 2);
+		let it = first + step;
+		if (comparator(array[it], value) <= 0) {
+			first = ++it;
+			count -= step + 1;
+		} else count = step;
+	}
+	return first;
+}
+//#endregion
+//#region node_modules/.pnpm/p-queue@9.3.0/node_modules/p-queue/dist/priority-queue.js
+const compactionThreshold = 100;
+var PriorityQueue = class {
+	#queue = [];
+	#head = 0;
+	enqueue(run, options) {
+		const { priority = 0, id } = options ?? {};
+		const { size } = this;
+		const element = {
+			priority,
+			id,
+			run
+		};
+		if (size === 0) {
+			this.#queue.length = 0;
+			this.#head = 0;
+			this.#queue.push(element);
+			return;
+		}
+		if (this.#queue.at(-1).priority >= priority) {
+			this.#queue.push(element);
+			return;
+		}
+		this.#compact();
+		const index = lowerBound(this.#queue, element, (a, b) => b.priority - a.priority);
+		this.#queue.splice(index, 0, element);
+	}
+	setPriority(id, priority) {
+		const index = this.#queue.findIndex((element, index) => index >= this.#head && element.id === id);
+		if (index === -1) throw new ReferenceError(`No promise function with the id "${id}" exists in the queue.`);
+		const [item] = this.#queue.splice(index, 1);
+		this.enqueue(item.run, {
+			priority,
+			id
+		});
+	}
+	remove(idOrRun) {
+		const index = this.#queue.findIndex((element, index) => {
+			if (index < this.#head) return false;
+			if (typeof idOrRun === "string") return element.id === idOrRun;
+			return element.run === idOrRun;
+		});
+		if (index !== -1) this.#queue.splice(index, 1);
+	}
+	dequeue() {
+		if (this.#head === this.#queue.length) return;
+		const item = this.#queue[this.#head];
+		this.#head++;
+		if (this.#head === this.#queue.length) {
+			this.#queue.length = 0;
+			this.#head = 0;
+		} else if (this.#head > compactionThreshold && this.#head > this.#queue.length / 2) this.#compact();
+		return item?.run;
+	}
+	filter(options) {
+		const result = [];
+		for (let index = this.#head; index < this.#queue.length; index++) {
+			const element = this.#queue[index];
+			if (element.priority === options.priority) result.push(element.run);
+		}
+		return result;
+	}
+	get size() {
+		return this.#queue.length - this.#head;
+	}
+	#compact() {
+		if (this.#head === 0) return;
+		this.#queue.splice(0, this.#head);
+		this.#head = 0;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/p-queue@9.3.0/node_modules/p-queue/dist/index.js
+/**
+Promise queue with concurrency control.
+*/
+var PQueue = class extends import_eventemitter3.default {
+	#carryoverIntervalCount;
+	#isIntervalIgnored;
+	#intervalCount = 0;
+	#intervalCap;
+	#rateLimitedInInterval = false;
+	#rateLimitFlushScheduled = false;
+	#interval;
+	#intervalEnd = 0;
+	#lastExecutionTime = 0;
+	#intervalId;
+	#timeoutId;
+	#strict;
+	#strictTicks = [];
+	#strictTicksStartIndex = 0;
+	#queue;
+	#queueClass;
+	#pending = 0;
+	#concurrency;
+	#isPaused;
+	#idAssigner = 1n;
+	#runningTasks = /* @__PURE__ */ new Map();
+	#queueAbortListenerCleanupFunctions = /* @__PURE__ */ new Set();
+	/**
+	Get or set the default timeout for all tasks. Can be changed at runtime.
+	
+	Operations will throw a `TimeoutError` if they don't complete within the specified time.
+	
+	The timeout begins when the operation is dequeued and starts execution, not while it's waiting in the queue.
+	
+	@example
+	```
+	const queue = new PQueue({timeout: 5000});
+	
+	// Change timeout for all future tasks
+	queue.timeout = 10000;
+	```
+	*/
+	timeout;
+	constructor(options) {
+		super();
+		options = {
+			carryoverIntervalCount: false,
+			intervalCap: Number.POSITIVE_INFINITY,
+			interval: 0,
+			concurrency: Number.POSITIVE_INFINITY,
+			autoStart: true,
+			queueClass: PriorityQueue,
+			strict: false,
+			...options
+		};
+		if (!(typeof options.intervalCap === "number" && options.intervalCap >= 1)) throw new TypeError(`Expected \`intervalCap\` to be a number from 1 and up, got \`${options.intervalCap?.toString() ?? ""}\` (${typeof options.intervalCap})`);
+		if (options.interval === void 0 || !(Number.isFinite(options.interval) && options.interval >= 0)) throw new TypeError(`Expected \`interval\` to be a finite number >= 0, got \`${options.interval?.toString() ?? ""}\` (${typeof options.interval})`);
+		if (options.strict && options.interval === 0) throw new TypeError("The `strict` option requires a non-zero `interval`");
+		if (options.strict && options.intervalCap === Number.POSITIVE_INFINITY) throw new TypeError("The `strict` option requires a finite `intervalCap`");
+		this.#carryoverIntervalCount = options.carryoverIntervalCount ?? options.carryoverConcurrencyCount ?? false;
+		this.#isIntervalIgnored = options.intervalCap === Number.POSITIVE_INFINITY || options.interval === 0;
+		this.#intervalCap = options.intervalCap;
+		this.#interval = options.interval;
+		this.#strict = options.strict;
+		this.#queue = new options.queueClass();
+		this.#queueClass = options.queueClass;
+		this.concurrency = options.concurrency;
+		if (options.timeout !== void 0 && !(Number.isFinite(options.timeout) && options.timeout > 0)) throw new TypeError(`Expected \`timeout\` to be a positive finite number, got \`${options.timeout}\` (${typeof options.timeout})`);
+		this.timeout = options.timeout;
+		this.#isPaused = options.autoStart === false;
+		this.#setupRateLimitTracking();
+	}
+	#cleanupStrictTicks(now) {
+		while (this.#strictTicksStartIndex < this.#strictTicks.length) {
+			const oldestTick = this.#strictTicks[this.#strictTicksStartIndex];
+			if (oldestTick !== void 0 && now - oldestTick >= this.#interval) this.#strictTicksStartIndex++;
+			else break;
+		}
+		if (this.#strictTicksStartIndex > 100 && this.#strictTicksStartIndex > this.#strictTicks.length / 2 || this.#strictTicksStartIndex === this.#strictTicks.length) {
+			this.#strictTicks = this.#strictTicks.slice(this.#strictTicksStartIndex);
+			this.#strictTicksStartIndex = 0;
+		}
+	}
+	#consumeIntervalSlot(now) {
+		if (this.#strict) this.#strictTicks.push(now);
+		else this.#intervalCount++;
+	}
+	#rollbackIntervalSlot() {
+		if (this.#strict) {
+			if (this.#strictTicks.length > this.#strictTicksStartIndex) this.#strictTicks.pop();
+		} else if (this.#intervalCount > 0) this.#intervalCount--;
+	}
+	#getActiveTicksCount() {
+		return this.#strictTicks.length - this.#strictTicksStartIndex;
+	}
+	get #doesIntervalAllowAnother() {
+		if (this.#isIntervalIgnored) return true;
+		if (this.#strict) return this.#getActiveTicksCount() < this.#intervalCap;
+		return this.#intervalCount < this.#intervalCap;
+	}
+	get #doesConcurrentAllowAnother() {
+		return this.#pending < this.#concurrency;
+	}
+	#next() {
+		this.#pending--;
+		if (this.#pending === 0) this.emit("pendingZero");
+		this.#tryToStartAnother();
+		this.emit("next");
+	}
+	#onResumeInterval() {
+		this.#timeoutId = void 0;
+		this.#onInterval();
+		this.#initializeIntervalIfNeeded();
+	}
+	#isIntervalPausedAt(now) {
+		if (this.#strict) {
+			this.#cleanupStrictTicks(now);
+			if (this.#getActiveTicksCount() >= this.#intervalCap) {
+				const oldestTick = this.#strictTicks[this.#strictTicksStartIndex];
+				const delay = this.#interval - (now - oldestTick);
+				this.#createIntervalTimeout(delay);
+				return true;
+			}
+			return false;
+		}
+		if (this.#intervalId === void 0) {
+			const delay = this.#intervalEnd - now;
+			if (delay < 0) {
+				if (this.#lastExecutionTime > 0) {
+					const timeSinceLastExecution = now - this.#lastExecutionTime;
+					if (timeSinceLastExecution < this.#interval) {
+						this.#createIntervalTimeout(this.#interval - timeSinceLastExecution);
+						return true;
+					}
+				}
+				this.#intervalCount = this.#carryoverIntervalCount ? this.#pending : 0;
+			} else {
+				this.#createIntervalTimeout(delay);
+				return true;
+			}
+		}
+		return false;
+	}
+	#createIntervalTimeout(delay) {
+		if (this.#timeoutId !== void 0) return;
+		this.#timeoutId = setTimeout(() => {
+			this.#onResumeInterval();
+		}, delay);
+	}
+	#clearIntervalTimer() {
+		if (this.#intervalId) {
+			clearInterval(this.#intervalId);
+			this.#intervalId = void 0;
+		}
+	}
+	#clearTimeoutTimer() {
+		if (this.#timeoutId) {
+			clearTimeout(this.#timeoutId);
+			this.#timeoutId = void 0;
+		}
+	}
+	#tryToStartAnother() {
+		if (this.#queue.size === 0) {
+			this.#clearIntervalTimer();
+			this.emit("empty");
+			if (this.#pending === 0) {
+				this.#clearTimeoutTimer();
+				if (this.#strict && this.#strictTicksStartIndex > 0) {
+					const now = Date.now();
+					this.#cleanupStrictTicks(now);
+				}
+				this.emit("idle");
+			}
+			return false;
+		}
+		let taskStarted = false;
+		if (!this.#isPaused) {
+			const now = Date.now();
+			const canInitializeInterval = !this.#isIntervalPausedAt(now);
+			if (this.#doesIntervalAllowAnother && this.#doesConcurrentAllowAnother) {
+				const job = this.#queue.dequeue();
+				if (!this.#isIntervalIgnored) {
+					this.#consumeIntervalSlot(now);
+					this.#scheduleRateLimitUpdate();
+				}
+				this.emit("active");
+				job();
+				if (canInitializeInterval) this.#initializeIntervalIfNeeded();
+				taskStarted = true;
+			}
+		}
+		return taskStarted;
+	}
+	#initializeIntervalIfNeeded() {
+		if (this.#isIntervalIgnored || this.#intervalId !== void 0) return;
+		if (this.#strict) return;
+		this.#intervalId = setInterval(() => {
+			this.#onInterval();
+		}, this.#interval);
+		this.#intervalEnd = Date.now() + this.#interval;
+	}
+	#onInterval() {
+		if (!this.#strict) {
+			if (this.#intervalCount === 0 && this.#pending === 0 && this.#intervalId) this.#clearIntervalTimer();
+			this.#intervalCount = this.#carryoverIntervalCount ? this.#pending : 0;
+		}
+		this.#processQueue();
+		this.#scheduleRateLimitUpdate();
+	}
+	/**
+	Executes all queued functions until it reaches the limit.
+	*/
+	#processQueue() {
+		while (this.#tryToStartAnother());
+	}
+	get concurrency() {
+		return this.#concurrency;
+	}
+	set concurrency(newConcurrency) {
+		if (!(typeof newConcurrency === "number" && newConcurrency >= 1)) throw new TypeError(`Expected \`concurrency\` to be a number from 1 and up, got \`${newConcurrency}\` (${typeof newConcurrency})`);
+		this.#concurrency = newConcurrency;
+		this.#processQueue();
+	}
+	/**
+	Updates the priority of a promise function by its id, affecting its execution order. Requires a defined concurrency limit to take effect.
+	
+	For example, this can be used to prioritize a promise function to run earlier.
+	
+	```js
+	import PQueue from 'p-queue';
+	
+	const queue = new PQueue({concurrency: 1});
+	
+	queue.add(async () => '🦄', {priority: 1});
+	queue.add(async () => '🦀', {priority: 0, id: '🦀'});
+	queue.add(async () => '🦄', {priority: 1});
+	queue.add(async () => '🦄', {priority: 1});
+	
+	queue.setPriority('🦀', 2);
+	```
+	
+	In this case, the promise function with `id: '🦀'` runs second.
+	
+	You can also deprioritize a promise function to delay its execution:
+	
+	```js
+	import PQueue from 'p-queue';
+	
+	const queue = new PQueue({concurrency: 1});
+	
+	queue.add(async () => '🦄', {priority: 1});
+	queue.add(async () => '🦀', {priority: 1, id: '🦀'});
+	queue.add(async () => '🦄');
+	queue.add(async () => '🦄', {priority: 0});
+	
+	queue.setPriority('🦀', -1);
+	```
+	Here, the promise function with `id: '🦀'` executes last.
+	*/
+	setPriority(id, priority) {
+		if (typeof priority !== "number" || !Number.isFinite(priority)) throw new TypeError(`Expected \`priority\` to be a finite number, got \`${priority}\` (${typeof priority})`);
+		this.#queue.setPriority(id, priority);
+	}
+	async add(function_, options = {}) {
+		options = {
+			timeout: this.timeout,
+			...options,
+			id: options.id ?? (this.#idAssigner++).toString()
+		};
+		return new Promise((resolve, reject) => {
+			const taskSymbol = Symbol(`task-${options.id}`);
+			let cleanupQueueAbortHandler = () => void 0;
+			const run = async () => {
+				cleanupQueueAbortHandler();
+				this.#pending++;
+				this.#runningTasks.set(taskSymbol, {
+					id: options.id,
+					priority: options.priority ?? 0,
+					startTime: Date.now(),
+					timeout: options.timeout
+				});
+				let eventListener;
+				try {
+					try {
+						options.signal?.throwIfAborted();
+					} catch (error) {
+						this.#rollbackIntervalConsumption();
+						this.#runningTasks.delete(taskSymbol);
+						throw error;
+					}
+					this.#lastExecutionTime = Date.now();
+					let operation = function_({ signal: options.signal });
+					if (options.timeout) operation = pTimeout(Promise.resolve(operation), {
+						milliseconds: options.timeout,
+						message: `Task timed out after ${options.timeout}ms (queue has ${this.#pending} running, ${this.#queue.size} waiting)`
+					});
+					if (options.signal) {
+						const { signal } = options;
+						operation = Promise.race([operation, new Promise((_resolve, reject) => {
+							eventListener = () => {
+								reject(signal.reason);
+							};
+							signal.addEventListener("abort", eventListener, { once: true });
+						})]);
+					}
+					const result = await operation;
+					resolve(result);
+					this.emit("completed", result);
+				} catch (error) {
+					reject(error);
+					this.emit("error", error);
+				} finally {
+					if (eventListener) options.signal?.removeEventListener("abort", eventListener);
+					this.#runningTasks.delete(taskSymbol);
+					queueMicrotask(() => {
+						this.#next();
+					});
+				}
+			};
+			this.#queue.enqueue(run, options);
+			const removeQueuedTask = () => {
+				if (this.#queue instanceof PriorityQueue) {
+					this.#queue.remove(run);
+					return;
+				}
+				this.#queue.remove?.(options.id);
+			};
+			if (options.signal) {
+				const { signal } = options;
+				const queueAbortHandler = () => {
+					cleanupQueueAbortHandler();
+					removeQueuedTask();
+					reject(signal.reason);
+					this.#tryToStartAnother();
+					this.emit("next");
+				};
+				cleanupQueueAbortHandler = () => {
+					signal.removeEventListener("abort", queueAbortHandler);
+					this.#queueAbortListenerCleanupFunctions.delete(cleanupQueueAbortHandler);
+				};
+				if (signal.aborted) {
+					queueAbortHandler();
+					return;
+				}
+				signal.addEventListener("abort", queueAbortHandler, { once: true });
+				this.#queueAbortListenerCleanupFunctions.add(cleanupQueueAbortHandler);
+			}
+			this.emit("add");
+			this.#tryToStartAnother();
+		});
+	}
+	async addAll(functions, options) {
+		return Promise.all(functions.map(async (function_) => this.add(function_, options)));
+	}
+	/**
+	Start (or resume) executing enqueued tasks within concurrency limit. No need to call this if queue is not paused (via `options.autoStart = false` or by `.pause()` method.)
+	*/
+	start() {
+		if (!this.#isPaused) return this;
+		this.#isPaused = false;
+		this.#processQueue();
+		return this;
+	}
+	/**
+	Put queue execution on hold.
+	*/
+	pause() {
+		this.#isPaused = true;
+	}
+	/**
+	Clear the queue.
+	*/
+	clear() {
+		for (const cleanupQueueAbortHandler of this.#queueAbortListenerCleanupFunctions) cleanupQueueAbortHandler();
+		this.#queue = new this.#queueClass();
+		this.#clearIntervalTimer();
+		this.#updateRateLimitState();
+		this.emit("empty");
+		if (this.#pending === 0) {
+			this.#clearTimeoutTimer();
+			this.emit("idle");
+		}
+		this.emit("next");
+	}
+	/**
+	Can be called multiple times. Useful if you for example add additional items at a later time.
+	
+	@returns A promise that settles when the queue becomes empty.
+	*/
+	async onEmpty() {
+		if (this.#queue.size === 0) return;
+		await this.#onEvent("empty");
+	}
+	/**
+	@returns A promise that settles when the queue size is less than the given limit: `queue.size < limit`.
+	
+	If you want to avoid having the queue grow beyond a certain size you can `await queue.onSizeLessThan()` before adding a new item.
+	
+	Note that this only limits the number of items waiting to start. There could still be up to `concurrency` jobs already running that this call does not include in its calculation.
+	*/
+	async onSizeLessThan(limit) {
+		if (this.#queue.size < limit) return;
+		await this.#onEvent("next", () => this.#queue.size < limit);
+	}
+	/**
+	The difference with `.onEmpty` is that `.onIdle` guarantees that all work from the queue has finished. `.onEmpty` merely signals that the queue is empty, but it could mean that some promises haven't completed yet.
+	
+	@returns A promise that settles when the queue becomes empty, and all promises have completed; `queue.size === 0 && queue.pending === 0`.
+	*/
+	async onIdle() {
+		if (this.#pending === 0 && this.#queue.size === 0) return;
+		await this.#onEvent("idle");
+	}
+	/**
+	The difference with `.onIdle` is that `.onPendingZero` only waits for currently running tasks to finish, ignoring queued tasks.
+	
+	@returns A promise that settles when all currently running tasks have completed; `queue.pending === 0`.
+	*/
+	async onPendingZero() {
+		if (this.#pending === 0) return;
+		await this.#onEvent("pendingZero");
+	}
+	/**
+	@returns A promise that settles when the queue becomes rate-limited due to intervalCap.
+	*/
+	async onRateLimit() {
+		if (this.isRateLimited) return;
+		await this.#onEvent("rateLimit");
+	}
+	/**
+	@returns A promise that settles when the queue is no longer rate-limited.
+	*/
+	async onRateLimitCleared() {
+		if (!this.isRateLimited) return;
+		await this.#onEvent("rateLimitCleared");
+	}
+	/**
+	@returns A promise that rejects when any task in the queue errors.
+	
+	Use with `Promise.race([queue.onError(), queue.onIdle()])` to fail fast on the first error while still resolving normally when the queue goes idle.
+	
+	Important: The promise returned by `add()` still rejects. You must handle each `add()` promise (for example, `.catch(() => {})`) to avoid unhandled rejections.
+	
+	@example
+	```
+	import PQueue from 'p-queue';
+	
+	const queue = new PQueue({concurrency: 2});
+	
+	queue.add(() => fetchData(1)).catch(() => {});
+	queue.add(() => fetchData(2)).catch(() => {});
+	queue.add(() => fetchData(3)).catch(() => {});
+	
+	// Stop processing on first error
+	try {
+	await Promise.race([
+	queue.onError(),
+	queue.onIdle()
+	]);
+	} catch (error) {
+	queue.pause(); // Stop processing remaining tasks
+	console.error('Queue failed:', error);
+	}
+	```
+	*/
+	onError() {
+		return new Promise((_resolve, reject) => {
+			const handleError = (error) => {
+				this.off("error", handleError);
+				reject(error);
+			};
+			this.on("error", handleError);
+		});
+	}
+	async #onEvent(event, filter) {
+		return new Promise((resolve) => {
+			const listener = () => {
+				if (filter && !filter()) return;
+				this.off(event, listener);
+				resolve();
+			};
+			this.on(event, listener);
+		});
+	}
+	/**
+	Size of the queue, the number of queued items waiting to run.
+	*/
+	get size() {
+		return this.#queue.size;
+	}
+	/**
+	Size of the queue, filtered by the given options.
+	
+	For example, this can be used to find the number of items remaining in the queue with a specific priority level.
+	*/
+	sizeBy(options) {
+		return this.#queue.filter(options).length;
+	}
+	/**
+	Number of running items (no longer in the queue).
+	*/
+	get pending() {
+		return this.#pending;
+	}
+	/**
+	Whether the queue is currently paused.
+	*/
+	get isPaused() {
+		return this.#isPaused;
+	}
+	#setupRateLimitTracking() {
+		if (this.#isIntervalIgnored) return;
+		this.on("add", () => {
+			if (this.#queue.size > 0) this.#scheduleRateLimitUpdate();
+		});
+		this.on("next", () => {
+			this.#scheduleRateLimitUpdate();
+		});
+	}
+	#scheduleRateLimitUpdate() {
+		if (this.#isIntervalIgnored || this.#rateLimitFlushScheduled) return;
+		this.#rateLimitFlushScheduled = true;
+		queueMicrotask(() => {
+			this.#rateLimitFlushScheduled = false;
+			this.#updateRateLimitState();
+		});
+	}
+	#rollbackIntervalConsumption() {
+		if (this.#isIntervalIgnored) return;
+		this.#rollbackIntervalSlot();
+		this.#scheduleRateLimitUpdate();
+	}
+	#updateRateLimitState() {
+		const previous = this.#rateLimitedInInterval;
+		if (this.#isIntervalIgnored || this.#queue.size === 0) {
+			if (previous) {
+				this.#rateLimitedInInterval = false;
+				this.emit("rateLimitCleared");
+			}
+			return;
+		}
+		let count;
+		if (this.#strict) {
+			const now = Date.now();
+			this.#cleanupStrictTicks(now);
+			count = this.#getActiveTicksCount();
+		} else count = this.#intervalCount;
+		const shouldBeRateLimited = count >= this.#intervalCap;
+		if (shouldBeRateLimited !== previous) {
+			this.#rateLimitedInInterval = shouldBeRateLimited;
+			this.emit(shouldBeRateLimited ? "rateLimit" : "rateLimitCleared");
+		}
+	}
+	/**
+	Whether the queue is currently rate-limited due to intervalCap.
+	*/
+	get isRateLimited() {
+		return this.#rateLimitedInInterval;
+	}
+	/**
+	Whether the queue is saturated. Returns `true` when:
+	- All concurrency slots are occupied and tasks are waiting, OR
+	- The queue is rate-limited and tasks are waiting
+	
+	Useful for detecting backpressure and potential hanging tasks.
+	
+	```js
+	import PQueue from 'p-queue';
+	
+	const queue = new PQueue({concurrency: 2});
+	
+	// Backpressure handling
+	if (queue.isSaturated) {
+	console.log('Queue is saturated, waiting for capacity...');
+	await queue.onSizeLessThan(queue.concurrency);
+	}
+	
+	// Monitoring for stuck tasks
+	setInterval(() => {
+	if (queue.isSaturated) {
+	console.warn(`Queue saturated: ${queue.pending} running, ${queue.size} waiting`);
+	}
+	}, 60000);
+	```
+	*/
+	get isSaturated() {
+		return this.#pending === this.#concurrency && this.#queue.size > 0 || this.isRateLimited && this.#queue.size > 0;
+	}
+	/**
+	The tasks currently being executed. Each task includes its `id`, `priority`, `startTime`, `timeout` (if set), and `timeoutRemaining` (milliseconds until the task times out, or `undefined` if no timeout is set).
+	
+	Returns an array of task info objects.
+	
+	```js
+	import PQueue from 'p-queue';
+	
+	const queue = new PQueue({concurrency: 2, timeout: 10000});
+	
+	// Add tasks with IDs for better debugging
+	queue.add(() => fetchUser(123), {id: 'user-123'});
+	queue.add(() => fetchPosts(456), {id: 'posts-456', priority: 1});
+	
+	// Check what's running
+	console.log(queue.runningTasks);
+	// => [{
+	//   id: 'user-123',
+	//   priority: 0,
+	//   startTime: 1759253001716,
+	//   timeout: 10000,
+	//   timeoutRemaining: 9700
+	// }, {
+	//   id: 'posts-456',
+	//   priority: 1,
+	//   startTime: 1759253001916,
+	//   timeout: 10000,
+	//   timeoutRemaining: 9900
+	// }]
+	```
+	*/
+	get runningTasks() {
+		return [...this.#runningTasks.values()].map((task) => ({
+			...task,
+			timeoutRemaining: task.timeout ? Math.max(0, task.startTime + task.timeout - Date.now()) : void 0
+		}));
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/errors.js
+var InvalidRequestError = class extends Error {
+	static name = "InvalidRequestError";
+	constructor(message = "Invalid request") {
+		super(message);
+		this.name = "InvalidRequestError";
+	}
+};
+var BadResponseError = class extends Error {
+	static name = "BadResponseError";
+	constructor(message = "Bad response") {
+		super(message);
+		this.name = "BadResponseError";
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/it-first@3.0.11/node_modules/it-first/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Return the first value in an (async)iterable
+*
+* @example
+*
+* ```javascript
+* import first from 'it-first'
+*
+* // This can also be an iterator, generator, etc
+* const values = [0, 1, 2, 3, 4]
+*
+* const res = first(values)
+*
+* console.info(res) // 0
+* ```
+*
+* Async sources must be awaited:
+*
+* ```javascript
+* import first from 'it-first'
+*
+* const values = async function * () {
+*   yield * [0, 1, 2, 3, 4]
+* }
+*
+* const res = await first(values())
+*
+* console.info(res) // 0
+* ```
+*/
+function isAsyncIterable$3(thing) {
+	return thing[Symbol.asyncIterator] != null;
+}
+function first(source) {
+	if (isAsyncIterable$3(source)) return (async () => {
+		for await (const entry of source) return entry;
+	})();
+	for (const entry of source) return entry;
+}
+//#endregion
+//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/routings.js
+const IPNS_PREFIX = fromString$2("/ipns/");
+function isIPNSKey(key) {
+	return equals(key.subarray(0, IPNS_PREFIX.byteLength), IPNS_PREFIX);
+}
+/**
+* Wrapper class to convert [http-routing-v1 content events](https://specs.ipfs.tech/routing/http-routing-v1/#response-body) into returned values
+*/
+var DelegatedRoutingV1HttpApiClientContentRouting = class {
+	client;
+	constructor(client) {
+		this.client = client;
+	}
+	async *findProviders(cid, options = {}) {
+		try {
+			yield* map(this.client.getProviders(cid, options), (record) => {
+				return {
+					id: record.ID,
+					multiaddrs: record.Addrs ?? [],
+					routing: "delegated-http-routing-v1"
+				};
+			});
+		} catch (err) {
+			if (err instanceof NotFoundError$2) return;
+			throw err;
+		}
+	}
+	async provide() {}
+	async cancelReprovide() {}
+	async put(key, value, options) {
+		if (!isIPNSKey(key)) return;
+		const digest = multihashFromIPNSRoutingKey(key);
+		const cid = CID$1.createV1(114, digest);
+		const record = unmarshalIPNSRecord(value);
+		await this.client.putIPNS(cid, record, options);
+	}
+	async get(key, options) {
+		if (!isIPNSKey(key)) throw new NotFoundError$2("Not found");
+		const digest = multihashFromIPNSRoutingKey(key);
+		const cid = CID$1.createV1(114, digest);
+		try {
+			return marshalIPNSRecord(await this.client.getIPNS(cid, options));
+		} catch (err) {
+			if (err.name === "BadResponseError") throw new NotFoundError$2("Not found");
+			throw err;
+		}
+	}
+	toString() {
+		return `DelegatedRoutingV1HttpApiClientContentRouting(${this.client.url})`;
+	}
+};
+/**
+* Wrapper class to convert [http-routing-v1](https://specs.ipfs.tech/routing/http-routing-v1/#response-body-0) events into expected libp2p values
+*/
+var DelegatedRoutingV1HttpApiClientPeerRouting = class {
+	client;
+	constructor(client) {
+		this.client = client;
+	}
+	async findPeer(peerId, options = {}) {
+		const peer = await first(this.client.getPeers(peerId, options));
+		if (peer != null) return {
+			id: peer.ID,
+			multiaddrs: peer.Addrs ?? []
+		};
+		throw new NotFoundError$2("Not found");
+	}
+	async *getClosestPeers(key, options = {}) {
+		let cidOrPeer;
+		try {
+			cidOrPeer = CID$1.decode(key);
+		} catch {
+			try {
+				cidOrPeer = peerIdFromMultihash(decode$17(key));
+			} catch {
+				cidOrPeer = CID$1.createV1(85, identity$2.digest(key));
+			}
+		}
+		for await (const peer of this.client.getClosestPeers(cidOrPeer, options)) yield {
+			id: peer.ID,
+			multiaddrs: peer.Addrs ?? []
+		};
+	}
+	toString() {
+		return `DelegatedRoutingV1HttpApiClientPeerRouting(${this.client.url})`;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/client.js
+const defaultValues = {
+	concurrentRequests: 4,
+	timeout: 3e4,
+	cacheTTL: 300 * 1e3,
+	cacheName: "delegated-routing-v1-cache"
+};
+var DelegatedRoutingV1HttpApiClient = class {
+	url;
+	started;
+	httpQueue;
+	shutDownController;
+	timeout;
+	contentRouting;
+	peerRouting;
+	filterAddrs;
+	filterProtocols;
+	inFlightRequests;
+	cacheName;
+	cache;
+	cacheTTL;
+	log;
+	/**
+	* Create a new DelegatedContentRouting instance
+	*/
+	constructor(components, init) {
+		this.log = components.logger.forComponent("delegated-routing-v1-http-api-client");
+		this.started = false;
+		this.shutDownController = new AbortController();
+		setMaxListeners$1(Infinity, this.shutDownController.signal);
+		this.httpQueue = new PQueue({ concurrency: init.concurrentRequests ?? defaultValues.concurrentRequests });
+		this.inFlightRequests = /* @__PURE__ */ new Map();
+		this.url = init.url instanceof URL ? init.url : new URL(init.url);
+		this.timeout = init.timeout ?? defaultValues.timeout;
+		this.filterAddrs = init.filterAddrs;
+		this.filterProtocols = init.filterProtocols;
+		this.contentRouting = new DelegatedRoutingV1HttpApiClientContentRouting(this);
+		this.peerRouting = new DelegatedRoutingV1HttpApiClientPeerRouting(this);
+		this.cacheName = init.cacheName ?? defaultValues.cacheName;
+		this.cacheTTL = init.cacheTTL ?? defaultValues.cacheTTL;
+	}
+	get [contentRoutingSymbol]() {
+		return this.contentRouting;
+	}
+	get [peerRoutingSymbol]() {
+		return this.peerRouting;
+	}
+	isStarted() {
+		return this.started;
+	}
+	async start() {
+		if (this.started) return;
+		this.started = true;
+		if (this.cacheTTL > 0) {
+			this.cache = await globalThis.caches?.open(this.cacheName);
+			if (this.cache != null) this.log("cache enabled with ttl %d", this.cacheTTL);
+		}
+	}
+	async stop() {
+		this.httpQueue.clear();
+		this.shutDownController.abort();
+		await globalThis.caches?.delete(this.cacheName);
+		this.started = false;
+	}
+	async *getProviders(cid, options = {}) {
+		this.log("getProviders starts: %c", cid);
+		const timeoutSignal = AbortSignal.timeout(this.timeout);
+		const signal = anySignal([
+			this.shutDownController.signal,
+			timeoutSignal,
+			options.signal
+		]);
+		setMaxListeners$1(Infinity, timeoutSignal, signal);
+		const onStart = pDefer();
+		const onFinish = pDefer();
+		let found = 0;
+		this.httpQueue.add(async () => {
+			onStart.resolve();
+			return onFinish.promise;
+		});
+		try {
+			await onStart.promise;
+			const url = new URL(`${this.url}routing/v1/providers/${cid}`);
+			this.#addFilterParams(url, options.filterAddrs, options.filterProtocols);
+			const getOptions = {
+				headers: { accept: "application/x-ndjson, application/json;q=0.8" },
+				signal
+			};
+			const res = await this.#makeRequest(url.toString(), getOptions);
+			if (!res.ok) {
+				if (res.status === 404) return;
+				if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
+				throw new BadResponseError(`Unexpected status code: ${res.status}`);
+			}
+			const contentType = res.headers.get("Content-Type");
+			if (contentType == null) throw new BadResponseError("No Content-Type header received");
+			if (res.body == null) {
+				if (contentType !== "application/x-ndjson") throw new BadResponseError("Routing response had no body");
+				return;
+			}
+			if (contentType.startsWith("application/json")) {
+				const providers = (await res.json()).Providers ?? [];
+				for (const provider of providers) {
+					const record = this.#conformToPeerSchema(provider);
+					if (record != null) {
+						found++;
+						yield record;
+					}
+				}
+			} else if (contentType.includes("application/x-ndjson")) for await (const provider of parse(browserReadableStreamToIt(res.body))) {
+				const record = this.#conformToPeerSchema(provider);
+				if (record != null) {
+					found++;
+					yield record;
+				}
+			}
+			else throw new BadResponseError(`Unsupported Content-Type: ${contentType}`);
+		} finally {
+			signal.clear();
+			onFinish.resolve();
+			this.log("getProviders finished found %d providers for %c", found, cid);
+		}
+	}
+	async *getPeers(peerId, options = {}) {
+		this.log("getPeers starts: %c", peerId);
+		const timeoutSignal = AbortSignal.timeout(this.timeout);
+		const signal = anySignal([
+			this.shutDownController.signal,
+			timeoutSignal,
+			options.signal
+		]);
+		setMaxListeners$1(Infinity, timeoutSignal, signal);
+		const onStart = pDefer();
+		const onFinish = pDefer();
+		this.httpQueue.add(async () => {
+			onStart.resolve();
+			return onFinish.promise;
+		});
+		try {
+			await onStart.promise;
+			const url = new URL(`${this.url}routing/v1/peers/${peerId.toCID().toString()}`);
+			this.#addFilterParams(url, options.filterAddrs, options.filterProtocols);
+			const getOptions = {
+				headers: { Accept: "application/x-ndjson" },
+				signal
+			};
+			const res = await this.#makeRequest(url.toString(), getOptions);
+			if (res.status === 404) return;
+			if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
+			if (res.body == null) throw new BadResponseError("Routing response had no body");
+			if (res.headers.get("Content-Type")?.startsWith("application/json")) {
+				const peers = (await res.json()).Peers ?? [];
+				for (const peer of peers) {
+					const record = this.#conformToPeerSchema(peer);
+					if (record != null) yield record;
+				}
+			} else for await (const peer of parse(browserReadableStreamToIt(res.body))) {
+				const record = this.#conformToPeerSchema(peer);
+				if (record != null) yield record;
+			}
+		} catch (err) {
+			this.log.error("getPeers errored - %e", err);
+		} finally {
+			signal.clear();
+			onFinish.resolve();
+			this.log("getPeers finished: %c", peerId);
+		}
+	}
+	async *getClosestPeers(key, options = {}) {
+		let target;
+		if (isPeerId(key)) target = key.toCID().toString();
+		else if (CID$1.asCID(key) === key || key instanceof CID$1) target = key.toV1().toString();
+		else throw new InvalidParametersError$4("Key must be CID or PeerId");
+		this.log("getClosestPeers starts: %s", target);
+		const timeoutSignal = AbortSignal.timeout(this.timeout);
+		const signal = anySignal([
+			this.shutDownController.signal,
+			timeoutSignal,
+			options.signal
+		]);
+		setMaxListeners$1(Infinity, timeoutSignal, signal);
+		const onStart = pDefer();
+		const onFinish = pDefer();
+		this.httpQueue.add(async () => {
+			onStart.resolve();
+			return onFinish.promise;
+		});
+		try {
+			await onStart.promise;
+			const url = new URL(`${this.url}routing/v1/dht/closest/peers/${target}`);
+			this.#addFilterParams(url, options.filterAddrs, options.filterProtocols);
+			const getOptions = {
+				headers: { Accept: "application/x-ndjson" },
+				signal
+			};
+			const res = await this.#makeRequest(url.toString(), getOptions);
+			if (res.status === 404) return;
+			if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
+			if (res.body == null) throw new BadResponseError("Routing response had no body");
+			if (res.headers.get("Content-Type")?.startsWith("application/json")) {
+				const peers = (await res.json()).Peers ?? [];
+				for (const peer of peers) {
+					const record = this.#conformToPeerSchema(peer);
+					if (record != null) yield record;
+				}
+			} else for await (const peer of parse(browserReadableStreamToIt(res.body))) {
+				const record = this.#conformToPeerSchema(peer);
+				if (record != null) yield record;
+			}
+		} catch (err) {
+			this.log.error("getClosestPeers errored - %e", err);
+		} finally {
+			signal.clear();
+			onFinish.resolve();
+			this.log("getClosestPeers finished: %s", target);
+		}
+	}
+	async getIPNS(libp2pKey, options = {}) {
+		this.log("getIPNS starts: %s", libp2pKey);
+		const timeoutSignal = AbortSignal.timeout(this.timeout);
+		const signal = anySignal([
+			this.shutDownController.signal,
+			timeoutSignal,
+			options.signal
+		]);
+		setMaxListeners$1(Infinity, timeoutSignal, signal);
+		const onStart = pDefer();
+		const onFinish = pDefer();
+		this.httpQueue.add(async () => {
+			onStart.resolve();
+			return onFinish.promise;
+		});
+		const resource = `${this.url}routing/v1/ipns/${libp2pKey}`;
+		try {
+			await onStart.promise;
+			const getOptions = {
+				headers: { Accept: "application/vnd.ipfs.ipns-record" },
+				signal
+			};
+			const res = await this.#makeRequest(resource, getOptions);
+			this.log("getIPNS GET %s %d", resource, res.status);
+			if (res.status === 404) throw new NotFoundError$2("No matching records found");
+			if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
+			if (!res.ok) throw new BadResponseError(`Unexpected status code: ${res.status}`);
+			const contentType = res.headers.get("Content-Type");
+			if (contentType == null || !contentType.includes("application/vnd.ipfs.ipns-record")) throw new NotFoundError$2("No matching records found");
+			if (res.body == null) throw new BadResponseError("GET ipns response had no body");
+			const buf = await res.arrayBuffer();
+			const body = new Uint8Array(buf, 0, buf.byteLength);
+			if (options.validate !== false) await ipnsValidator(multihashToIPNSRoutingKey(libp2pKey.multihash), body);
+			return unmarshalIPNSRecord(body);
+		} catch (err) {
+			this.log.error("getIPNS GET %s error - %e", resource, err);
+			throw err;
+		} finally {
+			signal.clear();
+			onFinish.resolve();
+			this.log("getIPNS finished: %s", libp2pKey);
+		}
+	}
+	async putIPNS(libp2pKey, record, options = {}) {
+		this.log("putIPNS starts: %c", libp2pKey);
+		const timeoutSignal = AbortSignal.timeout(this.timeout);
+		const signal = anySignal([
+			this.shutDownController.signal,
+			timeoutSignal,
+			options.signal
+		]);
+		setMaxListeners$1(Infinity, timeoutSignal, signal);
+		const onStart = pDefer();
+		const onFinish = pDefer();
+		this.httpQueue.add(async () => {
+			onStart.resolve();
+			return onFinish.promise;
+		});
+		const resource = `${this.url}routing/v1/ipns/${libp2pKey}`;
+		try {
+			await onStart.promise;
+			const getOptions = {
+				method: "PUT",
+				headers: { "Content-Type": "application/vnd.ipfs.ipns-record" },
+				body: marshalIPNSRecord(record),
+				signal
+			};
+			const res = await this.#makeRequest(resource, getOptions);
+			this.log("putIPNS PUT %s %d", resource, res.status);
+			if (res.status !== 200) throw new BadResponseError("PUT ipns response had status other than 200");
+		} catch (err) {
+			this.log.error("putIPNS PUT %s error - %e", resource, err.stack);
+			throw err;
+		} finally {
+			signal.clear();
+			onFinish.resolve();
+			this.log("putIPNS finished: %c", libp2pKey);
+		}
+	}
+	#conformToPeerSchema(record) {
+		try {
+			const protocols = [];
+			const multiaddrs = record.Addrs?.map(multiaddr) ?? [];
+			if (record.Protocols != null) protocols.push(...record.Protocols);
+			if (record.Protocol != null) {
+				protocols.push(record.Protocol);
+				delete record.Protocol;
+			}
+			return {
+				...record,
+				Schema: "peer",
+				ID: peerIdFromString$1(record.ID),
+				Addrs: multiaddrs,
+				Protocols: protocols
+			};
+		} catch (err) {
+			this.log.error("could not conform record to peer schema - %e", err);
+		}
+	}
+	#addFilterParams(url, filterAddrs, filterProtocols) {
+		if (filterAddrs != null || this.filterAddrs != null) {
+			const adressFilter = filterAddrs?.join(",") ?? this.filterAddrs?.join(",") ?? "";
+			if (adressFilter !== "") url.searchParams.set("filter-addrs", adressFilter);
+		}
+		if (filterProtocols != null || this.filterProtocols != null) {
+			const protocolFilter = filterProtocols?.join(",") ?? this.filterProtocols?.join(",") ?? "";
+			if (protocolFilter !== "") url.searchParams.set("filter-protocols", protocolFilter);
+		}
+	}
+	/**
+	* makeRequest has two features:
+	* - Ensures only one concurrent request is made for the same URL
+	* - Caches GET requests if the Cache API is available
+	*/
+	async #makeRequest(url, options) {
+		const requestMethod = options.method ?? "GET";
+		const key = `${requestMethod}-${url}`;
+		if (requestMethod === "GET") {
+			const cachedResponse = await this.cache?.match(url);
+			if (cachedResponse != null) if (parseInt(cachedResponse.headers.get("x-cache-expires") ?? "0", 10) > Date.now()) {
+				this.log("returning cached response for %s", key);
+				this.logResponse(cachedResponse);
+				return cachedResponse;
+			} else {
+				this.log("evicting cached response for %s", key);
+				await this.cache?.delete(url);
+			}
+			else if (this.cache != null) this.log("cache miss for %s", key);
+		}
+		const existingRequest = this.inFlightRequests.get(key);
+		if (existingRequest != null) {
+			const response = await existingRequest;
+			this.log("deduplicating outgoing request for %s", key);
+			return response.clone();
+		}
+		this.log("outgoing request:");
+		this.logRequest(url, options);
+		const requestPromise = fetch(url, options).then(async (response) => {
+			this.log("incoming response:");
+			this.logResponse(response);
+			if (this.cache != null && response.ok && requestMethod === "GET") {
+				const expires = Date.now() + this.cacheTTL;
+				const headers = new Headers(response.headers);
+				headers.set("x-cache-expires", expires.toString());
+				const cachedResponse = new Response(response.clone().body, {
+					status: response.status,
+					statusText: response.statusText,
+					headers
+				});
+				await this.cache.put(url, cachedResponse);
+			}
+			return response;
+		}).finally(() => {
+			this.inFlightRequests.delete(key);
+		});
+		this.inFlightRequests.set(key, requestPromise);
+		return await requestPromise;
+	}
+	toString() {
+		return `DefaultDelegatedRoutingV1HttpApiClient(${this.url})`;
+	}
+	logRequest(url, init) {
+		const headers = new Headers(init.headers);
+		this.log("%s %s HTTP/1.1", init.method ?? "GET", url);
+		for (const [key, value] of headers.entries()) this.log("%s: %s", key, value);
+	}
+	logResponse(response) {
+		this.log("HTTP/1.1 %d %s", response.status, response.statusText);
+		for (const [key, value] of response.headers.entries()) this.log("%s: %s", key, value);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* A client implementation of the IPFS [Delegated Routing V1 HTTP API](https://specs.ipfs.tech/routing/http-routing-v1/) that can be used to interact with any compliant server implementation.
+*
+* @example
+*
+* ```typescript
+* import { delegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
+* import { CID } from 'multiformats/cid'
+* import { defaultLogger } from '@libp2p/logger'
+*
+* const client = delegatedRoutingV1HttpApiClient({
+*   url: 'https://example.org'
+* })({
+*   logger: defaultLogger()
+* })
+*
+* for await (const prov of client.getProviders(CID.parse('QmFoo'))) {
+*   // ...
+* }
+* ```
+*
+* ### How to use with libp2p
+*
+* The client can be configured as a libp2p service, this will enable it as both a {@link https://libp2p.github.io/js-libp2p/interfaces/_libp2p_interface.content_routing.ContentRouting.html | ContentRouting} and a {@link https://libp2p.github.io/js-libp2p/interfaces/_libp2p_interface.peer_routing.PeerRouting.html | PeerRouting} implementation
+*
+* @example
+*
+* ```typescript
+* import { delegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
+* import { createLibp2p } from 'libp2p'
+* import { peerIdFromString } from '@libp2p/peer-id'
+*
+* const libp2p = await createLibp2p({
+*   // other config here
+*   services: {
+*     delegatedRouting: delegatedRoutingV1HttpApiClient({
+*       url: 'https://example.org'
+*     })
+*   }
+* })
+*
+* // later this will use the configured HTTP gateway
+* await libp2p.peerRouting.findPeer(peerIdFromString('QmFoo'))
+* ```
+*
+* ### Caching
+*
+* By default, the client caches successful (200) delegated routing responses in browser environments (that support the [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache)) for a duration of 5 minutes. The client does this by adding an `x-cache-expires` header to the response object.
+*
+* If caching is enabled, the client will cache responses for the duration of `cacheTTL` milliseconds.
+* If `cacheTTL` is 0, caching is disabled:
+*
+* @example
+*
+* ```typescript
+* // disable caching
+* const client = delegatedRoutingV1HttpApiClient({
+*   url: 'https://example.org'
+*   cacheTTL: 0
+* })({
+*   logger: defaultLogger()
+* })
+* ```
+*
+* ### Filtering with IPIP-484
+*
+* The client can be configured to pass filter options to the delegated routing server as defined in IPIP-484.
+* The filter options be set globally, by passing them to the client constructor, or on a per-request basis.
+*
+* @see https://github.com/ipfs/specs/pull/484
+*
+* @example
+*
+* ```typescript
+* import { delegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
+* import { createLibp2p } from 'libp2p'
+* import { peerIdFromString } from '@libp2p/peer-id'
+* import { defaultLogger } from '@libp2p/logger'
+*
+* // globally set filter options
+* const client = delegatedRoutingV1HttpApiClient({
+*   url: 'https://delegated-ipfs.dev',
+*   filterProtocols: ['transport-bitswap', 'unknown', 'transport-ipfs-gateway-http'],
+*   filterAddrs: ['webtransport', 'webrtc-direct', 'wss']
+* })({
+*   logger: defaultLogger()
+* })
+*
+* // per-request filter options
+* for await (const prov of client.getProviders(CID.parse('bafy'), {
+*   filterProtocols: ['transport-ipfs-gateway-http'],
+*   filterAddrs: ['!p2p-circuit']
+* })) {
+*   // ...
+* }
+* ```
+*/
+/**
+* Create and return a client to use with a Routing V1 HTTP API server
+*/
+function delegatedRoutingV1HttpApiClient(init) {
+	return (components) => new DelegatedRoutingV1HttpApiClient(components, init);
+}
+//#endregion
 //#region node_modules/.pnpm/@helia+http@3.1.4/node_modules/@helia/http/dist/src/utils/libp2p-defaults.js
 function libp2pDefaults(options = {}) {
 	const agentVersion = `@helia/http ${userAgent()}`;
@@ -57861,12 +56235,12 @@ async function createHeliaHTTP(init = {}) {
 * console.info(result) // [0, 1], [2, 3], [4]
 * ```
 */
-function isAsyncIterable$1(thing) {
+function isAsyncIterable$2(thing) {
 	return thing[Symbol.asyncIterator] != null;
 }
 function batch(source, size = 1) {
 	size = Number(size);
-	if (isAsyncIterable$1(source)) return async function* () {
+	if (isAsyncIterable$2(source)) return async function* () {
 		let things = [];
 		if (size < 1) size = 1;
 		if (size !== Math.round(size)) throw new Error("Batch size must be an integer");
@@ -58026,7 +56400,7 @@ function defaultBufferImporter(options) {
 					type: options.leafType,
 					data: block
 				});
-				block = encode({
+				block = encode$1({
 					Data: unixfs.marshal(),
 					Links: []
 				});
@@ -58049,11 +56423,11 @@ function defaultBufferImporter(options) {
 }
 //#endregion
 //#region node_modules/.pnpm/ipfs-unixfs-importer@16.1.5/node_modules/ipfs-unixfs-importer/dist/src/errors.js
-var InvalidParametersError$1 = class InvalidParametersError$1 extends Error {
+var InvalidParametersError$2 = class InvalidParametersError$2 extends Error {
 	static name = "InvalidParametersError";
 	static code = "ERR_INVALID_PARAMS";
-	name = InvalidParametersError$1.name;
-	code = InvalidParametersError$1.code;
+	name = InvalidParametersError$2.name;
+	code = InvalidParametersError$2.code;
 	constructor(message = "Invalid parameters") {
 		super(message);
 	}
@@ -58081,7 +56455,7 @@ const defaultDirBuilder = async (dir, blockstore, options) => {
 		mtime: dir.mtime,
 		mode: dir.mode
 	});
-	const block = encode(prepare({ Data: unixfs.marshal() }));
+	const block = encode$1(prepare({ Data: unixfs.marshal() }));
 	return {
 		cid: await persist$1(block, blockstore, options),
 		path: dir.path,
@@ -58138,7 +56512,7 @@ const reduce = (file, blockstore, options) => {
 					Data: leaf.unixfs.marshal(),
 					Links: []
 				};
-				leaf.block = encode(prepare(node));
+				leaf.block = encode$1(prepare(node));
 				leaf.cid = await persist$1(leaf.block, blockstore, {
 					...options,
 					cidVersion: options.cidVersion
@@ -58187,7 +56561,7 @@ const reduce = (file, blockstore, options) => {
 			Data: f.marshal(),
 			Links: links
 		};
-		const block = encode(prepare(node));
+		const block = encode$1(prepare(node));
 		const cid = await persist$1(block, blockstore, options);
 		options.onProgress?.(new CustomProgressEvent("unixfs:importer:progress:file:layout", {
 			cid,
@@ -58212,7 +56586,7 @@ const defaultFileBuilder = async (file, block, options) => {
 function isIterable(thing) {
 	return Symbol.iterator in thing;
 }
-function isAsyncIterable(thing) {
+function isAsyncIterable$1(thing) {
 	return Symbol.asyncIterator in thing;
 }
 function contentAsAsyncIterable(content) {
@@ -58223,7 +56597,7 @@ function contentAsAsyncIterable(content) {
 		else if (isIterable(content)) return (async function* () {
 			yield* content;
 		})();
-		else if (isAsyncIterable(content)) return content;
+		else if (isAsyncIterable$1(content)) return content;
 	} catch {
 		throw new InvalidContentError("Content was invalid");
 	}
@@ -58751,7 +57125,7 @@ var DirFlat = class extends Dir {
 				Tsize: child.size == null ? void 0 : Number(child.size)
 			});
 		}
-		return encode(prepare({
+		return encode$1(prepare({
 			Data: unixfs.marshal(),
 			Links: links
 		}));
@@ -58791,7 +57165,7 @@ var DirFlat = class extends Dir {
 			Data: unixfs.marshal(),
 			Links: links
 		};
-		const buffer = encode(prepare(node));
+		const buffer = encode$1(prepare(node));
 		const cid = await persist$1(buffer, block, this.options);
 		const size = buffer.length + node.Links.reduce(
 			/**
@@ -58811,6 +57185,847 @@ var DirFlat = class extends Dir {
 		};
 	}
 };
+//#endregion
+//#region node_modules/.pnpm/@multiformats+murmur3@2.2.5/node_modules/@multiformats/murmur3/src/vendor/murmur.js
+/**
+* Based on https://github.com/timepp/murmurhash
+*/
+/**
+* @typedef {{lo: number, hi: number}} u64
+*/
+/**
+* @param {u64} a
+* @param {u64} b
+* @returns {u64}
+*/
+function add64(a, b) {
+	const lo = a.lo + b.lo >>> 0;
+	return {
+		lo,
+		hi: a.hi + b.hi + (lo < a.lo ? 1 : 0) >>> 0
+	};
+}
+/**
+* @param {number} a
+* @param {number} b
+* @returns {number}
+*/
+function add32(a, b) {
+	return a + b >>> 0;
+}
+/**
+* @param {u64} a
+* @param {u64} b
+* @returns {u64}
+*/
+function mul64(a, b) {
+	const al = a.lo & 65535;
+	const ah = a.lo >>> 16;
+	const bl = b.lo & 65535;
+	const bh = b.lo >>> 16;
+	const p0 = al * bl;
+	const p1 = al * bh;
+	const p2 = ah * bl;
+	const p3 = ah * bh;
+	const lo1 = (p0 >>> 16) + (p1 & 65535) + (p2 & 65535) >>> 0;
+	const lo = (lo1 << 16 | p0 & 65535) >>> 0;
+	const hi0 = p3 + (p1 >>> 16) + (p2 >>> 16) + (lo1 >>> 16);
+	const hi1 = Math.imul(a.lo, b.hi);
+	const hi2 = Math.imul(a.hi, b.lo);
+	return {
+		lo,
+		hi: hi0 + hi1 + hi2 >>> 0
+	};
+}
+/**
+* @param {number} a
+* @param {number} b
+* @returns {number}
+*/
+function mul32(a, b) {
+	return Math.imul(a, b) >>> 0;
+}
+/**
+* @param {u64} x
+* @param {number} n
+* @returns {u64}
+*/
+function rotl64(x, n) {
+	if (n === 0) return x;
+	if (n === 32) return {
+		lo: x.hi,
+		hi: x.lo
+	};
+	if (n < 32) return {
+		lo: (x.lo << n | x.hi >>> 32 - n) >>> 0,
+		hi: (x.hi << n | x.lo >>> 32 - n) >>> 0
+	};
+	n -= 32;
+	return {
+		lo: (x.hi << n | x.lo >>> 32 - n) >>> 0,
+		hi: (x.lo << n | x.hi >>> 32 - n) >>> 0
+	};
+}
+/**
+* @param {u64} a
+* @param {u64} b
+* @returns {u64}
+*/
+function xor64(a, b) {
+	return {
+		lo: (a.lo ^ b.lo) >>> 0,
+		hi: (a.hi ^ b.hi) >>> 0
+	};
+}
+/**
+* @param {u64} x
+* @param {number} n
+* @returns {u64}
+*/
+function shr64(x, n) {
+	if (n === 0) return x;
+	if (n < 32) return {
+		lo: (x.lo >>> n | x.hi << 32 - n) >>> 0,
+		hi: x.hi >>> n
+	};
+	return {
+		lo: x.hi >>> n - 32,
+		hi: 0
+	};
+}
+/**
+* @param {number} lo
+* @param {number} hi
+* @returns {u64}
+*/
+function u64(lo, hi) {
+	return {
+		lo: lo >>> 0,
+		hi: hi >>> 0
+	};
+}
+/**
+* @param {number} x
+* @param {number} r
+* @returns {number}
+*/
+function rotl32(x, r) {
+	return (x << r | x >>> 32 - r) >>> 0;
+}
+/**
+* @param {Uint8Array} key
+* @param {number} i
+* @returns {u64}
+*/
+function getBlock64(key, i) {
+	const offset = i * 8;
+	const lo = key[offset] | key[offset + 1] << 8 | key[offset + 2] << 16 | key[offset + 3] << 24;
+	const hi = key[offset + 4] | key[offset + 5] << 8 | key[offset + 6] << 16 | key[offset + 7] << 24;
+	return {
+		lo: lo >>> 0,
+		hi: hi >>> 0
+	};
+}
+/**
+* @param {Uint8Array} key
+* @param {number} i
+* @returns {number}
+*/
+function getBlock32(key, i) {
+	const offset = i * 4;
+	return (key[offset] | key[offset + 1] << 8 | key[offset + 2] << 16 | key[offset + 3] << 24) >>> 0;
+}
+/**
+* @param {u64} k
+* @returns {u64}
+*/
+function fmix64(k) {
+	k = xor64(k, shr64(k, 33));
+	k = mul64(k, u64(3981806797, 4283543511));
+	k = xor64(k, shr64(k, 33));
+	k = mul64(k, u64(444984403, 3301882366));
+	k = xor64(k, shr64(k, 33));
+	return k;
+}
+/**
+* @param {number} k
+* @returns {number}
+*/
+function fmix32(k) {
+	k ^= k >>> 16;
+	k = mul32(k, 2246822507);
+	k ^= k >>> 13;
+	k = mul32(k, 3266489909);
+	k ^= k >>> 16;
+	return k;
+}
+/**
+* Generate murmurhash3 x64 128-bit hash
+*
+* @param {Uint8Array} key - original data
+* @param {number} [seed] - seed value (defaults to 0)
+* @returns {Uint8Array<ArrayBuffer>} the hash value as 16 bytes
+*/
+function murmurHash3_x64_128(key, seed = 0) {
+	let h1 = u64(seed, 0);
+	let h2 = u64(seed, 0);
+	const length = key.length;
+	const blocks = Math.floor(length / 16);
+	const c1 = u64(289559509, 2277735313);
+	const c2 = u64(658871167, 1291169091);
+	for (let i = 0; i < blocks; i++) {
+		let k1 = getBlock64(key, i * 2);
+		let k2 = getBlock64(key, i * 2 + 1);
+		k1 = mul64(k1, c1);
+		k1 = rotl64(k1, 31);
+		k1 = mul64(k1, c2);
+		h1 = xor64(h1, k1);
+		h1 = rotl64(h1, 27);
+		h1 = add64(h1, h2);
+		h1 = add64(mul64(h1, u64(5, 0)), u64(1390208809, 0));
+		k2 = mul64(k2, c2);
+		k2 = rotl64(k2, 33);
+		k2 = mul64(k2, c1);
+		h2 = xor64(h2, k2);
+		h2 = rotl64(h2, 31);
+		h2 = add64(h2, h1);
+		h2 = add64(mul64(h2, u64(5, 0)), u64(944331445, 0));
+	}
+	let k1 = u64(0, 0);
+	let k2 = u64(0, 0);
+	const tail = key.slice(blocks * 16);
+	switch (tail.length) {
+		case 15: k2 = xor64(k2, u64(0, tail[14] << 16));
+		case 14: k2 = xor64(k2, u64(0, tail[13] << 8));
+		case 13: k2 = xor64(k2, u64(0, tail[12]));
+		case 12: k2 = xor64(k2, u64(tail[11] << 24, 0));
+		case 11: k2 = xor64(k2, u64(tail[10] << 16, 0));
+		case 10: k2 = xor64(k2, u64(tail[9] << 8, 0));
+		case 9:
+			k2 = xor64(k2, u64(tail[8], 0));
+			k2 = mul64(k2, c2);
+			k2 = rotl64(k2, 33);
+			k2 = mul64(k2, c1);
+			h2 = xor64(h2, k2);
+		case 8: k1 = xor64(k1, u64(0, tail[7] << 24));
+		case 7: k1 = xor64(k1, u64(0, tail[6] << 16));
+		case 6: k1 = xor64(k1, u64(0, tail[5] << 8));
+		case 5: k1 = xor64(k1, u64(0, tail[4]));
+		case 4: k1 = xor64(k1, u64(tail[3] << 24, 0));
+		case 3: k1 = xor64(k1, u64(tail[2] << 16, 0));
+		case 2: k1 = xor64(k1, u64(tail[1] << 8, 0));
+		case 1:
+			k1 = xor64(k1, u64(tail[0], 0));
+			k1 = mul64(k1, c1);
+			k1 = rotl64(k1, 31);
+			k1 = mul64(k1, c2);
+			h1 = xor64(h1, k1);
+	}
+	const len64 = u64(length, 0);
+	h1 = xor64(h1, len64);
+	h2 = xor64(h2, len64);
+	h1 = add64(h1, h2);
+	h2 = add64(h2, h1);
+	h1 = fmix64(h1);
+	h2 = fmix64(h2);
+	h1 = add64(h1, h2);
+	h2 = add64(h2, h1);
+	return new Uint8Array([
+		h1.hi >>> 24 & 255,
+		h1.hi >>> 16 & 255,
+		h1.hi >>> 8 & 255,
+		h1.hi & 255,
+		h1.lo >>> 24 & 255,
+		h1.lo >>> 16 & 255,
+		h1.lo >>> 8 & 255,
+		h1.lo & 255,
+		h2.hi >>> 24 & 255,
+		h2.hi >>> 16 & 255,
+		h2.hi >>> 8 & 255,
+		h2.hi & 255,
+		h2.lo >>> 24 & 255,
+		h2.lo >>> 16 & 255,
+		h2.lo >>> 8 & 255,
+		h2.lo & 255
+	]);
+}
+/**
+* Generate murmurhash3 x86 32-bit hash
+*
+* @param {Uint8Array} key - original data
+* @param {number} [seed] - seed value (defaults to 0)
+* @returns {number} the hash value as a number
+*/
+function murmurHash3_x86_32(key, seed = 0) {
+	let h1 = seed >>> 0;
+	const length = key.length;
+	const blocks = Math.floor(length / 4);
+	const c1 = 3432918353;
+	const c2 = 461845907;
+	for (let i = 0; i < blocks; i++) {
+		let k1 = getBlock32(key, i);
+		k1 = mul32(k1, c1);
+		k1 = rotl32(k1, 15);
+		k1 = mul32(k1, c2);
+		h1 ^= k1;
+		h1 = rotl32(h1, 13);
+		h1 = add32(mul32(h1, 5), 3864292196);
+	}
+	const tail = key.slice(blocks * 4);
+	let k1 = 0;
+	switch (tail.length) {
+		case 3: k1 ^= tail[2] << 16;
+		case 2: k1 ^= tail[1] << 8;
+		case 1:
+			k1 ^= tail[0];
+			k1 = mul32(k1, c1);
+			k1 = rotl32(k1, 15);
+			k1 = mul32(k1, c2);
+			h1 ^= k1;
+	}
+	h1 ^= length;
+	h1 = fmix32(h1);
+	return h1;
+}
+//#endregion
+//#region node_modules/.pnpm/@multiformats+murmur3@2.2.5/node_modules/@multiformats/murmur3/src/index.js
+/**
+* @param {number} number
+* @returns {Uint8Array<ArrayBuffer>}
+*/
+function fromNumberTo32BitBuf(number) {
+	const bytes = new Array(4);
+	for (let i = 0; i < 4; i++) {
+		bytes[i] = number & 255;
+		number = number >> 8;
+	}
+	return new Uint8Array(bytes);
+}
+from({
+	name: "murmur3-32",
+	code: 35,
+	encode: (input) => fromNumberTo32BitBuf(murmurHash3_x86_32(input))
+});
+const murmur3128 = from({
+	name: "murmur3-128",
+	code: 34,
+	encode: (input) => murmurHash3_x64_128(input)
+});
+from({
+	name: "murmur3-x64-64",
+	code: 34,
+	encode: (input) => murmurHash3_x64_128(input).subarray(0, 8)
+});
+//#endregion
+//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/bucket.js
+var import_sparse_array = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	const BITS_PER_BYTE = 7;
+	module.exports = class SparseArray {
+		constructor() {
+			this._bitArrays = [];
+			this._data = [];
+			this._length = 0;
+			this._changedLength = false;
+			this._changedData = false;
+		}
+		set(index, value) {
+			let pos = this._internalPositionFor(index, false);
+			if (value === void 0) {
+				if (pos !== -1) {
+					this._unsetInternalPos(pos);
+					this._unsetBit(index);
+					this._changedLength = true;
+					this._changedData = true;
+				}
+			} else {
+				let needsSort = false;
+				if (pos === -1) {
+					pos = this._data.length;
+					this._setBit(index);
+					this._changedData = true;
+				} else needsSort = true;
+				this._setInternalPos(pos, index, value, needsSort);
+				this._changedLength = true;
+			}
+		}
+		unset(index) {
+			this.set(index, void 0);
+		}
+		get(index) {
+			this._sortData();
+			const pos = this._internalPositionFor(index, true);
+			if (pos === -1) return;
+			return this._data[pos][1];
+		}
+		push(value) {
+			this.set(this.length, value);
+			return this.length;
+		}
+		get length() {
+			this._sortData();
+			if (this._changedLength) {
+				const last = this._data[this._data.length - 1];
+				this._length = last ? last[0] + 1 : 0;
+				this._changedLength = false;
+			}
+			return this._length;
+		}
+		forEach(iterator) {
+			let i = 0;
+			while (i < this.length) {
+				iterator(this.get(i), i, this);
+				i++;
+			}
+		}
+		map(iterator) {
+			let i = 0;
+			let mapped = new Array(this.length);
+			while (i < this.length) {
+				mapped[i] = iterator(this.get(i), i, this);
+				i++;
+			}
+			return mapped;
+		}
+		reduce(reducer, initialValue) {
+			let i = 0;
+			let acc = initialValue;
+			while (i < this.length) {
+				const value = this.get(i);
+				acc = reducer(acc, value, i);
+				i++;
+			}
+			return acc;
+		}
+		find(finder) {
+			let i = 0, found, last;
+			while (i < this.length && !found) {
+				last = this.get(i);
+				found = finder(last);
+				i++;
+			}
+			return found ? last : void 0;
+		}
+		_internalPositionFor(index, noCreate) {
+			const bytePos = this._bytePosFor(index, noCreate);
+			if (bytePos >= this._bitArrays.length) return -1;
+			const byte = this._bitArrays[bytePos];
+			const bitPos = index - bytePos * BITS_PER_BYTE;
+			if (!((byte & 1 << bitPos) > 0)) return -1;
+			return this._bitArrays.slice(0, bytePos).reduce(popCountReduce, 0) + popCount(byte & ~(4294967295 << bitPos + 1)) - 1;
+		}
+		_bytePosFor(index, noCreate) {
+			const bytePos = Math.floor(index / BITS_PER_BYTE);
+			const targetLength = bytePos + 1;
+			while (!noCreate && this._bitArrays.length < targetLength) this._bitArrays.push(0);
+			return bytePos;
+		}
+		_setBit(index) {
+			const bytePos = this._bytePosFor(index, false);
+			this._bitArrays[bytePos] |= 1 << index - bytePos * BITS_PER_BYTE;
+		}
+		_unsetBit(index) {
+			const bytePos = this._bytePosFor(index, false);
+			this._bitArrays[bytePos] &= ~(1 << index - bytePos * BITS_PER_BYTE);
+		}
+		_setInternalPos(pos, index, value, needsSort) {
+			const data = this._data;
+			const elem = [index, value];
+			if (needsSort) {
+				this._sortData();
+				data[pos] = elem;
+			} else {
+				if (data.length) if (data[data.length - 1][0] >= index) data.push(elem);
+				else if (data[0][0] <= index) data.unshift(elem);
+				else {
+					const randomIndex = Math.round(data.length / 2);
+					this._data = data.slice(0, randomIndex).concat(elem).concat(data.slice(randomIndex));
+				}
+				else this._data.push(elem);
+				this._changedData = true;
+				this._changedLength = true;
+			}
+		}
+		_unsetInternalPos(pos) {
+			this._data.splice(pos, 1);
+		}
+		_sortData() {
+			if (this._changedData) this._data.sort(sortInternal);
+			this._changedData = false;
+		}
+		bitField() {
+			const bytes = [];
+			let pendingBitsForResultingByte = 8;
+			let pendingBitsForNewByte = 0;
+			let resultingByte = 0;
+			let newByte;
+			const pending = this._bitArrays.slice();
+			while (pending.length || pendingBitsForNewByte) {
+				if (pendingBitsForNewByte === 0) {
+					newByte = pending.shift();
+					pendingBitsForNewByte = 7;
+				}
+				const usingBits = Math.min(pendingBitsForNewByte, pendingBitsForResultingByte);
+				const mask = ~(255 << usingBits);
+				const masked = newByte & mask;
+				resultingByte |= masked << 8 - pendingBitsForResultingByte;
+				newByte = newByte >>> usingBits;
+				pendingBitsForNewByte -= usingBits;
+				pendingBitsForResultingByte -= usingBits;
+				if (!pendingBitsForResultingByte || !pendingBitsForNewByte && !pending.length) {
+					bytes.push(resultingByte);
+					resultingByte = 0;
+					pendingBitsForResultingByte = 8;
+				}
+			}
+			for (var i = bytes.length - 1; i > 0; i--) if (bytes[i] === 0) bytes.pop();
+			else break;
+			return bytes;
+		}
+		compactArray() {
+			this._sortData();
+			return this._data.map(valueOnly);
+		}
+	};
+	function popCountReduce(count, byte) {
+		return count + popCount(byte);
+	}
+	function popCount(_v) {
+		let v = _v;
+		v = v - (v >> 1 & 1431655765);
+		v = (v & 858993459) + (v >> 2 & 858993459);
+		return (v + (v >> 4) & 252645135) * 16843009 >> 24;
+	}
+	function sortInternal(a, b) {
+		return a[0] - b[0];
+	}
+	function valueOnly(elem) {
+		return elem[1];
+	}
+})))(), 1);
+var Bucket = class Bucket {
+	_options;
+	_popCount;
+	_parent;
+	_posAtParent;
+	_children;
+	key;
+	constructor(options, parent, posAtParent = 0) {
+		this._options = options;
+		this._popCount = 0;
+		this._parent = parent;
+		this._posAtParent = posAtParent;
+		this._children = new import_sparse_array.default();
+		this.key = null;
+	}
+	async put(key, value) {
+		const place = await this._findNewBucketAndPos(key);
+		place.bucket._putAt(place, key, value);
+	}
+	async get(key) {
+		const child = await this._findChild(key);
+		if (child != null) return child.value;
+	}
+	async del(key) {
+		const place = await this._findPlace(key);
+		const child = place.bucket._at(place.pos);
+		if (child != null && child.key === key) place.bucket._delAt(place.pos);
+	}
+	leafCount() {
+		return this._children.compactArray().reduce((acc, child) => {
+			if (child instanceof Bucket) return acc + child.leafCount();
+			return acc + 1;
+		}, 0);
+	}
+	childrenCount() {
+		return this._children.length;
+	}
+	onlyChild() {
+		return this._children.get(0);
+	}
+	*eachLeafSeries() {
+		const children = this._children.compactArray();
+		for (const child of children) if (child instanceof Bucket) yield* child.eachLeafSeries();
+		else yield child;
+	}
+	serialize(map, reduce) {
+		return reduce(this._children.reduce((acc, child, index) => {
+			if (child != null) if (child instanceof Bucket) acc.push(child.serialize(map, reduce));
+			else acc.push(map(child, index));
+			return acc;
+		}, []));
+	}
+	async asyncTransform(asyncMap, asyncReduce) {
+		return asyncTransformBucket(this, asyncMap, asyncReduce);
+	}
+	toJSON() {
+		return this.serialize(mapNode, reduceNodes);
+	}
+	prettyPrint() {
+		return JSON.stringify(this.toJSON(), null, "  ");
+	}
+	tableSize() {
+		return Math.pow(2, this._options.bits);
+	}
+	async _findChild(key) {
+		const result = await this._findPlace(key);
+		const child = result.bucket._at(result.pos);
+		if (child instanceof Bucket) return;
+		if (child != null && child.key === key) return child;
+	}
+	async _findPlace(key) {
+		const hashValue = this._options.hash(typeof key === "string" ? fromString(key) : key);
+		const index = await hashValue.take(this._options.bits);
+		const child = this._children.get(index);
+		if (child instanceof Bucket) return child._findPlace(hashValue);
+		return {
+			bucket: this,
+			pos: index,
+			hash: hashValue,
+			existingChild: child
+		};
+	}
+	async _findNewBucketAndPos(key) {
+		const place = await this._findPlace(key);
+		if (place.existingChild != null && place.existingChild.key !== key) {
+			const bucket = new Bucket(this._options, place.bucket, place.pos);
+			place.bucket._putObjectAt(place.pos, bucket);
+			const newPlace = await bucket._findPlace(place.existingChild.hash);
+			newPlace.bucket._putAt(newPlace, place.existingChild.key, place.existingChild.value);
+			return bucket._findNewBucketAndPos(place.hash);
+		}
+		return place;
+	}
+	_putAt(place, key, value) {
+		this._putObjectAt(place.pos, {
+			key,
+			value,
+			hash: place.hash
+		});
+	}
+	_putObjectAt(pos, object) {
+		if (this._children.get(pos) == null) this._popCount++;
+		this._children.set(pos, object);
+	}
+	_delAt(pos) {
+		if (pos === -1) throw new Error("Invalid position");
+		if (this._children.get(pos) != null) this._popCount--;
+		this._children.unset(pos);
+		this._level();
+	}
+	_level() {
+		if (this._parent != null && this._popCount <= 1) if (this._popCount === 1) {
+			const onlyChild = this._children.find(exists$1);
+			if (onlyChild != null && !(onlyChild instanceof Bucket)) {
+				const hash = onlyChild.hash;
+				hash.untake(this._options.bits);
+				const place = {
+					pos: this._posAtParent,
+					hash,
+					bucket: this._parent
+				};
+				this._parent._putAt(place, onlyChild.key, onlyChild.value);
+			}
+		} else this._parent._delAt(this._posAtParent);
+	}
+	_at(index) {
+		return this._children.get(index);
+	}
+};
+function exists$1(o) {
+	return Boolean(o);
+}
+function mapNode(node, _) {
+	return node.key;
+}
+function reduceNodes(nodes) {
+	return nodes;
+}
+async function asyncTransformBucket(bucket, asyncMap, asyncReduce) {
+	const output = [];
+	for (const child of bucket._children.compactArray()) if (child instanceof Bucket) await asyncTransformBucket(child, asyncMap, asyncReduce);
+	else {
+		const mappedChildren = await asyncMap(child);
+		output.push({
+			bitField: bucket._children.bitField(),
+			children: mappedChildren
+		});
+	}
+	return asyncReduce(output);
+}
+//#endregion
+//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/consumable-buffer.js
+const START_MASKS$1 = [
+	255,
+	254,
+	252,
+	248,
+	240,
+	224,
+	192,
+	128
+];
+const STOP_MASKS$1 = [
+	1,
+	3,
+	7,
+	15,
+	31,
+	63,
+	127,
+	255
+];
+var ConsumableBuffer$1 = class {
+	_value;
+	_currentBytePos;
+	_currentBitPos;
+	constructor(value) {
+		this._value = value;
+		this._currentBytePos = value.length - 1;
+		this._currentBitPos = 7;
+	}
+	availableBits() {
+		return this._currentBitPos + 1 + this._currentBytePos * 8;
+	}
+	totalBits() {
+		return this._value.length * 8;
+	}
+	take(bits) {
+		let pendingBits = bits;
+		let result = 0;
+		while (pendingBits > 0 && this._haveBits()) {
+			const byte = this._value[this._currentBytePos];
+			const availableBits = this._currentBitPos + 1;
+			const taking = Math.min(availableBits, pendingBits);
+			const value = byteBitsToInt$1(byte, availableBits - taking, taking);
+			result = (result << taking) + value;
+			pendingBits -= taking;
+			this._currentBitPos -= taking;
+			if (this._currentBitPos < 0) {
+				this._currentBitPos = 7;
+				this._currentBytePos--;
+			}
+		}
+		return result;
+	}
+	untake(bits) {
+		this._currentBitPos += bits;
+		while (this._currentBitPos > 7) {
+			this._currentBitPos -= 8;
+			this._currentBytePos += 1;
+		}
+	}
+	_haveBits() {
+		return this._currentBytePos >= 0;
+	}
+};
+function byteBitsToInt$1(byte, start, length) {
+	return (byte & maskFor$1(start, length)) >>> start;
+}
+function maskFor$1(start, length) {
+	return START_MASKS$1[start] & STOP_MASKS$1[Math.min(length + start - 1, 7)];
+}
+//#endregion
+//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/consumable-hash.js
+function wrapHash$1(hashFn) {
+	function hashing(value) {
+		if (value instanceof InfiniteHash$1) return value;
+		else return new InfiniteHash$1(value, hashFn);
+	}
+	return hashing;
+}
+var InfiniteHash$1 = class {
+	_value;
+	_hashFn;
+	_depth;
+	_availableBits;
+	_currentBufferIndex;
+	_buffers;
+	constructor(value, hashFn) {
+		if (!(value instanceof Uint8Array)) throw new Error("can only hash Uint8Arrays");
+		this._value = value;
+		this._hashFn = hashFn;
+		this._depth = -1;
+		this._availableBits = 0;
+		this._currentBufferIndex = 0;
+		this._buffers = [];
+	}
+	async take(bits) {
+		let pendingBits = bits;
+		while (this._availableBits < pendingBits) await this._produceMoreBits();
+		let result = 0;
+		while (pendingBits > 0) {
+			const hash = this._buffers[this._currentBufferIndex];
+			const available = Math.min(hash.availableBits(), pendingBits);
+			const took = hash.take(available);
+			result = (result << available) + took;
+			pendingBits -= available;
+			this._availableBits -= available;
+			if (hash.availableBits() === 0) this._currentBufferIndex++;
+		}
+		return result;
+	}
+	untake(bits) {
+		let pendingBits = bits;
+		while (pendingBits > 0) {
+			const hash = this._buffers[this._currentBufferIndex];
+			const availableForUntake = Math.min(hash.totalBits() - hash.availableBits(), pendingBits);
+			hash.untake(availableForUntake);
+			pendingBits -= availableForUntake;
+			this._availableBits += availableForUntake;
+			if (this._currentBufferIndex > 0 && hash.totalBits() === hash.availableBits()) {
+				this._depth--;
+				this._currentBufferIndex--;
+			}
+		}
+	}
+	async _produceMoreBits() {
+		this._depth++;
+		const value = this._depth > 0 ? concat$1([this._value, Uint8Array.from([this._depth])]) : this._value;
+		const buffer = new ConsumableBuffer$1(await this._hashFn(value));
+		this._buffers.push(buffer);
+		this._availableBits += buffer.availableBits();
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/hamt-sharding@3.0.8/node_modules/hamt-sharding/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* A [Hash Mapped Trie](https://en.wikipedia.org/wiki/Hash_array_mapped_trie) implementation for JavaScript.
+*
+* This is used by [@helia/unixfs](https://www.npmjs.com/package/@helia/unixfs) for it's HAMT-sharded directory implementation.
+*
+* @example
+*
+* ```TypeScript
+* import { createHAMT } from 'hamt-sharding'
+* import crypto from 'crypto-promise'
+*
+* // decide how to hash buffers made from keys, can return a Promise
+* const hashFn = async (buf) => {
+*   return crypto
+*     .createHash('sha256')
+*     .update(buf)
+*     .digest()
+* }
+*
+* const bucket = createHAMT({
+*   hashFn: hashFn
+* })
+*
+* await bucket.put('key', 'value')
+*
+* const output = await bucket.get('key')
+* // output === 'value'
+* ```
+*/
+function createHAMT(options) {
+	if (options == null || options.hashFn == null) throw new Error("please define an options.hashFn");
+	return new Bucket({
+		bits: options.bits ?? 8,
+		hash: wrapHash$1(options.hashFn)
+	});
+}
 //#endregion
 //#region node_modules/.pnpm/ipfs-unixfs-importer@16.1.5/node_modules/ipfs-unixfs-importer/dist/src/dir-sharded.js
 async function hamtHashFn$1(buf) {
@@ -58918,7 +58133,7 @@ async function* flush(bucket, blockstore, shardRoot, options) {
 		mtime: shardRoot?.mtime,
 		mode: shardRoot?.mode
 	});
-	const buffer = encode(prepare({
+	const buffer = encode$1(prepare({
 		Data: dir.marshal(),
 		Links: links
 	}));
@@ -58970,7 +58185,7 @@ async function calculateSize(bucket, shardRoot, blocks, options) {
 			sizeEstimate += labelPrefix.length + value.cid.byteLength;
 		}
 	}
-	const buffer = encode(prepare({
+	const buffer = encode$1(prepare({
 		Data: new UnixFS$1({
 			type: "hamt-sharded-directory",
 			data: Uint8Array.from(children.bitField().reverse()),
@@ -59276,8 +58491,55 @@ async function* importer(source, blockstore, options = {}) {
 */
 async function importFile(content, blockstore, options = {}) {
 	const result = await first(importer([content], blockstore, options));
-	if (result == null) throw new InvalidParametersError$1("Nothing imported");
+	if (result == null) throw new InvalidParametersError$2("Nothing imported");
 	return result;
+}
+//#endregion
+//#region node_modules/.pnpm/it-last@3.0.11/node_modules/it-last/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* Return the last value from an (async)iterable.
+*
+* @example
+*
+* ```javascript
+* import last from 'it-last'
+*
+* // This can also be an iterator, generator, etc
+* const values = [0, 1, 2, 3, 4]
+*
+* const res = last(values)
+*
+* console.info(res) // 4
+* ```
+*
+* Async sources must be awaited:
+*
+* ```javascript
+* import last from 'it-last'
+*
+* const values = async function * () {
+*   yield * [0, 1, 2, 3, 4]
+* }
+*
+* const res = await last(values())
+*
+* console.info(res) // 4
+* ```
+*/
+function isAsyncIterable(thing) {
+	return thing[Symbol.asyncIterator] != null;
+}
+function last(source) {
+	if (isAsyncIterable(source)) return (async () => {
+		let res;
+		for await (const entry of source) res = entry;
+		return res;
+	})();
+	let res;
+	for (const entry of source) res = entry;
+	return res;
 }
 //#endregion
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/errors.js
@@ -59290,7 +58552,7 @@ var UnixFSError = class extends Error {
 		this.code = code;
 	}
 };
-var NotUnixFSError = class extends UnixFSError {
+var NotUnixFSError$1 = class extends UnixFSError {
 	constructor(message = "not a Unixfs node") {
 		super(message, "NotUnixFSError", "ERR_NOT_UNIXFS");
 	}
@@ -59330,7 +58592,7 @@ var NotADirectoryError = class extends UnixFSError {
 		super(message, "NotADirectoryError", "ERR_NOT_A_DIRECTORY");
 	}
 };
-var InvalidParametersError = class extends UnixFSError {
+var InvalidParametersError$1 = class extends UnixFSError {
 	constructor(message = "invalid parameters") {
 		super(message, "InvalidParametersError", "ERR_INVALID_PARAMETERS");
 	}
@@ -59375,18 +58637,18 @@ async function addByteStream(bytes, blockstore, options = {}) {
 	return cid;
 }
 async function addFile(file, blockstore, options = {}) {
-	if (file.path == null) throw new InvalidParametersError("path is required");
-	if (file.content == null) throw new InvalidParametersError("content is required");
+	if (file.path == null) throw new InvalidParametersError$1("path is required");
+	if (file.content == null) throw new InvalidParametersError$1("content is required");
 	const result = await last(addAll([file], blockstore, {
 		...defaultImporterSettings,
 		...options,
 		wrapWithDirectory: true
 	}));
-	if (result == null) throw new InvalidParametersError("Nothing imported");
+	if (result == null) throw new InvalidParametersError$1("Nothing imported");
 	return result.cid;
 }
 async function addDirectory(dir, blockstore, options = {}) {
-	if (dir.content != null) throw new InvalidParametersError("Directories cannot have content, use addFile instead");
+	if (dir.content != null) throw new InvalidParametersError$1("Directories cannot have content, use addFile instead");
 	const result = await (dir.path == null ? first : last)(addAll([{
 		...dir,
 		path: dir.path ?? "-"
@@ -59395,8 +58657,746 @@ async function addDirectory(dir, blockstore, options = {}) {
 		...options,
 		wrapWithDirectory: dir.path != null
 	}));
-	if (result == null) throw new InvalidParametersError("Nothing imported");
+	if (result == null) throw new InvalidParametersError$1("Nothing imported");
 	return result.cid;
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/errors.js
+var BadPathError = class BadPathError extends Error {
+	static name = "BadPathError";
+	static code = "ERR_BAD_PATH";
+	name = BadPathError.name;
+	code = BadPathError.code;
+	constructor(message = "Bad path") {
+		super(message);
+	}
+};
+var NotFoundError$1 = class NotFoundError$1 extends Error {
+	static name = "NotFoundError";
+	static code = "ERR_NOT_FOUND";
+	name = NotFoundError$1.name;
+	code = NotFoundError$1.code;
+	constructor(message = "Not found") {
+		super(message);
+	}
+};
+var NoResolverError = class NoResolverError extends Error {
+	static name = "NoResolverError";
+	static code = "ERR_NO_RESOLVER";
+	name = NoResolverError.name;
+	code = NoResolverError.code;
+	constructor(message = "No resolver") {
+		super(message);
+	}
+};
+var NotUnixFSError = class NotUnixFSError extends Error {
+	static name = "NotUnixFSError";
+	static code = "ERR_NOT_UNIXFS";
+	name = NotUnixFSError.name;
+	code = NotUnixFSError.code;
+	constructor(message = "Not UnixFS") {
+		super(message);
+	}
+};
+var OverReadError = class OverReadError extends Error {
+	static name = "OverReadError";
+	static code = "ERR_OVER_READ";
+	name = OverReadError.name;
+	code = OverReadError.code;
+	constructor(message = "Over read") {
+		super(message);
+	}
+};
+var UnderReadError = class UnderReadError extends Error {
+	static name = "UnderReadError";
+	static code = "ERR_UNDER_READ";
+	name = UnderReadError.name;
+	code = UnderReadError.code;
+	constructor(message = "Under read") {
+		super(message);
+	}
+};
+var InvalidParametersError = class InvalidParametersError extends Error {
+	static name = "InvalidParametersError";
+	static code = "ERR_INVALID_PARAMS";
+	name = InvalidParametersError.name;
+	code = InvalidParametersError.code;
+	constructor(message = "Invalid parameters") {
+		super(message);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/is-cid.js
+function isCID(obj) {
+	if (obj == null) return false;
+	return CID$1.asCID(obj) === obj;
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/resolve-object-path.js
+function resolveObjectPath(object, path) {
+	let value;
+	let i = 0;
+	let resolved = "";
+	while (i < path.length) {
+		const key = path[i];
+		i++;
+		if (!Object.hasOwnProperty.call(object, key)) throw new BadPathError(`Object did not have key "${key}"`);
+		resolved += `/${key}`;
+		value = object[key];
+		object = value;
+		if (isCID(value)) break;
+	}
+	return {
+		value,
+		rest: path.slice(i),
+		path: resolved.substring(1)
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/dag-cbor.js
+async function* dagCborResolver$1(root, path, blockstore, options) {
+	const result = resolveObjectPath(decode$4(await toBuffer(blockstore.get(root, options))), path);
+	yield {
+		cid: isCID(result.value) ? result.value : root,
+		name: result.path,
+		rest: result.rest
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/dag-json.js
+async function* dagJsonResolver$1(root, path, blockstore, options) {
+	const result = resolveObjectPath(decode$2(await toBuffer(blockstore.get(root, options))), path);
+	yield {
+		cid: isCID(result.value) ? result.value : root,
+		name: result.path,
+		rest: result.rest
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/find-cid-in-shard.js
+const hashFn = async function(buf) {
+	return (await murmur3128.encode(buf)).slice(0, 8).reverse();
+};
+const addLinksToHamtBucket = async (links, bucket, rootBucket) => {
+	const padLength = (bucket.tableSize() - 1).toString(16).length;
+	await Promise.all(links.map(async (link) => {
+		if (link.Name == null) throw new Error("Unexpected Link without a Name");
+		if (link.Name.length === padLength) {
+			const pos = parseInt(link.Name, 16);
+			bucket._putObjectAt(pos, new Bucket({
+				hash: rootBucket._options.hash,
+				bits: rootBucket._options.bits
+			}, bucket, pos));
+			return;
+		}
+		await rootBucket.put(link.Name.substring(2), true);
+	}));
+};
+const toPrefix$1 = (position, padLength) => {
+	return position.toString(16).toUpperCase().padStart(padLength, "0").substring(0, padLength);
+};
+const toBucketPath = (position) => {
+	let bucket = position.bucket;
+	const path = [];
+	while (bucket._parent != null) {
+		path.push(bucket);
+		bucket = bucket._parent;
+	}
+	path.push(bucket);
+	return path.reverse();
+};
+async function* findShardCid(node, name, rest, blockstore, context, options) {
+	if (context == null) {
+		if (node.Data == null) throw new NotUnixFSError("No data in PBNode");
+		let dir;
+		try {
+			dir = UnixFS$1.unmarshal(node.Data);
+		} catch (err) {
+			throw new NotUnixFSError(err.message);
+		}
+		if (dir.type !== "hamt-sharded-directory") throw new NotUnixFSError("Not a HAMT");
+		if (dir.fanout == null) throw new NotUnixFSError("Missing fanout");
+		const rootBucket = createHAMT({
+			hashFn,
+			bits: Math.log2(Number(dir.fanout))
+		});
+		context = {
+			rootBucket,
+			hamtDepth: 1,
+			lastBucket: rootBucket
+		};
+	}
+	const padLength = (context.lastBucket.tableSize() - 1).toString(16).length;
+	await addLinksToHamtBucket(node.Links, context.lastBucket, context.rootBucket);
+	const position = await context.rootBucket._findNewBucketAndPos(name);
+	let prefix = toPrefix$1(position.pos, padLength);
+	const bucketPath = toBucketPath(position);
+	if (bucketPath.length > context.hamtDepth) {
+		context.lastBucket = bucketPath[context.hamtDepth];
+		prefix = toPrefix$1(context.lastBucket._posAtParent, padLength);
+	}
+	const link = node.Links.find((link) => {
+		if (link.Name == null) return false;
+		const entryPrefix = link.Name.substring(0, padLength);
+		const entryName = link.Name.substring(padLength);
+		if (entryPrefix !== prefix) return false;
+		if (entryName !== "" && entryName !== name) return false;
+		return true;
+	});
+	if (link == null) return;
+	if (link.Name != null && link.Name.substring(padLength) === name) {
+		yield {
+			cid: link.Hash,
+			name: link.Name.substring(padLength),
+			rest
+		};
+		return;
+	}
+	context.hamtDepth++;
+	node = decode$1(await toBuffer(blockstore.get(link.Hash, options)));
+	if (options?.yieldSubShards === true) yield {
+		cid: link.Hash,
+		name: link.Name ?? "",
+		rest: [name, ...rest]
+	};
+	yield* findShardCid(node, name, rest, blockstore, context, options);
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/dag-pb.js
+async function* dagPbResolver$1(root, path, blockstore, options) {
+	const block = await toBuffer(blockstore.get(root, options));
+	let pbNode;
+	try {
+		pbNode = decode$1(block);
+	} catch (err) {
+		throw new NotUnixFSError(err.message);
+	}
+	if (pbNode.Data == null) throw new NotUnixFSError("no data in PBNode");
+	let unixfs;
+	try {
+		unixfs = UnixFS$1.unmarshal(pbNode.Data);
+	} catch (err) {
+		throw new NotUnixFSError(err.message);
+	}
+	if (unixfs.type === "directory" || unixfs.type === "hamt-sharded-directory" && options?.translateHAMTPath === false) {
+		const link = pbNode.Links.find((link) => link.Name === path[0]);
+		if (link == null) throw new NotFoundError$1(`No link "${path[0]}" found under ${root}`);
+		yield {
+			cid: link.Hash,
+			name: path[0],
+			rest: path.slice(1)
+		};
+	} else if (unixfs.type === "hamt-sharded-directory") {
+		let foundPath = false;
+		for await (const entry of findShardCid(pbNode, path[0], path.slice(1), blockstore, void 0, options)) {
+			if (entry.name === path[0]) foundPath = true;
+			yield entry;
+		}
+		if (!foundPath) throw new NotFoundError$1(`No link "${path[0]}" found under ${root}`);
+	}
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/identity.js
+async function* identityResolver$1(root, path, blockstore, options) {
+	if (path.length === 0) return;
+	throw new BadPathError(`Cannot load path /${path.join("/")} from identity block`);
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/json.js
+async function* jsonResolver$1(root, path, blockstore, options) {
+	const result = resolveObjectPath(decode$13(await toBuffer(blockstore.get(root, options))), path);
+	yield {
+		cid: root,
+		name: result.path,
+		rest: result.rest
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/raw.js
+async function* rawResolver$1(root, path, blockstore, options) {
+	if (path.length === 0) return;
+	throw new NotFoundError$1(`Cannot load path /${path.join("/")} from raw block`);
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/index.js
+const resolvers$1 = {
+	[112]: dagPbResolver$1,
+	[85]: rawResolver$1,
+	[113]: dagCborResolver$1,
+	[81]: dagCborResolver$1,
+	[297]: dagJsonResolver$1,
+	[identity$2.code]: identityResolver$1,
+	[512]: jsonResolver$1
+};
+/**
+* Returns an async iterator that yields entries for all segments in a path
+*
+* @example
+*
+* ```TypeScript
+* import { walkPath } from 'ipfs-unixfs-exporter'
+*
+* const entries = []
+*
+* for await (const entry of walkPath('Qmfoo/foo/bar/baz.txt', blockstore)) {
+*   entries.push(entry)
+* }
+*
+* // entries contains 4x `entry` objects
+* ```
+*/
+async function* walkPath(path, blockstore, options = {}) {
+	path = path.toString();
+	if (path.startsWith("/ipfs/")) path = path.substring(6);
+	while (path.endsWith("/")) path = path.substring(0, path.length - 1);
+	let [root, ...rest] = path.split(/(?<!\\)\//g).filter(Boolean);
+	let cid = CID$1.parse(root);
+	let roots = [cid];
+	let location = `${cid}`;
+	yield {
+		cid,
+		name: location,
+		path: location,
+		roots,
+		remainder: rest
+	};
+	while (rest.length > 0) {
+		const resolver = resolvers$1[cid.code];
+		if (resolver == null) throw new NoResolverError(`No resolver for code ${cid.code}`);
+		let traversedDeeper = false;
+		for await (const result of resolver(cid, rest, blockstore, options)) {
+			cid = result.cid;
+			traversedDeeper = !roots[roots.length - 1].equals(cid);
+			rest = result.rest;
+			if (!traversedDeeper) break;
+			roots = [...roots, result.cid];
+			location = `${location}/${result.name}`;
+			yield {
+				cid: result.cid,
+				name: result.name,
+				path: location,
+				roots,
+				remainder: result.rest
+			};
+		}
+		if (!traversedDeeper) break;
+	}
+	options?.signal?.throwIfAborted();
+	if (rest.length !== 0) throw new NotFoundError$1(`Could not resolve path /${rest.join("/")} under ${path}`);
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/dag-cbor.js
+async function dagCborResolver(cid, name, path, blockstore, options) {
+	const block = await toBuffer(blockstore.get(cid, options));
+	return {
+		type: "object",
+		cid,
+		name,
+		path,
+		object: decode$4(block),
+		node: block
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/dag-json.js
+async function dagJsonResolver(cid, name, path, blockstore, options) {
+	const block = await toBuffer(blockstore.get(cid, options));
+	return {
+		type: "object",
+		cid,
+		name,
+		path,
+		object: decode$2(block),
+		node: block
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/utils/extract-data-from-block.js
+function extractDataFromBlock(block, blockStart, requestedStart, requestedEnd) {
+	const blockLength = BigInt(block.length);
+	const blockEnd = BigInt(blockStart + blockLength);
+	if (requestedStart >= blockEnd || requestedEnd < blockStart) return new Uint8Array(0);
+	if (requestedEnd >= blockStart && requestedEnd < blockEnd) block = block.subarray(0, Number(requestedEnd - blockStart));
+	if (requestedStart >= blockStart && requestedStart < blockEnd) block = block.subarray(Number(requestedStart - blockStart));
+	return block;
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/utils/validate-offset-and-length.js
+const validateOffsetAndLength = (size, offset = 0, length = size) => {
+	const fileSize = BigInt(size);
+	const start = BigInt(offset ?? 0);
+	let end = BigInt(length);
+	if (end !== fileSize) end = start + end;
+	if (end > fileSize) end = fileSize;
+	if (start < 0n) throw new InvalidParametersError("Offset must be greater than or equal to 0");
+	if (start > fileSize) throw new InvalidParametersError("Offset must be less than the file size");
+	if (end < 0n) throw new InvalidParametersError("Length must be greater than or equal to 0");
+	if (end > fileSize) throw new InvalidParametersError("Length must be less than the file size");
+	return {
+		start,
+		end
+	};
+};
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/utils/raw-content.js
+function rawContent(node, event) {
+	async function* contentGenerator(options = {}) {
+		const { start, end } = validateOffsetAndLength(node.length, options.offset, options.length);
+		const buf = extractDataFromBlock(node, 0n, start, end);
+		options.onProgress?.(new CustomProgressEvent(event, {
+			bytesRead: BigInt(buf.byteLength),
+			totalBytes: end - start,
+			fileSize: BigInt(node.byteLength)
+		}));
+		yield buf;
+	}
+	return contentGenerator;
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/identity.js
+async function identityResolver(cid, name, path, blockstore, options) {
+	const block = decode$17(cid.multihash.bytes);
+	return {
+		type: "identity",
+		cid,
+		name,
+		path,
+		content: rawContent(block.digest, "unixfs:exporter:progress:identity"),
+		size: BigInt(block.bytes.length),
+		node: block.bytes
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/json.js
+async function jsonResolver(cid, name, path, blockstore, options) {
+	const block = await toBuffer(blockstore.get(cid, options));
+	return {
+		type: "object",
+		cid,
+		name,
+		path,
+		object: decode$13(block),
+		node: block
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/raw.js
+async function rawResolver(cid, name, path, blockstore, options) {
+	const block = await toBuffer(blockstore.get(cid, options));
+	return {
+		type: "raw",
+		cid,
+		name,
+		path,
+		content: rawContent(block, "unixfs:exporter:progress:raw"),
+		size: BigInt(block.length),
+		node: block
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/content/directory.js
+function directoryContent(cid, node, unixfs, path) {
+	async function* yieldDirectoryContent(options = {}) {
+		const offset = options.offset ?? 0;
+		const length = options.length ?? node.Links.length;
+		const links = node.Links.slice(offset, length);
+		options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:directory", { cid }));
+		yield* links.map((link) => ({
+			cid: link.Hash,
+			name: link.Name ?? "",
+			path: `${path}/${link.Name ?? ""}`
+		}));
+	}
+	return yieldDirectoryContent;
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/content/file.js
+async function walkDAG(blockstore, node, queue, streamPosition, start, end, options) {
+	if (node instanceof Uint8Array) {
+		const buf = extractDataFromBlock(node, streamPosition, start, end);
+		queue.push(buf);
+		return;
+	}
+	if (node.Data == null) throw new NotUnixFSError("no data in PBNode");
+	let file;
+	try {
+		file = UnixFS$1.unmarshal(node.Data);
+	} catch (err) {
+		throw new NotUnixFSError(err.message);
+	}
+	if (file.data != null) {
+		const data = file.data;
+		const buf = extractDataFromBlock(data, streamPosition, start, end);
+		queue.push(buf);
+		streamPosition += BigInt(buf.byteLength);
+	}
+	const childOps = [];
+	if (node.Links.length !== file.blockSizes.length) throw new NotUnixFSError("Inconsistent block sizes and dag links");
+	for (let i = 0; i < node.Links.length; i++) {
+		const childLink = node.Links[i];
+		const childStart = streamPosition;
+		const childEnd = childStart + file.blockSizes[i];
+		if (start >= childStart && start < childEnd || end >= childStart && end <= childEnd || start < childStart && end > childEnd) childOps.push({
+			link: childLink,
+			blockStart: streamPosition
+		});
+		streamPosition = childEnd;
+		if (streamPosition > end) break;
+	}
+	await pipe(childOps, (source) => map(source, (op) => {
+		return async () => {
+			const block = await toBuffer(blockstore.get(op.link.Hash, options));
+			return {
+				...op,
+				block
+			};
+		};
+	}), (source) => parallel(source, {
+		ordered: true,
+		concurrency: options.blockReadConcurrency
+	}), async (source) => {
+		for await (const { link, block, blockStart } of source) {
+			let child;
+			switch (link.Hash.code) {
+				case 112:
+					child = decode$1(block);
+					break;
+				case 85:
+					child = block;
+					break;
+				default:
+					queue.end(new NotUnixFSError(`Unsupported codec: ${link.Hash.code}`));
+					return;
+			}
+			const childQueue = new PQueue({ concurrency: 1 });
+			childQueue.on("error", (error) => {
+				queue.end(error);
+			});
+			childQueue.add(async () => {
+				options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:file", { cid: link.Hash }));
+				await walkDAG(blockstore, child, queue, blockStart, start, end, options);
+			});
+			await childQueue.onIdle();
+		}
+	});
+	if (streamPosition >= end) queue.end();
+}
+function fileContent(cid, node, unixfs, path, blockstore) {
+	async function* yieldFileContent(options = {}) {
+		const fileSize = unixfs.fileSize();
+		if (fileSize === void 0) throw new Error("File was a directory");
+		const { start, end } = validateOffsetAndLength(fileSize, options.offset, options.length);
+		if (end === 0n) return;
+		let read = 0n;
+		const wanted = end - start;
+		const queue = pushable();
+		options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:file", { cid }));
+		walkDAG(blockstore, node, queue, 0n, start, end, options).catch((err) => {
+			queue.end(err);
+		});
+		for await (const buf of queue) {
+			if (buf == null) continue;
+			read += BigInt(buf.byteLength);
+			if (read > wanted) {
+				queue.end();
+				throw new OverReadError("Read too many bytes - the file size reported by the UnixFS data in the root node may be incorrect");
+			}
+			if (read === wanted) queue.end();
+			options.onProgress?.(new CustomProgressEvent("unixfs:exporter:progress:unixfs:file", {
+				bytesRead: read,
+				totalBytes: wanted,
+				fileSize
+			}));
+			yield buf;
+		}
+		if (read < wanted) throw new UnderReadError("Traversed entire DAG but did not read enough bytes");
+	}
+	return yieldFileContent;
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/content/hamt-sharded-directory.js
+async function* listDirectory(node, path, blockstore, options) {
+	const links = node.Links;
+	if (node.Data == null) throw new NotUnixFSError("no data in PBNode");
+	let dir;
+	try {
+		dir = UnixFS$1.unmarshal(node.Data);
+	} catch (err) {
+		throw new NotUnixFSError(err.message);
+	}
+	if (dir.fanout == null) throw new NotUnixFSError("missing fanout");
+	const padLength = (dir.fanout - 1n).toString(16).length;
+	const results = pipe(links, (source) => map(source, (link) => {
+		return async () => {
+			const name = link.Name != null ? link.Name.substring(padLength) : null;
+			if (name != null && name !== "") return { entries: [{
+				cid: link.Hash,
+				name,
+				path: `${path}/${name}`
+			}] };
+			else {
+				node = decode$1(await toBuffer(blockstore.get(link.Hash, options)));
+				options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:hamt-sharded-directory", { cid: link.Hash }));
+				return { entries: listDirectory(node, path, blockstore, options) };
+			}
+		};
+	}), (source) => parallel(source, {
+		ordered: true,
+		concurrency: options.blockReadConcurrency
+	}));
+	for await (const { entries } of results) yield* entries;
+}
+function hamtShardedDirectoryContent(cid, node, unixfs, path, blockstore) {
+	function yieldHamtDirectoryContent(options = {}) {
+		options.onProgress?.(new CustomProgressEvent("unixfs:exporter:walk:hamt-sharded-directory", { cid }));
+		return listDirectory(node, path, blockstore, options);
+	}
+	return yieldHamtDirectoryContent;
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/unixfs-v1/index.js
+const contentExporters = {
+	raw: fileContent,
+	file: fileContent,
+	directory: directoryContent,
+	"hamt-sharded-directory": hamtShardedDirectoryContent,
+	metadata: (cid, node, unixfs, blockstore) => {
+		return () => [];
+	},
+	symlink: (cid, node, unixfs, blockstore) => {
+		return () => [];
+	}
+};
+async function dagPbResolver(cid, name, path, blockstore, options) {
+	const block = await toBuffer(blockstore.get(cid, options));
+	let node;
+	try {
+		node = decode$1(block);
+	} catch (err) {
+		throw new NotUnixFSError(err.message);
+	}
+	if (node.Data == null) throw new NotUnixFSError("no data in PBNode");
+	let unixfs;
+	try {
+		unixfs = UnixFS$1.unmarshal(node.Data);
+	} catch (err) {
+		throw new NotUnixFSError(err.message);
+	}
+	const content = contentExporters[unixfs.type](cid, node, unixfs, path, blockstore);
+	if (content == null) throw new NotFoundError$1("could not find content exporter");
+	if (unixfs.isDirectory()) return {
+		type: "directory",
+		cid,
+		name,
+		path,
+		entries: content,
+		unixfs,
+		node
+	};
+	return {
+		type: "file",
+		cid,
+		name,
+		path,
+		content,
+		unixfs,
+		node,
+		size: unixfs.fileSize()
+	};
+}
+//#endregion
+//#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/index.js
+const resolvers = {
+	[112]: dagPbResolver,
+	[85]: rawResolver,
+	[113]: dagCborResolver,
+	[81]: dagCborResolver,
+	[297]: dagJsonResolver,
+	[identity$2.code]: identityResolver,
+	[512]: jsonResolver
+};
+/**
+* Uses the given blockstore instance to fetch an IPFS node by a CID or path.
+*
+* Returns a {@link Promise} which resolves to a {@link UnixFSEntry}.
+*
+* @example
+*
+* ```typescript
+* import { exporter } from 'ipfs-unixfs-exporter'
+* import { CID } from 'multiformats/cid'
+*
+* const cid = CID.parse('QmFoo')
+*
+* const entry = await exporter(cid, blockstore, {
+*   signal: AbortSignal.timeout(50000)
+* })
+*
+* if (entry.type === 'file') {
+*   for await (const chunk of entry.content()) {
+*     // chunk is a Uint8Array
+*   }
+* }
+* ```
+*/
+async function exporter(path, blockstore, options = {}) {
+	let cid;
+	let name;
+	if (path instanceof String || typeof path === "string") {
+		const entry = await last(walkPath(path, blockstore, options));
+		if (entry == null) throw new NotFoundError$1(`Could not walk path to ${path}`);
+		cid = entry.cid;
+		name = entry.name;
+		path = entry.path;
+	} else if (CID$1.asCID(path) === path || path instanceof CID$1) {
+		cid = path;
+		name = path = cid.toString();
+	} else throw new InvalidParametersError("Path must be string or CID");
+	const resolver = resolvers[cid.code];
+	if (resolver == null) throw new NoResolverError(`No resolver for code ${cid.code}`);
+	return resolver(cid, name, path, blockstore, options);
+}
+/**
+* Returns an async iterator that yields all entries beneath a given CID or IPFS
+* path, as well as the containing directory.
+*
+* @example
+*
+* ```typescript
+* import { recursive } from 'ipfs-unixfs-exporter'
+*
+* const entries = []
+*
+* for await (const child of recursive(CID.parse('Qmfoo'), blockstore)) {
+*   entries.push(entry)
+* }
+*
+* // entries contains all children of the `Qmfoo` directory and it's children
+* ```
+*/
+async function* recursive(path, blockstore, options = {}) {
+	const node = await exporter(path, blockstore, options);
+	if (node == null) return;
+	yield {
+		cid: node.cid,
+		name: node.name,
+		path: node.path,
+		depth: 0
+	};
+	if (node.type === "directory") for await (const child of recurse(node, 0, `${path}`, options)) yield child;
+	async function* recurse(node, depth, path, options) {
+		depth++;
+		for await (const entry of node.entries(options)) {
+			const entryPath = `${path}/${entry.name}`;
+			yield {
+				...entry,
+				depth,
+				path: entryPath
+			};
+			const file = await exporter(entry.cid, blockstore, options);
+			if (file.type === "directory") yield* recurse(file, depth, entryPath, options);
+		}
+	}
 }
 //#endregion
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/utils/consumable-hash.js
@@ -59454,7 +59454,7 @@ var InfiniteHash = class {
 	}
 	async _produceMoreBits() {
 		this._depth++;
-		const value = this._depth > 0 ? concat$1([this._value, Uint8Array.from([this._depth])]) : this._value;
+		const value = this._depth > 0 ? concat([this._value, Uint8Array.from([this._depth])]) : this._value;
 		const buffer = new ConsumableBuffer(await this._hashFn(value));
 		this._buffers.push(buffer);
 		this._availableBits += buffer.availableBits();
@@ -59598,7 +59598,7 @@ const updateShardedDirectory = async (path, blockstore, options) => {
 			Data: dir.marshal(),
 			Links: segment.node.Links
 		};
-		const block = encode(prepare(node));
+		const block = encode$1(prepare(node));
 		cid = await persist(block, blockstore, options);
 		if (!isRoot) {
 			const nextSegment = path[i + 1];
@@ -59623,7 +59623,7 @@ const recreateShardedDirectory = async (cid, fileName, blockstore, options) => {
 	const path = [];
 	const hashBits = options.shardFanoutBits ?? 8;
 	while (true) {
-		const node = decode(await toBuffer(blockstore.get(cid, options)));
+		const node = decode$1(await toBuffer(blockstore.get(cid, options)));
 		const children = new import_sparse_array.default();
 		const prefix = toPrefix(await hash.take(hashBits), hashBits);
 		path.push({
@@ -59703,7 +59703,7 @@ async function estimateShardSize(node, current, max, blockstore, options) {
 		current += utf8ByteLength(name);
 		current += link.Hash.bytes.byteLength;
 		if (link.Hash.code === 112) {
-			const node = decode(await toBuffer(blockstore.get(link.Hash, options)));
+			const node = decode$1(await toBuffer(blockstore.get(link.Hash, options)));
 			current += await estimateShardSize(node, current, max, blockstore, options);
 		}
 	}
@@ -59719,7 +59719,7 @@ async function calculateShardSize(node, current, max, blockstore, options) {
 		name = name.substring(prefixLength);
 		current += linkSerializedSize(utf8ByteLength(name), link.Hash.byteLength, Number(link.Tsize ?? 0));
 		if (link.Hash.code === 112) {
-			const node = decode(await toBuffer(blockstore.get(link.Hash, options)));
+			const node = decode$1(await toBuffer(blockstore.get(link.Hash, options)));
 			current += await calculateShardSize(node, current, max, blockstore, options);
 		}
 	}
@@ -59729,7 +59729,7 @@ async function calculateShardSize(node, current, max, blockstore, options) {
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/utils/add-link.js
 const log$8 = logger("helia:unixfs:components:utils:add-link");
 async function addLink(parent, child, blockstore, options) {
-	if (parent.node.Data == null) throw new InvalidParametersError("Invalid parent passed to addLink");
+	if (parent.node.Data == null) throw new InvalidParametersError$1("Invalid parent passed to addLink");
 	if (UnixFS$1.unmarshal(parent.node.Data).type === "hamt-sharded-directory") {
 		log$8("adding link to sharded directory");
 		return addToShardedDirectory(parent, child, blockstore, options);
@@ -59740,12 +59740,12 @@ async function addLink(parent, child, blockstore, options) {
 		log$8("converting directory to sharded directory");
 		const converted = await convertToShardedDirectory(result, blockstore, options);
 		result.cid = converted.cid;
-		result.node = decode(await toBuffer(blockstore.get(converted.cid, options)));
+		result.node = decode$1(await toBuffer(blockstore.get(converted.cid, options)));
 	}
 	return result;
 }
 const convertToShardedDirectory = async (parent, blockstore, options) => {
-	if (parent.node.Data == null) throw new InvalidParametersError("Invalid parent passed to convertToShardedDirectory");
+	if (parent.node.Data == null) throw new InvalidParametersError$1("Invalid parent passed to convertToShardedDirectory");
 	const unixfs = UnixFS$1.unmarshal(parent.node.Data);
 	const result = await createShard(blockstore, parent.node.Links.map((link) => ({
 		name: link.Name ?? "",
@@ -59783,7 +59783,7 @@ const addToDirectory = async (parent, child, blockstore, options) => {
 		Data: data,
 		Links: parentLinks
 	});
-	const buf = encode(parent.node);
+	const buf = encode$1(parent.node);
 	const hash = await sha256$2.digest(buf);
 	options?.signal?.throwIfAborted();
 	const cid = CID$1.create(parent.cid.version, 112, hash);
@@ -59871,7 +59871,7 @@ const addToShardedDirectory = async (parent, child, blockstore, options) => {
 //#endregion
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/utils/cid-to-directory.js
 async function cidToDirectory(cid, blockstore, options = {}) {
-	const entry = await exporter$1(cid, blockstore, options);
+	const entry = await exporter(cid, blockstore, options);
 	if (entry.type !== "directory") throw new NotADirectoryError(`${cid.toString()} was not a UnixFS directory`);
 	return {
 		cid,
@@ -59881,8 +59881,8 @@ async function cidToDirectory(cid, blockstore, options = {}) {
 //#endregion
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/utils/cid-to-pblink.js
 async function cidToPBLink(cid, name, blockstore, options) {
-	const sourceEntry = await exporter$1(cid, blockstore, options);
-	if (sourceEntry.type !== "directory" && sourceEntry.type !== "file" && sourceEntry.type !== "raw") throw new NotUnixFSError(`${cid.toString()} was not a UnixFS node`);
+	const sourceEntry = await exporter(cid, blockstore, options);
+	if (sourceEntry.type !== "directory" && sourceEntry.type !== "file" && sourceEntry.type !== "raw") throw new NotUnixFSError$1(`${cid.toString()} was not a UnixFS node`);
 	return {
 		Name: name,
 		Tsize: sourceEntry.node instanceof Uint8Array ? sourceEntry.node.byteLength : dagNodeTsize(sourceEntry.node),
@@ -59891,7 +59891,7 @@ async function cidToPBLink(cid, name, blockstore, options) {
 }
 function dagNodeTsize(node) {
 	const linkSizes = node.Links.reduce((acc, curr) => acc + (curr.Tsize ?? 0), 0);
-	return encode(node).byteLength + linkSizes;
+	return encode$1(node).byteLength + linkSizes;
 }
 //#endregion
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/utils/resolve.js
@@ -59932,7 +59932,7 @@ async function updatePathCids(cid, result, blockstore, options) {
 //#endregion
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/cat.js
 async function* cat(cid, blockstore, options = {}) {
-	const result = await exporter$1((await resolve$1(cid, options.path, blockstore, options)).cid, blockstore, options);
+	const result = await exporter((await resolve$1(cid, options.path, blockstore, options)).cid, blockstore, options);
 	if (result.type !== "file" && result.type !== "raw") throw new NotAFileError();
 	if (result.content == null) throw new NoContentError();
 	yield* result.content(options);
@@ -59948,7 +59948,7 @@ async function chmod(cid, mode, blockstore, options = {}) {
 			for await (const entry of recursive(resolved.cid, blockstore, options)) {
 				let metadata;
 				let links = [];
-				const file = await exporter$1(entry.cid, blockstore, options);
+				const file = await exporter(entry.cid, blockstore, options);
 				if (file.type === "raw") metadata = new UnixFS$1({
 					type: "file",
 					data: file.node
@@ -59956,7 +59956,7 @@ async function chmod(cid, mode, blockstore, options = {}) {
 				else if (file.type === "file" || file.type === "directory") {
 					metadata = file.unixfs;
 					links = file.node.Links;
-				} else throw new NotUnixFSError();
+				} else throw new NotUnixFSError$1();
 				metadata.mode = mode;
 				const node = {
 					Data: metadata.marshal(),
@@ -59972,7 +59972,7 @@ async function chmod(cid, mode, blockstore, options = {}) {
 			dagBuilder: async function* (source, block) {
 				for await (const entry of source) yield async function() {
 					const node = entry.content;
-					const buf = encode(node);
+					const buf = encode$1(node);
 					const updatedCid = await persist(buf, block, {
 						...options,
 						cidVersion: cid.version
@@ -59999,13 +59999,13 @@ async function chmod(cid, mode, blockstore, options = {}) {
 		data: block
 	});
 	else {
-		const node = decode(block);
+		const node = decode$1(block);
 		if (node.Data == null) throw new InvalidPBNodeError(`${resolved.cid.toString()} had no data`);
 		links = node.Links;
 		metadata = UnixFS$1.unmarshal(node.Data);
 	}
 	metadata.mode = mode;
-	const updatedBlock = encode({
+	const updatedBlock = encode$1({
 		Data: metadata.marshal(),
 		Links: links
 	});
@@ -60018,7 +60018,7 @@ async function chmod(cid, mode, blockstore, options = {}) {
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/cp.js
 const log$5 = logger("helia:unixfs:cp");
 async function cp(source, target, name, blockstore, options = {}) {
-	if (name.includes("/")) throw new InvalidParametersError("Name must not have slashes");
+	if (name.includes("/")) throw new InvalidParametersError$1("Name must not have slashes");
 	const [directory, pblink] = await Promise.all([cidToDirectory(target, blockstore, options), cidToPBLink(source, name, blockstore, options)]);
 	log$5("Adding %c as \"%s\" to %c", source, name, target);
 	return (await addLink(directory, pblink, blockstore, {
@@ -60030,7 +60030,7 @@ async function cp(source, target, name, blockstore, options = {}) {
 //#endregion
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/ls.js
 async function* ls(cid, blockstore, options = {}) {
-	const result = await exporter$1((await resolve$1(cid, options.path, blockstore, options)).cid, blockstore, options);
+	const result = await exporter((await resolve$1(cid, options.path, blockstore, options)).cid, blockstore, options);
 	if (result.type === "directory") {
 		yield* result.entries(options);
 		return;
@@ -60041,10 +60041,10 @@ async function* ls(cid, blockstore, options = {}) {
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/mkdir.js
 const log$4 = logger("helia:unixfs:mkdir");
 async function mkdir(parentCid, dirname, blockstore, options = {}) {
-	if (dirname.includes("/")) throw new InvalidParametersError("Path must not have slashes");
-	if ((await exporter$1(parentCid, blockstore, options)).type !== "directory") throw new NotADirectoryError(`${parentCid.toString()} was not a UnixFS directory`);
+	if (dirname.includes("/")) throw new InvalidParametersError$1("Path must not have slashes");
+	if ((await exporter(parentCid, blockstore, options)).type !== "directory") throw new NotADirectoryError(`${parentCid.toString()} was not a UnixFS directory`);
 	log$4("creating %s", dirname);
-	const buf = encode({
+	const buf = encode$1({
 		Data: new UnixFS$1({
 			type: "directory",
 			mode: options.mode,
@@ -60083,7 +60083,7 @@ const removeFromDirectory = async (parent, name, blockstore, options) => {
 	parent.node.Links = parent.node.Links.filter((link) => {
 		return link.Name !== name;
 	});
-	const parentCid = await persist(encode(parent.node), blockstore, {
+	const parentCid = await persist(encode$1(parent.node), blockstore, {
 		...options,
 		cidVersion: parent.cid.version
 	});
@@ -60122,15 +60122,15 @@ const removeFromShardedDirectory = async (parent, name, blockstore, options) => 
 	return updateShardedDirectory(path, blockstore, options);
 };
 const convertToFlatDirectory = async (parent, blockstore, options) => {
-	if (parent.node.Data == null) throw new InvalidParametersError("Invalid parent passed to convertToFlatDirectory");
+	if (parent.node.Data == null) throw new InvalidParametersError$1("Invalid parent passed to convertToFlatDirectory");
 	const rootNode = { Links: [] };
-	const dir = await exporter$1(parent.cid, blockstore, options);
+	const dir = await exporter(parent.cid, blockstore, options);
 	if (dir.type !== "directory") throw new Error("Unexpected node type");
 	for await (const entry of dir.entries()) {
 		let tsize = 0;
-		const file = await exporter$1(entry.cid, blockstore, options);
+		const file = await exporter(entry.cid, blockstore, options);
 		if (file.node instanceof Uint8Array) tsize = file.node.byteLength;
-		else tsize = encode(file.node).length;
+		else tsize = encode$1(file.node).length;
 		rootNode.Links.push({
 			Hash: entry.cid,
 			Name: entry.name,
@@ -60144,7 +60144,7 @@ const convertToFlatDirectory = async (parent, blockstore, options) => {
 		mtime: oldUnixfs.mtime
 	}).marshal();
 	return {
-		cid: await persist(encode(prepare(rootNode)), blockstore, {
+		cid: await persist(encode$1(prepare(rootNode)), blockstore, {
 			codec: src_exports,
 			cidVersion: parent.cid.version,
 			signal: options.signal
@@ -60156,7 +60156,7 @@ const convertToFlatDirectory = async (parent, blockstore, options) => {
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/rm.js
 const log$2 = logger("helia:unixfs:rm");
 async function rm(target, name, blockstore, options = {}) {
-	if (name.includes("/")) throw new InvalidParametersError("Name must not have slashes");
+	if (name.includes("/")) throw new InvalidParametersError$1("Name must not have slashes");
 	const directory = await cidToDirectory(target, blockstore, options);
 	log$2("Removing %s from %c", name, target);
 	return (await removeLink(directory, name, blockstore, {
@@ -60172,7 +60172,7 @@ const log$1 = logger("helia:unixfs:stat");
 async function stat(cid, blockstore, options = {}) {
 	const resolved = await resolve$1(cid, options.path, blockstore, options);
 	log$1("stat %c", resolved.cid);
-	const result = await exporter$1(resolved.cid, blockstore, options);
+	const result = await exporter(resolved.cid, blockstore, options);
 	if (result.type === "raw") {
 		if (options.extended === true) return createExtendedRawStats(result);
 		return createRawStats(result);
@@ -60180,7 +60180,7 @@ async function stat(cid, blockstore, options = {}) {
 		if (options.extended === true) return createExtendedStats(result, blockstore, options.filter ?? new ScalableCuckooFilter({ filterSize: 1024 }), options);
 		return createStats(result);
 	}
-	throw new NotUnixFSError();
+	throw new NotUnixFSError$1();
 }
 function createStats(entry) {
 	return {
@@ -60256,7 +60256,7 @@ async function inspectDag(cid, blockstore, isFile, filter, options) {
 			results.localSize += BigInt(block.byteLength);
 			if (isFile) results.dirSize += BigInt(block.byteLength);
 		} else if (cid.code === 112) {
-			const pbNode = decode(block);
+			const pbNode = decode$1(block);
 			let unixfs;
 			if (pbNode.Data != null) unixfs = UnixFS$1.unmarshal(pbNode.Data);
 			if (pbNode.Links.length > 0) {
@@ -60304,14 +60304,14 @@ async function touch(cid, blockstore, options = {}) {
 			for await (const entry of recursive(resolved.cid, blockstore)) {
 				let metadata;
 				let links;
-				const file = await exporter$1(entry.cid, blockstore, options);
+				const file = await exporter(entry.cid, blockstore, options);
 				if (file.type === "raw") {
 					metadata = new UnixFS$1({ data: file.node });
 					links = [];
 				} else if (file.type === "file" || file.type === "directory") {
 					metadata = file.unixfs;
 					links = file.node.Links;
-				} else throw new NotUnixFSError();
+				} else throw new NotUnixFSError$1();
 				metadata.mtime = mtime;
 				const node = {
 					Data: metadata.marshal(),
@@ -60327,7 +60327,7 @@ async function touch(cid, blockstore, options = {}) {
 			dagBuilder: async function* (source, block) {
 				for await (const entry of source) yield async function() {
 					const node = entry.content;
-					const buf = encode(node);
+					const buf = encode$1(node);
 					const updatedCid = await persist(buf, block, {
 						...options,
 						cidVersion: cid.version
@@ -60351,13 +60351,13 @@ async function touch(cid, blockstore, options = {}) {
 	let links = [];
 	if (resolved.cid.code === 85) metadata = new UnixFS$1({ data: block });
 	else {
-		const node = decode(block);
+		const node = decode$1(block);
 		links = node.Links;
 		if (node.Data == null) throw new InvalidPBNodeError(`${resolved.cid.toString()} had no data`);
 		metadata = UnixFS$1.unmarshal(node.Data);
 	}
 	metadata.mtime = mtime;
-	const updatedBlock = encode({
+	const updatedBlock = encode$1({
 		Data: metadata.marshal(),
 		Links: links
 	});
@@ -60730,11 +60730,6 @@ function normalizeUploadInput(input, options) {
 	};
 }
 //#endregion
-//#region node_modules/.pnpm/@uppy+utils@7.2.0/node_modules/@uppy/utils/lib/hasProperty.js
-function hasProperty(object, key) {
-	return Object.hasOwn(object, key);
-}
-//#endregion
 //#region node_modules/.pnpm/@uppy+utils@7.2.0/node_modules/@uppy/utils/lib/NetworkError.js
 var NetworkError$1 = class extends Error {
 	cause;
@@ -61004,6 +60999,11 @@ function pad(number) {
 function getTimeStamp() {
 	const date = /* @__PURE__ */ new Date();
 	return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+//#endregion
+//#region node_modules/.pnpm/@uppy+utils@7.2.0/node_modules/@uppy/utils/lib/hasProperty.js
+function hasProperty(object, key) {
+	return Object.hasOwn(object, key);
 }
 //#endregion
 //#region node_modules/.pnpm/@uppy+utils@7.2.0/node_modules/@uppy/utils/lib/isNetworkError.js
@@ -61446,221 +61446,6 @@ var EventManager = class {
 			if (!this.#uppy.getFile(fileID)) return;
 			cb();
 		});
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/@uppy+core@5.2.0/node_modules/@uppy/core/lib/loggers.js
-const justErrorsLogger = {
-	debug: () => {},
-	warn: () => {},
-	error: (...args) => console.error(`[Uppy] [${getTimeStamp()}]`, ...args)
-};
-const debugLogger = {
-	debug: (...args) => console.debug(`[Uppy] [${getTimeStamp()}]`, ...args),
-	warn: (...args) => console.warn(`[Uppy] [${getTimeStamp()}]`, ...args),
-	error: (...args) => console.error(`[Uppy] [${getTimeStamp()}]`, ...args)
-};
-//#endregion
-//#region node_modules/.pnpm/@transloadit+prettier-bytes@0.3.5/node_modules/@transloadit/prettier-bytes/dist/prettierBytes.js
-var require_prettierBytes = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	module.exports = function prettierBytes(input) {
-		if (typeof input !== "number" || Number.isNaN(input)) throw new TypeError(`Expected a number, got ${typeof input}`);
-		const neg = input < 0;
-		let num = Math.abs(input);
-		if (neg) num = -num;
-		if (num === 0) return "0 B";
-		const units = [
-			"B",
-			"KB",
-			"MB",
-			"GB",
-			"TB",
-			"PB",
-			"EB",
-			"ZB",
-			"YB"
-		];
-		const exponent = Math.min(Math.floor(Math.log(num) / Math.log(1024)), units.length - 1);
-		const value = Number(num / 1024 ** exponent);
-		const unit = units[exponent];
-		return `${value >= 10 || value % 1 === 0 ? Math.round(value) : value.toFixed(1)} ${unit}`;
-	};
-}));
-//#endregion
-//#region node_modules/.pnpm/wildcard@1.1.2/node_modules/wildcard/index.js
-var require_wildcard = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	/**
-	# wildcard
-	
-	Very simple wildcard matching, which is designed to provide the same
-	functionality that is found in the
-	[eve](https://github.com/adobe-webplatform/eve) eventing library.
-	
-	## Usage
-	
-	It works with strings:
-	
-	<<< examples/strings.js
-	
-	Arrays:
-	
-	<<< examples/arrays.js
-	
-	Objects (matching against keys):
-	
-	<<< examples/objects.js
-	
-	While the library works in Node, if you are are looking for file-based
-	wildcard matching then you should have a look at:
-	
-	<https://github.com/isaacs/node-glob>
-	**/
-	function WildcardMatcher(text, separator) {
-		this.text = text = text || "";
-		this.hasWild = ~text.indexOf("*");
-		this.separator = separator;
-		this.parts = text.split(separator);
-	}
-	WildcardMatcher.prototype.match = function(input) {
-		var matches = true;
-		var parts = this.parts;
-		var ii;
-		var partsCount = parts.length;
-		var testParts;
-		if (typeof input == "string" || input instanceof String) if (!this.hasWild && this.text != input) matches = false;
-		else {
-			testParts = (input || "").split(this.separator);
-			for (ii = 0; matches && ii < partsCount; ii++) if (parts[ii] === "*") continue;
-			else if (ii < testParts.length) matches = parts[ii] === testParts[ii];
-			else matches = false;
-			matches = matches && testParts;
-		}
-		else if (typeof input.splice == "function") {
-			matches = [];
-			for (ii = input.length; ii--;) if (this.match(input[ii])) matches[matches.length] = input[ii];
-		} else if (typeof input == "object") {
-			matches = {};
-			for (var key in input) if (this.match(key)) matches[key] = input[key];
-		}
-		return matches;
-	};
-	module.exports = function(text, test, separator) {
-		var matcher = new WildcardMatcher(text, separator || /[\/\.]/);
-		if (typeof test != "undefined") return matcher.match(test);
-		return matcher;
-	};
-}));
-//#endregion
-//#region node_modules/.pnpm/mime-match@1.0.2/node_modules/mime-match/index.js
-var require_mime_match = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var wildcard = require_wildcard();
-	var reMimePartSplit = /[\/\+\.]/;
-	/**
-	# mime-match
-	
-	A simple function to checker whether a target mime type matches a mime-type
-	pattern (e.g. image/jpeg matches image/jpeg OR image/*).
-	
-	## Example Usage
-	
-	<<< example.js
-	
-	**/
-	module.exports = function(target, pattern) {
-		function test(pattern) {
-			var result = wildcard(pattern, target, reMimePartSplit);
-			return result && result.length >= 2;
-		}
-		return pattern ? test(pattern.split(";")[0]) : test;
-	};
-}));
-//#endregion
-//#region node_modules/.pnpm/@uppy+core@5.2.0/node_modules/@uppy/core/lib/Restricter.js
-var import_prettierBytes = /* @__PURE__ */ __toESM(require_prettierBytes(), 1);
-var import_mime_match = /* @__PURE__ */ __toESM(require_mime_match(), 1);
-const defaultOptions$2 = {
-	maxFileSize: null,
-	minFileSize: null,
-	maxTotalFileSize: null,
-	maxNumberOfFiles: null,
-	minNumberOfFiles: null,
-	allowedFileTypes: null,
-	requiredMetaFields: []
-};
-var RestrictionError = class extends Error {
-	isUserFacing;
-	file;
-	constructor(message, opts) {
-		super(message);
-		this.isUserFacing = opts?.isUserFacing ?? true;
-		if (opts?.file) this.file = opts.file;
-	}
-	isRestriction = true;
-};
-var Restricter = class {
-	getI18n;
-	getOpts;
-	constructor(getOpts, getI18n) {
-		this.getI18n = getI18n;
-		this.getOpts = () => {
-			const opts = getOpts();
-			if (opts.restrictions?.allowedFileTypes != null && !Array.isArray(opts.restrictions.allowedFileTypes)) throw new TypeError("`restrictions.allowedFileTypes` must be an array");
-			return opts;
-		};
-	}
-	validateAggregateRestrictions(existingFiles, addingFiles) {
-		const { maxTotalFileSize, maxNumberOfFiles } = this.getOpts().restrictions;
-		if (maxNumberOfFiles) {
-			if (existingFiles.filter((f) => !f.isGhost).length + addingFiles.length > maxNumberOfFiles) throw new RestrictionError(`${this.getI18n()("youCanOnlyUploadX", { smart_count: maxNumberOfFiles })}`);
-		}
-		if (maxTotalFileSize) {
-			const totalFilesSize = [...existingFiles, ...addingFiles].reduce((total, f) => total + (f.size ?? 0), 0);
-			if (totalFilesSize > maxTotalFileSize) throw new RestrictionError(this.getI18n()("aggregateExceedsSize", {
-				sizeAllowed: (0, import_prettierBytes.default)(maxTotalFileSize),
-				size: (0, import_prettierBytes.default)(totalFilesSize)
-			}));
-		}
-	}
-	validateSingleFile(file) {
-		const { maxFileSize, minFileSize, allowedFileTypes } = this.getOpts().restrictions;
-		if (allowedFileTypes) {
-			if (!allowedFileTypes.some((type) => {
-				if (type.includes("/")) {
-					if (!file.type) return false;
-					return (0, import_mime_match.default)(file.type.replace(/;.*?$/, ""), type);
-				}
-				if (type[0] === "." && file.extension) return file.extension.toLowerCase() === type.slice(1).toLowerCase();
-				return false;
-			})) {
-				const allowedFileTypesString = allowedFileTypes.join(", ");
-				throw new RestrictionError(this.getI18n()("youCanOnlyUploadFileTypes", { types: allowedFileTypesString }), { file });
-			}
-		}
-		if (maxFileSize && file.size != null && file.size > maxFileSize) throw new RestrictionError(this.getI18n()("exceedsSize", {
-			size: (0, import_prettierBytes.default)(maxFileSize),
-			file: file.name ?? this.getI18n()("unnamed")
-		}), { file });
-		if (minFileSize && file.size != null && file.size < minFileSize) throw new RestrictionError(this.getI18n()("inferiorSize", { size: (0, import_prettierBytes.default)(minFileSize) }), { file });
-	}
-	validate(existingFiles, addingFiles) {
-		addingFiles.forEach((addingFile) => {
-			this.validateSingleFile(addingFile);
-		});
-		this.validateAggregateRestrictions(existingFiles, addingFiles);
-	}
-	validateMinNumberOfFiles(files) {
-		const { minNumberOfFiles } = this.getOpts().restrictions;
-		if (minNumberOfFiles && Object.keys(files).length < minNumberOfFiles) throw new RestrictionError(this.getI18n()("youHaveToAtLeastSelectX", { smart_count: minNumberOfFiles }));
-	}
-	getMissingRequiredMetaFields(file) {
-		const error = new RestrictionError(this.getI18n()("missingRequiredMetaFieldOnFile", { fileName: file.name ?? this.getI18n()("unnamed") }));
-		const { requiredMetaFields } = this.getOpts().restrictions;
-		const missingFields = [];
-		for (const field of requiredMetaFields) if (!Object.hasOwn(file.meta, field) || file.meta[field] === "") missingFields.push(field);
-		return {
-			missingFields,
-			error
-		};
 	}
 };
 //#endregion
@@ -62321,7 +62106,7 @@ var require_namespace_emitter = /* @__PURE__ */ __commonJSMin(((exports, module)
 	};
 }));
 //#endregion
-//#region node_modules/.pnpm/nanoid@5.1.11/node_modules/nanoid/non-secure/index.js
+//#region node_modules/.pnpm/nanoid@5.1.14/node_modules/nanoid/non-secure/index.js
 let urlAlphabet = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
 let nanoid = (size = 21) => {
 	let id = "";
@@ -62403,6 +62188,221 @@ var locale_default$1 = { strings: {
 	unnamed: "Unnamed",
 	pleaseWait: "Please wait"
 } };
+//#endregion
+//#region node_modules/.pnpm/@uppy+core@5.2.0/node_modules/@uppy/core/lib/loggers.js
+const justErrorsLogger = {
+	debug: () => {},
+	warn: () => {},
+	error: (...args) => console.error(`[Uppy] [${getTimeStamp()}]`, ...args)
+};
+const debugLogger = {
+	debug: (...args) => console.debug(`[Uppy] [${getTimeStamp()}]`, ...args),
+	warn: (...args) => console.warn(`[Uppy] [${getTimeStamp()}]`, ...args),
+	error: (...args) => console.error(`[Uppy] [${getTimeStamp()}]`, ...args)
+};
+//#endregion
+//#region node_modules/.pnpm/@transloadit+prettier-bytes@0.3.5/node_modules/@transloadit/prettier-bytes/dist/prettierBytes.js
+var require_prettierBytes = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = function prettierBytes(input) {
+		if (typeof input !== "number" || Number.isNaN(input)) throw new TypeError(`Expected a number, got ${typeof input}`);
+		const neg = input < 0;
+		let num = Math.abs(input);
+		if (neg) num = -num;
+		if (num === 0) return "0 B";
+		const units = [
+			"B",
+			"KB",
+			"MB",
+			"GB",
+			"TB",
+			"PB",
+			"EB",
+			"ZB",
+			"YB"
+		];
+		const exponent = Math.min(Math.floor(Math.log(num) / Math.log(1024)), units.length - 1);
+		const value = Number(num / 1024 ** exponent);
+		const unit = units[exponent];
+		return `${value >= 10 || value % 1 === 0 ? Math.round(value) : value.toFixed(1)} ${unit}`;
+	};
+}));
+//#endregion
+//#region node_modules/.pnpm/wildcard@1.1.2/node_modules/wildcard/index.js
+var require_wildcard = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	# wildcard
+	
+	Very simple wildcard matching, which is designed to provide the same
+	functionality that is found in the
+	[eve](https://github.com/adobe-webplatform/eve) eventing library.
+	
+	## Usage
+	
+	It works with strings:
+	
+	<<< examples/strings.js
+	
+	Arrays:
+	
+	<<< examples/arrays.js
+	
+	Objects (matching against keys):
+	
+	<<< examples/objects.js
+	
+	While the library works in Node, if you are are looking for file-based
+	wildcard matching then you should have a look at:
+	
+	<https://github.com/isaacs/node-glob>
+	**/
+	function WildcardMatcher(text, separator) {
+		this.text = text = text || "";
+		this.hasWild = ~text.indexOf("*");
+		this.separator = separator;
+		this.parts = text.split(separator);
+	}
+	WildcardMatcher.prototype.match = function(input) {
+		var matches = true;
+		var parts = this.parts;
+		var ii;
+		var partsCount = parts.length;
+		var testParts;
+		if (typeof input == "string" || input instanceof String) if (!this.hasWild && this.text != input) matches = false;
+		else {
+			testParts = (input || "").split(this.separator);
+			for (ii = 0; matches && ii < partsCount; ii++) if (parts[ii] === "*") continue;
+			else if (ii < testParts.length) matches = parts[ii] === testParts[ii];
+			else matches = false;
+			matches = matches && testParts;
+		}
+		else if (typeof input.splice == "function") {
+			matches = [];
+			for (ii = input.length; ii--;) if (this.match(input[ii])) matches[matches.length] = input[ii];
+		} else if (typeof input == "object") {
+			matches = {};
+			for (var key in input) if (this.match(key)) matches[key] = input[key];
+		}
+		return matches;
+	};
+	module.exports = function(text, test, separator) {
+		var matcher = new WildcardMatcher(text, separator || /[\/\.]/);
+		if (typeof test != "undefined") return matcher.match(test);
+		return matcher;
+	};
+}));
+//#endregion
+//#region node_modules/.pnpm/mime-match@1.0.2/node_modules/mime-match/index.js
+var require_mime_match = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var wildcard = require_wildcard();
+	var reMimePartSplit = /[\/\+\.]/;
+	/**
+	# mime-match
+	
+	A simple function to checker whether a target mime type matches a mime-type
+	pattern (e.g. image/jpeg matches image/jpeg OR image/*).
+	
+	## Example Usage
+	
+	<<< example.js
+	
+	**/
+	module.exports = function(target, pattern) {
+		function test(pattern) {
+			var result = wildcard(pattern, target, reMimePartSplit);
+			return result && result.length >= 2;
+		}
+		return pattern ? test(pattern.split(";")[0]) : test;
+	};
+}));
+//#endregion
+//#region node_modules/.pnpm/@uppy+core@5.2.0/node_modules/@uppy/core/lib/Restricter.js
+var import_prettierBytes = /* @__PURE__ */ __toESM(require_prettierBytes(), 1);
+var import_mime_match = /* @__PURE__ */ __toESM(require_mime_match(), 1);
+const defaultOptions$2 = {
+	maxFileSize: null,
+	minFileSize: null,
+	maxTotalFileSize: null,
+	maxNumberOfFiles: null,
+	minNumberOfFiles: null,
+	allowedFileTypes: null,
+	requiredMetaFields: []
+};
+var RestrictionError = class extends Error {
+	isUserFacing;
+	file;
+	constructor(message, opts) {
+		super(message);
+		this.isUserFacing = opts?.isUserFacing ?? true;
+		if (opts?.file) this.file = opts.file;
+	}
+	isRestriction = true;
+};
+var Restricter = class {
+	getI18n;
+	getOpts;
+	constructor(getOpts, getI18n) {
+		this.getI18n = getI18n;
+		this.getOpts = () => {
+			const opts = getOpts();
+			if (opts.restrictions?.allowedFileTypes != null && !Array.isArray(opts.restrictions.allowedFileTypes)) throw new TypeError("`restrictions.allowedFileTypes` must be an array");
+			return opts;
+		};
+	}
+	validateAggregateRestrictions(existingFiles, addingFiles) {
+		const { maxTotalFileSize, maxNumberOfFiles } = this.getOpts().restrictions;
+		if (maxNumberOfFiles) {
+			if (existingFiles.filter((f) => !f.isGhost).length + addingFiles.length > maxNumberOfFiles) throw new RestrictionError(`${this.getI18n()("youCanOnlyUploadX", { smart_count: maxNumberOfFiles })}`);
+		}
+		if (maxTotalFileSize) {
+			const totalFilesSize = [...existingFiles, ...addingFiles].reduce((total, f) => total + (f.size ?? 0), 0);
+			if (totalFilesSize > maxTotalFileSize) throw new RestrictionError(this.getI18n()("aggregateExceedsSize", {
+				sizeAllowed: (0, import_prettierBytes.default)(maxTotalFileSize),
+				size: (0, import_prettierBytes.default)(totalFilesSize)
+			}));
+		}
+	}
+	validateSingleFile(file) {
+		const { maxFileSize, minFileSize, allowedFileTypes } = this.getOpts().restrictions;
+		if (allowedFileTypes) {
+			if (!allowedFileTypes.some((type) => {
+				if (type.includes("/")) {
+					if (!file.type) return false;
+					return (0, import_mime_match.default)(file.type.replace(/;.*?$/, ""), type);
+				}
+				if (type[0] === "." && file.extension) return file.extension.toLowerCase() === type.slice(1).toLowerCase();
+				return false;
+			})) {
+				const allowedFileTypesString = allowedFileTypes.join(", ");
+				throw new RestrictionError(this.getI18n()("youCanOnlyUploadFileTypes", { types: allowedFileTypesString }), { file });
+			}
+		}
+		if (maxFileSize && file.size != null && file.size > maxFileSize) throw new RestrictionError(this.getI18n()("exceedsSize", {
+			size: (0, import_prettierBytes.default)(maxFileSize),
+			file: file.name ?? this.getI18n()("unnamed")
+		}), { file });
+		if (minFileSize && file.size != null && file.size < minFileSize) throw new RestrictionError(this.getI18n()("inferiorSize", { size: (0, import_prettierBytes.default)(minFileSize) }), { file });
+	}
+	validate(existingFiles, addingFiles) {
+		addingFiles.forEach((addingFile) => {
+			this.validateSingleFile(addingFile);
+		});
+		this.validateAggregateRestrictions(existingFiles, addingFiles);
+	}
+	validateMinNumberOfFiles(files) {
+		const { minNumberOfFiles } = this.getOpts().restrictions;
+		if (minNumberOfFiles && Object.keys(files).length < minNumberOfFiles) throw new RestrictionError(this.getI18n()("youHaveToAtLeastSelectX", { smart_count: minNumberOfFiles }));
+	}
+	getMissingRequiredMetaFields(file) {
+		const error = new RestrictionError(this.getI18n()("missingRequiredMetaFieldOnFile", { fileName: file.name ?? this.getI18n()("unnamed") }));
+		const { requiredMetaFields } = this.getOpts().restrictions;
+		const missingFields = [];
+		for (const field of requiredMetaFields) if (!Object.hasOwn(file.meta, field) || file.meta[field] === "") missingFields.push(field);
+		return {
+			missingFields,
+			error
+		};
+	}
+};
 //#endregion
 //#region node_modules/.pnpm/@uppy+core@5.2.0/node_modules/@uppy/core/lib/supportsUploadProgress.js
 function supportsUploadProgress(userAgent) {
@@ -79397,11 +79397,16 @@ async function uploadPath(pinner, inputPath) {
 	const stat = fs$1.statSync(inputPath);
 	if (stat.isFile()) {
 		const file = new File$1([fs$1.readFileSync(inputPath)], path.basename(inputPath));
-		return (await pinner.uploadAndWait(file, { name: path.basename(inputPath) })).cid;
+		const result = await pinner.uploadAndWait(file, { name: path.basename(inputPath) });
+		if (!result.cid) throw new Error("Upload completed but CID is not available");
+		return result.cid;
 	}
 	if (stat.isDirectory()) {
 		const files = readDirAsFiles(inputPath);
-		return (await (await pinner.uploadDirectory(files, { name: path.basename(inputPath) })).result).cid;
+		const result = await (await pinner.uploadDirectory(files, { name: path.basename(inputPath) })).result;
+		const settled = await pinner.waitForOperation(result);
+		if (!settled.cid) throw new Error("Upload completed but CID is not available");
+		return settled.cid;
 	}
 	throw new Error(`Path is neither a file nor directory: ${inputPath}`);
 }
