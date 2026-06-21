@@ -38,6 +38,9 @@ export async function uploadPath(
     const result: UploadResult = await pinner.uploadAndWait(file, {
       name: path.basename(inputPath)
     })
+    if (!result.cid) {
+      throw new Error('Upload completed but CID is not available')
+    }
     return result.cid
   }
 
@@ -47,7 +50,11 @@ export async function uploadPath(
       name: path.basename(inputPath)
     })
     const result: UploadResult = await operation.result
-    return result.cid
+    const settled = await pinner.waitForOperation(result)
+    if (!settled.cid) {
+      throw new Error('Upload completed but CID is not available')
+    }
+    return settled.cid
   }
 
   throw new Error(`Path is neither a file nor directory: ${inputPath}`)
