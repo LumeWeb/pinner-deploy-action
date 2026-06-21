@@ -55,6 +55,12 @@ function createMockPinner() {
         operationId: 'op-1'
       })
     }),
+    waitForOperation: vi.fn().mockResolvedValue({
+      cid: 'QmTestCID',
+      name: 'test',
+      size: 1024,
+      operationId: 'op-1'
+    }),
     pinByHash: vi.fn(),
     ipns: {
       publish: vi.fn().mockResolvedValue({ name: 'k51qzi5qu...test' }),
@@ -133,6 +139,86 @@ describe('pinner wrapper', () => {
       const cid = await uploadPath(mockPinner as any, '/path/to/dir')
       expect(cid).toBe('QmTestCID')
       expect(mockPinner.uploadDirectory).toHaveBeenCalled()
+    })
+
+    it('should call waitForOperation after directory upload before returning CID', async () => {
+      mockStatSync.mockReturnValue({
+        isFile: () => false,
+        isDirectory: () => true
+      })
+      mockReaddirSync.mockReturnValue([
+        { name: 'index.html', isFile: () => true, isDirectory: () => false }
+      ])
+      mockReadFileSync.mockReturnValue(Buffer.from('<html>test</html>'))
+
+      mockPinner.uploadDirectory.mockReturnValue({
+        result: Promise.resolve({
+          cid: 'QmDirCID',
+          name: 'dir',
+          size: 2048,
+          operationId: 'op-2'
+        })
+      })
+      mockPinner.waitForOperation.mockResolvedValue({
+        cid: 'QmDirCID',
+        name: 'dir',
+        size: 2048,
+        operationId: 'op-2'
+      })
+
+      const cid = await uploadPath(mockPinner as any, '/path/to/dir')
+      expect(cid).toBe('QmDirCID')
+      expect(mockPinner.waitForOperation).toHaveBeenCalledWith(
+        expect.objectContaining({ cid: 'QmDirCID', operationId: 'op-2' })
+      )
+    })
+
+    it('should throw if waitForOperation returns a result without a CID', async () => {
+      mockStatSync.mockReturnValue({
+        isFile: () => false,
+        isDirectory: () => true
+      })
+      mockReaddirSync.mockReturnValue([
+        { name: 'index.html', isFile: () => true, isDirectory: () => false }
+      ])
+      mockReadFileSync.mockReturnValue(Buffer.from('<html>test</html>'))
+
+      mockPinner.uploadDirectory.mockReturnValue({
+        result: Promise.resolve({
+          cid: 'QmDirCID',
+          name: 'dir',
+          size: 2048,
+          operationId: 'op-3'
+        })
+      })
+      mockPinner.waitForOperation.mockResolvedValue({
+        cid: undefined,
+        name: 'dir',
+        size: 2048,
+        operationId: 'op-3'
+      })
+
+      await expect(
+        uploadPath(mockPinner as any, '/path/to/dir')
+      ).rejects.toThrow('CID is not available')
+    })
+
+    it('should throw if file upload result has no CID', async () => {
+      mockStatSync.mockReturnValue({
+        isFile: () => true,
+        isDirectory: () => false
+      })
+      mockReadFileSync.mockReturnValue(Buffer.from('test'))
+      mockPinner.uploadAndWait.mockResolvedValue({
+        cid: undefined,
+        name: 'test',
+        size: 1024,
+        operationId: 'op-4'
+      })
+
+      await expect(
+        uploadPath(mockPinner as any, '/path/to/file.txt')
+      ).rejects.toThrow('CID is not available')
     })
 
     it('should throw for non-file non-directory paths', async () => {
