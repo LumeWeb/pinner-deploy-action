@@ -16336,12 +16336,12 @@ function info(message) {
 	process.stdout.write(message + os$2.EOL);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/types/mime-types.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/types/mime-types.js
 const MIME_TYPE_CAR = "application/vnd.ipld.car";
 const MIME_TYPE_OCTET_STREAM = "application/octet-stream";
 const FILE_EXTENSION_CAR = ".car";
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/utils/env.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/utils/env.js
 /**
 * Check if the current environment is Node.js.
 */
@@ -16350,7 +16350,7 @@ function isNodeEnvironment$1() {
 }
 var init_env = __esmMin((() => {}));
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/utils/stream.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/utils/stream.js
 var stream_exports = /* @__PURE__ */ __exportAll({
 	asyncGeneratorToReadableStream: () => asyncGeneratorToReadableStream,
 	calculateStreamSize: () => calculateStreamSize,
@@ -16492,7 +16492,7 @@ var init_stream = __esmMin((() => {
 	init_env();
 }));
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/types/constants.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/types/constants.js
 init_stream();
 /**
 * Default API endpoint URL for the pinning service.
@@ -20158,7 +20158,7 @@ var init_fs_lite = __esmMin((() => {
 	});
 }));
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/blockstore/unstorage.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/blockstore/unstorage.js
 function isBrowser() {
 	return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 }
@@ -61011,7 +61011,7 @@ function unixfs(helia) {
 	return new UnixFS(helia);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/car.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/car.js
 init_stream();
 let helia = null;
 let blockstore = null;
@@ -61127,7 +61127,7 @@ async function destroyCarPreprocessor() {
 	await cleanupHelia();
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/errors/index.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/errors/index.js
 var PinnerError = class extends Error {
 	constructor(code, message, retryable, cause) {
 		super(message);
@@ -61196,7 +61196,7 @@ var NotFoundError = class extends PinError {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/types/upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/types/upload.js
 /**
 * Symbol used to brand UploadResult for type checking
 */
@@ -61209,11 +61209,11 @@ function isUploadResult(value) {
 	return typeof value === "object" && value !== null && UploadResultSymbol in value && value[UploadResultSymbol] === true;
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/constants.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/constants.js
 const UPLOAD_SOURCE_XHR = "xhr-upload";
 const UPLOAD_SOURCE_TUS = "tus-upload";
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/normalize.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/normalize.js
 function normalizeUploadInput(input, options) {
 	if (input instanceof File) return {
 		data: input,
@@ -64129,7 +64129,7 @@ var Uppy = class Uppy {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/base-upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/base-upload.js
 init_env();
 init_stream();
 var BaseUploadHandler = class {
@@ -66236,7 +66236,7 @@ var XHRUpload = class extends BasePlugin {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/xhr-upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/xhr-upload.js
 var XHRUploadHandler = class extends BaseUploadHandler {
 	async configurePlugin(uppy) {
 		uppy.use(XHRUpload, {
@@ -76067,7 +76067,7 @@ var Tus = class extends BasePlugin {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/tus-upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/tus-upload.js
 var TUSUploadHandler = class extends BaseUploadHandler {
 	constructor(config, auth) {
 		super(config, auth);
@@ -77008,7 +77008,7 @@ var Sdk = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/manager.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/manager.js
 init_stream();
 /**
 * Handles file uploads via XHR or TUS protocol based on file size.
@@ -77027,12 +77027,12 @@ var UploadManager = class {
 	* @param config SDK configuration
 	* @param auth AuthManager for authentication
 	*/
-	constructor(config, auth) {
+	constructor(config, auth, sdk) {
 		this.config = config;
 		this.auth = auth;
 		this.xhrHandler = new XHRUploadHandler(config, auth);
 		this.tusHandler = new TUSUploadHandler(config, auth);
-		this.portalSdk = new Sdk(config.endpoint || "https://ipfs.pinner.xyz");
+		this.portalSdk = sdk;
 		configureCar({
 			datastoreName: config.datastoreName,
 			datastore: config.datastore
@@ -77328,7 +77328,7 @@ var UploadManager = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/api/client.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/api/client.js
 /**
 * Shared base class for API clients that use ky with Bearer auth.
 *
@@ -77376,7 +77376,7 @@ var ApiClient = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/api/ipns.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/api/ipns.js
 /**
 * Client for managing IPNS keys and publishing content to IPNS names.
 */
@@ -77474,7 +77474,7 @@ let createNanoEvents = () => ({
 	}
 });
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/api/websites.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/api/websites.js
 const SSLStatus = {
 	PENDING: "pending",
 	VALIDATING: "validating",
@@ -77659,7 +77659,30 @@ var SSLWatcherImpl = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/error.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/config.js
+const DEFAULT_CONFIG = {
+	endpoint: DEFAULT_ENDPOINT,
+	gateway: DEFAULT_GATEWAY,
+	timeout: 12e4,
+	retries: 3
+};
+/**
+* Derive the account API endpoint from a pinner endpoint.
+*
+* The portal-sdk AccountApi constructor prepends "account." to the hostname.
+* We strip the first subdomain (e.g. ipfs.pinner.xyz → pinner.xyz) so
+* AccountApi produces account.pinner.xyz, not account.ipfs.pinner.xyz.
+* Port and path are preserved.
+*/
+function deriveAccountEndpoint(endpoint) {
+	const url = new URL(endpoint);
+	const parts = url.hostname.split(".");
+	if (parts.length > 2) parts.shift();
+	url.hostname = parts.join(".");
+	return url.toString();
+}
+//#endregion
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/error.js
 /**
 * Error wrapper for encoder operations.
 */
@@ -77674,7 +77697,7 @@ var EncoderError = class extends Error {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/json.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/json.js
 /**
 * JSON encoder - converts JSON objects to File objects.
 */
@@ -77704,7 +77727,7 @@ async function jsonToFile(data, options) {
 	return new JsonEncoder().encode(data, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/base64.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/base64.js
 /**
 * Base64 encoder - converts base64 strings to File objects.
 */
@@ -77736,7 +77759,7 @@ async function base64ToFile(base64String, options) {
 	return new Base64Encoder().encode(base64String, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/url.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/url.js
 /**
 * URL encoder - fetches content from URLs and converts to File objects.
 */
@@ -77766,7 +77789,7 @@ async function urlToFile(urlString, options) {
 	return new UrlEncoder().encode(urlString, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/field-formatter.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/field-formatter.js
 /**
 * Escape special regex characters in a string.
 */
@@ -77838,7 +77861,7 @@ var FieldFormatter = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/row-formatter.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/row-formatter.js
 /**
 * Handles formatting of CSV rows including headers and column extraction.
 *
@@ -77992,7 +78015,7 @@ var RowFormatter = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/csv-formatter.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/csv-formatter.js
 /**
 * Simple CSV formatter without streaming support.
 * Converts arrays of objects or arrays to CSV strings.
@@ -78068,7 +78091,7 @@ function createCsvFormatter(options) {
 	return new CsvFormatter(options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/csv.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/csv.js
 /**
 * CSV encoder - converts CSV strings, arrays of objects, or arrays of arrays to File objects.
 * Uses a simplified CSV formatter without streaming support.
@@ -78105,7 +78128,7 @@ async function csvToFile(data, options) {
 	return new CsvEncoder().encode(data, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/encoder/text.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/encoder/text.js
 /**
 * Text encoder - converts text strings to File objects.
 */
@@ -78134,7 +78157,7 @@ async function textToFile(data, options) {
 	return new TextEncoder$1().encode(data, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/utils/validation.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/utils/validation.js
 var import_ipaddr = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	(function(root) {
 		"use strict";
@@ -79146,7 +79169,7 @@ function validateUrl(urlString) {
 	}
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/upload/builder.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/upload/builder.js
 /**
 * Base upload builder with common name/keyvalues functionality.
 */
@@ -79797,7 +79820,7 @@ var Configuration = class extends Configuration$1 {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/pin/client.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/pin/client.js
 var PinClient = class {
 	client = null;
 	config;
@@ -79888,7 +79911,7 @@ var PinClient = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/auth/manager.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/auth/manager.js
 /**
 * Default AuthManager implementation that holds a JWT token.
 *
@@ -79959,7 +79982,7 @@ function jwtDecode(token, options) {
 	}
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/auth/key-exchange.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/auth/key-exchange.js
 /**
 * AuthManager that exchanges an API key JWT for a login JWT when needed.
 *
@@ -79974,16 +79997,9 @@ function jwtDecode(token, options) {
 var KeyExchangeAuthManager = class extends JwtAuthManager {
 	resolvedToken = "";
 	exchangePromise;
-	sdk;
-	constructor(jwt, endpoint) {
+	constructor(jwt, sdk) {
 		super(jwt);
-		const url = new URL(endpoint);
-		const parts = url.hostname.split(".");
-		if (parts.length > 2) {
-			parts.shift();
-			url.hostname = parts.join(".");
-		}
-		this.sdk = new Sdk(url.toString());
+		this.sdk = sdk;
 	}
 	/**
 	* Decode the JWT audience without verification.
@@ -80033,15 +80049,7 @@ var KeyExchangeAuthManager = class extends JwtAuthManager {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/config.js
-const DEFAULT_CONFIG = {
-	endpoint: DEFAULT_ENDPOINT,
-	gateway: DEFAULT_GATEWAY,
-	timeout: 12e4,
-	retries: 3
-};
-//#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.16_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_ea063f3c04137f3bb9e49ca21b4ac5be/node_modules/@lumeweb/pinner/dist/esm/pinner.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.17_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_faf201dd10a684cf43e011692c85a5a4/node_modules/@lumeweb/pinner/dist/esm/pinner.js
 var Pinner = class {
 	uploadManager;
 	_pins;
@@ -80054,9 +80062,9 @@ var Pinner = class {
 	* @param config SDK configuration object
 	*/
 	constructor(config) {
-		const endpoint = config.endpoint ?? DEFAULT_CONFIG.endpoint;
-		this.auth = new KeyExchangeAuthManager(config.jwt, endpoint);
-		this.uploadManager = new UploadManager(config, this.auth);
+		const sdk = new Sdk(deriveAccountEndpoint(config.endpoint ?? DEFAULT_CONFIG.endpoint));
+		this.auth = new KeyExchangeAuthManager(config.jwt, sdk);
+		this.uploadManager = new UploadManager(config, this.auth, sdk);
 		this._pins = new PinClient(config, this.auth);
 		this._ipns = new IpnsClient(config, this.auth);
 		this._websites = new WebsitesClient(config, this.auth);
