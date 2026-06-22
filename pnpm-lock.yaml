@@ -12,8 +12,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1
       '@lumeweb/pinner':
-        specifier: ^0.1.14
-        version: 0.1.14(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.15
+        version: 0.1.15(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.5.0
@@ -484,11 +484,11 @@ packages:
   '@libp2p/utils@7.2.2':
     resolution: {integrity: sha512-EEF/S3nYnR6+Ii0o2XL8RATEb8d+IhPCUNVVZ46u9L0wB+8cxL856pPi5tlzz+vK+Aix0ARGK4tbpROyXQst5Q==}
 
-  '@lumeweb/pinner@0.1.14':
-    resolution: {integrity: sha512-K1MXojg1rJfiQ2GPJ81zmAca/elOpNjVs7WvODZ9GA57L+SNeh+dRuX6dNykck9a21ER95q8Bwes3VUlHLwBzw==}
+  '@lumeweb/pinner@0.1.15':
+    resolution: {integrity: sha512-2mivceBFzju/nIhykhpaSKx2V2GYTzC3+TRe1AYlRGsHOTMphD7y/x7b1t0Tnp71ZJ2xTf3BbyXd8ljm2bZ64w==}
 
-  '@lumeweb/portal-sdk@0.1.6':
-    resolution: {integrity: sha512-fJ3J+thRpGl4YqffXmf2JOAA0nzA4kBcucfqOILP4rnTShhc+MlwRCM7xvAmc9u5aaAdlqDYVZ9MJP6DSlrHpg==}
+  '@lumeweb/portal-sdk@0.1.7':
+    resolution: {integrity: sha512-SkXChaAR96Vy0KvFlLeLn0zx+QeQ35P4Kv0Kgc0IDF+OGhJLnOGPlP1EFF4L8QeGxf8LvHtPE4JSzL646v3eZw==}
 
   '@lumeweb/query-builder@0.1.1':
     resolution: {integrity: sha512-S7HqE+nIHBSm0TNhZx09a8kR3GMkWbaRMYnCC/dB/8Bg9H2UOSZ+em7be2Mo0cFugm7FHWqJZTnZgGyuRlcgNQ==}
@@ -2080,6 +2080,10 @@ packages:
 
   jwt-decode@3.1.2:
     resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+
+  jwt-decode@4.0.0:
+    resolution: {integrity: sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==}
+    engines: {node: '>=18'}
 
   ky@2.0.2:
     resolution: {integrity: sha512-/GmXpo9F9W+f8n4Ivr2iH+7h7wL7jLbLKWkMlpflcCRb6kGjBfTlASEXaZ9qUgNTn4VgS0P2pwxxzQ4EM6Ulgg==}
@@ -3867,14 +3871,14 @@ snapshots:
       uint8arraylist: 2.4.9
       uint8arrays: 6.1.1
 
-  '@lumeweb/pinner@0.1.14(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@lumeweb/pinner@0.1.15(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@helia/car': 5.4.2
       '@helia/http': 3.1.4
       '@helia/unixfs': 7.2.1
       '@ipfs-shipyard/pinning-service-client': 3.0.0
       '@ipld/car': 5.4.6
-      '@lumeweb/portal-sdk': 0.1.6(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@lumeweb/portal-sdk': 0.1.7(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/query-builder': 0.1.1(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/uppy-post-upload': 0.1.2(@uppy/core@5.2.0)
       '@uppy/core': 5.2.0
@@ -3887,6 +3891,7 @@ snapshots:
       interface-datastore: 10.0.1
       interface-store: 8.0.0
       ipaddr.js: 2.4.0
+      jwt-decode: 4.0.0
       ky: 2.0.2
       multiformats: 14.0.0
       nanoevents: 9.1.0
@@ -3921,7 +3926,7 @@ snapshots:
       - supports-color
       - uploadthing
 
-  '@lumeweb/portal-sdk@0.1.6(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@lumeweb/portal-sdk@0.1.7(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@lumeweb/query-builder': 0.1.1(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
@@ -5457,6 +5462,8 @@ snapshots:
   json5@2.2.3: {}
 
   jwt-decode@3.1.2: {}
+
+  jwt-decode@4.0.0: {}
 
   ky@2.0.2: {}
 
