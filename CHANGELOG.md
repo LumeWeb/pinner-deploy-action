@@ -1,3 +1,10 @@
+## 0.1.11 (2026-06-22)
+
+### Fixes
+
+- bump @lumeweb/pinner to ^0.1.14
+- bump @lumeweb/pinner to ^0.1.14
+
 ## 0.1.10 (2026-06-21)
 
 ### Fixes
