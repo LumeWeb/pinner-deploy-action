@@ -12,8 +12,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1
       '@lumeweb/pinner':
-        specifier: ^0.1.13
-        version: 0.1.13(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^0.1.14
+        version: 0.1.14(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.5.0
@@ -484,11 +484,11 @@ packages:
   '@libp2p/utils@7.2.2':
     resolution: {integrity: sha512-EEF/S3nYnR6+Ii0o2XL8RATEb8d+IhPCUNVVZ46u9L0wB+8cxL856pPi5tlzz+vK+Aix0ARGK4tbpROyXQst5Q==}
 
-  '@lumeweb/pinner@0.1.13':
-    resolution: {integrity: sha512-5zKaSsRgz2wLyHQFKonK6Fwc1dleBgAO+jVaUPtKiWqcMPdckwiXaaNgk5ys+pKrOnWZSIt1ZhORaFgNzPvegQ==}
+  '@lumeweb/pinner@0.1.14':
+    resolution: {integrity: sha512-K1MXojg1rJfiQ2GPJ81zmAca/elOpNjVs7WvODZ9GA57L+SNeh+dRuX6dNykck9a21ER95q8Bwes3VUlHLwBzw==}
 
-  '@lumeweb/portal-sdk@0.1.5':
-    resolution: {integrity: sha512-gQJgQ6a3rJ6Zwz1Xal75Y+JDr30EH49eet/kTLkd2Lnpnw7IBBwnDKAMP/paCS2IkMy7+6rVw40ysl3VjugRAw==}
+  '@lumeweb/portal-sdk@0.1.6':
+    resolution: {integrity: sha512-fJ3J+thRpGl4YqffXmf2JOAA0nzA4kBcucfqOILP4rnTShhc+MlwRCM7xvAmc9u5aaAdlqDYVZ9MJP6DSlrHpg==}
 
   '@lumeweb/query-builder@0.1.1':
     resolution: {integrity: sha512-S7HqE+nIHBSm0TNhZx09a8kR3GMkWbaRMYnCC/dB/8Bg9H2UOSZ+em7be2Mo0cFugm7FHWqJZTnZgGyuRlcgNQ==}
@@ -1508,8 +1508,11 @@ packages:
   blockstore-core@6.1.3:
     resolution: {integrity: sha512-GLb6XpvbWOlrz1Liz8lTH8iZoXfJ7otY02i26Ok1q6lDkr9uN3jcZq8GzhNq76jJ7CkFG/EGP8J75F3MFo7v6A==}
 
-  blockstore-idb@3.0.2:
-    resolution: {integrity: sha512-j8yyPj8PQPhws9bcO8jUnwNIJqLrgPm4J+0ZXhXso7vCwMxH/IaxL0MtqM4kN7MoPQbw6YP6Tg+Ti7iCW2BgRA==}
+  blockstore-core@7.0.1:
+    resolution: {integrity: sha512-HgLzdH8oL6DrMC6J7snxmV0TXzJ/BMPSbskH4v7BBuUO9foDBOMEKUfoMX9yoBpxbH+r3Z9afXHDgXlTifMxHQ==}
+
+  blockstore-idb@4.0.1:
+    resolution: {integrity: sha512-ZfqKiJZ7wCokOrWsKtGULypIEYH+58mS/jvLk43wDMMjvNxAUPobzblzGtf+uDEE3qpYELTqjeBbS+5YCGUwFA==}
 
   bottleneck@2.19.5:
     resolution: {integrity: sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==}
@@ -1651,8 +1654,11 @@ packages:
   datastore-core@11.0.4:
     resolution: {integrity: sha512-k755ayqP66Q8NuzvVKTZiaTgcTJU1/EMmQAQ0OtZNA13JX1pFw+aCu42Db6/Q7LuyJUcBtqAJdfOjM7zA8/8Lw==}
 
-  datastore-idb@4.0.3:
-    resolution: {integrity: sha512-Lrv7ysbz5B64hjTgHu0TgNXByRNQIvkRs/ESyCjF8VpOSB4bo2UKDxyl4j/uYsdWBQJtj8bnIVr7X2mE633gyQ==}
+  datastore-core@12.0.1:
+    resolution: {integrity: sha512-pfgIE5LG0Z5oyc6TxiLaF/0j4Gh1Yrs2+Ck/qssf9Oxw4s4YKC3zpqifuzThnKakAFWONr/vRv+66Koc0yJvyA==}
+
+  datastore-idb@5.0.1:
+    resolution: {integrity: sha512-HyipOcFzltZVhdGRmihsmhflQn0uHb46RgnzB5rB9MHfn5PiyBZTJvvucClHFVaMRClvw6HlYcwQ21fz3duoug==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -1877,8 +1883,8 @@ packages:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
 
-  idb-keyval@6.2.4:
-    resolution: {integrity: sha512-D/NzHWUmYJGXi++z67aMSrnisb9A3621CyRK5G89JyTlN13C8xf0g04DLxUKMufPem3e3L2JAXR6Z00OWy183Q==}
+  idb-keyval@6.2.5:
+    resolution: {integrity: sha512-eKQkTnS0relYsSOYomx8ozIbmdsQCKUdhyuIaQ2DZgKuaxtyQQMkyD/wlnQN32pO3yutN1b1L8uqwcDKaJd7/Q==}
 
   idb@8.0.3:
     resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
@@ -1892,11 +1898,20 @@ packages:
   interface-blockstore@6.0.2:
     resolution: {integrity: sha512-Z8LscLfuNWYatKVgaEXK8su+wY6iEEcCXYQiwXf20XVuMvR/zyFa6A0s36epfw8CvUrIv+bXT+FZ2hMEfUCmJw==}
 
+  interface-blockstore@7.0.1:
+    resolution: {integrity: sha512-a3NsgRXpRppVWtQnJjmZ9jxvjcttY1+WNWqHFWwgKhRcNMMGwWGtFNYpQmcZ+mEnIt5NTJVYzNwLCcALMWPNsA==}
+
+  interface-datastore@10.0.1:
+    resolution: {integrity: sha512-DYMj/Og5Cz1Qwkx6/x5KRvR8SYEX7rVAv3KKCm2NzTwWSfpNAC4PahjcYbHyoZBP6zPWrhQv5n5wE+vaDdgSAg==}
+
   interface-datastore@9.0.3:
     resolution: {integrity: sha512-NLZa7Mp+0qn48nSwIY/C36da4uVIKzwG2tuEIpaSJArsuB2RrdyDWwkoDUyjsJ+VrMntXz38VSk9vXTx/ZUpAw==}
 
   interface-store@7.0.2:
     resolution: {integrity: sha512-KYOPcDH+1peaPhSeoZujR5nwkVeola1EdrnrlHTIM0HRNUs9B0aTsUQMH5kTmIjaQq1BOowoUyoCamgL8IMyww==}
+
+  interface-store@8.0.0:
+    resolution: {integrity: sha512-e2+s3EEROzM+Wlas4hU3zveTUscvVMf1BOvdsJfpzFm19SoEXLVadpACjWOnM491HqGpvtfFnevyiaN8W+I6Eg==}
 
   ip-regex@5.0.0:
     resolution: {integrity: sha512-fOCG6lhoKKakwv+C6KdsOnGvgXnmgfmp0myi3bcNwj3qfwPAxRKWEuFhvEFF7ceYIz6+1jRZ+yguLFAmUNPEfw==}
@@ -2042,6 +2057,9 @@ packages:
 
   it-to-buffer@4.0.12:
     resolution: {integrity: sha512-spgKdZMsY2+d8hJbdbUyPdCArXdz0yJUqY3eXOFUzzgdDV0wk/lWIj4u2HGJhF3jLUun5p7nmPCqGzZGA0WVfw==}
+
+  it-to-buffer@5.0.0:
+    resolution: {integrity: sha512-DyinWj+79wxFDQNiPZcmV8Fz2PJFOcM3KRRN4GiZiIdEfxO11cCkrZJMfUMrxryy+rLoNhAfh1bpoVUFHPR6pQ==}
 
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
@@ -3849,33 +3867,33 @@ snapshots:
       uint8arraylist: 2.4.9
       uint8arrays: 6.1.1
 
-  '@lumeweb/pinner@0.1.13(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@lumeweb/pinner@0.1.14(@azure/storage-blob@12.31.0)(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@helia/car': 5.4.2
       '@helia/http': 3.1.4
       '@helia/unixfs': 7.2.1
       '@ipfs-shipyard/pinning-service-client': 3.0.0
       '@ipld/car': 5.4.6
-      '@lumeweb/portal-sdk': 0.1.5(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@lumeweb/portal-sdk': 0.1.6(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/query-builder': 0.1.1(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/uppy-post-upload': 0.1.2(@uppy/core@5.2.0)
       '@uppy/core': 5.2.0
       '@uppy/tus': 5.1.1(@uppy/core@5.2.0)
-      blockstore-core: 6.1.3
-      blockstore-idb: 3.0.2
-      datastore-idb: 4.0.3
-      idb-keyval: 6.2.4
-      interface-blockstore: 6.0.2
-      interface-datastore: 9.0.3
-      interface-store: 7.0.2
+      blockstore-core: 7.0.1
+      blockstore-idb: 4.0.1
+      datastore-idb: 5.0.1
+      idb-keyval: 6.2.5
+      interface-blockstore: 7.0.1
+      interface-datastore: 10.0.1
+      interface-store: 8.0.0
       ipaddr.js: 2.4.0
       ky: 2.0.2
-      multiformats: 13.4.2
+      multiformats: 14.0.0
       nanoevents: 9.1.0
       p-defer: 4.0.1
       progress-events: 1.1.0
       tus-js-client: 4.3.1
-      unstorage: 1.17.5(@azure/storage-blob@12.31.0)(idb-keyval@6.2.4)
+      unstorage: 1.17.5(@azure/storage-blob@12.31.0)(idb-keyval@6.2.5)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -3903,7 +3921,7 @@ snapshots:
       - supports-color
       - uploadthing
 
-  '@lumeweb/portal-sdk@0.1.5(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@lumeweb/portal-sdk@0.1.6(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@lumeweb/query-builder': 0.1.1(@tanstack/react-query@5.100.14(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
@@ -4764,15 +4782,27 @@ snapshots:
       it-merge: 3.0.14
       multiformats: 13.4.2
 
-  blockstore-idb@3.0.2:
+  blockstore-core@7.0.1:
     dependencies:
-      blockstore-core: 6.1.3
-      idb: 8.0.3
-      interface-blockstore: 6.0.2
-      interface-store: 7.0.2
+      '@libp2p/logger': 6.2.8
+      abort-error: 1.0.2
+      interface-blockstore: 7.0.1
+      interface-store: 8.0.0
       it-all: 3.0.11
-      it-to-buffer: 4.0.12
-      multiformats: 13.4.2
+      it-filter: 3.1.6
+      it-merge: 3.0.14
+      multiformats: 14.0.0
+
+  blockstore-idb@4.0.1:
+    dependencies:
+      abort-error: 1.0.2
+      blockstore-core: 7.0.1
+      idb: 8.0.3
+      interface-blockstore: 7.0.1
+      interface-store: 8.0.0
+      it-all: 3.0.11
+      it-to-buffer: 5.0.0
+      multiformats: 14.0.0
       race-signal: 2.0.0
 
   bottleneck@2.19.5: {}
@@ -4913,12 +4943,27 @@ snapshots:
       it-sort: 3.0.11
       it-take: 3.0.11
 
-  datastore-idb@4.0.3:
+  datastore-core@12.0.1:
     dependencies:
-      datastore-core: 11.0.4
+      '@libp2p/logger': 6.2.8
+      abort-error: 1.0.2
+      interface-datastore: 10.0.1
+      interface-store: 8.0.0
+      it-drain: 3.0.12
+      it-filter: 3.1.6
+      it-map: 3.1.6
+      it-merge: 3.0.14
+      it-pipe: 3.0.1
+      it-sort: 3.0.11
+      it-take: 3.0.11
+
+  datastore-idb@5.0.1:
+    dependencies:
+      abort-error: 1.0.2
+      datastore-core: 12.0.1
       idb: 8.0.3
-      interface-datastore: 9.0.3
-      interface-store: 7.0.2
+      interface-datastore: 10.0.1
+      interface-store: 8.0.0
       it-filter: 3.1.6
       it-sort: 3.0.11
       race-signal: 2.0.0
@@ -5167,7 +5212,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  idb-keyval@6.2.4: {}
+  idb-keyval@6.2.5: {}
 
   idb@8.0.3: {}
 
@@ -5180,12 +5225,27 @@ snapshots:
       interface-store: 7.0.2
       multiformats: 13.4.2
 
+  interface-blockstore@7.0.1:
+    dependencies:
+      interface-store: 8.0.0
+      multiformats: 14.0.0
+
+  interface-datastore@10.0.1:
+    dependencies:
+      abort-error: 1.0.2
+      interface-store: 8.0.0
+      uint8arrays: 6.1.1
+
   interface-datastore@9.0.3:
     dependencies:
       interface-store: 7.0.2
       uint8arrays: 5.1.1
 
   interface-store@7.0.2: {}
+
+  interface-store@8.0.0:
+    dependencies:
+      abort-error: 1.0.2
 
   ip-regex@5.0.0: {}
 
@@ -5377,6 +5437,10 @@ snapshots:
   it-to-buffer@4.0.12:
     dependencies:
       uint8arrays: 5.1.1
+
+  it-to-buffer@5.0.0:
+    dependencies:
+      uint8arrays: 6.1.1
 
   jackspeak@3.4.3:
     dependencies:
@@ -6177,7 +6241,7 @@ snapshots:
 
   unlimited-timeout@0.1.0: {}
 
-  unstorage@1.17.5(@azure/storage-blob@12.31.0)(idb-keyval@6.2.4):
+  unstorage@1.17.5(@azure/storage-blob@12.31.0)(idb-keyval@6.2.5):
     dependencies:
       anymatch: 3.1.3
       chokidar: 5.0.0
@@ -6189,7 +6253,7 @@ snapshots:
       ufo: 1.6.4
     optionalDependencies:
       '@azure/storage-blob': 12.31.0
-      idb-keyval: 6.2.4
+      idb-keyval: 6.2.5
 
   until-async@3.0.2: {}
 
