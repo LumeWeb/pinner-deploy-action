@@ -16336,12 +16336,12 @@ function info(message) {
 	process.stdout.write(message + os$2.EOL);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/types/mime-types.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/types/mime-types.js
 const MIME_TYPE_CAR = "application/vnd.ipld.car";
 const MIME_TYPE_OCTET_STREAM = "application/octet-stream";
 const FILE_EXTENSION_CAR = ".car";
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/utils/env.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/utils/env.js
 /**
 * Check if the current environment is Node.js.
 */
@@ -16350,7 +16350,7 @@ function isNodeEnvironment$1() {
 }
 var init_env = __esmMin((() => {}));
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/utils/stream.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/utils/stream.js
 var stream_exports = /* @__PURE__ */ __exportAll({
 	asyncGeneratorToReadableStream: () => asyncGeneratorToReadableStream,
 	calculateStreamSize: () => calculateStreamSize,
@@ -16492,7 +16492,7 @@ var init_stream = __esmMin((() => {
 	init_env();
 }));
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/types/constants.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/types/constants.js
 init_stream();
 /**
 * Default TUS upload size threshold (100MB).
@@ -16500,8 +16500,8 @@ init_stream();
 */
 const TUS_SIZE_THRESHOLD = 100 * 1024 * 1024;
 //#endregion
-//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/base.js
-var BaseBlockstore = class {
+//#region node_modules/.pnpm/blockstore-core@7.0.1/node_modules/blockstore-core/dist/src/base.js
+var BaseBlockstore$1 = class {
 	has(key, options) {
 		return Promise.reject(/* @__PURE__ */ new Error(".has is not implemented"));
 	}
@@ -16537,23 +16537,6 @@ var BaseBlockstore = class {
 	*/
 	async *getAll(options) {
 		throw new Error(".getAll is not implemented");
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/interface-store@7.0.2/node_modules/interface-store/dist/src/errors.js
-var NotFoundError$3 = class NotFoundError$3 extends Error {
-	static name = "NotFoundError";
-	name = NotFoundError$3.name;
-	/**
-	* @deprecated use `.name` instead - this will be removed in a future release
-	*/
-	static code = "ERR_NOT_FOUND";
-	/**
-	* @deprecated use `.name` instead - this will be removed in a future release
-	*/
-	code = NotFoundError$3.code;
-	constructor(message = "Not Found") {
-		super(message);
 	}
 };
 //#endregion
@@ -16604,17 +16587,26 @@ function all(source) {
 	return arr;
 }
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bytes.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bytes.js
 function equals$5(aa, bb) {
 	if (aa === bb) return true;
 	if (aa.byteLength !== bb.byteLength) return false;
 	for (let ii = 0; ii < aa.byteLength; ii++) if (aa[ii] !== bb[ii]) return false;
 	return true;
 }
+/**
+* Normalize binary input to a plain `Uint8Array` backed by an `ArrayBuffer`.
+*
+* Returns the input itself when it is already a plain `Uint8Array` over an
+* `ArrayBuffer`, otherwise a fresh view (or, for `SharedArrayBuffer`-backed
+* input, a copy) over the same bytes.
+*
+* Throws if input is not a recognised binary type.
+*/
 function coerce$1(o) {
-	if (o instanceof Uint8Array && o.constructor.name === "Uint8Array") return o;
+	if (o instanceof Uint8Array && o.constructor.name === "Uint8Array") return toArrayBufferBackedArray(o);
 	if (o instanceof ArrayBuffer) return new Uint8Array(o);
-	if (ArrayBuffer.isView(o)) return new Uint8Array(o.buffer, o.byteOffset, o.byteLength);
+	if (ArrayBuffer.isView(o)) return toArrayBufferBackedArray(new Uint8Array(o.buffer, o.byteOffset, o.byteLength));
 	throw new Error("Unknown type, must be binary type");
 }
 function fromString$4(str) {
@@ -16623,8 +16615,19 @@ function fromString$4(str) {
 function toString$4(b) {
 	return new TextDecoder().decode(b);
 }
+function isByteArrayWithArrayBuffer(b) {
+	return b?.buffer instanceof ArrayBuffer;
+}
+/**
+* Ensures `b` is backed by an ArrayBuffer - if not a new Uint8Array will be
+* created and the contents of `b` copied into it.
+*/
+function toArrayBufferBackedArray(b) {
+	if (isByteArrayWithArrayBuffer(b)) return b;
+	return b.slice();
+}
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/vendor/base-x.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/vendor/base-x.js
 /**
 * @param {string} ALPHABET
 * @param {any} name
@@ -16733,7 +16736,7 @@ function base$1(ALPHABET, name) {
 }
 var _brrp__multiformats_scope_baseX$1 = base$1;
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base.js
 /**
 * Class represents both BaseEncoder and MultibaseEncoder meaning it
 * can be used to encode to multibase or base encode without multibase
@@ -16897,7 +16900,7 @@ function rfc4648$1({ name, prefix, bitsPerChar, alphabet }) {
 	});
 }
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base32.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base32.js
 var base32_exports$1 = /* @__PURE__ */ __exportAll({
 	base32: () => base32$1,
 	base32hex: () => base32hex$1,
@@ -16964,7 +16967,7 @@ const base32z$1 = rfc4648$1({
 	bitsPerChar: 5
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base36.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base36.js
 var base36_exports$1 = /* @__PURE__ */ __exportAll({
 	base36: () => base36$1,
 	base36upper: () => base36upper$1
@@ -16980,7 +16983,7 @@ const base36upper$1 = baseX$1({
 	alphabet: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base58.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base58.js
 var base58_exports$1 = /* @__PURE__ */ __exportAll({
 	base58btc: () => base58btc$1,
 	base58flickr: () => base58flickr$1
@@ -16996,7 +16999,7 @@ const base58flickr$1 = baseX$1({
 	alphabet: "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/vendor/varint.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/vendor/varint.js
 var encode_1$1 = encode$16;
 var MSB$3 = 128, MSBALL$1 = -128, INT$1 = Math.pow(2, 31);
 /**
@@ -17058,7 +17061,7 @@ var _brrp_varint$1 = {
 	encodingLength: length$2
 };
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/varint.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/varint.js
 function decode$18(data, offset = 0) {
 	return [_brrp_varint$1.decode(data, offset), _brrp_varint$1.decode.bytes];
 }
@@ -17070,7 +17073,7 @@ function encodingLength$3(int) {
 	return _brrp_varint$1.encodingLength(int);
 }
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/digest.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/digest.js
 /**
 * Creates a multihash digest.
 */
@@ -17117,12 +17120,12 @@ var Digest$1 = class {
 	constructor(code, size, digest, bytes) {
 		this.code = code;
 		this.size = size;
-		this.digest = digest;
-		this.bytes = bytes;
+		this.digest = toArrayBufferBackedArray(digest);
+		this.bytes = toArrayBufferBackedArray(bytes);
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/cid.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/cid.js
 function format$3(link, base) {
 	const { bytes, version } = link;
 	switch (version) {
@@ -17155,8 +17158,8 @@ var CID$1 = class CID$1 {
 		this.code = code;
 		this.version = version;
 		this.multihash = multihash;
-		this.bytes = bytes;
-		this["/"] = bytes;
+		this.bytes = toArrayBufferBackedArray(bytes);
+		this["/"] = this.bytes;
 	}
 	/**
 	* Signalling `cid.asCID === cid` has been replaced with `cid['/'] === cid.bytes`
@@ -17405,494 +17408,6 @@ function encodeCID$1(version, code, multihash) {
 }
 const cidSymbol$1 = Symbol.for("@ipld/js-cid/CID");
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/codecs/raw.js
-var raw_exports = /* @__PURE__ */ __exportAll({
-	code: () => 85,
-	decode: () => decode$16,
-	encode: () => encode$15,
-	name: () => "raw"
-});
-function encode$15(node) {
-	return coerce$1(node);
-}
-function decode$16(data) {
-	return coerce$1(data);
-}
-//#endregion
-//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/memory.js
-function isPromise$3(p) {
-	return typeof p?.then === "function";
-}
-var MemoryBlockstore = class extends BaseBlockstore {
-	data;
-	constructor() {
-		super();
-		this.data = /* @__PURE__ */ new Map();
-	}
-	put(key, val, options) {
-		options?.signal?.throwIfAborted();
-		let buf;
-		if (val instanceof Uint8Array) buf = [val];
-		else {
-			const result = all(val);
-			if (isPromise$3(result)) return result.then((val) => {
-				return this._put(key, val, options);
-			});
-			else buf = result;
-		}
-		return this._put(key, buf, options);
-	}
-	_put(key, val, options) {
-		options?.signal?.throwIfAborted();
-		this.data.set(base32$1.encode(key.multihash.bytes), val);
-		return key;
-	}
-	*get(key, options) {
-		options?.signal?.throwIfAborted();
-		const buf = this.data.get(base32$1.encode(key.multihash.bytes));
-		if (buf == null) throw new NotFoundError$3();
-		yield* buf;
-	}
-	has(key, options) {
-		options?.signal?.throwIfAborted();
-		return this.data.has(base32$1.encode(key.multihash.bytes));
-	}
-	async delete(key, options) {
-		options?.signal?.throwIfAborted();
-		this.data.delete(base32$1.encode(key.multihash.bytes));
-	}
-	*getAll(options) {
-		options?.signal?.throwIfAborted();
-		for (const [key, value] of this.data.entries()) {
-			yield {
-				cid: CID$1.createV1(85, decode$17(base32$1.decode(key))),
-				bytes: (async function* () {
-					yield* value;
-				})()
-			};
-			options?.signal?.throwIfAborted();
-		}
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/black-hole.js
-var BlackHoleBlockstore = class extends BaseBlockstore {
-	put(key, value, options) {
-		options?.signal?.throwIfAborted();
-		return key;
-	}
-	get(key, options) {
-		options?.signal?.throwIfAborted();
-		throw new NotFoundError$3();
-	}
-	has(key, options) {
-		options?.signal?.throwIfAborted();
-		return false;
-	}
-	async delete(cid, options) {
-		options?.signal?.throwIfAborted();
-	}
-	async *getAll(options) {
-		options?.signal?.throwIfAborted();
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bytes.js
-function equals$3(aa, bb) {
-	if (aa === bb) return true;
-	if (aa.byteLength !== bb.byteLength) return false;
-	for (let ii = 0; ii < aa.byteLength; ii++) if (aa[ii] !== bb[ii]) return false;
-	return true;
-}
-/**
-* Normalize binary input to a plain `Uint8Array` backed by an `ArrayBuffer`.
-*
-* Returns the input itself when it is already a plain `Uint8Array` over an
-* `ArrayBuffer`, otherwise a fresh view (or, for `SharedArrayBuffer`-backed
-* input, a copy) over the same bytes.
-*
-* Throws if input is not a recognised binary type.
-*/
-function coerce(o) {
-	if (o instanceof Uint8Array && o.constructor.name === "Uint8Array") return toArrayBufferBackedArray(o);
-	if (o instanceof ArrayBuffer) return new Uint8Array(o);
-	if (ArrayBuffer.isView(o)) return toArrayBufferBackedArray(new Uint8Array(o.buffer, o.byteOffset, o.byteLength));
-	throw new Error("Unknown type, must be binary type");
-}
-function fromString$3(str) {
-	return new TextEncoder().encode(str);
-}
-function toString$3(b) {
-	return new TextDecoder().decode(b);
-}
-function isByteArrayWithArrayBuffer(b) {
-	return b?.buffer instanceof ArrayBuffer;
-}
-/**
-* Ensures `b` is backed by an ArrayBuffer - if not a new Uint8Array will be
-* created and the contents of `b` copied into it.
-*/
-function toArrayBufferBackedArray(b) {
-	if (isByteArrayWithArrayBuffer(b)) return b;
-	return b.slice();
-}
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/vendor/base-x.js
-/**
-* @param {string} ALPHABET
-* @param {any} name
-*/
-function base(ALPHABET, name) {
-	if (ALPHABET.length >= 255) throw new TypeError("Alphabet too long");
-	var BASE_MAP = new Uint8Array(256);
-	for (var j = 0; j < BASE_MAP.length; j++) BASE_MAP[j] = 255;
-	for (var i = 0; i < ALPHABET.length; i++) {
-		var x = ALPHABET.charAt(i);
-		var xc = x.charCodeAt(0);
-		if (BASE_MAP[xc] !== 255) throw new TypeError(x + " is ambiguous");
-		BASE_MAP[xc] = i;
-	}
-	var BASE = ALPHABET.length;
-	var LEADER = ALPHABET.charAt(0);
-	var FACTOR = Math.log(BASE) / Math.log(256);
-	var iFACTOR = Math.log(256) / Math.log(BASE);
-	/**
-	* @param {any[] | Iterable<number>} source
-	*/
-	function encode(source) {
-		if (source instanceof Uint8Array);
-		else if (ArrayBuffer.isView(source)) source = new Uint8Array(source.buffer, source.byteOffset, source.byteLength);
-		else if (Array.isArray(source)) source = Uint8Array.from(source);
-		if (!(source instanceof Uint8Array)) throw new TypeError("Expected Uint8Array");
-		if (source.length === 0) return "";
-		var zeroes = 0;
-		var length = 0;
-		var pbegin = 0;
-		var pend = source.length;
-		while (pbegin !== pend && source[pbegin] === 0) {
-			pbegin++;
-			zeroes++;
-		}
-		var size = (pend - pbegin) * iFACTOR + 1 >>> 0;
-		var b58 = new Uint8Array(size);
-		while (pbegin !== pend) {
-			var carry = source[pbegin];
-			var i = 0;
-			for (var it1 = size - 1; (carry !== 0 || i < length) && it1 !== -1; it1--, i++) {
-				carry += 256 * b58[it1] >>> 0;
-				b58[it1] = carry % BASE >>> 0;
-				carry = carry / BASE >>> 0;
-			}
-			if (carry !== 0) throw new Error("Non-zero carry");
-			length = i;
-			pbegin++;
-		}
-		var it2 = size - length;
-		while (it2 !== size && b58[it2] === 0) it2++;
-		var str = LEADER.repeat(zeroes);
-		for (; it2 < size; ++it2) str += ALPHABET.charAt(b58[it2]);
-		return str;
-	}
-	/**
-	* @param {string | string[]} source
-	*/
-	function decodeUnsafe(source) {
-		if (typeof source !== "string") throw new TypeError("Expected String");
-		if (source.length === 0) return new Uint8Array();
-		var psz = 0;
-		if (source[psz] === " ") return;
-		var zeroes = 0;
-		var length = 0;
-		while (source[psz] === LEADER) {
-			zeroes++;
-			psz++;
-		}
-		var size = (source.length - psz) * FACTOR + 1 >>> 0;
-		var b256 = new Uint8Array(size);
-		while (source[psz]) {
-			var carry = BASE_MAP[source.charCodeAt(psz)];
-			if (carry === 255) return;
-			var i = 0;
-			for (var it3 = size - 1; (carry !== 0 || i < length) && it3 !== -1; it3--, i++) {
-				carry += BASE * b256[it3] >>> 0;
-				b256[it3] = carry % 256 >>> 0;
-				carry = carry / 256 >>> 0;
-			}
-			if (carry !== 0) throw new Error("Non-zero carry");
-			length = i;
-			psz++;
-		}
-		if (source[psz] === " ") return;
-		var it4 = size - length;
-		while (it4 !== size && b256[it4] === 0) it4++;
-		var vch = new Uint8Array(zeroes + (size - it4));
-		var j = zeroes;
-		while (it4 !== size) vch[j++] = b256[it4++];
-		return vch;
-	}
-	/**
-	* @param {string | string[]} string
-	*/
-	function decode(string) {
-		var buffer = decodeUnsafe(string);
-		if (buffer) return buffer;
-		throw new Error(`Non-${name} character`);
-	}
-	return {
-		encode,
-		decodeUnsafe,
-		decode
-	};
-}
-var _brrp__multiformats_scope_baseX = base;
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base.js
-/**
-* Class represents both BaseEncoder and MultibaseEncoder meaning it
-* can be used to encode to multibase or base encode without multibase
-* prefix.
-*/
-var Encoder = class {
-	name;
-	prefix;
-	baseEncode;
-	constructor(name, prefix, baseEncode) {
-		this.name = name;
-		this.prefix = prefix;
-		this.baseEncode = baseEncode;
-	}
-	encode(bytes) {
-		if (bytes instanceof Uint8Array) return `${this.prefix}${this.baseEncode(bytes)}`;
-		else throw Error("Unknown type, must be binary type");
-	}
-};
-/**
-* Class represents both BaseDecoder and MultibaseDecoder so it could be used
-* to decode multibases (with matching prefix) or just base decode strings
-* with corresponding base encoding.
-*/
-var Decoder = class {
-	name;
-	prefix;
-	baseDecode;
-	prefixCodePoint;
-	constructor(name, prefix, baseDecode) {
-		this.name = name;
-		this.prefix = prefix;
-		const prefixCodePoint = prefix.codePointAt(0);
-		/* c8 ignore next 3 */
-		if (prefixCodePoint === void 0) throw new Error("Invalid prefix character");
-		this.prefixCodePoint = prefixCodePoint;
-		this.baseDecode = baseDecode;
-	}
-	decode(text) {
-		if (typeof text === "string") {
-			if (text.codePointAt(0) !== this.prefixCodePoint) throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`);
-			return this.baseDecode(text.slice(this.prefix.length));
-		} else throw Error("Can only multibase decode strings");
-	}
-	or(decoder) {
-		return or$1(this, decoder);
-	}
-};
-var ComposedDecoder = class {
-	decoders;
-	constructor(decoders) {
-		this.decoders = decoders;
-	}
-	or(decoder) {
-		return or$1(this, decoder);
-	}
-	decode(input) {
-		const prefix = input[0];
-		const decoder = this.decoders[prefix];
-		if (decoder != null) return decoder.decode(input);
-		else throw RangeError(`Unable to decode multibase string ${JSON.stringify(input)}, only inputs prefixed with ${Object.keys(this.decoders)} are supported`);
-	}
-};
-function or$1(left, right) {
-	return new ComposedDecoder({
-		...left.decoders ?? { [left.prefix]: left },
-		...right.decoders ?? { [right.prefix]: right }
-	});
-}
-var Codec = class {
-	name;
-	prefix;
-	baseEncode;
-	baseDecode;
-	encoder;
-	decoder;
-	constructor(name, prefix, baseEncode, baseDecode) {
-		this.name = name;
-		this.prefix = prefix;
-		this.baseEncode = baseEncode;
-		this.baseDecode = baseDecode;
-		this.encoder = new Encoder(name, prefix, baseEncode);
-		this.decoder = new Decoder(name, prefix, baseDecode);
-	}
-	encode(input) {
-		return this.encoder.encode(input);
-	}
-	decode(input) {
-		return this.decoder.decode(input);
-	}
-};
-function from$2({ name, prefix, encode, decode }) {
-	return new Codec(name, prefix, encode, decode);
-}
-function baseX({ name, prefix, alphabet }) {
-	const { encode, decode } = _brrp__multiformats_scope_baseX(alphabet, name);
-	return from$2({
-		prefix,
-		name,
-		encode,
-		decode: (text) => coerce(decode(text))
-	});
-}
-function decode$15(string, alphabetIdx, bitsPerChar, name) {
-	let end = string.length;
-	while (string[end - 1] === "=") --end;
-	const out = new Uint8Array(end * bitsPerChar / 8 | 0);
-	let bits = 0;
-	let buffer = 0;
-	let written = 0;
-	for (let i = 0; i < end; ++i) {
-		const value = alphabetIdx[string[i]];
-		if (value === void 0) throw new SyntaxError(`Non-${name} character`);
-		buffer = buffer << bitsPerChar | value;
-		bits += bitsPerChar;
-		if (bits >= 8) {
-			bits -= 8;
-			out[written++] = 255 & buffer >> bits;
-		}
-	}
-	if (bits >= bitsPerChar || (255 & buffer << 8 - bits) !== 0) throw new SyntaxError("Unexpected end of data");
-	return out;
-}
-function encode$14(data, alphabet, bitsPerChar) {
-	const pad = alphabet[alphabet.length - 1] === "=";
-	const mask = (1 << bitsPerChar) - 1;
-	let out = "";
-	let bits = 0;
-	let buffer = 0;
-	for (let i = 0; i < data.length; ++i) {
-		buffer = buffer << 8 | data[i];
-		bits += 8;
-		while (bits > bitsPerChar) {
-			bits -= bitsPerChar;
-			out += alphabet[mask & buffer >> bits];
-		}
-	}
-	if (bits !== 0) out += alphabet[mask & buffer << bitsPerChar - bits];
-	if (pad) while ((out.length * bitsPerChar & 7) !== 0) out += "=";
-	return out;
-}
-function createAlphabetIdx(alphabet) {
-	const alphabetIdx = {};
-	for (let i = 0; i < alphabet.length; ++i) alphabetIdx[alphabet[i]] = i;
-	return alphabetIdx;
-}
-/**
-* RFC4648 Factory
-*/
-function rfc4648({ name, prefix, bitsPerChar, alphabet }) {
-	const alphabetIdx = createAlphabetIdx(alphabet);
-	return from$2({
-		prefix,
-		name,
-		encode(input) {
-			return encode$14(input, alphabet, bitsPerChar);
-		},
-		decode(input) {
-			return decode$15(input, alphabetIdx, bitsPerChar, name);
-		}
-	});
-}
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base32.js
-var base32_exports = /* @__PURE__ */ __exportAll({
-	base32: () => base32,
-	base32hex: () => base32hex,
-	base32hexpad: () => base32hexpad,
-	base32hexpadupper: () => base32hexpadupper,
-	base32hexupper: () => base32hexupper,
-	base32pad: () => base32pad,
-	base32padupper: () => base32padupper,
-	base32upper: () => base32upper,
-	base32z: () => base32z
-});
-const base32 = rfc4648({
-	prefix: "b",
-	name: "base32",
-	alphabet: "abcdefghijklmnopqrstuvwxyz234567",
-	bitsPerChar: 5
-});
-const base32upper = rfc4648({
-	prefix: "B",
-	name: "base32upper",
-	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
-	bitsPerChar: 5
-});
-const base32pad = rfc4648({
-	prefix: "c",
-	name: "base32pad",
-	alphabet: "abcdefghijklmnopqrstuvwxyz234567=",
-	bitsPerChar: 5
-});
-const base32padupper = rfc4648({
-	prefix: "C",
-	name: "base32padupper",
-	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
-	bitsPerChar: 5
-});
-const base32hex = rfc4648({
-	prefix: "v",
-	name: "base32hex",
-	alphabet: "0123456789abcdefghijklmnopqrstuv",
-	bitsPerChar: 5
-});
-const base32hexupper = rfc4648({
-	prefix: "V",
-	name: "base32hexupper",
-	alphabet: "0123456789ABCDEFGHIJKLMNOPQRSTUV",
-	bitsPerChar: 5
-});
-const base32hexpad = rfc4648({
-	prefix: "t",
-	name: "base32hexpad",
-	alphabet: "0123456789abcdefghijklmnopqrstuv=",
-	bitsPerChar: 5
-});
-const base32hexpadupper = rfc4648({
-	prefix: "T",
-	name: "base32hexpadupper",
-	alphabet: "0123456789ABCDEFGHIJKLMNOPQRSTUV=",
-	bitsPerChar: 5
-});
-const base32z = rfc4648({
-	prefix: "h",
-	name: "base32z",
-	alphabet: "ybndrfg8ejkmcpqxot1uwisza345h769",
-	bitsPerChar: 5
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base58.js
-var base58_exports = /* @__PURE__ */ __exportAll({
-	base58btc: () => base58btc,
-	base58flickr: () => base58flickr
-});
-const base58btc = baseX({
-	name: "base58btc",
-	prefix: "z",
-	alphabet: "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-});
-const base58flickr = baseX({
-	name: "base58flickr",
-	prefix: "Z",
-	alphabet: "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
-});
-//#endregion
 //#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base64.js
 var base64_exports$1 = /* @__PURE__ */ __exportAll({
 	base64: () => base64$1,
@@ -17900,25 +17415,25 @@ var base64_exports$1 = /* @__PURE__ */ __exportAll({
 	base64url: () => base64url$1,
 	base64urlpad: () => base64urlpad$1
 });
-const base64$1 = rfc4648({
+const base64$1 = rfc4648$1({
 	prefix: "m",
 	name: "base64",
 	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 	bitsPerChar: 6
 });
-const base64pad$1 = rfc4648({
+const base64pad$1 = rfc4648$1({
 	prefix: "M",
 	name: "base64pad",
 	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 	bitsPerChar: 6
 });
-const base64url$1 = rfc4648({
+const base64url$1 = rfc4648$1({
 	prefix: "u",
 	name: "base64url",
 	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
 	bitsPerChar: 6
 });
-const base64urlpad$1 = rfc4648({
+const base64urlpad$1 = rfc4648$1({
 	prefix: "U",
 	name: "base64urlpad",
 	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=",
@@ -18464,7 +17979,7 @@ function getDate() {
 /**
 * Invokes `util.format()` with the specified arguments and writes to stderr.
 */
-function log$14(...args) {
+function log$15(...args) {
 	return process.stderr.write(util.format(...args) + "\n");
 }
 /**
@@ -18529,7 +18044,7 @@ function setupFormatters(formatters) {
 */
 var src_default = setup({
 	init,
-	log: log$14,
+	log: log$15,
 	formatArgs,
 	save,
 	load: load$1,
@@ -18574,10 +18089,10 @@ var src_default = setup({
 * ```
 */
 src_default.formatters.b = (v) => {
-	return v == null ? "undefined" : base58btc.baseEncode(v);
+	return v == null ? "undefined" : base58btc$1.baseEncode(v);
 };
 src_default.formatters.t = (v) => {
-	return v == null ? "undefined" : base32.baseEncode(v);
+	return v == null ? "undefined" : base32$1.baseEncode(v);
 };
 src_default.formatters.m = (v) => {
 	return v == null ? "undefined" : base64$1.baseEncode(v);
@@ -19136,7 +18651,7 @@ function destr(value, options = {}) {
 	}
 }
 //#endregion
-//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.4/node_modules/unstorage/dist/shared/unstorage.zVDD2mZo.mjs
+//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.5/node_modules/unstorage/dist/shared/unstorage.zVDD2mZo.mjs
 function wrapToPromise(value) {
 	if (!value || typeof value.then !== "function") return Promise.resolve(value);
 	return value;
@@ -19206,7 +18721,7 @@ function filterKeyByBase(key, base) {
 	return key[key.length - 1] !== "$";
 }
 //#endregion
-//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.4/node_modules/unstorage/dist/index.mjs
+//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.5/node_modules/unstorage/dist/index.mjs
 function defineDriver$1(factory) {
 	return factory;
 }
@@ -19513,7 +19028,7 @@ async function dispose(driver) {
 	if (typeof driver.dispose === "function") await asyncCall(driver.dispose);
 }
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base10.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base10.js
 var base10_exports$1 = /* @__PURE__ */ __exportAll({ base10: () => base10$1 });
 const base10$1 = baseX$1({
 	prefix: "9",
@@ -19521,7 +19036,7 @@ const base10$1 = baseX$1({
 	alphabet: "0123456789"
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base16.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base16.js
 var base16_exports$1 = /* @__PURE__ */ __exportAll({
 	base16: () => base16$1,
 	base16upper: () => base16upper$1
@@ -19539,7 +19054,7 @@ const base16upper$1 = rfc4648$1({
 	bitsPerChar: 4
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base2.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base2.js
 var base2_exports$1 = /* @__PURE__ */ __exportAll({ base2: () => base2$1 });
 const base2$1 = rfc4648$1({
 	prefix: "0",
@@ -19548,7 +19063,7 @@ const base2$1 = rfc4648$1({
 	bitsPerChar: 1
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base256emoji.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base256emoji.js
 var base256emoji_exports$1 = /* @__PURE__ */ __exportAll({ base256emoji: () => base256emoji$1 });
 const alphabet$1 = Array.from("🚀🪐☄🛰🌌🌑🌒🌓🌔🌕🌖🌗🌘🌍🌏🌎🐉☀💻🖥💾💿😂❤😍🤣😊🙏💕😭😘👍😅👏😁🔥🥰💔💖💙😢🤔😆🙄💪😉☺👌🤗💜😔😎😇🌹🤦🎉💞✌✨🤷😱😌🌸🙌😋💗💚😏💛🙂💓🤩😄😀🖤😃💯🙈👇🎶😒🤭❣😜💋👀😪😑💥🙋😞😩😡🤪👊🥳😥🤤👉💃😳✋😚😝😴🌟😬🙃🍀🌷😻😓⭐✅🥺🌈😈🤘💦✔😣🏃💐☹🎊💘😠☝😕🌺🎂🌻😐🖕💝🙊😹🗣💫💀👑🎵🤞😛🔴😤🌼😫⚽🤙☕🏆🤫👈😮🙆🍻🍃🐶💁😲🌿🧡🎁⚡🌞🎈❌✊👋😰🤨😶🤝🚶💰🍓💢🤟🙁🚨💨🤬✈🎀🍺🤓😙💟🌱😖👶🥴▶➡❓💎💸⬇😨🌚🦋😷🕺⚠🙅😟😵👎🤲🤠🤧📌🔵💅🧐🐾🍒😗🤑🌊🤯🐷☎💧😯💆👆🎤🙇🍑❄🌴💣🐸💌📍🥀🤢👅💡💩👐📸👻🤐🤮🎼🥵🚩🍎🍊👼💍📣🥂");
 const alphabetBytesToChars$1 = alphabet$1.reduce((p, c, i) => {
@@ -19561,13 +19076,13 @@ const alphabetCharsToBytes$1 = alphabet$1.reduce((p, c, i) => {
 	p[codePoint] = i;
 	return p;
 }, []);
-function encode$13(data) {
+function encode$15(data) {
 	return data.reduce((p, c) => {
 		p += alphabetBytesToChars$1[c];
 		return p;
 	}, "");
 }
-function decode$14(str) {
+function decode$16(str) {
 	const byts = [];
 	for (const char of str) {
 		const codePoint = char.codePointAt(0);
@@ -19581,43 +19096,11 @@ function decode$14(str) {
 const base256emoji$1 = from$3({
 	prefix: "🚀",
 	name: "base256emoji",
-	encode: encode$13,
-	decode: decode$14
+	encode: encode$15,
+	decode: decode$16
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base64.js
-var base64_exports = /* @__PURE__ */ __exportAll({
-	base64: () => base64,
-	base64pad: () => base64pad,
-	base64url: () => base64url,
-	base64urlpad: () => base64urlpad
-});
-const base64 = rfc4648$1({
-	prefix: "m",
-	name: "base64",
-	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-	bitsPerChar: 6
-});
-const base64pad = rfc4648$1({
-	prefix: "M",
-	name: "base64pad",
-	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-	bitsPerChar: 6
-});
-const base64url = rfc4648$1({
-	prefix: "u",
-	name: "base64url",
-	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
-	bitsPerChar: 6
-});
-const base64urlpad = rfc4648$1({
-	prefix: "U",
-	name: "base64urlpad",
-	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=",
-	bitsPerChar: 6
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base8.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base8.js
 var base8_exports$1 = /* @__PURE__ */ __exportAll({ base8: () => base8$1 });
 const base8$1 = rfc4648$1({
 	prefix: "7",
@@ -19626,7 +19109,7 @@ const base8$1 = rfc4648$1({
 	bitsPerChar: 3
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/identity.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/identity.js
 var identity_exports$3 = /* @__PURE__ */ __exportAll({ identity: () => identity$3 });
 const identity$3 = from$3({
 	prefix: "\0",
@@ -19634,46 +19117,31 @@ const identity$3 = from$3({
 	encode: (buf) => toString$4(buf),
 	decode: (str) => fromString$4(str)
 });
+new TextEncoder();
+new TextDecoder();
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/codecs/json.js
-var json_exports = /* @__PURE__ */ __exportAll({
-	code: () => 512,
-	decode: () => decode$13,
-	encode: () => encode$12,
-	name: () => name$6
-});
-const textEncoder$4 = new TextEncoder();
-const textDecoder$3 = new TextDecoder();
-const name$6 = "json";
-function encode$12(node) {
-	return textEncoder$4.encode(JSON.stringify(node));
-}
-function decode$13(data) {
-	return JSON.parse(textDecoder$3.decode(data));
-}
-//#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/identity.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/identity.js
 var identity_exports$2 = /* @__PURE__ */ __exportAll({ identity: () => identity$2 });
-const code$5 = 0;
-const name$5 = "identity";
-const encode$11 = coerce$1;
+const code$7 = 0;
+const name$7 = "identity";
+const encode$14 = coerce$1;
 function digest$1(input, options) {
 	if (options?.truncate != null && options.truncate !== input.byteLength) {
 		if (options.truncate < 0 || options.truncate > input.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${input.byteLength}`);
 		input = input.subarray(0, options.truncate);
 	}
-	return create$3(code$5, encode$11(input));
+	return create$3(code$7, encode$14(input));
 }
 const identity$2 = {
-	code: code$5,
-	name: name$5,
-	encode: encode$11,
+	code: code$7,
+	name: name$7,
+	encode: encode$14,
 	digest: digest$1
 };
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/hasher.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/hasher.js
 const DEFAULT_MIN_DIGEST_LENGTH$1 = 20;
-function from$1({ name, code, encode, minDigestLength, maxDigestLength }) {
+function from$2({ name, code, encode, minDigestLength, maxDigestLength }) {
 	return new Hasher$1(name, code, encode, minDigestLength, maxDigestLength);
 }
 /**
@@ -19717,23 +19185,23 @@ function createDigest$1(digest, code, truncate) {
 	return create$3(code, digest);
 }
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/sha2.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/sha2.js
 var sha2_exports$1 = /* @__PURE__ */ __exportAll({
 	sha256: () => sha256$2,
 	sha512: () => sha512$2
 });
-const sha256$2 = from$1({
+const sha256$2 = from$2({
 	name: "sha2-256",
 	code: 18,
-	encode: (input) => coerce$1(crypto$1.createHash("sha256").update(input).digest())
+	encode: (input) => coerce$1(crypto$2.createHash("sha256").update(input).digest())
 });
-const sha512$2 = from$1({
+const sha512$2 = from$2({
 	name: "sha2-512",
 	code: 19,
-	encode: (input) => coerce$1(crypto$1.createHash("sha512").update(input).digest())
+	encode: (input) => coerce$1(crypto$2.createHash("sha512").update(input).digest())
 });
 //#endregion
-//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/basics.js
+//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/basics.js
 const bases$1 = {
 	...identity_exports$3,
 	...base2_exports$1,
@@ -19743,7 +19211,7 @@ const bases$1 = {
 	...base32_exports$1,
 	...base36_exports$1,
 	...base58_exports$1,
-	...base64_exports,
+	...base64_exports$1,
 	...base256emoji_exports$1
 };
 ({
@@ -19751,16 +19219,18 @@ const bases$1 = {
 	...identity_exports$2
 });
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/util/as-uint8array.node.js
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/as-uint8array.node.js
 /**
 * To guarantee Uint8Array semantics, convert nodejs Buffers
 * into vanilla Uint8Arrays
 */
 function asUint8Array$1(buf) {
-	return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+	if (buf.buffer instanceof ArrayBuffer) return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+	const b = buf.slice();
+	return new Uint8Array(b.buffer, 0, b.byteLength);
 }
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/alloc.node.js
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/alloc.node.js
 /**
 * Returns a `Uint8Array` of the requested size. Referenced memory will
 * be initialized to 0.
@@ -19777,7 +19247,7 @@ function allocUnsafe$1(size = 0) {
 	return asUint8Array$1(Buffer$1.allocUnsafe(size));
 }
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/util/bases.js
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/bases.js
 function createCodec$2(name, prefix, encode, decode) {
 	return {
 		name,
@@ -19815,7 +19285,7 @@ const BASES$1 = {
 	...bases$1
 };
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/from-string.node.js
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/from-string.node.js
 /**
 * Create a `Uint8Array` from the passed string
 *
@@ -19823,14 +19293,14 @@ const BASES$1 = {
 *
 * Also `ascii` which is similar to node's 'binary' encoding.
 */
-function fromString$2(string, encoding = "utf8") {
+function fromString$3(string, encoding = "utf8") {
 	const base = BASES$1[encoding];
 	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
 	if (encoding === "utf8" || encoding === "utf-8") return asUint8Array$1(Buffer$1.from(string, "utf-8"));
 	return base.decoder.decode(`${base.prefix}${string}`);
 }
 //#endregion
-//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/to-string.node.js
+//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/to-string.node.js
 /**
 * Turns a `Uint8Array` into a string.
 *
@@ -19838,17 +19308,17 @@ function fromString$2(string, encoding = "utf8") {
 *
 * Also `ascii` which is similar to node's 'binary' encoding.
 */
-function toString$2(array, encoding = "utf8") {
+function toString$3(array, encoding = "utf8") {
 	const base = BASES$1[encoding];
 	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
 	if (encoding === "utf8" || encoding === "utf-8") return Buffer$1.from(array.buffer, array.byteOffset, array.byteLength).toString("utf8");
 	return base.encoder.encode(array).substring(1);
 }
 //#endregion
-//#region node_modules/.pnpm/interface-datastore@9.0.3/node_modules/interface-datastore/dist/src/key.js
-const pathSepS = "/";
-const pathSepB = new TextEncoder().encode(pathSepS);
-const pathSep = pathSepB[0];
+//#region node_modules/.pnpm/interface-datastore@10.0.1/node_modules/interface-datastore/dist/src/key.js
+const pathSepS$1 = "/";
+const pathSepB$1 = new TextEncoder().encode(pathSepS$1);
+const pathSep$1 = pathSepB$1[0];
 /**
 * A Key represents the unique identifier of an object.
 * Our Key scheme is inspired by file systems and Google App Engine key model.
@@ -19865,19 +19335,19 @@ const pathSep = pathSepB[0];
 * - `new Key('/Comedy/MontyPython/Sketch:CheeseShop/Character:Mousebender')`
 *
 */
-var Key = class Key {
+var Key$1 = class Key$1 {
 	_buf;
 	/**
 	* @param {string | Uint8Array} s
 	* @param {boolean} [clean]
 	*/
 	constructor(s, clean) {
-		if (typeof s === "string") this._buf = fromString$2(s);
+		if (typeof s === "string") this._buf = fromString$3(s);
 		else if (s instanceof Uint8Array) this._buf = s;
 		else throw new Error("Invalid key, should be String of Uint8Array");
 		if (clean == null) clean = true;
 		if (clean) this.clean();
-		if (this._buf.byteLength === 0 || this._buf[0] !== pathSep) throw new Error("Invalid key");
+		if (this._buf.byteLength === 0 || this._buf[0] !== pathSep$1) throw new Error("Invalid key");
 	}
 	/**
 	* Convert to the string representation
@@ -19886,7 +19356,7 @@ var Key = class Key {
 	* @returns {string}
 	*/
 	toString(encoding = "utf8") {
-		return toString$2(this._buf, encoding);
+		return toString$3(this._buf, encoding);
 	}
 	/**
 	* Return the Uint8Array representation of the key
@@ -19917,7 +19387,7 @@ var Key = class Key {
 	* ```
 	*/
 	static withNamespaces(list) {
-		return new Key(list.join(pathSepS));
+		return new Key$1(list.join(pathSepS$1));
 	}
 	/**
 	* Returns a randomly (uuid) generated key.
@@ -19931,14 +19401,14 @@ var Key = class Key {
 	* ```
 	*/
 	static random() {
-		return new Key(Math.random().toString().substring(2));
+		return new Key$1(Math.random().toString().substring(2));
 	}
 	/**
 	* @param {*} other
 	*/
 	static asKey(other) {
-		if (other instanceof Uint8Array || typeof other === "string") return new Key(other);
-		if (typeof other.uint8Array === "function") return new Key(other.uint8Array());
+		if (other instanceof Uint8Array || typeof other === "string") return new Key$1(other);
+		if (typeof other.uint8Array === "function") return new Key$1(other.uint8Array());
 		return null;
 	}
 	/**
@@ -19947,14 +19417,14 @@ var Key = class Key {
 	* @returns {void}
 	*/
 	clean() {
-		if (this._buf == null || this._buf.byteLength === 0) this._buf = pathSepB;
-		if (this._buf[0] !== pathSep) {
+		if (this._buf == null || this._buf.byteLength === 0) this._buf = pathSepB$1;
+		if (this._buf[0] !== pathSep$1) {
 			const bytes = new Uint8Array(this._buf.byteLength + 1);
-			bytes.fill(pathSep, 0, 1);
+			bytes.fill(pathSep$1, 0, 1);
 			bytes.set(this._buf, 1);
 			this._buf = bytes;
 		}
-		while (this._buf.byteLength > 1 && this._buf[this._buf.byteLength - 1] === pathSep) this._buf = this._buf.subarray(0, -1);
+		while (this._buf.byteLength > 1 && this._buf[this._buf.byteLength - 1] === pathSep$1) this._buf = this._buf.subarray(0, -1);
 	}
 	/**
 	* Check if the given key is sorted lower than ourself.
@@ -19986,7 +19456,7 @@ var Key = class Key {
 	* ```
 	*/
 	reverse() {
-		return Key.withNamespaces(this.list().slice().reverse());
+		return Key$1.withNamespaces(this.list().slice().reverse());
 	}
 	/**
 	* Returns the `namespaces` making up this Key.
@@ -20023,7 +19493,7 @@ var Key = class Key {
 	* ```
 	*/
 	list() {
-		return this.toString().split(pathSepS).slice(1);
+		return this.toString().split(pathSepS$1).slice(1);
 	}
 	/**
 	* Returns the "type" of this key (value of last namespace).
@@ -20037,7 +19507,7 @@ var Key = class Key {
 	* ```
 	*/
 	type() {
-		return namespaceType(this.baseNamespace());
+		return namespaceType$1(this.baseNamespace());
 	}
 	/**
 	* Returns the "name" of this key (field of last namespace).
@@ -20051,7 +19521,7 @@ var Key = class Key {
 	* ```
 	*/
 	name() {
-		return namespaceValue(this.baseNamespace());
+		return namespaceValue$1(this.baseNamespace());
 	}
 	/**
 	* Returns an "instance" of this type key (appends value to namespace).
@@ -20066,7 +19536,7 @@ var Key = class Key {
 	* ```
 	*/
 	instance(s) {
-		return new Key(this.toString() + ":" + s);
+		return new Key$1(this.toString() + ":" + s);
 	}
 	/**
 	* Returns the "path" of this key (parent + type).
@@ -20081,9 +19551,9 @@ var Key = class Key {
 	*/
 	path() {
 		let p = this.parent().toString();
-		if (!p.endsWith(pathSepS)) p += pathSepS;
+		if (!p.endsWith(pathSepS$1)) p += pathSepS$1;
 		p += this.type();
-		return new Key(p);
+		return new Key$1(p);
 	}
 	/**
 	* Returns the `parent` Key of this Key.
@@ -20098,8 +19568,8 @@ var Key = class Key {
 	*/
 	parent() {
 		const list = this.list();
-		if (list.length === 1) return new Key(pathSepS);
-		return new Key(list.slice(0, -1).join(pathSepS));
+		if (list.length === 1) return new Key$1(pathSepS$1);
+		return new Key$1(list.slice(0, -1).join(pathSepS$1));
 	}
 	/**
 	* Returns the `child` Key of this Key.
@@ -20114,9 +19584,9 @@ var Key = class Key {
 	* ```
 	*/
 	child(key) {
-		if (this.toString() === pathSepS) return key;
-		else if (key.toString() === pathSepS) return this;
-		return new Key(this.toString() + key.toString(), false);
+		if (this.toString() === pathSepS$1) return key;
+		else if (key.toString() === pathSepS$1) return this;
+		return new Key$1(this.toString() + key.toString(), false);
 	}
 	/**
 	* Returns whether this key is a prefix of `other`
@@ -20165,7 +19635,7 @@ var Key = class Key {
 	* @returns {Key}
 	*/
 	concat(...keys) {
-		return Key.withNamespaces([...this.namespaces(), ...flatten(keys.map((key) => key.namespaces()))]);
+		return Key$1.withNamespaces([...this.namespaces(), ...flatten$1(keys.map((key) => key.namespaces()))]);
 	}
 };
 /**
@@ -20174,7 +19644,7 @@ var Key = class Key {
 * @param {string} ns
 * @returns {string}
 */
-function namespaceType(ns) {
+function namespaceType$1(ns) {
 	const parts = ns.split(":");
 	if (parts.length < 2) return "";
 	return parts.slice(0, -1).join(":");
@@ -20185,7 +19655,7 @@ function namespaceType(ns) {
 * @param {string} ns
 * @returns {string}
 */
-function namespaceValue(ns) {
+function namespaceValue$1(ns) {
 	const parts = ns.split(":");
 	return parts[parts.length - 1];
 }
@@ -20196,7 +19666,7 @@ function namespaceValue(ns) {
 * @param {Array<any>} arr
 * @returns {T[]}
 */
-function flatten(arr) {
+function flatten$1(arr) {
 	return [].concat(...arr);
 }
 function createStorageWithOptions(options) {
@@ -20245,7 +19715,7 @@ function createUnstorageBase(options, getDefaultDriver) {
 	};
 }
 function createUnstorageBlockstore(getDefaultDriver) {
-	return class UnstorageBlockstore extends BaseBlockstore {
+	return class UnstorageBlockstore extends BaseBlockstore$1 {
 		prefix;
 		base;
 		constructor(options = {}) {
@@ -20273,12 +19743,15 @@ function createUnstorageBlockstore(getDefaultDriver) {
 			yield await this.base.getItem(storageKey);
 		}
 		async *getMany(source, options) {
-			for await (const cid of source) yield {
-				cid,
-				bytes: async function* () {
-					yield* await this.get(cid, options);
-				}.call(this)
-			};
+			for await (const cid of source) {
+				const self = this;
+				yield {
+					cid,
+					bytes: (async function* () {
+						yield* await self.get(cid, options);
+					})()
+				};
+			}
 		}
 		async delete(key, _) {
 			await this.base.deleteItem(this.keyToStorageKey(key));
@@ -20319,7 +19792,7 @@ function createUnstorageDatastore(getDefaultDriver) {
 			return `${this.prefix}:${key.toString()}`;
 		}
 		storageKeyToKey(storageKey) {
-			return new Key(storageKey.slice(this.prefix.length + 1));
+			return new Key$1(storageKey.slice(this.prefix.length + 1));
 		}
 		async has(key, _) {
 			return await this.base.hasItem(this.keyToStorageKey(key));
@@ -20415,7 +19888,7 @@ function createUnstorageDatastore(getDefaultDriver) {
 	};
 }
 //#endregion
-//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.4/node_modules/unstorage/drivers/utils/index.mjs
+//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.5/node_modules/unstorage/drivers/utils/index.mjs
 function defineDriver(factory) {
 	return factory;
 }
@@ -20430,7 +19903,7 @@ function createRequiredError(driver, name) {
 }
 var init_utils = __esmMin((() => {}));
 //#endregion
-//#region node_modules/.pnpm/idb-keyval@6.2.4/node_modules/idb-keyval/dist/index.js
+//#region node_modules/.pnpm/idb-keyval@6.2.5/node_modules/idb-keyval/dist/index.js
 function promisifyRequest(request) {
 	return new Promise((resolve, reject) => {
 		request.oncomplete = request.onsuccess = () => resolve(request.result);
@@ -20523,7 +19996,7 @@ function keys(customStore = defaultGetStore()) {
 var defaultGetStoreFunc;
 var init_dist = __esmMin((() => {}));
 //#endregion
-//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.4/node_modules/unstorage/drivers/indexedb.mjs
+//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.5/node_modules/unstorage/drivers/indexedb.mjs
 var indexedb_exports = /* @__PURE__ */ __exportAll({ default: () => indexedb_default });
 var DRIVER_NAME$1, indexedb_default;
 var init_indexedb = __esmMin((() => {
@@ -20566,7 +20039,7 @@ var init_indexedb = __esmMin((() => {
 	});
 }));
 //#endregion
-//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.4/node_modules/unstorage/drivers/utils/node-fs.mjs
+//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.5/node_modules/unstorage/drivers/utils/node-fs.mjs
 function ignoreNotfound(err) {
 	return err.code === "ENOENT" || err.code === "EISDIR" ? null : err;
 }
@@ -20616,7 +20089,7 @@ async function rmRecursive(dir) {
 }
 var init_node_fs = __esmMin((() => {}));
 //#endregion
-//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.4/node_modules/unstorage/drivers/fs-lite.mjs
+//#region node_modules/.pnpm/unstorage@1.17.5_@azure+storage-blob@12.31.0_idb-keyval@6.2.5/node_modules/unstorage/drivers/fs-lite.mjs
 var fs_lite_exports = /* @__PURE__ */ __exportAll({ default: () => fs_lite_default });
 var PATH_TRAVERSE_RE, DRIVER_NAME, fs_lite_default;
 var init_fs_lite = __esmMin((() => {
@@ -20677,7 +20150,7 @@ var init_fs_lite = __esmMin((() => {
 	});
 }));
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/blockstore/unstorage.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/blockstore/unstorage.js
 function isBrowser() {
 	return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 }
@@ -20857,7 +20330,7 @@ function asU8A(buf) {
 }
 const FROM_STRING_THRESHOLD_BUFFER = 24;
 const FROM_STRING_THRESHOLD_TEXTENCODER = 200;
-const fromString$1 = useBuffer ? (string) => {
+const fromString$2 = useBuffer ? (string) => {
 	return string.length >= FROM_STRING_THRESHOLD_BUFFER ? globalThis.Buffer.from(string) : utf8ToBytes$1(string);
 } : 
 /**
@@ -21478,7 +20951,7 @@ function decodeBytes64(data, pos, _minor, options) {
 * @returns {Uint8Array}
 */
 function tokenBytes(token) {
-	if (token.encodedBytes === void 0) token.encodedBytes = Type.equals(token.type, Type.string) ? fromString$1(token.value) : token.value;
+	if (token.encodedBytes === void 0) token.encodedBytes = Type.equals(token.type, Type.string) ? fromString$2(token.value) : token.value;
 	return token.encodedBytes;
 }
 /**
@@ -22598,7 +22071,7 @@ function directEncode(writer, data, options, refStack) {
 			else encodeUintValue(writer, MAJOR_NEGINT, data * neg1b - pos1b);
 			return;
 		case "string": {
-			const bytes = fromString$1(data);
+			const bytes = fromString$2(data);
 			encodeUintValue(writer, MAJOR_STRING, bytes.length);
 			writer.push(bytes);
 			return;
@@ -22666,7 +22139,7 @@ function encodeCustom(data, encoders, options, destination) {
 * @param {EncodeOptions} [options]
 * @returns {Uint8Array}
 */
-function encode$10(data, options) {
+function encode$13(data, options) {
 	options = Object.assign({}, defaultEncodeOptions$1, options);
 	if (canDirectEncode(options)) {
 		defaultWriter.reset();
@@ -22873,7 +22346,7 @@ function decodeFirst(data, options) {
 * @param {DecodeOptions} [options]
 * @returns {any}
 */
-function decode$12(data, options) {
+function decode$15(data, options) {
 	const [decoded, remainder] = decodeFirst(data, options);
 	if (remainder.length > 0) throw new Error(`${decodeErrPrefix} too many terminals, data makes no sense`);
 	return decoded;
@@ -22924,431 +22397,6 @@ Object.defineProperty(class Tagged {
 	}
 }.prototype, Symbol.toStringTag, { value: "Tagged" });
 //#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base36.js
-var base36_exports = /* @__PURE__ */ __exportAll({
-	base36: () => base36,
-	base36upper: () => base36upper
-});
-const base36 = baseX({
-	prefix: "k",
-	name: "base36",
-	alphabet: "0123456789abcdefghijklmnopqrstuvwxyz"
-});
-const base36upper = baseX({
-	prefix: "K",
-	name: "base36upper",
-	alphabet: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/vendor/varint.js
-var encode_1 = encode$9;
-var MSB$2 = 128, MSBALL = -128, INT = Math.pow(2, 31);
-/**
-* @param {number} num
-* @param {number[]} out
-* @param {number} offset
-*/
-function encode$9(num, out, offset) {
-	out = out || [];
-	offset = offset || 0;
-	var oldOffset = offset;
-	while (num >= INT) {
-		out[offset++] = num & 255 | MSB$2;
-		num /= 128;
-	}
-	while (num & MSBALL) {
-		out[offset++] = num & 255 | MSB$2;
-		num >>>= 7;
-	}
-	out[offset] = num | 0;
-	encode$9.bytes = offset - oldOffset + 1;
-	return out;
-}
-var decode$11 = read$1;
-var MSB$1$1 = 128, REST$1$1 = 127;
-/**
-* @param {string | any[]} buf
-* @param {number} offset
-*/
-function read$1(buf, offset) {
-	var res = 0, offset = offset || 0, shift = 0, counter = offset, b, l = buf.length;
-	do {
-		if (counter >= l) {
-			read$1.bytes = 0;
-			throw new RangeError("Could not decode varint");
-		}
-		b = buf[counter++];
-		res += shift < 28 ? (b & REST$1$1) << shift : (b & REST$1$1) * Math.pow(2, shift);
-		shift += 7;
-	} while (b >= MSB$1$1);
-	read$1.bytes = counter - offset;
-	return res;
-}
-var N1$2 = Math.pow(2, 7);
-var N2$2 = Math.pow(2, 14);
-var N3$2 = Math.pow(2, 21);
-var N4$2 = Math.pow(2, 28);
-var N5$2 = Math.pow(2, 35);
-var N6$2 = Math.pow(2, 42);
-var N7$2 = Math.pow(2, 49);
-var N8 = Math.pow(2, 56);
-var N9 = Math.pow(2, 63);
-var length$1 = function(value) {
-	return value < N1$2 ? 1 : value < N2$2 ? 2 : value < N3$2 ? 3 : value < N4$2 ? 4 : value < N5$2 ? 5 : value < N6$2 ? 6 : value < N7$2 ? 7 : value < N8 ? 8 : value < N9 ? 9 : 10;
-};
-var _brrp_varint = {
-	encode: encode_1,
-	decode: decode$11,
-	encodingLength: length$1
-};
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/varint.js
-function decode$10(data, offset = 0) {
-	return [_brrp_varint.decode(data, offset), _brrp_varint.decode.bytes];
-}
-function encodeTo(int, target, offset = 0) {
-	_brrp_varint.encode(int, target, offset);
-	return target;
-}
-function encodingLength$2(int) {
-	return _brrp_varint.encodingLength(int);
-}
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/digest.js
-/**
-* Creates a multihash digest.
-*/
-function create$2(code, digest) {
-	const size = digest.byteLength;
-	const sizeOffset = encodingLength$2(code);
-	const digestOffset = sizeOffset + encodingLength$2(size);
-	const bytes = new Uint8Array(digestOffset + size);
-	encodeTo(code, bytes, 0);
-	encodeTo(size, bytes, sizeOffset);
-	bytes.set(digest, digestOffset);
-	return new Digest(code, size, digest, bytes);
-}
-/**
-* Turns bytes representation of multihash digest into an instance.
-*/
-function decode$9(multihash) {
-	const bytes = coerce(multihash);
-	const [code, sizeOffset] = decode$10(bytes);
-	const [size, digestOffset] = decode$10(bytes.subarray(sizeOffset));
-	const digest = bytes.subarray(sizeOffset + digestOffset);
-	if (digest.byteLength !== size) throw new Error("Incorrect length");
-	return new Digest(code, size, digest, bytes);
-}
-function equals$2(a, b) {
-	if (a === b) return true;
-	else {
-		const data = b;
-		return a.code === data.code && a.size === data.size && data.bytes instanceof Uint8Array && equals$3(a.bytes, data.bytes);
-	}
-}
-/**
-* Represents a multihash digest which carries information about the
-* hashing algorithm and an actual hash digest.
-*/
-var Digest = class {
-	code;
-	size;
-	digest;
-	bytes;
-	/**
-	* Creates a multihash digest.
-	*/
-	constructor(code, size, digest, bytes) {
-		this.code = code;
-		this.size = size;
-		this.digest = toArrayBufferBackedArray(digest);
-		this.bytes = toArrayBufferBackedArray(bytes);
-	}
-};
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/cid.js
-function format$1(link, base) {
-	const { bytes, version } = link;
-	switch (version) {
-		case 0: return toStringV0(bytes, baseCache(link), base ?? base58btc.encoder);
-		default: return toStringV1(bytes, baseCache(link), base ?? base32.encoder);
-	}
-}
-const cache$1 = /* @__PURE__ */ new WeakMap();
-function baseCache(cid) {
-	const baseCache = cache$1.get(cid);
-	if (baseCache == null) {
-		const baseCache = /* @__PURE__ */ new Map();
-		cache$1.set(cid, baseCache);
-		return baseCache;
-	}
-	return baseCache;
-}
-var CID = class CID {
-	code;
-	version;
-	multihash;
-	bytes;
-	"/";
-	/**
-	* @param version - Version of the CID
-	* @param code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
-	* @param multihash - (Multi)hash of the of the content.
-	*/
-	constructor(version, code, multihash, bytes) {
-		this.code = code;
-		this.version = version;
-		this.multihash = multihash;
-		this.bytes = toArrayBufferBackedArray(bytes);
-		this["/"] = this.bytes;
-	}
-	/**
-	* Signalling `cid.asCID === cid` has been replaced with `cid['/'] === cid.bytes`
-	* please either use `CID.asCID(cid)` or switch to new signalling mechanism
-	*
-	* @deprecated
-	*/
-	get asCID() {
-		return this;
-	}
-	get byteOffset() {
-		return this.bytes.byteOffset;
-	}
-	get byteLength() {
-		return this.bytes.byteLength;
-	}
-	toV0() {
-		switch (this.version) {
-			case 0: return this;
-			case 1: {
-				const { code, multihash } = this;
-				if (code !== DAG_PB_CODE) throw new Error("Cannot convert a non dag-pb CID to CIDv0");
-				if (multihash.code !== SHA_256_CODE) throw new Error("Cannot convert non sha2-256 multihash CID to CIDv0");
-				return CID.createV0(multihash);
-			}
-			default: throw Error(`Can not convert CID version ${this.version} to version 0. This is a bug please report`);
-		}
-	}
-	toV1() {
-		switch (this.version) {
-			case 0: {
-				const { code, digest } = this.multihash;
-				const multihash = create$2(code, digest);
-				return CID.createV1(this.code, multihash);
-			}
-			case 1: return this;
-			default: throw Error(`Can not convert CID version ${this.version} to version 1. This is a bug please report`);
-		}
-	}
-	equals(other) {
-		return CID.equals(this, other);
-	}
-	static equals(self, other) {
-		const unknown = other;
-		return unknown != null && self.code === unknown.code && self.version === unknown.version && equals$2(self.multihash, unknown.multihash);
-	}
-	toString(base) {
-		return format$1(this, base);
-	}
-	toJSON() {
-		return { "/": format$1(this) };
-	}
-	link() {
-		return this;
-	}
-	[Symbol.toStringTag] = "CID";
-	[Symbol.for("nodejs.util.inspect.custom")]() {
-		return `CID(${this.toString()})`;
-	}
-	/**
-	* Takes any input `value` and returns a `CID` instance if it was
-	* a `CID` otherwise returns `null`. If `value` is instanceof `CID`
-	* it will return value back. If `value` is not instance of this CID
-	* class, but is compatible CID it will return new instance of this
-	* `CID` class. Otherwise returns null.
-	*
-	* This allows two different incompatible versions of CID library to
-	* co-exist and interop as long as binary interface is compatible.
-	*/
-	static asCID(input) {
-		if (input == null) return null;
-		const value = input;
-		if (value instanceof CID) return value;
-		else if (value["/"] != null && value["/"] === value.bytes || value.asCID === value) {
-			const { version, code, multihash, bytes } = value;
-			return new CID(version, code, multihash, bytes ?? encodeCID(version, code, multihash.bytes));
-		} else if (value[cidSymbol] === true) {
-			const { version, multihash, code } = value;
-			const digest = decode$9(multihash);
-			return CID.create(version, code, digest);
-		} else return null;
-	}
-	/**
-	* @param version - Version of the CID
-	* @param code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
-	* @param digest - (Multi)hash of the of the content.
-	*/
-	static create(version, code, digest) {
-		if (typeof code !== "number") throw new Error("String codecs are no longer supported");
-		if (!(digest.bytes instanceof Uint8Array)) throw new Error("Invalid digest");
-		switch (version) {
-			case 0: if (code !== DAG_PB_CODE) throw new Error(`Version 0 CID must use dag-pb (code: ${DAG_PB_CODE}) block encoding`);
-			else return new CID(version, code, digest, digest.bytes);
-			case 1: return new CID(version, code, digest, encodeCID(version, code, digest.bytes));
-			default: throw new Error("Invalid version");
-		}
-	}
-	/**
-	* Simplified version of `create` for CIDv0.
-	*/
-	static createV0(digest) {
-		return CID.create(0, DAG_PB_CODE, digest);
-	}
-	/**
-	* Simplified version of `create` for CIDv1.
-	*
-	* @param code - Content encoding format code.
-	* @param digest - Multihash of the content.
-	*/
-	static createV1(code, digest) {
-		return CID.create(1, code, digest);
-	}
-	/**
-	* Decoded a CID from its binary representation. The byte array must contain
-	* only the CID with no additional bytes.
-	*
-	* An error will be thrown if the bytes provided do not contain a valid
-	* binary representation of a CID.
-	*/
-	static decode(bytes) {
-		const [cid, remainder] = CID.decodeFirst(bytes);
-		if (remainder.length !== 0) throw new Error("Incorrect length");
-		return cid;
-	}
-	/**
-	* Decoded a CID from its binary representation at the beginning of a byte
-	* array.
-	*
-	* Returns an array with the first element containing the CID and the second
-	* element containing the remainder of the original byte array. The remainder
-	* will be a zero-length byte array if the provided bytes only contained a
-	* binary CID representation.
-	*/
-	static decodeFirst(bytes) {
-		const specs = CID.inspectBytes(bytes);
-		const prefixSize = specs.size - specs.multihashSize;
-		const multihashBytes = coerce(bytes.subarray(prefixSize, prefixSize + specs.multihashSize));
-		if (multihashBytes.byteLength !== specs.multihashSize) throw new Error("Incorrect length");
-		const digestBytes = multihashBytes.subarray(specs.multihashSize - specs.digestSize);
-		const digest = new Digest(specs.multihashCode, specs.digestSize, digestBytes, multihashBytes);
-		return [specs.version === 0 ? CID.createV0(digest) : CID.createV1(specs.codec, digest), bytes.subarray(specs.size)];
-	}
-	/**
-	* Inspect the initial bytes of a CID to determine its properties.
-	*
-	* Involves decoding up to 4 varints. Typically this will require only 4 to 6
-	* bytes but for larger multicodec code values and larger multihash digest
-	* lengths these varints can be quite large. It is recommended that at least
-	* 10 bytes be made available in the `initialBytes` argument for a complete
-	* inspection.
-	*/
-	static inspectBytes(initialBytes) {
-		let offset = 0;
-		const next = () => {
-			const [i, length] = decode$10(initialBytes.subarray(offset));
-			offset += length;
-			return i;
-		};
-		let version = next();
-		let codec = DAG_PB_CODE;
-		if (version === 18) {
-			version = 0;
-			offset = 0;
-		} else codec = next();
-		if (version !== 0 && version !== 1) throw new RangeError(`Invalid CID version ${version}`);
-		const prefixSize = offset;
-		const multihashCode = next();
-		const digestSize = next();
-		const size = offset + digestSize;
-		const multihashSize = size - prefixSize;
-		return {
-			version,
-			codec,
-			multihashCode,
-			digestSize,
-			multihashSize,
-			size
-		};
-	}
-	/**
-	* Takes cid in a string representation and creates an instance. If `base`
-	* decoder is not provided will use a default from the configuration. It will
-	* throw an error if encoding of the CID is not compatible with supplied (or
-	* a default decoder).
-	*/
-	static parse(source, base) {
-		const [prefix, bytes] = parseCIDtoBytes(source, base);
-		const cid = CID.decode(bytes);
-		if (cid.version === 0 && source[0] !== "Q") throw Error("Version 0 CID string must not include multibase prefix");
-		baseCache(cid).set(prefix, source);
-		return cid;
-	}
-};
-function parseCIDtoBytes(source, base) {
-	switch (source[0]) {
-		case "Q": {
-			const decoder = base ?? base58btc;
-			return [base58btc.prefix, decoder.decode(`${base58btc.prefix}${source}`)];
-		}
-		case base58btc.prefix: {
-			const decoder = base ?? base58btc;
-			return [base58btc.prefix, decoder.decode(source)];
-		}
-		case base32.prefix: {
-			const decoder = base ?? base32;
-			return [base32.prefix, decoder.decode(source)];
-		}
-		case base36.prefix: {
-			const decoder = base ?? base36;
-			return [base36.prefix, decoder.decode(source)];
-		}
-		default:
-			if (base == null) throw Error("To parse non base32, base36 or base58btc encoded CID multibase decoder must be provided");
-			return [source[0], base.decode(source)];
-	}
-}
-function toStringV0(bytes, cache, base) {
-	const { prefix } = base;
-	if (prefix !== base58btc.prefix) throw Error(`Cannot string encode V0 in ${base.name} encoding`);
-	const cid = cache.get(prefix);
-	if (cid == null) {
-		const cid = base.encode(bytes).slice(1);
-		cache.set(prefix, cid);
-		return cid;
-	} else return cid;
-}
-function toStringV1(bytes, cache, base) {
-	const { prefix } = base;
-	const cid = cache.get(prefix);
-	if (cid == null) {
-		const cid = base.encode(bytes);
-		cache.set(prefix, cid);
-		return cid;
-	} else return cid;
-}
-const DAG_PB_CODE = 112;
-const SHA_256_CODE = 18;
-function encodeCID(version, code, multihash) {
-	const codeOffset = encodingLength$2(version);
-	const hashOffset = codeOffset + encodingLength$2(code);
-	const bytes = new Uint8Array(hashOffset + multihash.byteLength);
-	encodeTo(version, bytes, 0);
-	encodeTo(code, bytes, codeOffset);
-	bytes.set(multihash, hashOffset);
-	return bytes;
-}
-const cidSymbol = Symbol.for("@ipld/js-cid/CID");
-//#endregion
 //#region node_modules/.pnpm/@ipld+dag-cbor@10.0.1/node_modules/@ipld/dag-cbor/src/index.js
 const CID_CBOR_TAG$1 = 42;
 /**
@@ -23378,7 +22426,7 @@ function toByteView$3(buf) {
 */
 function cidEncoder$2(obj) {
 	if (obj.asCID !== obj && obj["/"] !== obj.bytes) return null;
-	const cid = CID.asCID(obj);
+	const cid = CID$1.asCID(obj);
 	/* c8 ignore next 4 */
 	if (!cid) return null;
 	const bytes = new Uint8Array(cid.bytes.byteLength + 1);
@@ -23432,7 +22480,7 @@ const _encodeOptions$1 = {
 function cidDecoder$1(decode) {
 	const bytes = decode();
 	if (bytes[0] !== 0) throw new Error("Invalid CID for CBOR tag 42; expected leading 0x00");
-	return CID.decode(bytes.subarray(1));
+	return CID$1.decode(bytes.subarray(1));
 }
 const _decodeOptions$1 = {
 	allowIndefinite: false,
@@ -23452,13 +22500,13 @@ const _decodeOptions$1 = {
 * @param {T} node
 * @returns {ByteView<T>}
 */
-const encode$8 = (node) => encode$10(node, _encodeOptions$1);
+const encode$12 = (node) => encode$13(node, _encodeOptions$1);
 /**
 * @template T
 * @param {ByteView<T> | ArrayBufferView<T>} data
 * @returns {T}
 */
-const decode$8 = (data) => decode$12(toByteView$3(data), _decodeOptions$1);
+const decode$14 = (data) => decode$15(toByteView$3(data), _decodeOptions$1);
 //#endregion
 //#region node_modules/.pnpm/varint@6.0.0/node_modules/varint/encode.js
 var require_encode = /* @__PURE__ */ __commonJSMin(((exports, module) => {
@@ -23796,7 +22844,7 @@ new Token(Type.tag, 42);
 async function readHeader(reader, strictVersion) {
 	const length = decodeVarint$1(await reader.upTo(8), reader);
 	if (length === 0) throw new Error("Invalid CAR header (zero length)");
-	const block = decode$8(await reader.exactly(length, true));
+	const block = decode$14(await reader.exactly(length, true));
 	if (CarV1HeaderOrV2Pragma.toTyped(block) === void 0) throw new Error("Invalid CAR header format");
 	if (block.version !== 1 && block.version !== 2 || strictVersion !== void 0 && block.version !== strictVersion) throw new Error(`Invalid CAR version: ${block.version}${strictVersion !== void 0 ? ` (expected ${strictVersion})` : ""}`);
 	if (block.version === 1) {
@@ -23816,14 +22864,14 @@ async function readHeader(reader, strictVersion) {
 async function readCid(reader) {
 	const first = await reader.exactly(2, false);
 	if (first[0] === CIDV0_BYTES.SHA2_256 && first[1] === CIDV0_BYTES.LENGTH) {
-		const multihash = decode$9(await reader.exactly(34, true));
-		return CID.create(0, CIDV0_BYTES.DAG_PB, multihash);
+		const multihash = decode$17(await reader.exactly(34, true));
+		return CID$1.create(0, CIDV0_BYTES.DAG_PB, multihash);
 	}
 	const version = decodeVarint$1(await reader.upTo(8), reader);
 	if (version !== 1) throw new Error(`Unexpected CID version (${version})`);
 	const codec = decodeVarint$1(await reader.upTo(8), reader);
-	const multihash = decode$9(await reader.exactly(getMultihashLength(await reader.upTo(8)), true));
-	return CID.create(version, codec, multihash);
+	const multihash = decode$17(await reader.exactly(getMultihashLength(await reader.upTo(8)), true));
+	return CID$1.create(version, codec, multihash);
 }
 /**
 * Reads the leading data of an individual block from CAR data from a
@@ -24314,7 +23362,7 @@ const CAR_V1_VERSION = 1;
 * @returns {Uint8Array}
 */
 function createHeader(roots) {
-	const headerBytes = encode$8({
+	const headerBytes = encode$12({
 		version: CAR_V1_VERSION,
 		roots
 	});
@@ -24373,7 +23421,7 @@ function noop$2() {}
 * @template {any} T
 * @returns {IteratorChannel<T>}
 */
-function create$1() {
+function create$2() {
 	/** @type {T[]} */
 	const chunkQueue = [];
 	/** @type {Promise<void> | null} */
@@ -24517,7 +23565,7 @@ var CarWriter$1 = class CarWriter$1 {
 	async put(block) {
 		if (!(block.bytes instanceof Uint8Array) || !block.cid) throw new TypeError("Can only write {cid, bytes} objects");
 		if (this._ended) throw new Error("Already closed");
-		const cid = CID.asCID(block.cid);
+		const cid = CID$1.asCID(block.cid);
 		if (!cid) throw new TypeError("Can only write {cid, bytes} objects");
 		this._mutex = this._mutex.then(() => this._encoder.writeBlock({
 			cid,
@@ -24640,7 +23688,7 @@ var CarWriterOut = class {
 	}
 };
 function encodeWriter() {
-	const { writer, iterator } = create$1();
+	const { writer, iterator } = create$2();
 	return {
 		encoder: createEncoder(writer),
 		iterator
@@ -24654,13 +23702,13 @@ function encodeWriter() {
 function toRoots(roots) {
 	if (roots === void 0) return [];
 	if (!Array.isArray(roots)) {
-		const cid = CID.asCID(roots);
+		const cid = CID$1.asCID(roots);
 		if (!cid) throw new TypeError("roots must be a single CID or an array of CIDs");
 		return [cid];
 	}
 	const _roots = [];
 	for (const root of roots) {
-		const _root = CID.asCID(root);
+		const _root = CID$1.asCID(root);
 		if (!_root) throw new TypeError("roots must be a single CID or an array of CIDs");
 		_roots.push(_root);
 	}
@@ -24905,7 +23953,7 @@ var ConnectionClosedError = class extends Error {
 /**
 * Thrown when a value could not be found
 */
-var NotFoundError$2 = class extends Error {
+var NotFoundError$3 = class extends Error {
 	static name = "NotFoundError";
 	constructor(message = "Not found") {
 		super(message);
@@ -25411,6 +24459,1138 @@ function getTypes(types) {
 	}
 	return [types];
 }
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bytes.js
+function equals$3(aa, bb) {
+	if (aa === bb) return true;
+	if (aa.byteLength !== bb.byteLength) return false;
+	for (let ii = 0; ii < aa.byteLength; ii++) if (aa[ii] !== bb[ii]) return false;
+	return true;
+}
+function coerce(o) {
+	if (o instanceof Uint8Array && o.constructor.name === "Uint8Array") return o;
+	if (o instanceof ArrayBuffer) return new Uint8Array(o);
+	if (ArrayBuffer.isView(o)) return new Uint8Array(o.buffer, o.byteOffset, o.byteLength);
+	throw new Error("Unknown type, must be binary type");
+}
+function fromString$1(str) {
+	return new TextEncoder().encode(str);
+}
+function toString$2(b) {
+	return new TextDecoder().decode(b);
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/vendor/base-x.js
+/**
+* @param {string} ALPHABET
+* @param {any} name
+*/
+function base(ALPHABET, name) {
+	if (ALPHABET.length >= 255) throw new TypeError("Alphabet too long");
+	var BASE_MAP = new Uint8Array(256);
+	for (var j = 0; j < BASE_MAP.length; j++) BASE_MAP[j] = 255;
+	for (var i = 0; i < ALPHABET.length; i++) {
+		var x = ALPHABET.charAt(i);
+		var xc = x.charCodeAt(0);
+		if (BASE_MAP[xc] !== 255) throw new TypeError(x + " is ambiguous");
+		BASE_MAP[xc] = i;
+	}
+	var BASE = ALPHABET.length;
+	var LEADER = ALPHABET.charAt(0);
+	var FACTOR = Math.log(BASE) / Math.log(256);
+	var iFACTOR = Math.log(256) / Math.log(BASE);
+	/**
+	* @param {any[] | Iterable<number>} source
+	*/
+	function encode(source) {
+		if (source instanceof Uint8Array);
+		else if (ArrayBuffer.isView(source)) source = new Uint8Array(source.buffer, source.byteOffset, source.byteLength);
+		else if (Array.isArray(source)) source = Uint8Array.from(source);
+		if (!(source instanceof Uint8Array)) throw new TypeError("Expected Uint8Array");
+		if (source.length === 0) return "";
+		var zeroes = 0;
+		var length = 0;
+		var pbegin = 0;
+		var pend = source.length;
+		while (pbegin !== pend && source[pbegin] === 0) {
+			pbegin++;
+			zeroes++;
+		}
+		var size = (pend - pbegin) * iFACTOR + 1 >>> 0;
+		var b58 = new Uint8Array(size);
+		while (pbegin !== pend) {
+			var carry = source[pbegin];
+			var i = 0;
+			for (var it1 = size - 1; (carry !== 0 || i < length) && it1 !== -1; it1--, i++) {
+				carry += 256 * b58[it1] >>> 0;
+				b58[it1] = carry % BASE >>> 0;
+				carry = carry / BASE >>> 0;
+			}
+			if (carry !== 0) throw new Error("Non-zero carry");
+			length = i;
+			pbegin++;
+		}
+		var it2 = size - length;
+		while (it2 !== size && b58[it2] === 0) it2++;
+		var str = LEADER.repeat(zeroes);
+		for (; it2 < size; ++it2) str += ALPHABET.charAt(b58[it2]);
+		return str;
+	}
+	/**
+	* @param {string | string[]} source
+	*/
+	function decodeUnsafe(source) {
+		if (typeof source !== "string") throw new TypeError("Expected String");
+		if (source.length === 0) return new Uint8Array();
+		var psz = 0;
+		if (source[psz] === " ") return;
+		var zeroes = 0;
+		var length = 0;
+		while (source[psz] === LEADER) {
+			zeroes++;
+			psz++;
+		}
+		var size = (source.length - psz) * FACTOR + 1 >>> 0;
+		var b256 = new Uint8Array(size);
+		while (source[psz]) {
+			var carry = BASE_MAP[source.charCodeAt(psz)];
+			if (carry === 255) return;
+			var i = 0;
+			for (var it3 = size - 1; (carry !== 0 || i < length) && it3 !== -1; it3--, i++) {
+				carry += BASE * b256[it3] >>> 0;
+				b256[it3] = carry % 256 >>> 0;
+				carry = carry / 256 >>> 0;
+			}
+			if (carry !== 0) throw new Error("Non-zero carry");
+			length = i;
+			psz++;
+		}
+		if (source[psz] === " ") return;
+		var it4 = size - length;
+		while (it4 !== size && b256[it4] === 0) it4++;
+		var vch = new Uint8Array(zeroes + (size - it4));
+		var j = zeroes;
+		while (it4 !== size) vch[j++] = b256[it4++];
+		return vch;
+	}
+	/**
+	* @param {string | string[]} string
+	*/
+	function decode(string) {
+		var buffer = decodeUnsafe(string);
+		if (buffer) return buffer;
+		throw new Error(`Non-${name} character`);
+	}
+	return {
+		encode,
+		decodeUnsafe,
+		decode
+	};
+}
+var _brrp__multiformats_scope_baseX = base;
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base.js
+/**
+* Class represents both BaseEncoder and MultibaseEncoder meaning it
+* can be used to encode to multibase or base encode without multibase
+* prefix.
+*/
+var Encoder = class {
+	name;
+	prefix;
+	baseEncode;
+	constructor(name, prefix, baseEncode) {
+		this.name = name;
+		this.prefix = prefix;
+		this.baseEncode = baseEncode;
+	}
+	encode(bytes) {
+		if (bytes instanceof Uint8Array) return `${this.prefix}${this.baseEncode(bytes)}`;
+		else throw Error("Unknown type, must be binary type");
+	}
+};
+/**
+* Class represents both BaseDecoder and MultibaseDecoder so it could be used
+* to decode multibases (with matching prefix) or just base decode strings
+* with corresponding base encoding.
+*/
+var Decoder = class {
+	name;
+	prefix;
+	baseDecode;
+	prefixCodePoint;
+	constructor(name, prefix, baseDecode) {
+		this.name = name;
+		this.prefix = prefix;
+		const prefixCodePoint = prefix.codePointAt(0);
+		/* c8 ignore next 3 */
+		if (prefixCodePoint === void 0) throw new Error("Invalid prefix character");
+		this.prefixCodePoint = prefixCodePoint;
+		this.baseDecode = baseDecode;
+	}
+	decode(text) {
+		if (typeof text === "string") {
+			if (text.codePointAt(0) !== this.prefixCodePoint) throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`);
+			return this.baseDecode(text.slice(this.prefix.length));
+		} else throw Error("Can only multibase decode strings");
+	}
+	or(decoder) {
+		return or$1(this, decoder);
+	}
+};
+var ComposedDecoder = class {
+	decoders;
+	constructor(decoders) {
+		this.decoders = decoders;
+	}
+	or(decoder) {
+		return or$1(this, decoder);
+	}
+	decode(input) {
+		const prefix = input[0];
+		const decoder = this.decoders[prefix];
+		if (decoder != null) return decoder.decode(input);
+		else throw RangeError(`Unable to decode multibase string ${JSON.stringify(input)}, only inputs prefixed with ${Object.keys(this.decoders)} are supported`);
+	}
+};
+function or$1(left, right) {
+	return new ComposedDecoder({
+		...left.decoders ?? { [left.prefix]: left },
+		...right.decoders ?? { [right.prefix]: right }
+	});
+}
+var Codec = class {
+	name;
+	prefix;
+	baseEncode;
+	baseDecode;
+	encoder;
+	decoder;
+	constructor(name, prefix, baseEncode, baseDecode) {
+		this.name = name;
+		this.prefix = prefix;
+		this.baseEncode = baseEncode;
+		this.baseDecode = baseDecode;
+		this.encoder = new Encoder(name, prefix, baseEncode);
+		this.decoder = new Decoder(name, prefix, baseDecode);
+	}
+	encode(input) {
+		return this.encoder.encode(input);
+	}
+	decode(input) {
+		return this.decoder.decode(input);
+	}
+};
+function from$1({ name, prefix, encode, decode }) {
+	return new Codec(name, prefix, encode, decode);
+}
+function baseX({ name, prefix, alphabet }) {
+	const { encode, decode } = _brrp__multiformats_scope_baseX(alphabet, name);
+	return from$1({
+		prefix,
+		name,
+		encode,
+		decode: (text) => coerce(decode(text))
+	});
+}
+function decode$13(string, alphabetIdx, bitsPerChar, name) {
+	let end = string.length;
+	while (string[end - 1] === "=") --end;
+	const out = new Uint8Array(end * bitsPerChar / 8 | 0);
+	let bits = 0;
+	let buffer = 0;
+	let written = 0;
+	for (let i = 0; i < end; ++i) {
+		const value = alphabetIdx[string[i]];
+		if (value === void 0) throw new SyntaxError(`Non-${name} character`);
+		buffer = buffer << bitsPerChar | value;
+		bits += bitsPerChar;
+		if (bits >= 8) {
+			bits -= 8;
+			out[written++] = 255 & buffer >> bits;
+		}
+	}
+	if (bits >= bitsPerChar || (255 & buffer << 8 - bits) !== 0) throw new SyntaxError("Unexpected end of data");
+	return out;
+}
+function encode$11(data, alphabet, bitsPerChar) {
+	const pad = alphabet[alphabet.length - 1] === "=";
+	const mask = (1 << bitsPerChar) - 1;
+	let out = "";
+	let bits = 0;
+	let buffer = 0;
+	for (let i = 0; i < data.length; ++i) {
+		buffer = buffer << 8 | data[i];
+		bits += 8;
+		while (bits > bitsPerChar) {
+			bits -= bitsPerChar;
+			out += alphabet[mask & buffer >> bits];
+		}
+	}
+	if (bits !== 0) out += alphabet[mask & buffer << bitsPerChar - bits];
+	if (pad) while ((out.length * bitsPerChar & 7) !== 0) out += "=";
+	return out;
+}
+function createAlphabetIdx(alphabet) {
+	const alphabetIdx = {};
+	for (let i = 0; i < alphabet.length; ++i) alphabetIdx[alphabet[i]] = i;
+	return alphabetIdx;
+}
+/**
+* RFC4648 Factory
+*/
+function rfc4648({ name, prefix, bitsPerChar, alphabet }) {
+	const alphabetIdx = createAlphabetIdx(alphabet);
+	return from$1({
+		prefix,
+		name,
+		encode(input) {
+			return encode$11(input, alphabet, bitsPerChar);
+		},
+		decode(input) {
+			return decode$13(input, alphabetIdx, bitsPerChar, name);
+		}
+	});
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base10.js
+var base10_exports = /* @__PURE__ */ __exportAll({ base10: () => base10 });
+const base10 = baseX({
+	prefix: "9",
+	name: "base10",
+	alphabet: "0123456789"
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base16.js
+var base16_exports = /* @__PURE__ */ __exportAll({
+	base16: () => base16,
+	base16upper: () => base16upper
+});
+const base16 = rfc4648({
+	prefix: "f",
+	name: "base16",
+	alphabet: "0123456789abcdef",
+	bitsPerChar: 4
+});
+const base16upper = rfc4648({
+	prefix: "F",
+	name: "base16upper",
+	alphabet: "0123456789ABCDEF",
+	bitsPerChar: 4
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base2.js
+var base2_exports = /* @__PURE__ */ __exportAll({ base2: () => base2 });
+const base2 = rfc4648({
+	prefix: "0",
+	name: "base2",
+	alphabet: "01",
+	bitsPerChar: 1
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base256emoji.js
+var base256emoji_exports = /* @__PURE__ */ __exportAll({ base256emoji: () => base256emoji });
+const alphabet = Array.from("🚀🪐☄🛰🌌🌑🌒🌓🌔🌕🌖🌗🌘🌍🌏🌎🐉☀💻🖥💾💿😂❤😍🤣😊🙏💕😭😘👍😅👏😁🔥🥰💔💖💙😢🤔😆🙄💪😉☺👌🤗💜😔😎😇🌹🤦🎉💞✌✨🤷😱😌🌸🙌😋💗💚😏💛🙂💓🤩😄😀🖤😃💯🙈👇🎶😒🤭❣😜💋👀😪😑💥🙋😞😩😡🤪👊🥳😥🤤👉💃😳✋😚😝😴🌟😬🙃🍀🌷😻😓⭐✅🥺🌈😈🤘💦✔😣🏃💐☹🎊💘😠☝😕🌺🎂🌻😐🖕💝🙊😹🗣💫💀👑🎵🤞😛🔴😤🌼😫⚽🤙☕🏆🤫👈😮🙆🍻🍃🐶💁😲🌿🧡🎁⚡🌞🎈❌✊👋😰🤨😶🤝🚶💰🍓💢🤟🙁🚨💨🤬✈🎀🍺🤓😙💟🌱😖👶🥴▶➡❓💎💸⬇😨🌚🦋😷🕺⚠🙅😟😵👎🤲🤠🤧📌🔵💅🧐🐾🍒😗🤑🌊🤯🐷☎💧😯💆👆🎤🙇🍑❄🌴💣🐸💌📍🥀🤢👅💡💩👐📸👻🤐🤮🎼🥵🚩🍎🍊👼💍📣🥂");
+const alphabetBytesToChars = alphabet.reduce((p, c, i) => {
+	p[i] = c;
+	return p;
+}, []);
+const alphabetCharsToBytes = alphabet.reduce((p, c, i) => {
+	const codePoint = c.codePointAt(0);
+	if (codePoint == null) throw new Error(`Invalid character: ${c}`);
+	p[codePoint] = i;
+	return p;
+}, []);
+function encode$10(data) {
+	return data.reduce((p, c) => {
+		p += alphabetBytesToChars[c];
+		return p;
+	}, "");
+}
+function decode$12(str) {
+	const byts = [];
+	for (const char of str) {
+		const codePoint = char.codePointAt(0);
+		if (codePoint == null) throw new Error(`Invalid character: ${char}`);
+		const byt = alphabetCharsToBytes[codePoint];
+		if (byt == null) throw new Error(`Non-base256emoji character: ${char}`);
+		byts.push(byt);
+	}
+	return new Uint8Array(byts);
+}
+const base256emoji = from$1({
+	prefix: "🚀",
+	name: "base256emoji",
+	encode: encode$10,
+	decode: decode$12
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base32.js
+var base32_exports = /* @__PURE__ */ __exportAll({
+	base32: () => base32,
+	base32hex: () => base32hex,
+	base32hexpad: () => base32hexpad,
+	base32hexpadupper: () => base32hexpadupper,
+	base32hexupper: () => base32hexupper,
+	base32pad: () => base32pad,
+	base32padupper: () => base32padupper,
+	base32upper: () => base32upper,
+	base32z: () => base32z
+});
+const base32 = rfc4648({
+	prefix: "b",
+	name: "base32",
+	alphabet: "abcdefghijklmnopqrstuvwxyz234567",
+	bitsPerChar: 5
+});
+const base32upper = rfc4648({
+	prefix: "B",
+	name: "base32upper",
+	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+	bitsPerChar: 5
+});
+const base32pad = rfc4648({
+	prefix: "c",
+	name: "base32pad",
+	alphabet: "abcdefghijklmnopqrstuvwxyz234567=",
+	bitsPerChar: 5
+});
+const base32padupper = rfc4648({
+	prefix: "C",
+	name: "base32padupper",
+	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
+	bitsPerChar: 5
+});
+const base32hex = rfc4648({
+	prefix: "v",
+	name: "base32hex",
+	alphabet: "0123456789abcdefghijklmnopqrstuv",
+	bitsPerChar: 5
+});
+const base32hexupper = rfc4648({
+	prefix: "V",
+	name: "base32hexupper",
+	alphabet: "0123456789ABCDEFGHIJKLMNOPQRSTUV",
+	bitsPerChar: 5
+});
+const base32hexpad = rfc4648({
+	prefix: "t",
+	name: "base32hexpad",
+	alphabet: "0123456789abcdefghijklmnopqrstuv=",
+	bitsPerChar: 5
+});
+const base32hexpadupper = rfc4648({
+	prefix: "T",
+	name: "base32hexpadupper",
+	alphabet: "0123456789ABCDEFGHIJKLMNOPQRSTUV=",
+	bitsPerChar: 5
+});
+const base32z = rfc4648({
+	prefix: "h",
+	name: "base32z",
+	alphabet: "ybndrfg8ejkmcpqxot1uwisza345h769",
+	bitsPerChar: 5
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base36.js
+var base36_exports = /* @__PURE__ */ __exportAll({
+	base36: () => base36,
+	base36upper: () => base36upper
+});
+const base36 = baseX({
+	prefix: "k",
+	name: "base36",
+	alphabet: "0123456789abcdefghijklmnopqrstuvwxyz"
+});
+const base36upper = baseX({
+	prefix: "K",
+	name: "base36upper",
+	alphabet: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base58.js
+var base58_exports = /* @__PURE__ */ __exportAll({
+	base58btc: () => base58btc,
+	base58flickr: () => base58flickr
+});
+const base58btc = baseX({
+	name: "base58btc",
+	prefix: "z",
+	alphabet: "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+});
+const base58flickr = baseX({
+	name: "base58flickr",
+	prefix: "Z",
+	alphabet: "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base64.js
+var base64_exports = /* @__PURE__ */ __exportAll({
+	base64: () => base64,
+	base64pad: () => base64pad,
+	base64url: () => base64url,
+	base64urlpad: () => base64urlpad
+});
+const base64 = rfc4648({
+	prefix: "m",
+	name: "base64",
+	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+	bitsPerChar: 6
+});
+const base64pad = rfc4648({
+	prefix: "M",
+	name: "base64pad",
+	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+	bitsPerChar: 6
+});
+const base64url = rfc4648({
+	prefix: "u",
+	name: "base64url",
+	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
+	bitsPerChar: 6
+});
+const base64urlpad = rfc4648({
+	prefix: "U",
+	name: "base64urlpad",
+	alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=",
+	bitsPerChar: 6
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/base8.js
+var base8_exports = /* @__PURE__ */ __exportAll({ base8: () => base8 });
+const base8 = rfc4648({
+	prefix: "7",
+	name: "base8",
+	alphabet: "01234567",
+	bitsPerChar: 3
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/bases/identity.js
+var identity_exports$1 = /* @__PURE__ */ __exportAll({ identity: () => identity$1 });
+const identity$1 = from$1({
+	prefix: "\0",
+	name: "identity",
+	encode: (buf) => toString$2(buf),
+	decode: (str) => fromString$1(str)
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/codecs/json.js
+var json_exports = /* @__PURE__ */ __exportAll({
+	code: () => 512,
+	decode: () => decode$11,
+	encode: () => encode$9,
+	name: () => name$6
+});
+const textEncoder$2 = new TextEncoder();
+const textDecoder$1 = new TextDecoder();
+const name$6 = "json";
+function encode$9(node) {
+	return textEncoder$2.encode(JSON.stringify(node));
+}
+function decode$11(data) {
+	return JSON.parse(textDecoder$1.decode(data));
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/codecs/raw.js
+var raw_exports = /* @__PURE__ */ __exportAll({
+	code: () => 85,
+	decode: () => decode$10,
+	encode: () => encode$8,
+	name: () => "raw"
+});
+function encode$8(node) {
+	return coerce(node);
+}
+function decode$10(data) {
+	return coerce(data);
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/vendor/varint.js
+var encode_1 = encode$7;
+var MSB$2 = 128, MSBALL = -128, INT = Math.pow(2, 31);
+/**
+* @param {number} num
+* @param {number[]} out
+* @param {number} offset
+*/
+function encode$7(num, out, offset) {
+	out = out || [];
+	offset = offset || 0;
+	var oldOffset = offset;
+	while (num >= INT) {
+		out[offset++] = num & 255 | MSB$2;
+		num /= 128;
+	}
+	while (num & MSBALL) {
+		out[offset++] = num & 255 | MSB$2;
+		num >>>= 7;
+	}
+	out[offset] = num | 0;
+	encode$7.bytes = offset - oldOffset + 1;
+	return out;
+}
+var decode$9 = read$1;
+var MSB$1$1 = 128, REST$1$1 = 127;
+/**
+* @param {string | any[]} buf
+* @param {number} offset
+*/
+function read$1(buf, offset) {
+	var res = 0, offset = offset || 0, shift = 0, counter = offset, b, l = buf.length;
+	do {
+		if (counter >= l) {
+			read$1.bytes = 0;
+			throw new RangeError("Could not decode varint");
+		}
+		b = buf[counter++];
+		res += shift < 28 ? (b & REST$1$1) << shift : (b & REST$1$1) * Math.pow(2, shift);
+		shift += 7;
+	} while (b >= MSB$1$1);
+	read$1.bytes = counter - offset;
+	return res;
+}
+var N1$2 = Math.pow(2, 7);
+var N2$2 = Math.pow(2, 14);
+var N3$2 = Math.pow(2, 21);
+var N4$2 = Math.pow(2, 28);
+var N5$2 = Math.pow(2, 35);
+var N6$2 = Math.pow(2, 42);
+var N7$2 = Math.pow(2, 49);
+var N8 = Math.pow(2, 56);
+var N9 = Math.pow(2, 63);
+var length$1 = function(value) {
+	return value < N1$2 ? 1 : value < N2$2 ? 2 : value < N3$2 ? 3 : value < N4$2 ? 4 : value < N5$2 ? 5 : value < N6$2 ? 6 : value < N7$2 ? 7 : value < N8 ? 8 : value < N9 ? 9 : 10;
+};
+var _brrp_varint = {
+	encode: encode_1,
+	decode: decode$9,
+	encodingLength: length$1
+};
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/varint.js
+function decode$8(data, offset = 0) {
+	return [_brrp_varint.decode(data, offset), _brrp_varint.decode.bytes];
+}
+function encodeTo(int, target, offset = 0) {
+	_brrp_varint.encode(int, target, offset);
+	return target;
+}
+function encodingLength$2(int) {
+	return _brrp_varint.encodingLength(int);
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/digest.js
+/**
+* Creates a multihash digest.
+*/
+function create$1(code, digest) {
+	const size = digest.byteLength;
+	const sizeOffset = encodingLength$2(code);
+	const digestOffset = sizeOffset + encodingLength$2(size);
+	const bytes = new Uint8Array(digestOffset + size);
+	encodeTo(code, bytes, 0);
+	encodeTo(size, bytes, sizeOffset);
+	bytes.set(digest, digestOffset);
+	return new Digest(code, size, digest, bytes);
+}
+/**
+* Turns bytes representation of multihash digest into an instance.
+*/
+function decode$7(multihash) {
+	const bytes = coerce(multihash);
+	const [code, sizeOffset] = decode$8(bytes);
+	const [size, digestOffset] = decode$8(bytes.subarray(sizeOffset));
+	const digest = bytes.subarray(sizeOffset + digestOffset);
+	if (digest.byteLength !== size) throw new Error("Incorrect length");
+	return new Digest(code, size, digest, bytes);
+}
+function equals$2(a, b) {
+	if (a === b) return true;
+	else {
+		const data = b;
+		return a.code === data.code && a.size === data.size && data.bytes instanceof Uint8Array && equals$3(a.bytes, data.bytes);
+	}
+}
+/**
+* Represents a multihash digest which carries information about the
+* hashing algorithm and an actual hash digest.
+*/
+var Digest = class {
+	code;
+	size;
+	digest;
+	bytes;
+	/**
+	* Creates a multihash digest.
+	*/
+	constructor(code, size, digest, bytes) {
+		this.code = code;
+		this.size = size;
+		this.digest = digest;
+		this.bytes = bytes;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/identity.js
+var identity_exports = /* @__PURE__ */ __exportAll({ identity: () => identity });
+const code$4 = 0;
+const name$4 = "identity";
+const encode$6 = coerce;
+function digest(input, options) {
+	if (options?.truncate != null && options.truncate !== input.byteLength) {
+		if (options.truncate < 0 || options.truncate > input.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${input.byteLength}`);
+		input = input.subarray(0, options.truncate);
+	}
+	return create$1(code$4, encode$6(input));
+}
+const identity = {
+	code: code$4,
+	name: name$4,
+	encode: encode$6,
+	digest
+};
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/hasher.js
+const DEFAULT_MIN_DIGEST_LENGTH = 20;
+function from({ name, code, encode, minDigestLength, maxDigestLength }) {
+	return new Hasher(name, code, encode, minDigestLength, maxDigestLength);
+}
+/**
+* Hasher represents a hashing algorithm implementation that produces as
+* `MultihashDigest`.
+*/
+var Hasher = class {
+	name;
+	code;
+	encode;
+	minDigestLength;
+	maxDigestLength;
+	constructor(name, code, encode, minDigestLength, maxDigestLength) {
+		this.name = name;
+		this.code = code;
+		this.encode = encode;
+		this.minDigestLength = minDigestLength ?? DEFAULT_MIN_DIGEST_LENGTH;
+		this.maxDigestLength = maxDigestLength;
+	}
+	digest(input, options) {
+		if (options?.truncate != null) {
+			if (options.truncate < this.minDigestLength) throw new Error(`Invalid truncate option, must be greater than or equal to ${this.minDigestLength}`);
+			if (this.maxDigestLength != null && options.truncate > this.maxDigestLength) throw new Error(`Invalid truncate option, must be less than or equal to ${this.maxDigestLength}`);
+		}
+		if (input instanceof Uint8Array) {
+			const result = this.encode(input);
+			if (result instanceof Uint8Array) return createDigest(result, this.code, options?.truncate);
+			return result.then((digest) => createDigest(digest, this.code, options?.truncate));
+		} else throw Error("Unknown type, must be binary type");
+	}
+};
+/**
+* Create a Digest from the passed uint8array and code, optionally truncating it
+* first.
+*/
+function createDigest(digest, code, truncate) {
+	if (truncate != null && truncate !== digest.byteLength) {
+		if (truncate > digest.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${digest.byteLength}`);
+		digest = digest.subarray(0, truncate);
+	}
+	return create$1(code, digest);
+}
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/hashes/sha2.js
+var sha2_exports = /* @__PURE__ */ __exportAll({
+	sha256: () => sha256$1,
+	sha512: () => sha512$1
+});
+const sha256$1 = from({
+	name: "sha2-256",
+	code: 18,
+	encode: (input) => coerce(crypto$1.createHash("sha256").update(input).digest())
+});
+const sha512$1 = from({
+	name: "sha2-512",
+	code: 19,
+	encode: (input) => coerce(crypto$1.createHash("sha512").update(input).digest())
+});
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/cid.js
+function format$1(link, base) {
+	const { bytes, version } = link;
+	switch (version) {
+		case 0: return toStringV0(bytes, baseCache(link), base ?? base58btc.encoder);
+		default: return toStringV1(bytes, baseCache(link), base ?? base32.encoder);
+	}
+}
+const cache$1 = /* @__PURE__ */ new WeakMap();
+function baseCache(cid) {
+	const baseCache = cache$1.get(cid);
+	if (baseCache == null) {
+		const baseCache = /* @__PURE__ */ new Map();
+		cache$1.set(cid, baseCache);
+		return baseCache;
+	}
+	return baseCache;
+}
+var CID = class CID {
+	code;
+	version;
+	multihash;
+	bytes;
+	"/";
+	/**
+	* @param version - Version of the CID
+	* @param code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
+	* @param multihash - (Multi)hash of the of the content.
+	*/
+	constructor(version, code, multihash, bytes) {
+		this.code = code;
+		this.version = version;
+		this.multihash = multihash;
+		this.bytes = bytes;
+		this["/"] = bytes;
+	}
+	/**
+	* Signalling `cid.asCID === cid` has been replaced with `cid['/'] === cid.bytes`
+	* please either use `CID.asCID(cid)` or switch to new signalling mechanism
+	*
+	* @deprecated
+	*/
+	get asCID() {
+		return this;
+	}
+	get byteOffset() {
+		return this.bytes.byteOffset;
+	}
+	get byteLength() {
+		return this.bytes.byteLength;
+	}
+	toV0() {
+		switch (this.version) {
+			case 0: return this;
+			case 1: {
+				const { code, multihash } = this;
+				if (code !== DAG_PB_CODE) throw new Error("Cannot convert a non dag-pb CID to CIDv0");
+				if (multihash.code !== SHA_256_CODE) throw new Error("Cannot convert non sha2-256 multihash CID to CIDv0");
+				return CID.createV0(multihash);
+			}
+			default: throw Error(`Can not convert CID version ${this.version} to version 0. This is a bug please report`);
+		}
+	}
+	toV1() {
+		switch (this.version) {
+			case 0: {
+				const { code, digest } = this.multihash;
+				const multihash = create$1(code, digest);
+				return CID.createV1(this.code, multihash);
+			}
+			case 1: return this;
+			default: throw Error(`Can not convert CID version ${this.version} to version 1. This is a bug please report`);
+		}
+	}
+	equals(other) {
+		return CID.equals(this, other);
+	}
+	static equals(self, other) {
+		const unknown = other;
+		return unknown != null && self.code === unknown.code && self.version === unknown.version && equals$2(self.multihash, unknown.multihash);
+	}
+	toString(base) {
+		return format$1(this, base);
+	}
+	toJSON() {
+		return { "/": format$1(this) };
+	}
+	link() {
+		return this;
+	}
+	[Symbol.toStringTag] = "CID";
+	[Symbol.for("nodejs.util.inspect.custom")]() {
+		return `CID(${this.toString()})`;
+	}
+	/**
+	* Takes any input `value` and returns a `CID` instance if it was
+	* a `CID` otherwise returns `null`. If `value` is instanceof `CID`
+	* it will return value back. If `value` is not instance of this CID
+	* class, but is compatible CID it will return new instance of this
+	* `CID` class. Otherwise returns null.
+	*
+	* This allows two different incompatible versions of CID library to
+	* co-exist and interop as long as binary interface is compatible.
+	*/
+	static asCID(input) {
+		if (input == null) return null;
+		const value = input;
+		if (value instanceof CID) return value;
+		else if (value["/"] != null && value["/"] === value.bytes || value.asCID === value) {
+			const { version, code, multihash, bytes } = value;
+			return new CID(version, code, multihash, bytes ?? encodeCID(version, code, multihash.bytes));
+		} else if (value[cidSymbol] === true) {
+			const { version, multihash, code } = value;
+			const digest = decode$7(multihash);
+			return CID.create(version, code, digest);
+		} else return null;
+	}
+	/**
+	* @param version - Version of the CID
+	* @param code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
+	* @param digest - (Multi)hash of the of the content.
+	*/
+	static create(version, code, digest) {
+		if (typeof code !== "number") throw new Error("String codecs are no longer supported");
+		if (!(digest.bytes instanceof Uint8Array)) throw new Error("Invalid digest");
+		switch (version) {
+			case 0: if (code !== DAG_PB_CODE) throw new Error(`Version 0 CID must use dag-pb (code: ${DAG_PB_CODE}) block encoding`);
+			else return new CID(version, code, digest, digest.bytes);
+			case 1: return new CID(version, code, digest, encodeCID(version, code, digest.bytes));
+			default: throw new Error("Invalid version");
+		}
+	}
+	/**
+	* Simplified version of `create` for CIDv0.
+	*/
+	static createV0(digest) {
+		return CID.create(0, DAG_PB_CODE, digest);
+	}
+	/**
+	* Simplified version of `create` for CIDv1.
+	*
+	* @param code - Content encoding format code.
+	* @param digest - Multihash of the content.
+	*/
+	static createV1(code, digest) {
+		return CID.create(1, code, digest);
+	}
+	/**
+	* Decoded a CID from its binary representation. The byte array must contain
+	* only the CID with no additional bytes.
+	*
+	* An error will be thrown if the bytes provided do not contain a valid
+	* binary representation of a CID.
+	*/
+	static decode(bytes) {
+		const [cid, remainder] = CID.decodeFirst(bytes);
+		if (remainder.length !== 0) throw new Error("Incorrect length");
+		return cid;
+	}
+	/**
+	* Decoded a CID from its binary representation at the beginning of a byte
+	* array.
+	*
+	* Returns an array with the first element containing the CID and the second
+	* element containing the remainder of the original byte array. The remainder
+	* will be a zero-length byte array if the provided bytes only contained a
+	* binary CID representation.
+	*/
+	static decodeFirst(bytes) {
+		const specs = CID.inspectBytes(bytes);
+		const prefixSize = specs.size - specs.multihashSize;
+		const multihashBytes = coerce(bytes.subarray(prefixSize, prefixSize + specs.multihashSize));
+		if (multihashBytes.byteLength !== specs.multihashSize) throw new Error("Incorrect length");
+		const digestBytes = multihashBytes.subarray(specs.multihashSize - specs.digestSize);
+		const digest = new Digest(specs.multihashCode, specs.digestSize, digestBytes, multihashBytes);
+		return [specs.version === 0 ? CID.createV0(digest) : CID.createV1(specs.codec, digest), bytes.subarray(specs.size)];
+	}
+	/**
+	* Inspect the initial bytes of a CID to determine its properties.
+	*
+	* Involves decoding up to 4 varints. Typically this will require only 4 to 6
+	* bytes but for larger multicodec code values and larger multihash digest
+	* lengths these varints can be quite large. It is recommended that at least
+	* 10 bytes be made available in the `initialBytes` argument for a complete
+	* inspection.
+	*/
+	static inspectBytes(initialBytes) {
+		let offset = 0;
+		const next = () => {
+			const [i, length] = decode$8(initialBytes.subarray(offset));
+			offset += length;
+			return i;
+		};
+		let version = next();
+		let codec = DAG_PB_CODE;
+		if (version === 18) {
+			version = 0;
+			offset = 0;
+		} else codec = next();
+		if (version !== 0 && version !== 1) throw new RangeError(`Invalid CID version ${version}`);
+		const prefixSize = offset;
+		const multihashCode = next();
+		const digestSize = next();
+		const size = offset + digestSize;
+		const multihashSize = size - prefixSize;
+		return {
+			version,
+			codec,
+			multihashCode,
+			digestSize,
+			multihashSize,
+			size
+		};
+	}
+	/**
+	* Takes cid in a string representation and creates an instance. If `base`
+	* decoder is not provided will use a default from the configuration. It will
+	* throw an error if encoding of the CID is not compatible with supplied (or
+	* a default decoder).
+	*/
+	static parse(source, base) {
+		const [prefix, bytes] = parseCIDtoBytes(source, base);
+		const cid = CID.decode(bytes);
+		if (cid.version === 0 && source[0] !== "Q") throw Error("Version 0 CID string must not include multibase prefix");
+		baseCache(cid).set(prefix, source);
+		return cid;
+	}
+};
+function parseCIDtoBytes(source, base) {
+	switch (source[0]) {
+		case "Q": {
+			const decoder = base ?? base58btc;
+			return [base58btc.prefix, decoder.decode(`${base58btc.prefix}${source}`)];
+		}
+		case base58btc.prefix: {
+			const decoder = base ?? base58btc;
+			return [base58btc.prefix, decoder.decode(source)];
+		}
+		case base32.prefix: {
+			const decoder = base ?? base32;
+			return [base32.prefix, decoder.decode(source)];
+		}
+		case base36.prefix: {
+			const decoder = base ?? base36;
+			return [base36.prefix, decoder.decode(source)];
+		}
+		default:
+			if (base == null) throw Error("To parse non base32, base36 or base58btc encoded CID multibase decoder must be provided");
+			return [source[0], base.decode(source)];
+	}
+}
+function toStringV0(bytes, cache, base) {
+	const { prefix } = base;
+	if (prefix !== base58btc.prefix) throw Error(`Cannot string encode V0 in ${base.name} encoding`);
+	const cid = cache.get(prefix);
+	if (cid == null) {
+		const cid = base.encode(bytes).slice(1);
+		cache.set(prefix, cid);
+		return cid;
+	} else return cid;
+}
+function toStringV1(bytes, cache, base) {
+	const { prefix } = base;
+	const cid = cache.get(prefix);
+	if (cid == null) {
+		const cid = base.encode(bytes);
+		cache.set(prefix, cid);
+		return cid;
+	} else return cid;
+}
+const DAG_PB_CODE = 112;
+const SHA_256_CODE = 18;
+function encodeCID(version, code, multihash) {
+	const codeOffset = encodingLength$2(version);
+	const hashOffset = codeOffset + encodingLength$2(code);
+	const bytes = new Uint8Array(hashOffset + multihash.byteLength);
+	encodeTo(version, bytes, 0);
+	encodeTo(code, bytes, codeOffset);
+	bytes.set(multihash, hashOffset);
+	return bytes;
+}
+const cidSymbol = Symbol.for("@ipld/js-cid/CID");
+//#endregion
+//#region node_modules/.pnpm/multiformats@13.4.2/node_modules/multiformats/dist/src/basics.js
+const bases = {
+	...identity_exports$1,
+	...base2_exports,
+	...base8_exports,
+	...base10_exports,
+	...base16_exports,
+	...base32_exports,
+	...base36_exports,
+	...base58_exports,
+	...base64_exports,
+	...base256emoji_exports
+};
+({
+	...sha2_exports,
+	...identity_exports
+});
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/util/as-uint8array.node.js
+/**
+* To guarantee Uint8Array semantics, convert nodejs Buffers
+* into vanilla Uint8Arrays
+*/
+function asUint8Array(buf) {
+	return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+}
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/alloc.node.js
+/**
+* Returns a `Uint8Array` of the requested size. Referenced memory will
+* be initialized to 0.
+*/
+function alloc$1(size = 0) {
+	return asUint8Array(Buffer$1.alloc(size));
+}
+/**
+* Where possible returns a Uint8Array of the requested size that references
+* uninitialized memory. Only use if you are certain you will immediately
+* overwrite every value in the returned `Uint8Array`.
+*/
+function allocUnsafe(size = 0) {
+	return asUint8Array(Buffer$1.allocUnsafe(size));
+}
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/util/bases.js
+function createCodec$1(name, prefix, encode, decode) {
+	return {
+		name,
+		prefix,
+		encoder: {
+			name,
+			prefix,
+			encode
+		},
+		decoder: { decode }
+	};
+}
+const string = createCodec$1("utf8", "u", (buf) => {
+	return "u" + new TextDecoder("utf8").decode(buf);
+}, (str) => {
+	return new TextEncoder().encode(str.substring(1));
+});
+const ascii = createCodec$1("ascii", "a", (buf) => {
+	let string = "a";
+	for (let i = 0; i < buf.length; i++) string += String.fromCharCode(buf[i]);
+	return string;
+}, (str) => {
+	str = str.substring(1);
+	const buf = allocUnsafe(str.length);
+	for (let i = 0; i < str.length; i++) buf[i] = str.charCodeAt(i);
+	return buf;
+});
+const BASES = {
+	utf8: string,
+	"utf-8": string,
+	hex: bases.base16,
+	latin1: ascii,
+	ascii,
+	binary: ascii,
+	...bases
+};
+//#endregion
+//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/to-string.node.js
+/**
+* Turns a `Uint8Array` into a string.
+*
+* Supports `utf8`, `utf-8` and any encoding supported by the multibase module.
+*
+* Also `ascii` which is similar to node's 'binary' encoding.
+*/
+function toString$1(array, encoding = "utf8") {
+	const base = BASES[encoding];
+	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
+	if (encoding === "utf8" || encoding === "utf-8") return Buffer$1.from(array.buffer, array.byteOffset, array.byteLength).toString("utf8");
+	return base.encoder.encode(array).substring(1);
+}
 function toDNSResponse(obj) {
 	return {
 		Status: obj.Status ?? 0,
@@ -25430,7 +25610,7 @@ function toDNSResponse(obj) {
 				name: answer.name,
 				type: RecordType[answer.type],
 				TTL: answer.TTL ?? answer.ttl ?? 60,
-				data: answer.data instanceof Uint8Array ? toString$2(answer.data) : answer.data
+				data: answer.data instanceof Uint8Array ? toString$1(answer.data) : answer.data
 			};
 		})
 	};
@@ -25739,278 +25919,6 @@ function dns(init = {}) {
 	return new DNS$1(init);
 }
 //#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base10.js
-var base10_exports = /* @__PURE__ */ __exportAll({ base10: () => base10 });
-const base10 = baseX({
-	prefix: "9",
-	name: "base10",
-	alphabet: "0123456789"
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base16.js
-var base16_exports = /* @__PURE__ */ __exportAll({
-	base16: () => base16,
-	base16upper: () => base16upper
-});
-const base16 = rfc4648({
-	prefix: "f",
-	name: "base16",
-	alphabet: "0123456789abcdef",
-	bitsPerChar: 4
-});
-const base16upper = rfc4648({
-	prefix: "F",
-	name: "base16upper",
-	alphabet: "0123456789ABCDEF",
-	bitsPerChar: 4
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base2.js
-var base2_exports = /* @__PURE__ */ __exportAll({ base2: () => base2 });
-const base2 = rfc4648({
-	prefix: "0",
-	name: "base2",
-	alphabet: "01",
-	bitsPerChar: 1
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base256emoji.js
-var base256emoji_exports = /* @__PURE__ */ __exportAll({ base256emoji: () => base256emoji });
-const alphabet = Array.from("🚀🪐☄🛰🌌🌑🌒🌓🌔🌕🌖🌗🌘🌍🌏🌎🐉☀💻🖥💾💿😂❤😍🤣😊🙏💕😭😘👍😅👏😁🔥🥰💔💖💙😢🤔😆🙄💪😉☺👌🤗💜😔😎😇🌹🤦🎉💞✌✨🤷😱😌🌸🙌😋💗💚😏💛🙂💓🤩😄😀🖤😃💯🙈👇🎶😒🤭❣😜💋👀😪😑💥🙋😞😩😡🤪👊🥳😥🤤👉💃😳✋😚😝😴🌟😬🙃🍀🌷😻😓⭐✅🥺🌈😈🤘💦✔😣🏃💐☹🎊💘😠☝😕🌺🎂🌻😐🖕💝🙊😹🗣💫💀👑🎵🤞😛🔴😤🌼😫⚽🤙☕🏆🤫👈😮🙆🍻🍃🐶💁😲🌿🧡🎁⚡🌞🎈❌✊👋😰🤨😶🤝🚶💰🍓💢🤟🙁🚨💨🤬✈🎀🍺🤓😙💟🌱😖👶🥴▶➡❓💎💸⬇😨🌚🦋😷🕺⚠🙅😟😵👎🤲🤠🤧📌🔵💅🧐🐾🍒😗🤑🌊🤯🐷☎💧😯💆👆🎤🙇🍑❄🌴💣🐸💌📍🥀🤢👅💡💩👐📸👻🤐🤮🎼🥵🚩🍎🍊👼💍📣🥂");
-const alphabetBytesToChars = alphabet.reduce((p, c, i) => {
-	p[i] = c;
-	return p;
-}, []);
-const alphabetCharsToBytes = alphabet.reduce((p, c, i) => {
-	const codePoint = c.codePointAt(0);
-	if (codePoint == null) throw new Error(`Invalid character: ${c}`);
-	p[codePoint] = i;
-	return p;
-}, []);
-function encode$7(data) {
-	return data.reduce((p, c) => {
-		p += alphabetBytesToChars[c];
-		return p;
-	}, "");
-}
-function decode$7(str) {
-	const byts = [];
-	for (const char of str) {
-		const codePoint = char.codePointAt(0);
-		if (codePoint == null) throw new Error(`Invalid character: ${char}`);
-		const byt = alphabetCharsToBytes[codePoint];
-		if (byt == null) throw new Error(`Non-base256emoji character: ${char}`);
-		byts.push(byt);
-	}
-	return new Uint8Array(byts);
-}
-const base256emoji = from$2({
-	prefix: "🚀",
-	name: "base256emoji",
-	encode: encode$7,
-	decode: decode$7
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/base8.js
-var base8_exports = /* @__PURE__ */ __exportAll({ base8: () => base8 });
-const base8 = rfc4648({
-	prefix: "7",
-	name: "base8",
-	alphabet: "01234567",
-	bitsPerChar: 3
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/bases/identity.js
-var identity_exports$1 = /* @__PURE__ */ __exportAll({ identity: () => identity$1 });
-const identity$1 = from$2({
-	prefix: "\0",
-	name: "identity",
-	encode: (buf) => toString$3(buf),
-	decode: (str) => fromString$3(str)
-});
-new TextEncoder();
-new TextDecoder();
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/identity.js
-var identity_exports = /* @__PURE__ */ __exportAll({ identity: () => identity });
-const code$4 = 0;
-const name$4 = "identity";
-const encode$6 = coerce;
-function digest(input, options) {
-	if (options?.truncate != null && options.truncate !== input.byteLength) {
-		if (options.truncate < 0 || options.truncate > input.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${input.byteLength}`);
-		input = input.subarray(0, options.truncate);
-	}
-	return create$2(code$4, encode$6(input));
-}
-const identity = {
-	code: code$4,
-	name: name$4,
-	encode: encode$6,
-	digest
-};
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/hasher.js
-const DEFAULT_MIN_DIGEST_LENGTH = 20;
-function from({ name, code, encode, minDigestLength, maxDigestLength }) {
-	return new Hasher(name, code, encode, minDigestLength, maxDigestLength);
-}
-/**
-* Hasher represents a hashing algorithm implementation that produces as
-* `MultihashDigest`.
-*/
-var Hasher = class {
-	name;
-	code;
-	encode;
-	minDigestLength;
-	maxDigestLength;
-	constructor(name, code, encode, minDigestLength, maxDigestLength) {
-		this.name = name;
-		this.code = code;
-		this.encode = encode;
-		this.minDigestLength = minDigestLength ?? DEFAULT_MIN_DIGEST_LENGTH;
-		this.maxDigestLength = maxDigestLength;
-	}
-	digest(input, options) {
-		if (options?.truncate != null) {
-			if (options.truncate < this.minDigestLength) throw new Error(`Invalid truncate option, must be greater than or equal to ${this.minDigestLength}`);
-			if (this.maxDigestLength != null && options.truncate > this.maxDigestLength) throw new Error(`Invalid truncate option, must be less than or equal to ${this.maxDigestLength}`);
-		}
-		if (input instanceof Uint8Array) {
-			const result = this.encode(input);
-			if (result instanceof Uint8Array) return createDigest(result, this.code, options?.truncate);
-			return result.then((digest) => createDigest(digest, this.code, options?.truncate));
-		} else throw Error("Unknown type, must be binary type");
-	}
-};
-/**
-* Create a Digest from the passed uint8array and code, optionally truncating it
-* first.
-*/
-function createDigest(digest, code, truncate) {
-	if (truncate != null && truncate !== digest.byteLength) {
-		if (truncate > digest.byteLength) throw new Error(`Invalid truncate option, must be less than or equal to ${digest.byteLength}`);
-		digest = digest.subarray(0, truncate);
-	}
-	return create$2(code, digest);
-}
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/hashes/sha2.js
-var sha2_exports = /* @__PURE__ */ __exportAll({
-	sha256: () => sha256$1,
-	sha512: () => sha512$1
-});
-const sha256$1 = from({
-	name: "sha2-256",
-	code: 18,
-	encode: (input) => coerce(crypto$2.createHash("sha256").update(input).digest())
-});
-const sha512$1 = from({
-	name: "sha2-512",
-	code: 19,
-	encode: (input) => coerce(crypto$2.createHash("sha512").update(input).digest())
-});
-//#endregion
-//#region node_modules/.pnpm/multiformats@14.0.0/node_modules/multiformats/dist/src/basics.js
-const bases = {
-	...identity_exports$1,
-	...base2_exports,
-	...base8_exports,
-	...base10_exports,
-	...base16_exports,
-	...base32_exports,
-	...base36_exports,
-	...base58_exports,
-	...base64_exports$1,
-	...base256emoji_exports
-};
-({
-	...sha2_exports,
-	...identity_exports
-});
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/as-uint8array.node.js
-/**
-* To guarantee Uint8Array semantics, convert nodejs Buffers
-* into vanilla Uint8Arrays
-*/
-function asUint8Array(buf) {
-	if (buf.buffer instanceof ArrayBuffer) return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
-	const b = buf.slice();
-	return new Uint8Array(b.buffer, 0, b.byteLength);
-}
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/alloc.node.js
-/**
-* Returns a `Uint8Array` of the requested size. Referenced memory will
-* be initialized to 0.
-*/
-function alloc$1(size = 0) {
-	return asUint8Array(Buffer$1.alloc(size));
-}
-/**
-* Where possible returns a Uint8Array of the requested size that references
-* uninitialized memory. Only use if you are certain you will immediately
-* overwrite every value in the returned `Uint8Array`.
-*/
-function allocUnsafe(size = 0) {
-	return asUint8Array(Buffer$1.allocUnsafe(size));
-}
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/util/bases.js
-function createCodec$1(name, prefix, encode, decode) {
-	return {
-		name,
-		prefix,
-		encoder: {
-			name,
-			prefix,
-			encode
-		},
-		decoder: { decode }
-	};
-}
-const string = createCodec$1("utf8", "u", (buf) => {
-	return "u" + new TextDecoder("utf8").decode(buf);
-}, (str) => {
-	return new TextEncoder().encode(str.substring(1));
-});
-const ascii = createCodec$1("ascii", "a", (buf) => {
-	let string = "a";
-	for (let i = 0; i < buf.length; i++) string += String.fromCharCode(buf[i]);
-	return string;
-}, (str) => {
-	str = str.substring(1);
-	const buf = allocUnsafe(str.length);
-	for (let i = 0; i < str.length; i++) buf[i] = str.charCodeAt(i);
-	return buf;
-});
-const BASES = {
-	utf8: string,
-	"utf-8": string,
-	hex: bases.base16,
-	latin1: ascii,
-	ascii,
-	binary: ascii,
-	...bases
-};
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/from-string.node.js
-/**
-* Create a `Uint8Array` from the passed string
-*
-* Supports `utf8`, `utf-8`, `hex`, and any encoding supported by the multiformats module.
-*
-* Also `ascii` which is similar to node's 'binary' encoding.
-*/
-function fromString(string, encoding = "utf8") {
-	const base = BASES[encoding];
-	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
-	if (encoding === "utf8" || encoding === "utf-8") return asUint8Array(Buffer$1.from(string, "utf-8"));
-	return base.decoder.decode(`${base.prefix}${string}`);
-}
-//#endregion
 //#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/equals.js
 /**
 * Returns true if the two passed Uint8Arrays have the same content
@@ -26028,7 +25936,7 @@ var Fingerprint = class {
 	constructor(buf, hash, seed, fingerprintSize = 2) {
 		if (fingerprintSize > 64) throw new TypeError("Invalid Fingerprint Size");
 		const fnv = hash.hashV(buf, seed);
-		const fp = alloc$1(fingerprintSize);
+		const fp = alloc$3(fingerprintSize);
 		for (let i = 0; i < fp.length; i++) fp[i] = fnv[i];
 		if (fp.length === 0) fp[0] = 7;
 		this.fp = fp;
@@ -26151,7 +26059,7 @@ const fnv1a = {
 function numberToBuffer(num) {
 	let hex = num.toString(16);
 	if (hex.length % 2 === 1) hex = `0${hex}`;
-	return fromString(hex, "base16");
+	return fromString$3(hex, "base16");
 }
 //#endregion
 //#region node_modules/.pnpm/@libp2p+utils@7.2.2/node_modules/@libp2p/utils/dist/src/filters/cuckoo-filter.js
@@ -26174,7 +26082,7 @@ var CuckooFilter = class {
 		this.seed = init.seed ?? getRandomInt(0, Math.pow(2, 10));
 	}
 	add(item) {
-		if (typeof item === "string") item = fromString(item);
+		if (typeof item === "string") item = fromString$3(item);
 		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
 		const j = this.hash.hash(item, this.seed) % this.filterSize;
 		const k = (j ^ fingerprint.hash()) % this.filterSize;
@@ -26200,7 +26108,7 @@ var CuckooFilter = class {
 		return false;
 	}
 	has(item) {
-		if (typeof item === "string") item = fromString(item);
+		if (typeof item === "string") item = fromString$3(item);
 		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
 		const j = this.hash.hash(item, this.seed) % this.filterSize;
 		const inJ = this.buckets[j]?.has(fingerprint) ?? false;
@@ -26209,7 +26117,7 @@ var CuckooFilter = class {
 		return this.buckets[k]?.has(fingerprint) ?? false;
 	}
 	remove(item) {
-		if (typeof item === "string") item = fromString(item);
+		if (typeof item === "string") item = fromString$3(item);
 		const fingerprint = new Fingerprint(item, this.hash, this.seed, this.fingerprintSize);
 		const j = this.hash.hash(item, this.seed) % this.filterSize;
 		const inJ = this.buckets[j]?.remove(fingerprint) ?? false;
@@ -26272,7 +26180,7 @@ var ScalableCuckooFilter = class {
 		})];
 	}
 	add(item) {
-		if (typeof item === "string") item = fromString(item);
+		if (typeof item === "string") item = fromString$3(item);
 		if (this.has(item)) return true;
 		let current = this.filterSeries.find((cuckoo) => {
 			return cuckoo.reliable;
@@ -26290,12 +26198,12 @@ var ScalableCuckooFilter = class {
 		return current.add(item);
 	}
 	has(item) {
-		if (typeof item === "string") item = fromString(item);
+		if (typeof item === "string") item = fromString$3(item);
 		for (let i = 0; i < this.filterSeries.length; i++) if (this.filterSeries[i].has(item)) return true;
 		return false;
 	}
 	remove(item) {
-		if (typeof item === "string") item = fromString(item);
+		if (typeof item === "string") item = fromString$3(item);
 		for (let i = 0; i < this.filterSeries.length; i++) if (this.filterSeries[i].remove(item)) return true;
 		return false;
 	}
@@ -26965,22 +26873,7 @@ function withArrayBuffer(arr) {
 * Returns a new Uint8Array created by concatenating the passed Uint8Arrays
 */
 function concat$1(arrays, length) {
-	return asUint8Array(Buffer$1.concat(arrays, length));
-}
-//#endregion
-//#region node_modules/.pnpm/uint8arrays@6.1.1/node_modules/uint8arrays/dist/src/to-string.node.js
-/**
-* Turns a `Uint8Array` into a string.
-*
-* Supports `utf8`, `utf-8` and any encoding supported by the multibase module.
-*
-* Also `ascii` which is similar to node's 'binary' encoding.
-*/
-function toString$1(array, encoding = "utf8") {
-	const base = BASES[encoding];
-	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
-	if (encoding === "utf8" || encoding === "utf-8") return Buffer$1.from(array.buffer, array.byteOffset, array.byteLength).toString("utf8");
-	return base.encoder.encode(array).substring(1);
+	return asUint8Array$1(Buffer$1.concat(arrays, length));
 }
 //#endregion
 //#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/errors.js
@@ -27007,12 +26900,12 @@ var UnknownProtocolError = class extends Error {
 //#region node_modules/.pnpm/@multiformats+multiaddr@13.0.3/node_modules/@multiformats/multiaddr/dist/src/utils.js
 function bytesToString(base) {
 	return (buf) => {
-		return toString$1(buf, base);
+		return toString$3(buf, base);
 	};
 }
 function stringToBytes(base) {
 	return (buf) => {
-		return fromString(buf, base);
+		return fromString$3(buf, base);
 	};
 }
 function bytes2port(buf) {
@@ -27027,7 +26920,7 @@ function onion2bytes(str) {
 	const addr = str.split(":");
 	if (addr.length !== 2) throw new Error(`failed to parse onion addr: ["'${addr.join("\", \"")}'"]' does not contain a port number`);
 	if (addr[0].length !== 16) throw new Error(`failed to parse onion addr: ${addr[0]} not a Tor onion address.`);
-	const buf = fromString(addr[0], "base32");
+	const buf = fromString$3(addr[0], "base32");
 	const port = parseInt(addr[1], 10);
 	if (port < 1 || port > 65536) throw new Error("Port number is not in range(1, 65536)");
 	const portBuf = port2bytes(port);
@@ -27037,7 +26930,7 @@ function onion32bytes(str) {
 	const addr = str.split(":");
 	if (addr.length !== 2) throw new Error(`failed to parse onion addr: ["'${addr.join("\", \"")}'"]' does not contain a port number`);
 	if (addr[0].length !== 56) throw new Error(`failed to parse onion addr: ${addr[0]} not a Tor onion3 address.`);
-	const buf = base32.decode(`b${addr[0]}`);
+	const buf = base32$1.decode(`b${addr[0]}`);
 	const port = parseInt(addr[1], 10);
 	if (port < 1 || port > 65536) throw new Error("Port number is not in range(1, 65536)");
 	const portBuf = port2bytes(port);
@@ -27046,7 +26939,7 @@ function onion32bytes(str) {
 function bytes2onion(buf) {
 	const addrBytes = buf.subarray(0, buf.length - 2);
 	const portBytes = buf.subarray(buf.length - 2);
-	return `${toString$1(addrBytes, "base32")}:${bytes2port(portBytes)}`;
+	return `${toString$3(addrBytes, "base32")}:${bytes2port(portBytes)}`;
 }
 const ip4ToBytes = function(ip) {
 	ip = ip.toString().trim();
@@ -27068,9 +26961,9 @@ const ip6ToBytes = function(ip) {
 		let v4Buffer;
 		if (isv4) {
 			v4Buffer = ip4ToBytes(sections[i]);
-			sections[i] = toString$1(v4Buffer.subarray(0, 2), "base16");
+			sections[i] = toString$3(v4Buffer.subarray(0, 2), "base16");
 		}
-		if (v4Buffer != null && ++i < 8) sections.splice(i, 0, toString$1(v4Buffer.subarray(2, 4), "base16"));
+		if (v4Buffer != null && ++i < 8) sections.splice(i, 0, toString$3(v4Buffer.subarray(2, 4), "base16"));
 	}
 	if (sections[0] === "") while (sections.length < 8) sections.unshift("0");
 	else if (sections[sections.length - 1] === "") while (sections.length < 8) sections.push("0");
@@ -27121,7 +27014,7 @@ function ip6StringToValue(str) {
 		throw new InvalidMultiaddrError(`Invalid IPv6 address "${str}"`);
 	}
 }
-const decoders$1 = Object.values(bases).map((c) => c.decoder);
+const decoders$1 = Object.values(bases$1).map((c) => c.decoder);
 const anybaseDecoder = (function() {
 	let acc = decoders$1[0].or(decoders$1[1]);
 	decoders$1.slice(2).forEach((d) => acc = acc.or(d));
@@ -27291,7 +27184,7 @@ const registry = new Registry();
 		bytesToValue: bytesToString("base58btc"),
 		valueToBytes: (val) => {
 			if (val.startsWith("Q") || val.startsWith("1")) return stringToBytes("base58btc")(val);
-			return CID.parse(val).multihash.bytes;
+			return CID$1.parse(val).multihash.bytes;
 		}
 	},
 	{
@@ -27430,7 +27323,7 @@ function bytesToComponents(bytes) {
 		if (size > 0) {
 			const valueOffset = i + codeLength + sizeLength;
 			const valueBytes = bytes.subarray(valueOffset, valueOffset + size);
-			component.value = codec.bytesToValue?.(valueBytes) ?? toString$1(valueBytes);
+			component.value = codec.bytesToValue?.(valueBytes) ?? toString$3(valueBytes);
 		}
 		components.push(component);
 		i += componentLength;
@@ -27448,7 +27341,7 @@ function componentsToBytes(components) {
 			let valueLength = 0;
 			let valueLengthLength = 0;
 			if (component.value != null) {
-				valueBytes = codec.valueToBytes?.(component.value) ?? fromString(component.value);
+				valueBytes = codec.valueToBytes?.(component.value) ?? fromString$3(component.value);
 				valueLength = valueBytes.byteLength;
 				if (codec.size === -1) valueLengthLength = encodingLength$1(valueLength);
 			}
@@ -29442,7 +29335,7 @@ function decodeUint8ArrayList(buf, offset) {
 	throw new RangeError("Could not decode varint");
 }
 function encode$5(value, buf, offset = 0) {
-	if (buf == null) buf = allocUnsafe$1(encodingLength(value));
+	if (buf == null) buf = allocUnsafe(encodingLength(value));
 	if (buf instanceof Uint8Array) return encodeUint8Array(value, buf, offset);
 	else return encodeUint8ArrayList(value, buf, offset);
 }
@@ -29456,7 +29349,7 @@ function decode$5(buf, offset = 0) {
 * Returns a new Uint8Array created by concatenating the passed Uint8Arrays
 */
 function concat(arrays, length) {
-	return asUint8Array$1(Buffer$1.concat(arrays, length));
+	return asUint8Array(Buffer$1.concat(arrays, length));
 }
 //#endregion
 //#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/equals.js
@@ -29806,7 +29699,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getInt8(0);
 	}
 	setInt8(byteOffset, value) {
-		const buf = allocUnsafe$1(1);
+		const buf = allocUnsafe(1);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setInt8(0, value);
 		this.write(buf, byteOffset);
 	}
@@ -29815,7 +29708,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getInt16(0, littleEndian);
 	}
 	setInt16(byteOffset, value, littleEndian) {
-		const buf = alloc$3(2);
+		const buf = alloc$1(2);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setInt16(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -29824,7 +29717,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getInt32(0, littleEndian);
 	}
 	setInt32(byteOffset, value, littleEndian) {
-		const buf = alloc$3(4);
+		const buf = alloc$1(4);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setInt32(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -29833,7 +29726,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getBigInt64(0, littleEndian);
 	}
 	setBigInt64(byteOffset, value, littleEndian) {
-		const buf = alloc$3(8);
+		const buf = alloc$1(8);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setBigInt64(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -29842,7 +29735,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getUint8(0);
 	}
 	setUint8(byteOffset, value) {
-		const buf = allocUnsafe$1(1);
+		const buf = allocUnsafe(1);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setUint8(0, value);
 		this.write(buf, byteOffset);
 	}
@@ -29851,7 +29744,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getUint16(0, littleEndian);
 	}
 	setUint16(byteOffset, value, littleEndian) {
-		const buf = alloc$3(2);
+		const buf = alloc$1(2);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setUint16(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -29860,7 +29753,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getUint32(0, littleEndian);
 	}
 	setUint32(byteOffset, value, littleEndian) {
-		const buf = alloc$3(4);
+		const buf = alloc$1(4);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setUint32(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -29869,7 +29762,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getBigUint64(0, littleEndian);
 	}
 	setBigUint64(byteOffset, value, littleEndian) {
-		const buf = alloc$3(8);
+		const buf = alloc$1(8);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setBigUint64(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -29878,7 +29771,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getFloat32(0, littleEndian);
 	}
 	setFloat32(byteOffset, value, littleEndian) {
-		const buf = alloc$3(4);
+		const buf = alloc$1(4);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setFloat32(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -29887,7 +29780,7 @@ var Uint8ArrayList = class Uint8ArrayList {
 		return new DataView(buf.buffer, buf.byteOffset, buf.byteLength).getFloat64(0, littleEndian);
 	}
 	setFloat64(byteOffset, value, littleEndian) {
-		const buf = alloc$3(8);
+		const buf = alloc$1(8);
 		new DataView(buf.buffer, buf.byteOffset, buf.byteLength).setFloat64(0, value, littleEndian);
 		this.write(buf, byteOffset);
 	}
@@ -30130,6 +30023,475 @@ function trackedMap(config) {
 	return map;
 }
 //#endregion
+//#region node_modules/.pnpm/uint8arrays@5.1.1/node_modules/uint8arrays/dist/src/from-string.node.js
+/**
+* Create a `Uint8Array` from the passed string
+*
+* Supports `utf8`, `utf-8`, `hex`, and any encoding supported by the multiformats module.
+*
+* Also `ascii` which is similar to node's 'binary' encoding.
+*/
+function fromString(string, encoding = "utf8") {
+	const base = BASES[encoding];
+	if (base == null) throw new Error(`Unsupported encoding "${encoding}"`);
+	if (encoding === "utf8" || encoding === "utf-8") return asUint8Array(Buffer$1.from(string, "utf-8"));
+	return base.decoder.decode(`${base.prefix}${string}`);
+}
+//#endregion
+//#region node_modules/.pnpm/interface-datastore@9.0.3/node_modules/interface-datastore/dist/src/key.js
+const pathSepS = "/";
+const pathSepB = new TextEncoder().encode(pathSepS);
+const pathSep = pathSepB[0];
+/**
+* A Key represents the unique identifier of an object.
+* Our Key scheme is inspired by file systems and Google App Engine key model.
+* Keys are meant to be unique across a system. Keys are hierarchical,
+* incorporating more and more specific namespaces. Thus keys can be deemed
+* 'children' or 'ancestors' of other keys:
+* - `new Key('/Comedy')`
+* - `new Key('/Comedy/MontyPython')`
+* Also, every namespace can be parametrized to embed relevant object
+* information. For example, the Key `name` (most specific namespace) could
+* include the object type:
+* - `new Key('/Comedy/MontyPython/Actor:JohnCleese')`
+* - `new Key('/Comedy/MontyPython/Sketch:CheeseShop')`
+* - `new Key('/Comedy/MontyPython/Sketch:CheeseShop/Character:Mousebender')`
+*
+*/
+var Key = class Key {
+	_buf;
+	/**
+	* @param {string | Uint8Array} s
+	* @param {boolean} [clean]
+	*/
+	constructor(s, clean) {
+		if (typeof s === "string") this._buf = fromString(s);
+		else if (s instanceof Uint8Array) this._buf = s;
+		else throw new Error("Invalid key, should be String of Uint8Array");
+		if (clean == null) clean = true;
+		if (clean) this.clean();
+		if (this._buf.byteLength === 0 || this._buf[0] !== pathSep) throw new Error("Invalid key");
+	}
+	/**
+	* Convert to the string representation
+	*
+	* @param {import('uint8arrays/to-string').SupportedEncodings} [encoding] - The encoding to use.
+	* @returns {string}
+	*/
+	toString(encoding = "utf8") {
+		return toString$1(this._buf, encoding);
+	}
+	/**
+	* Return the Uint8Array representation of the key
+	*
+	* @returns {Uint8Array}
+	*/
+	uint8Array() {
+		return this._buf;
+	}
+	/**
+	* Return string representation of the key
+	*
+	* @returns {string}
+	*/
+	get [Symbol.toStringTag]() {
+		return `Key(${this.toString()})`;
+	}
+	/**
+	* Constructs a key out of a namespace array.
+	*
+	* @param {Array<string>} list - The array of namespaces
+	* @returns {Key}
+	*
+	* @example
+	* ```js
+	* Key.withNamespaces(['one', 'two'])
+	* // => Key('/one/two')
+	* ```
+	*/
+	static withNamespaces(list) {
+		return new Key(list.join(pathSepS));
+	}
+	/**
+	* Returns a randomly (uuid) generated key.
+	*
+	* @returns {Key}
+	*
+	* @example
+	* ```js
+	* Key.random()
+	* // => Key('/344502982398')
+	* ```
+	*/
+	static random() {
+		return new Key(Math.random().toString().substring(2));
+	}
+	/**
+	* @param {*} other
+	*/
+	static asKey(other) {
+		if (other instanceof Uint8Array || typeof other === "string") return new Key(other);
+		if (typeof other.uint8Array === "function") return new Key(other.uint8Array());
+		return null;
+	}
+	/**
+	* Cleanup the current key
+	*
+	* @returns {void}
+	*/
+	clean() {
+		if (this._buf == null || this._buf.byteLength === 0) this._buf = pathSepB;
+		if (this._buf[0] !== pathSep) {
+			const bytes = new Uint8Array(this._buf.byteLength + 1);
+			bytes.fill(pathSep, 0, 1);
+			bytes.set(this._buf, 1);
+			this._buf = bytes;
+		}
+		while (this._buf.byteLength > 1 && this._buf[this._buf.byteLength - 1] === pathSep) this._buf = this._buf.subarray(0, -1);
+	}
+	/**
+	* Check if the given key is sorted lower than ourself.
+	*
+	* @param {Key} key - The other Key to check against
+	* @returns {boolean}
+	*/
+	less(key) {
+		const list1 = this.list();
+		const list2 = key.list();
+		for (let i = 0; i < list1.length; i++) {
+			if (list2.length < i + 1) return false;
+			const c1 = list1[i];
+			const c2 = list2[i];
+			if (c1 < c2) return true;
+			else if (c1 > c2) return false;
+		}
+		return list1.length < list2.length;
+	}
+	/**
+	* Returns the key with all parts in reversed order.
+	*
+	* @returns {Key}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython/Actor:JohnCleese').reverse()
+	* // => Key('/Actor:JohnCleese/MontyPython/Comedy')
+	* ```
+	*/
+	reverse() {
+		return Key.withNamespaces(this.list().slice().reverse());
+	}
+	/**
+	* Returns the `namespaces` making up this Key.
+	*
+	* @returns {Array<string>}
+	*/
+	namespaces() {
+		return this.list();
+	}
+	/**
+	* Returns the "base" namespace of this key.
+	*
+	* @returns {string}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython/Actor:JohnCleese').baseNamespace()
+	* // => 'Actor:JohnCleese'
+	* ```
+	*/
+	baseNamespace() {
+		const ns = this.namespaces();
+		return ns[ns.length - 1];
+	}
+	/**
+	* Returns the `list` representation of this key.
+	*
+	* @returns {Array<string>}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython/Actor:JohnCleese').list()
+	* // => ['Comedy', 'MontyPythong', 'Actor:JohnCleese']
+	* ```
+	*/
+	list() {
+		return this.toString().split(pathSepS).slice(1);
+	}
+	/**
+	* Returns the "type" of this key (value of last namespace).
+	*
+	* @returns {string}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython/Actor:JohnCleese').type()
+	* // => 'Actor'
+	* ```
+	*/
+	type() {
+		return namespaceType(this.baseNamespace());
+	}
+	/**
+	* Returns the "name" of this key (field of last namespace).
+	*
+	* @returns {string}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython/Actor:JohnCleese').name()
+	* // => 'JohnCleese'
+	* ```
+	*/
+	name() {
+		return namespaceValue(this.baseNamespace());
+	}
+	/**
+	* Returns an "instance" of this type key (appends value to namespace).
+	*
+	* @param {string} s - The string to append.
+	* @returns {Key}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython/Actor').instance('JohnClesse')
+	* // => Key('/Comedy/MontyPython/Actor:JohnCleese')
+	* ```
+	*/
+	instance(s) {
+		return new Key(this.toString() + ":" + s);
+	}
+	/**
+	* Returns the "path" of this key (parent + type).
+	*
+	* @returns {Key}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython/Actor:JohnCleese').path()
+	* // => Key('/Comedy/MontyPython/Actor')
+	* ```
+	*/
+	path() {
+		let p = this.parent().toString();
+		if (!p.endsWith(pathSepS)) p += pathSepS;
+		p += this.type();
+		return new Key(p);
+	}
+	/**
+	* Returns the `parent` Key of this Key.
+	*
+	* @returns {Key}
+	*
+	* @example
+	* ```js
+	* new Key("/Comedy/MontyPython/Actor:JohnCleese").parent()
+	* // => Key("/Comedy/MontyPython")
+	* ```
+	*/
+	parent() {
+		const list = this.list();
+		if (list.length === 1) return new Key(pathSepS);
+		return new Key(list.slice(0, -1).join(pathSepS));
+	}
+	/**
+	* Returns the `child` Key of this Key.
+	*
+	* @param {Key} key - The child Key to add
+	* @returns {Key}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython').child(new Key('Actor:JohnCleese'))
+	* // => Key('/Comedy/MontyPython/Actor:JohnCleese')
+	* ```
+	*/
+	child(key) {
+		if (this.toString() === pathSepS) return key;
+		else if (key.toString() === pathSepS) return this;
+		return new Key(this.toString() + key.toString(), false);
+	}
+	/**
+	* Returns whether this key is a prefix of `other`
+	*
+	* @param {Key} other - The other key to test against
+	* @returns {boolean}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy').isAncestorOf('/Comedy/MontyPython')
+	* // => true
+	* ```
+	*/
+	isAncestorOf(other) {
+		if (other.toString() === this.toString()) return false;
+		return other.toString().startsWith(this.toString());
+	}
+	/**
+	* Returns whether this key is a contains another as prefix.
+	*
+	* @param {Key} other - The other Key to test against
+	* @returns {boolean}
+	*
+	* @example
+	* ```js
+	* new Key('/Comedy/MontyPython').isDecendantOf('/Comedy')
+	* // => true
+	* ```
+	*/
+	isDecendantOf(other) {
+		if (other.toString() === this.toString()) return false;
+		return this.toString().startsWith(other.toString());
+	}
+	/**
+	* Checks if this key has only one namespace.
+	*
+	* @returns {boolean}
+	*/
+	isTopLevel() {
+		return this.list().length === 1;
+	}
+	/**
+	* Concats one or more Keys into one new Key.
+	*
+	* @param {Array<Key>} keys - The array of keys to concatenate
+	* @returns {Key}
+	*/
+	concat(...keys) {
+		return Key.withNamespaces([...this.namespaces(), ...flatten(keys.map((key) => key.namespaces()))]);
+	}
+};
+/**
+* The first component of a namespace. `foo` in `foo:bar`
+*
+* @param {string} ns
+* @returns {string}
+*/
+function namespaceType(ns) {
+	const parts = ns.split(":");
+	if (parts.length < 2) return "";
+	return parts.slice(0, -1).join(":");
+}
+/**
+* The last component of a namespace, `baz` in `foo:bar:baz`.
+*
+* @param {string} ns
+* @returns {string}
+*/
+function namespaceValue(ns) {
+	const parts = ns.split(":");
+	return parts[parts.length - 1];
+}
+/**
+* Flatten array of arrays (only one level)
+*
+* @template T
+* @param {Array<any>} arr
+* @returns {T[]}
+*/
+function flatten(arr) {
+	return [].concat(...arr);
+}
+//#endregion
+//#region node_modules/.pnpm/interface-datastore@9.0.3/node_modules/interface-datastore/dist/src/index.js
+/**
+* @packageDocumentation
+*
+* A Datastore is a key/value database that lets store/retrieve binary blobs using namespaced Keys.
+*
+* It is used by IPFS to store/retrieve arbitrary metadata needed to run the node - DHT provider records, signed peer records, etc.
+*
+* ## Backed Implementations
+*
+* - File System: [`datastore-fs`](https://github.com/ipfs/js-stores/tree/main/packages/datastore-fs)
+* - IndexedDB: [`datastore-idb`](https://github.com/ipfs/js-stores/blob/main/packages/datastore-idb)
+* - level: [`datastore-level`](https://github.com/ipfs/js-stores/tree/main/packages/datastore-level) (supports any levelup compatible backend)
+* - Memory: [`datastore-core/memory`](https://github.com/ipfs/js-stores/blob/main/packages/datastore-core/src/memory.ts)
+* - S3: [`datastore-s3`](https://github.com/ipfs/js-stores/tree/main/packages/datastore-s3)
+*
+* ## Wrapper Implementations
+*
+* - Keytransform: [`datstore-core/src/keytransform`](https://github.com/ipfs/js-stores/blob/main/packages/datastore-core/src/keytransform.ts)
+* - Mount: [`datastore-core/src/mount`](https://github.com/ipfs/js-stores/blob/main/packages/datastore-core/src/mount.ts)
+* - Namespace: [`datastore-core/src/namespace`](https://github.com/ipfs/js-stores/blob/main/packages/datastore-core/src/namespace.ts)
+* - Sharding: [`datastore-core/src/sharding`](https://github.com/ipfs/js-stores/blob/main/packages/datastore-core/src/sharding.ts)
+* - Tiered: [`datstore-core/src/tiered`](https://github.com/ipfs/js-stores/blob/main/packages/datastore-core/src/tiered.ts)
+*
+* If you want the same functionality as [go-ds-flatfs](https://github.com/ipfs/go-ds-flatfs), use sharding with fs.
+*
+* @example
+*
+* ```js
+* import FsStore from 'datastore-fs'
+* import { ShardingDataStore, shard } from 'datastore-core'
+*
+* const fs = new FsStore('path/to/store')
+*
+* // flatfs now works like go-flatfs
+* const flatfs = await ShardingStore.createOrOpen(fs, new shard.NextToLast(2))
+* ```
+*
+* ### Test suite
+*
+* Available via the [`interface-datastore-tests`](https://npmjs.com/package/interface-datastore-tests) module
+*
+* ```js
+* import { interfaceDatastoreTests } from 'interface-datastore-tests'
+*
+* describe('mystore', () => {
+*   interfaceDatastoreTests({
+*     async setup () {
+*       return instanceOfMyStore
+*     },
+*     async teardown () {
+*       // cleanup resources
+*     }
+*   })
+* })
+* ```
+*
+* ### Aborting requests
+*
+* Most API methods accept an \[AbortSignal]\[] as part of an options object.  Implementations may listen for an `abort` event emitted by this object, or test the `signal.aborted` property. When received implementations should tear down any long-lived requests or resources created.
+*
+* ### Concurrency
+*
+* The streaming `(put|get|delete)Many` methods are intended to be used with modules such as [it-parallel-batch](https://www.npmjs.com/package/it-parallel-batch) to allow calling code to control levels of parallelisation.  The batching method ensures results are returned in the correct order, but interface implementations should be thread safe.
+*
+* ```js
+* import batch from 'it-parallel-batch'
+* const source = [{
+*   key: ..,
+*   value: ..
+* }]
+*
+* // put values into the datastore concurrently, max 10 at a time
+* for await (const { key, data } of batch(store.putMany(source), 10)) {
+*   console.info(`Put ${key}`)
+* }
+* ```
+*
+* ### Keys
+*
+* To allow a better abstraction on how to address values, there is a `Key` class which is used as identifier. It's easy to create a key from a `Uint8Array` or a `string`.
+*
+* ```js
+* const a = new Key('a')
+* const b = new Key(new Uint8Array([0, 1, 2, 3]))
+* ```
+*
+* The key scheme is inspired by file systems and Google App Engine key model. Keys are meant to be unique across a system. They are typically hierarchical, incorporating more and more specific namespaces. Thus keys can be deemed 'children' or 'ancestors' of other keys:
+*
+* - `new Key('/Comedy')`
+* - `new Key('/Comedy/MontyPython')`
+*
+* Also, every namespace can be parameterized to embed relevant object information. For example, the Key `name` (most specific namespace) could include the object type:
+*
+* - `new Key('/Comedy/MontyPython/Actor:JohnCleese')`
+* - `new Key('/Comedy/MontyPython/Sketch:CheeseShop')`
+* - `new Key('/Comedy/MontyPython/Sketch:CheeseShop/Character:Mousebender')`
+*/
+//#endregion
 //#region node_modules/.pnpm/it-to-buffer@4.0.12/node_modules/it-to-buffer/dist/src/index.js
 /**
 * @packageDocumentation
@@ -30193,19 +30555,19 @@ function readonly({ enumerable = true, configurable = false } = {}) {
 function* linksWithin(path, value) {
 	if (value != null && typeof value === "object") if (Array.isArray(value)) for (const [index, element] of value.entries()) {
 		const elementPath = [...path, index];
-		const cid = CID$1.asCID(element);
+		const cid = CID.asCID(element);
 		if (cid != null) yield [elementPath.join("/"), cid];
 		else if (typeof element === "object") yield* links(element, elementPath);
 	}
 	else {
-		const cid = CID$1.asCID(value);
+		const cid = CID.asCID(value);
 		if (cid != null) yield [path.join("/"), cid];
 		else yield* links(value, path);
 	}
 }
 function* links(source, base) {
 	if (source == null || source instanceof Uint8Array) return;
-	const cid = CID$1.asCID(source);
+	const cid = CID.asCID(source);
 	if (cid != null) yield [base.join("/"), cid];
 	for (const [key, value] of Object.entries(source)) yield* linksWithin([...base, key], value);
 }
@@ -30213,7 +30575,7 @@ function* treeWithin(path, value) {
 	if (Array.isArray(value)) for (const [index, element] of value.entries()) {
 		const elementPath = [...path, index];
 		yield elementPath.join("/");
-		if (typeof element === "object" && CID$1.asCID(element) == null) yield* tree(element, elementPath);
+		if (typeof element === "object" && CID.asCID(element) == null) yield* tree(element, elementPath);
 	}
 	else yield* tree(value, path);
 }
@@ -30222,7 +30584,7 @@ function* tree(source, base) {
 	for (const [key, value] of Object.entries(source)) {
 		const path = [...base, key];
 		yield path.join("/");
-		if (value != null && !(value instanceof Uint8Array) && typeof value === "object" && CID$1.asCID(value) == null) yield* treeWithin(path, value);
+		if (value != null && !(value instanceof Uint8Array) && typeof value === "object" && CID.asCID(value) == null) yield* treeWithin(path, value);
 	}
 }
 function get(source, path) {
@@ -30230,7 +30592,7 @@ function get(source, path) {
 	for (const [index, key] of path.entries()) {
 		node = node[key];
 		if (node == null) throw new Error(`Object has no property at ${path.slice(0, index + 1).map((part) => `[${JSON.stringify(part)}]`).join("")}`);
-		const cid = CID$1.asCID(node);
+		const cid = CID.asCID(node);
 		if (cid != null) return {
 			value: cid,
 			remaining: path.slice(index + 1).join("/")
@@ -30321,7 +30683,7 @@ var BlockNotFoundWhileOfflineError = class extends Error {
 //#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/pins.js
 const DATASTORE_PIN_PREFIX = "/pin/";
 const DATASTORE_BLOCK_PREFIX = "/pinned-block/";
-const DATASTORE_ENCODING = base36$1;
+const DATASTORE_ENCODING = base36;
 const DAG_WALK_QUEUE_CONCURRENCY = 1;
 function toDSKey(cid) {
 	if (cid.version === 0) cid = cid.toV1();
@@ -30358,7 +30720,7 @@ var PinsImpl = class {
 			depth,
 			metadata: options.metadata ?? {}
 		};
-		await this.datastore.put(pinKey, encode$10(pin), options);
+		await this.datastore.put(pinKey, encode$13(pin), options);
 	}
 	/**
 	* Walk a DAG in an iterable fashion
@@ -30389,7 +30751,7 @@ var PinsImpl = class {
 			pinnedBy: []
 		};
 		try {
-			pinnedBlock = decode$12(await this.datastore.get(blockKey, options));
+			pinnedBlock = decode$15(await this.datastore.get(blockKey, options));
 		} catch (err) {
 			if (err.name !== "NotFoundError") throw err;
 		}
@@ -30400,12 +30762,12 @@ var PinsImpl = class {
 				return;
 			}
 		}
-		await this.datastore.put(blockKey, encode$10(pinnedBlock), options);
+		await this.datastore.put(blockKey, encode$13(pinnedBlock), options);
 		options.onProgress?.(new CustomProgressEvent("helia:pin:add", cid));
 	}
 	async *rm(cid, options = {}) {
 		const pinKey = toDSKey(cid);
-		const pin = decode$12(await this.datastore.get(pinKey, options));
+		const pin = decode$15(await this.datastore.get(pinKey, options));
 		await this.datastore.delete(pinKey, options);
 		const queue = new Queue$1({ concurrency: DAG_WALK_QUEUE_CONCURRENCY });
 		for await (const childCid of this.#walkDag(cid, queue, {
@@ -30424,9 +30786,9 @@ var PinsImpl = class {
 		}
 	}
 	async *ls(options = {}) {
-		for await (const { key, value } of this.datastore.query({ prefix: DATASTORE_PIN_PREFIX + (options.cid != null ? `${options.cid.toString(base36$1)}` : "") }, options)) yield {
-			cid: CID$1.parse(key.toString().substring(5), base36$1),
-			...decode$12(value)
+		for await (const { key, value } of this.datastore.query({ prefix: DATASTORE_PIN_PREFIX + (options.cid != null ? `${options.cid.toString(base36)}` : "") }, options)) yield {
+			cid: CID.parse(key.toString().substring(5), base36),
+			...decode$15(value)
 		};
 	}
 	async isPinned(cid, options = {}) {
@@ -30435,13 +30797,13 @@ var PinsImpl = class {
 	}
 	async get(cid, options) {
 		const pinKey = toDSKey(cid);
-		return decode$12(await this.datastore.get(pinKey, options));
+		return decode$15(await this.datastore.get(pinKey, options));
 	}
 	async setMetadata(cid, metadata, options) {
 		const pinKey = toDSKey(cid);
-		const pin = decode$12(await this.datastore.get(pinKey, options));
+		const pin = decode$15(await this.datastore.get(pinKey, options));
 		pin.metadata = metadata ?? {};
-		await this.datastore.put(pinKey, encode$10(pin), options);
+		await this.datastore.put(pinKey, encode$13(pin), options);
 	}
 };
 //#endregion
@@ -30647,7 +31009,7 @@ var Routing = class {
 				}
 			}));
 		} catch {}
-		if (result == null) throw new GetFailedError(errors, `Failed to get value key ${toString$2(key, "base58btc")}`);
+		if (result == null) throw new GetFailedError(errors, `Failed to get value key ${toString$1(key, "base58btc")}`);
 		return result;
 	}
 	/**
@@ -30676,7 +31038,7 @@ var Routing = class {
 			if (peer == null) continue;
 			return peer;
 		}
-		throw new NotFoundError$2("Could not find peer in routing");
+		throw new NotFoundError$3("Could not find peer in routing");
 	}
 	/**
 	* Attempt to find the closest peers on the network to the given key
@@ -31869,10 +32231,10 @@ const DS_VERSION_KEY = new Key("/version");
 const CURRENT_VERSION = 1;
 async function assertDatastoreVersionIsCurrent(datastore) {
 	if (!await datastore.has(DS_VERSION_KEY)) {
-		await datastore.put(DS_VERSION_KEY, fromString$2(`${CURRENT_VERSION}`));
+		await datastore.put(DS_VERSION_KEY, fromString(`${CURRENT_VERSION}`));
 		return;
 	}
-	const str = toString$2(await datastore.get(DS_VERSION_KEY));
+	const str = toString$1(await datastore.get(DS_VERSION_KEY));
 	if (parseInt(str, 10) !== CURRENT_VERSION) throw new InvalidDatastoreVersionError("Invalid datastore version, a datastore migration may be required");
 }
 //#endregion
@@ -31914,7 +32276,7 @@ function toByteView$2(buf) {
 */
 function cidEncoder$1(obj) {
 	if (obj.asCID !== obj && obj["/"] !== obj.bytes) return null;
-	const cid = CID$1.asCID(obj);
+	const cid = CID.asCID(obj);
 	/* c8 ignore next 4 */
 	if (!cid) return null;
 	const bytes = new Uint8Array(cid.bytes.byteLength + 1);
@@ -31971,7 +32333,7 @@ const encodeOptions$1 = {
 function cidDecoder(decode) {
 	const bytes = decode();
 	if (bytes[0] !== 0) throw new Error("Invalid CID for CBOR tag 42; expected leading 0x00");
-	return CID$1.decode(bytes.subarray(1));
+	return CID.decode(bytes.subarray(1));
 }
 const _decodeOptions = {
 	allowIndefinite: false,
@@ -31995,13 +32357,13 @@ const name$3 = "dag-cbor";
 * @param {T} node
 * @returns {ByteView<T>}
 */
-const encode$4 = (node) => encode$10(node, _encodeOptions);
+const encode$4 = (node) => encode$13(node, _encodeOptions);
 /**
 * @template T
 * @param {ByteView<T> | ArrayBufferView<T>} data
 * @returns {T}
 */
-const decode$4 = (data) => decode$12(toByteView$2(data), _decodeOptions);
+const decode$4 = (data) => decode$15(toByteView$2(data), _decodeOptions);
 //#endregion
 //#region node_modules/.pnpm/cborg@5.1.1/node_modules/cborg/lib/json/encode.js
 /**
@@ -32063,7 +32425,7 @@ var JSONEncoder = class extends Array {
 	*/
 	[Type.string.major](buf, token) {
 		this.prefix(buf);
-		const byts = fromString$1(JSON.stringify(token.value));
+		const byts = fromString$2(JSON.stringify(token.value));
 		buf.push(byts.length > 32 ? asU8A(byts) : byts);
 	}
 	/**
@@ -32568,7 +32930,7 @@ var Tokenizer = class {
 */
 function decode$3(data, options) {
 	options = Object.assign({ tokenizer: new Tokenizer(data, options) }, options);
-	return decode$12(data, options);
+	return decode$15(data, options);
 }
 //#endregion
 //#region node_modules/.pnpm/@ipld+dag-json@10.2.9/node_modules/@ipld/dag-json/src/index.js
@@ -32616,7 +32978,7 @@ function toByteView$1(buf) {
 */
 function cidEncoder(obj) {
 	if (obj.asCID !== obj && obj["/"] !== obj.bytes) return null;
-	const cid = CID$1.asCID(obj);
+	const cid = CID.asCID(obj);
 	/* c8 ignore next 4 */
 	if (!cid) return null;
 	const cidString = cid.toString();
@@ -32783,7 +33145,7 @@ const decodeOptions = {
 	useMaps: false,
 	rejectDuplicateMapKeys: true,
 	/** @type {{ [tagNumber: number]: import('cborg').TagDecoder }} */
-	tags: { 42: (decode) => CID$1.parse(decode()) }
+	tags: { 42: (decode) => CID.parse(decode()) }
 };
 const name$2 = "dag-json";
 /**
@@ -33410,18 +33772,18 @@ function hasOnlyProperties(node, properties) {
 */
 function asLink(link) {
 	if (typeof link.asCID === "object") {
-		const Hash = CID.asCID(link);
+		const Hash = CID$1.asCID(link);
 		if (!Hash) throw new TypeError("Invalid DAG-PB form");
 		return { Hash };
 	}
 	if (typeof link !== "object" || Array.isArray(link)) throw new TypeError("Invalid DAG-PB form");
 	const pbl = {};
 	if (link.Hash) {
-		let cid = CID.asCID(link.Hash);
+		let cid = CID$1.asCID(link.Hash);
 		try {
 			if (!cid) {
-				if (typeof link.Hash === "string") cid = CID.parse(link.Hash);
-				else if (link.Hash instanceof Uint8Array) cid = CID.decode(link.Hash);
+				if (typeof link.Hash === "string") cid = CID$1.parse(link.Hash);
+				else if (link.Hash instanceof Uint8Array) cid = CID$1.decode(link.Hash);
 			}
 		} catch (e) {
 			throw new TypeError(`Invalid DAG-PB form: ${e.message}`);
@@ -33560,7 +33922,7 @@ function decode$1(bytes) {
 	if (pbn.Links) node.Links = pbn.Links.map((l) => {
 		const link = {};
 		try {
-			link.Hash = CID.decode(l.Hash);
+			link.Hash = CID$1.decode(l.Hash);
 		} catch {}
 		if (!link.Hash) throw new Error("Invalid Hash field found in link, expected CID");
 		if (l.Name !== void 0) link.Name = l.Name;
@@ -33571,7 +33933,7 @@ function decode$1(bytes) {
 }
 //#endregion
 //#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/is-promise.js
-function isPromise$2(p) {
+function isPromise$3(p) {
 	return p?.then != null;
 }
 //#endregion
@@ -33591,7 +33953,7 @@ function getCodec(initialCodecs = [], loadCodec) {
 		let codec = codecs[code];
 		if (codec == null && loadCodec != null) {
 			const res = loadCodec(code);
-			if (isPromise$2(res)) codec = await res;
+			if (isPromise$3(res)) codec = await res;
 			else codec = res;
 			codecs[codec.code] = codec;
 		}
@@ -33603,9 +33965,9 @@ function getCodec(initialCodecs = [], loadCodec) {
 //#region node_modules/.pnpm/@helia+utils@2.5.2/node_modules/@helia/utils/dist/src/utils/get-hasher.js
 function getHasher(initialHashers = [], loadHasher) {
 	const hashers = {
-		[sha256$2.code]: sha256$2,
-		[sha512$2.code]: sha512$2,
-		[identity$2.code]: identity$2
+		[sha256$1.code]: sha256$1,
+		[sha512$1.code]: sha512$1,
+		[identity.code]: identity
 	};
 	initialHashers.forEach((hasher) => {
 		hashers[hasher.code] = hasher;
@@ -33614,7 +33976,7 @@ function getHasher(initialHashers = [], loadHasher) {
 		let hasher = hashers[code];
 		if (hasher == null && loadHasher != null) {
 			const res = loadHasher(code);
-			if (isPromise$2(res)) hasher = await res;
+			if (isPromise$3(res)) hasher = await res;
 			else hasher = res;
 			hashers[hasher.code] = hasher;
 		}
@@ -33622,6 +33984,63 @@ function getHasher(initialHashers = [], loadHasher) {
 		throw new UnknownHashAlgorithmError(`No hasher configured for multihash code 0x${code.toString(16)}, please configure one. You can look up which hash this is at https://github.com/multiformats/multicodec/blob/master/table.csv`);
 	};
 }
+//#endregion
+//#region node_modules/.pnpm/interface-store@7.0.2/node_modules/interface-store/dist/src/errors.js
+var NotFoundError$2 = class NotFoundError$2 extends Error {
+	static name = "NotFoundError";
+	name = NotFoundError$2.name;
+	/**
+	* @deprecated use `.name` instead - this will be removed in a future release
+	*/
+	static code = "ERR_NOT_FOUND";
+	/**
+	* @deprecated use `.name` instead - this will be removed in a future release
+	*/
+	code = NotFoundError$2.code;
+	constructor(message = "Not Found") {
+		super(message);
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/base.js
+var BaseBlockstore = class {
+	has(key, options) {
+		return Promise.reject(/* @__PURE__ */ new Error(".has is not implemented"));
+	}
+	put(key, val, options) {
+		return Promise.reject(/* @__PURE__ */ new Error(".put is not implemented"));
+	}
+	async *putMany(source, options) {
+		for await (const { cid, bytes } of source) {
+			await this.put(cid, bytes, options);
+			yield cid;
+		}
+	}
+	get(key, options) {
+		throw new Error(".get is not implemented");
+	}
+	async *getMany(source, options) {
+		for await (const key of source) yield {
+			cid: key,
+			bytes: this.get(key, options)
+		};
+	}
+	delete(key, options) {
+		return Promise.reject(/* @__PURE__ */ new Error(".delete is not implemented"));
+	}
+	async *deleteMany(source, options) {
+		for await (const key of source) {
+			await this.delete(key, options);
+			yield key;
+		}
+	}
+	/**
+	* Extending classes should override `query` or implement this method
+	*/
+	async *getAll(options) {
+		throw new Error(".getAll is not implemented");
+	}
+};
 //#endregion
 //#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/identity.js
 const IDENTITY_CODEC$1 = 0;
@@ -33658,7 +34077,7 @@ var IdentityBlockstore = class extends BaseBlockstore {
 		}
 		if (this.child == null) {
 			options?.signal?.throwIfAborted();
-			throw new NotFoundError$3();
+			throw new NotFoundError$2();
 		}
 		yield* this.child.get(key, options);
 	}
@@ -33732,7 +34151,7 @@ var IdentityBlockstore = class extends BaseBlockstore {
 function isAsyncIterable$7(thing) {
 	return thing[Symbol.asyncIterator] != null;
 }
-function isPromise$1(thing) {
+function isPromise$2(thing) {
 	return thing?.then != null;
 }
 function forEach(source, fn) {
@@ -33740,7 +34159,7 @@ function forEach(source, fn) {
 	if (isAsyncIterable$7(source)) return (async function* () {
 		for await (const val of source) {
 			const res = fn(val, index++);
-			if (isPromise$1(res)) await res;
+			if (isPromise$2(res)) await res;
 			yield val;
 		}
 	})();
@@ -33753,7 +34172,7 @@ function forEach(source, fn) {
 		yield value;
 		for (const val of peekable$1) {
 			const res = fn(val, index++);
-			if (isPromise$1(res)) await res;
+			if (isPromise$2(res)) await res;
 			yield val;
 		}
 	})();
@@ -33936,7 +34355,7 @@ const getCidBlockVerifierFunction = (cid, hasher) => {
 	return async (block) => {
 		let hash;
 		const res = hasher.digest(block, { truncate: cid.multihash.digest.byteLength });
-		if (isPromise$2(res)) hash = await res;
+		if (isPromise$3(res)) hash = await res;
 		else hash = res;
 		if (!equals(hash.digest, cid.multihash.digest)) throw new InvalidMultihashError("Hash of downloaded block did not match multihash from passed CID");
 	};
@@ -35190,9 +35609,9 @@ function pool(size) {
 	let slab;
 	let offset = SIZE;
 	return function poolAlloc(size) {
-		if (size < 1 || size > MAX) return allocUnsafe$1(size);
+		if (size < 1 || size > MAX) return allocUnsafe(size);
 		if (offset + size > SIZE) {
-			slab = allocUnsafe$1(SIZE);
+			slab = allocUnsafe(SIZE);
 			offset = 0;
 		}
 		const buf = slab.subarray(offset, offset += size);
@@ -35265,7 +35684,7 @@ const bufferPool = pool();
 * Allocates a buffer of the specified size
 */
 function alloc(size) {
-	if (globalThis.Buffer != null) return allocUnsafe$1(size);
+	if (globalThis.Buffer != null) return allocUnsafe(size);
 	return bufferPool(size);
 }
 /**
@@ -35587,7 +36006,7 @@ function writeBytesBuffer(val, buf, pos) {
 function writeStringBuffer(val, buf, pos) {
 	if (val.length < 40) write(val, buf, pos);
 	else if (buf.utf8Write != null) buf.utf8Write(val, pos);
-	else buf.set(fromString$2(val), pos);
+	else buf.set(fromString(val), pos);
 }
 /**
 * Creates a new writer
@@ -36491,7 +36910,7 @@ function validateMaxDataLength(chunk, maxDataLength) {
 }
 const defaultEncoder = (length) => {
 	const lengthLength = encodingLength(length);
-	const lengthBuf = allocUnsafe$1(lengthLength);
+	const lengthBuf = allocUnsafe(lengthLength);
 	encode$5(length, lengthBuf);
 	defaultEncoder.bytes = lengthLength;
 	return lengthBuf;
@@ -36905,14 +37324,14 @@ function unmarshalECDSAPrivateKey(bytes) {
 }
 function pkiMessageToECDSAPrivateKey(message) {
 	const privateKey = message[1];
-	const d = toString$1(privateKey, "base64url");
+	const d = toString$3(privateKey, "base64url");
 	const coordinates = message[2][1][0];
 	const offset = 1;
 	let x;
 	let y;
 	if (privateKey.byteLength === P_256_KEY_LENGTH) {
-		x = toString$1(coordinates.subarray(offset, 33), "base64url");
-		y = toString$1(coordinates.subarray(33), "base64url");
+		x = toString$3(coordinates.subarray(offset, 33), "base64url");
+		y = toString$3(coordinates.subarray(33), "base64url");
 		return new ECDSAPrivateKey({
 			...P_256_KEY_JWK,
 			key_ops: ["sign"],
@@ -36922,8 +37341,8 @@ function pkiMessageToECDSAPrivateKey(message) {
 		});
 	}
 	if (privateKey.byteLength === P_384_KEY_LENGTH) {
-		x = toString$1(coordinates.subarray(offset, 49), "base64url");
-		y = toString$1(coordinates.subarray(49), "base64url");
+		x = toString$3(coordinates.subarray(offset, 49), "base64url");
+		y = toString$3(coordinates.subarray(49), "base64url");
 		return new ECDSAPrivateKey({
 			...P_384_KEY_JWK,
 			key_ops: ["sign"],
@@ -36933,8 +37352,8 @@ function pkiMessageToECDSAPrivateKey(message) {
 		});
 	}
 	if (privateKey.byteLength === P_521_KEY_LENGTH) {
-		x = toString$1(coordinates.subarray(offset, 67), "base64url");
-		y = toString$1(coordinates.subarray(67), "base64url");
+		x = toString$3(coordinates.subarray(offset, 67), "base64url");
+		y = toString$3(coordinates.subarray(67), "base64url");
 		return new ECDSAPrivateKey({
 			...P_521_KEY_JWK,
 			key_ops: ["sign"],
@@ -36954,8 +37373,8 @@ function pkiMessageToECDSAPublicKey(message) {
 	let x;
 	let y;
 	if (coordinates.byteLength === 65) {
-		x = toString$1(coordinates.subarray(offset, 33), "base64url");
-		y = toString$1(coordinates.subarray(33), "base64url");
+		x = toString$3(coordinates.subarray(offset, 33), "base64url");
+		y = toString$3(coordinates.subarray(33), "base64url");
 		return new ECDSAPublicKey({
 			...P_256_KEY_JWK,
 			key_ops: ["verify"],
@@ -36964,8 +37383,8 @@ function pkiMessageToECDSAPublicKey(message) {
 		});
 	}
 	if (coordinates.byteLength === 97) {
-		x = toString$1(coordinates.subarray(offset, 49), "base64url");
-		y = toString$1(coordinates.subarray(49), "base64url");
+		x = toString$3(coordinates.subarray(offset, 49), "base64url");
+		y = toString$3(coordinates.subarray(49), "base64url");
 		return new ECDSAPublicKey({
 			...P_384_KEY_JWK,
 			key_ops: ["verify"],
@@ -36974,8 +37393,8 @@ function pkiMessageToECDSAPublicKey(message) {
 		});
 	}
 	if (coordinates.byteLength === 133) {
-		x = toString$1(coordinates.subarray(offset, 67), "base64url");
-		y = toString$1(coordinates.subarray(67), "base64url");
+		x = toString$3(coordinates.subarray(offset, 67), "base64url");
+		y = toString$3(coordinates.subarray(67), "base64url");
 		return new ECDSAPublicKey({
 			...P_521_KEY_JWK,
 			key_ops: ["verify"],
@@ -36988,16 +37407,16 @@ function pkiMessageToECDSAPublicKey(message) {
 function privateKeyToPKIMessage(privateKey) {
 	return encodeSequence([
 		encodeInteger(Uint8Array.from([1])),
-		encodeOctetString(fromString(privateKey.d ?? "", "base64url")),
+		encodeOctetString(fromString$3(privateKey.d ?? "", "base64url")),
 		encodeSequence([getOID(privateKey.crv)], 160),
-		encodeSequence([encodeBitString(new Uint8ArrayList(Uint8Array.from([4]), fromString(privateKey.x ?? "", "base64url"), fromString(privateKey.y ?? "", "base64url")))], 161)
+		encodeSequence([encodeBitString(new Uint8ArrayList(Uint8Array.from([4]), fromString$3(privateKey.x ?? "", "base64url"), fromString$3(privateKey.y ?? "", "base64url")))], 161)
 	]).subarray();
 }
 function publicKeyToPKIMessage(publicKey) {
 	return encodeSequence([
 		encodeInteger(Uint8Array.from([1])),
 		encodeSequence([getOID(publicKey.crv)], 160),
-		encodeSequence([encodeBitString(new Uint8ArrayList(Uint8Array.from([4]), fromString(publicKey.x ?? "", "base64url"), fromString(publicKey.y ?? "", "base64url")))], 161)
+		encodeSequence([encodeBitString(new Uint8ArrayList(Uint8Array.from([4]), fromString$3(publicKey.x ?? "", "base64url"), fromString$3(publicKey.y ?? "", "base64url")))], 161)
 	]).subarray();
 }
 function getOID(curve) {
@@ -37023,13 +37442,13 @@ var ECDSAPublicKey = class {
 		return this._raw;
 	}
 	toMultihash() {
-		return identity.digest(publicKeyToProtobuf(this));
+		return identity$2.digest(publicKeyToProtobuf(this));
 	}
 	toCID() {
-		return CID.createV1(114, this.toMultihash());
+		return CID$1.createV1(114, this.toMultihash());
 	}
 	toString() {
-		return base58btc.encode(this.toMultihash().bytes).substring(1);
+		return base58btc$1.encode(this.toMultihash().bytes).substring(1);
 	}
 	equals(key) {
 		if (key == null || !(key.raw instanceof Uint8Array)) return false;
@@ -40526,8 +40945,8 @@ function generateKey() {
 			format: "jwk"
 		}
 	});
-	const privateKeyRaw = fromString(key.privateKey.d, "base64url");
-	const publicKeyRaw = fromString(key.publicKey.x, "base64url");
+	const privateKeyRaw = fromString$3(key.privateKey.d, "base64url");
+	const publicKeyRaw = fromString$3(key.publicKey.x, "base64url");
 	return {
 		privateKey: concat$1([privateKeyRaw, publicKeyRaw], privateKeyRaw.byteLength + publicKeyRaw.byteLength),
 		publicKey: publicKeyRaw
@@ -40548,8 +40967,8 @@ function hashAndSign$2(key, msg) {
 		format: "jwk",
 		key: {
 			crv: "Ed25519",
-			d: toString$1(privateKey, "base64url"),
-			x: toString$1(publicKey, "base64url"),
+			d: toString$3(privateKey, "base64url"),
+			x: toString$3(publicKey, "base64url"),
 			kty: "OKP"
 		}
 	});
@@ -40564,7 +40983,7 @@ function hashAndVerify$2(key, sig, msg) {
 		format: "jwk",
 		key: {
 			crv: "Ed25519",
-			x: toString$1(key, "base64url"),
+			x: toString$3(key, "base64url"),
 			kty: "OKP"
 		}
 	});
@@ -40572,7 +40991,7 @@ function hashAndVerify$2(key, sig, msg) {
 }
 //#endregion
 //#region node_modules/.pnpm/@libp2p+crypto@5.1.19/node_modules/@libp2p/crypto/dist/src/util.js
-function isPromise(thing) {
+function isPromise$1(thing) {
 	if (thing == null) return false;
 	return typeof thing.then === "function" && typeof thing.catch === "function" && typeof thing.finally === "function";
 }
@@ -40585,13 +41004,13 @@ var Ed25519PublicKey = class {
 		this.raw = ensureEd25519Key(key, 32);
 	}
 	toMultihash() {
-		return identity.digest(publicKeyToProtobuf(this));
+		return identity$2.digest(publicKeyToProtobuf(this));
 	}
 	toCID() {
-		return CID.createV1(114, this.toMultihash());
+		return CID$1.createV1(114, this.toMultihash());
 	}
 	toString() {
-		return base58btc.encode(this.toMultihash().bytes).substring(1);
+		return base58btc$1.encode(this.toMultihash().bytes).substring(1);
 	}
 	equals(key) {
 		if (key == null || !(key.raw instanceof Uint8Array)) return false;
@@ -40600,7 +41019,7 @@ var Ed25519PublicKey = class {
 	verify(data, sig, options) {
 		options?.signal?.throwIfAborted();
 		const result = hashAndVerify$2(this.raw, sig, data);
-		if (isPromise(result)) return result.then((res) => {
+		if (isPromise$1(result)) return result.then((res) => {
 			options?.signal?.throwIfAborted();
 			return res;
 		});
@@ -40622,7 +41041,7 @@ var Ed25519PrivateKey = class {
 	sign(message, options) {
 		options?.signal?.throwIfAborted();
 		const sig = hashAndSign$2(this.raw, message);
-		if (isPromise(sig)) return sig.then((res) => {
+		if (isPromise$1(sig)) return sig.then((res) => {
 			options?.signal?.throwIfAborted();
 			return res;
 		});
@@ -40844,10 +41263,10 @@ var RSAPublicKey = class {
 		return this._multihash;
 	}
 	toCID() {
-		return CID.createV1(114, this._multihash);
+		return CID$1.createV1(114, this._multihash);
 	}
 	toString() {
-		return base58btc.encode(this.toMultihash().bytes).substring(1);
+		return base58btc$1.encode(this.toMultihash().bytes).substring(1);
 	}
 	equals(key) {
 		if (key == null || !(key.raw instanceof Uint8Array)) return false;
@@ -40902,14 +41321,14 @@ const RSA_ALGORITHM_IDENTIFIER = Uint8Array.from([
 */
 function pkcs1MessageToJwk(message) {
 	return {
-		n: toString$1(message[1], "base64url"),
-		e: toString$1(message[2], "base64url"),
-		d: toString$1(message[3], "base64url"),
-		p: toString$1(message[4], "base64url"),
-		q: toString$1(message[5], "base64url"),
-		dp: toString$1(message[6], "base64url"),
-		dq: toString$1(message[7], "base64url"),
-		qi: toString$1(message[8], "base64url"),
+		n: toString$3(message[1], "base64url"),
+		e: toString$3(message[2], "base64url"),
+		d: toString$3(message[3], "base64url"),
+		p: toString$3(message[4], "base64url"),
+		q: toString$3(message[5], "base64url"),
+		dp: toString$3(message[6], "base64url"),
+		dq: toString$3(message[7], "base64url"),
+		qi: toString$3(message[8], "base64url"),
 		kty: "RSA"
 	};
 }
@@ -40920,22 +41339,22 @@ function jwkToPkcs1(jwk) {
 	if (jwk.n == null || jwk.e == null || jwk.d == null || jwk.p == null || jwk.q == null || jwk.dp == null || jwk.dq == null || jwk.qi == null) throw new InvalidParametersError$4("JWK was missing components");
 	return encodeSequence([
 		encodeInteger(Uint8Array.from([0])),
-		encodeInteger(fromString(jwk.n, "base64url")),
-		encodeInteger(fromString(jwk.e, "base64url")),
-		encodeInteger(fromString(jwk.d, "base64url")),
-		encodeInteger(fromString(jwk.p, "base64url")),
-		encodeInteger(fromString(jwk.q, "base64url")),
-		encodeInteger(fromString(jwk.dp, "base64url")),
-		encodeInteger(fromString(jwk.dq, "base64url")),
-		encodeInteger(fromString(jwk.qi, "base64url"))
+		encodeInteger(fromString$3(jwk.n, "base64url")),
+		encodeInteger(fromString$3(jwk.e, "base64url")),
+		encodeInteger(fromString$3(jwk.d, "base64url")),
+		encodeInteger(fromString$3(jwk.p, "base64url")),
+		encodeInteger(fromString$3(jwk.q, "base64url")),
+		encodeInteger(fromString$3(jwk.dp, "base64url")),
+		encodeInteger(fromString$3(jwk.dq, "base64url")),
+		encodeInteger(fromString$3(jwk.qi, "base64url"))
 	]).subarray();
 }
 function pkixMessageToJwk(message) {
 	const keys = decodeDer(message[1], { offset: 0 });
 	return {
 		kty: "RSA",
-		n: toString$1(keys[0], "base64url"),
-		e: toString$1(keys[1], "base64url")
+		n: toString$3(keys[0], "base64url"),
+		e: toString$3(keys[1], "base64url")
 	};
 }
 /**
@@ -40943,7 +41362,7 @@ function pkixMessageToJwk(message) {
 */
 function jwkToPkix(jwk) {
 	if (jwk.n == null || jwk.e == null) throw new InvalidParametersError$4("JWK was missing components");
-	return encodeSequence([RSA_ALGORITHM_IDENTIFIER, encodeBitString(encodeSequence([encodeInteger(fromString(jwk.n, "base64url")), encodeInteger(fromString(jwk.e, "base64url"))]))]).subarray();
+	return encodeSequence([RSA_ALGORITHM_IDENTIFIER, encodeBitString(encodeSequence([encodeInteger(fromString$3(jwk.n, "base64url")), encodeInteger(fromString$3(jwk.e, "base64url"))]))]).subarray();
 }
 /**
 * Turn PKCS#1 DER bytes into a PrivateKey
@@ -40966,7 +41385,7 @@ function pkixToRSAPublicKey(bytes, digest) {
 }
 function pkixMessageToRSAPublicKey(message, bytes, digest) {
 	const jwk = pkixMessageToJwk(message);
-	if (digest == null) digest = create$2(SHA2_256_CODE, sha256(PublicKey.encode({
+	if (digest == null) digest = create$3(SHA2_256_CODE, sha256(PublicKey.encode({
 		Type: KeyType.RSA,
 		Data: bytes
 	})));
@@ -40975,7 +41394,7 @@ function pkixMessageToRSAPublicKey(message, bytes, digest) {
 function jwkToRSAPrivateKey(jwk) {
 	if (rsaKeySize(jwk) > 8192) throw new InvalidParametersError$4("Key size is too large");
 	const keys = jwkToJWKKeyPair(jwk);
-	const digest = create$2(SHA2_256_CODE, sha256(PublicKey.encode({
+	const digest = create$3(SHA2_256_CODE, sha256(PublicKey.encode({
 		Type: KeyType.RSA,
 		Data: jwkToPkix(keys.publicKey)
 	})));
@@ -40984,7 +41403,7 @@ function jwkToRSAPrivateKey(jwk) {
 async function generateRSAKeyPair(bits) {
 	if (bits > 8192) throw new InvalidParametersError$4("Key size is too large");
 	const keys = await generateRSAKey(bits);
-	const digest = create$2(SHA2_256_CODE, sha256(PublicKey.encode({
+	const digest = create$3(SHA2_256_CODE, sha256(PublicKey.encode({
 		Type: KeyType.RSA,
 		Data: jwkToPkix(keys.publicKey)
 	})));
@@ -41048,7 +41467,7 @@ function hashAndVerify$1(key, sig, msg, options) {
 function rsaKeySize(jwk) {
 	if (jwk.kty !== "RSA") throw new InvalidParametersError$4("Invalid key type");
 	else if (jwk.n == null) throw new InvalidParametersError$4("Invalid key modulus");
-	return fromString(jwk.n, "base64url").length * 8;
+	return fromString$3(jwk.n, "base64url").length * 8;
 }
 //#endregion
 //#region node_modules/.pnpm/@noble+hashes@2.2.0/node_modules/@noble/hashes/hmac.js
@@ -42287,13 +42706,13 @@ var Secp256k1PublicKey = class {
 		this.raw = compressSecp256k1PublicKey(this._key);
 	}
 	toMultihash() {
-		return identity.digest(publicKeyToProtobuf(this));
+		return identity$2.digest(publicKeyToProtobuf(this));
 	}
 	toCID() {
-		return CID.createV1(114, this.toMultihash());
+		return CID$1.createV1(114, this.toMultihash());
 	}
 	toString() {
-		return base58btc.encode(this.toMultihash().bytes).substring(1);
+		return base58btc$1.encode(this.toMultihash().bytes).substring(1);
 	}
 	equals(key) {
 		if (key == null || !(key.raw instanceof Uint8Array)) return false;
@@ -42507,14 +42926,14 @@ var PeerIdImpl = class {
 	}
 	[peerIdSymbol] = true;
 	toString() {
-		if (this.string == null) this.string = base58btc.encode(this.multihash.bytes).slice(1);
+		if (this.string == null) this.string = base58btc$1.encode(this.multihash.bytes).slice(1);
 		return this.string;
 	}
 	toMultihash() {
 		return this.multihash;
 	}
 	toCID() {
-		return CID.createV1(LIBP2P_KEY_CODE$1, this.multihash);
+		return CID$1.createV1(LIBP2P_KEY_CODE$1, this.multihash);
 	}
 	toJSON() {
 		return this.toString();
@@ -42586,7 +43005,7 @@ var URLPeerId = class {
 	url;
 	constructor(url) {
 		this.url = url.toString();
-		this.multihash = identity.digest(fromString(this.url));
+		this.multihash = identity$2.digest(fromString$3(this.url));
 	}
 	[inspect]() {
 		return `PeerId(${this.url})`;
@@ -42599,14 +43018,14 @@ var URLPeerId = class {
 		return this.multihash;
 	}
 	toCID() {
-		return CID.createV1(TRANSPORT_IPFS_GATEWAY_HTTP_CODE$3, this.toMultihash());
+		return CID$1.createV1(TRANSPORT_IPFS_GATEWAY_HTTP_CODE$3, this.toMultihash());
 	}
 	toJSON() {
 		return this.toString();
 	}
 	equals(other) {
 		if (other == null) return false;
-		if (other instanceof Uint8Array) other = toString$1(other);
+		if (other instanceof Uint8Array) other = toString$3(other);
 		return other.toString() === this.toString();
 	}
 };
@@ -42631,11 +43050,11 @@ const LIBP2P_KEY_CODE = 114;
 const TRANSPORT_IPFS_GATEWAY_HTTP_CODE$2 = 2336;
 function peerIdFromString$1(str, decoder) {
 	let multihash;
-	if (str.charAt(0) === "1" || str.charAt(0) === "Q") multihash = decode$9(base58btc.decode(`z${str}`));
-	else if (str.startsWith("k51qzi5uqu5") || str.startsWith("kzwfwjn5ji4") || str.startsWith("k2k4r8") || str.startsWith("bafz")) return peerIdFromCID(CID.parse(str));
+	if (str.charAt(0) === "1" || str.charAt(0) === "Q") multihash = decode$17(base58btc$1.decode(`z${str}`));
+	else if (str.startsWith("k51qzi5uqu5") || str.startsWith("kzwfwjn5ji4") || str.startsWith("k2k4r8") || str.startsWith("bafz")) return peerIdFromCID(CID$1.parse(str));
 	else {
 		if (decoder == null) throw new InvalidParametersError$4("Please pass a multibase decoder for strings that do not start with \"1\" or \"Q\"");
-		multihash = decode$9(decoder.decode(str));
+		multihash = decode$17(decoder.decode(str));
 	}
 	return peerIdFromMultihash(multihash);
 }
@@ -42670,7 +43089,7 @@ function peerIdFromMultihash(multihash) {
 			publicKey
 		});
 	} catch (err) {
-		const url = toString$1(multihash.digest);
+		const url = toString$3(multihash.digest);
 		return new URLPeerId(new URL(url));
 	}
 	throw new InvalidMultihashError("Supplied PeerID Multihash is invalid");
@@ -42678,16 +43097,16 @@ function peerIdFromMultihash(multihash) {
 function peerIdFromCID(cid) {
 	if (cid?.multihash == null || cid.version == null || cid.version === 1 && cid.code !== LIBP2P_KEY_CODE && cid.code !== TRANSPORT_IPFS_GATEWAY_HTTP_CODE$2) throw new InvalidCIDError("Supplied PeerID CID is invalid");
 	if (cid.code === TRANSPORT_IPFS_GATEWAY_HTTP_CODE$2) {
-		const url = toString$1(cid.multihash.digest);
+		const url = toString$3(cid.multihash.digest);
 		return new URLPeerId(new URL(url));
 	}
 	return peerIdFromMultihash(cid.multihash);
 }
 function isIdentityMultihash(multihash) {
-	return multihash.code === identity.code;
+	return multihash.code === identity$2.code;
 }
 function isSha256Multihash(multihash) {
-	return multihash.code === sha256$1.code;
+	return multihash.code === sha256$2.code;
 }
 //#endregion
 //#region node_modules/.pnpm/@libp2p+peer-collections@7.0.21/node_modules/@libp2p/peer-collections/dist/src/util.js
@@ -42715,7 +43134,7 @@ function mapIterable(iter, map) {
 	return iterator;
 }
 function peerIdFromString(str) {
-	return peerIdFromMultihash(decode$9(base58btc.decode(`z${str}`)));
+	return peerIdFromMultihash(decode$17(base58btc$1.decode(`z${str}`)));
 }
 //#endregion
 //#region node_modules/.pnpm/@libp2p+peer-collections@7.0.21/node_modules/@libp2p/peer-collections/dist/src/map.js
@@ -43413,7 +43832,7 @@ var TrustlessGateway = class {
 		this.transformRequestInit = transformRequestInit;
 		this.log = logger.forComponent(`helia:trustless-gateway-block-broker:${this.url.host}`);
 		this.routing = routing;
-		this.peer = peerIdFromCID(CID$1.createV1(TRANSPORT_IPFS_GATEWAY_HTTP_CODE$1, identity$2.digest(fromString$2(this.url.toString()))));
+		this.peer = peerIdFromCID(CID.createV1(TRANSPORT_IPFS_GATEWAY_HTTP_CODE$1, identity.digest(fromString(this.url.toString()))));
 	}
 	/**
 	* This function returns a unique string for the multihash.bytes of the CID.
@@ -43705,12 +44124,12 @@ const TRANSPORT_IPFS_GATEWAY_HTTP_CODE = 2336;
 function toPeerInfo(url) {
 	url = url.toString();
 	return {
-		id: peerIdFromCID(CID$1.createV1(TRANSPORT_IPFS_GATEWAY_HTTP_CODE, identity$2.digest(fromString$2(url)))),
+		id: peerIdFromCID(CID.createV1(TRANSPORT_IPFS_GATEWAY_HTTP_CODE, identity.digest(fromString(url)))),
 		multiaddrs: [uriToMultiaddr(url)]
 	};
 }
 function toUrl(info) {
-	return new URL(toString$2(info.id.toMultihash().digest));
+	return new URL(toString$1(info.id.toMultihash().digest));
 }
 var HTTPGatewayRouter = class {
 	name = "http-gateway-router";
@@ -43775,6 +44194,85 @@ var Libp2pRouter = class {
 function libp2pRouting(libp2p) {
 	return new Libp2pRouter(libp2p);
 }
+//#endregion
+//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/memory.js
+function isPromise(p) {
+	return typeof p?.then === "function";
+}
+var MemoryBlockstore = class extends BaseBlockstore {
+	data;
+	constructor() {
+		super();
+		this.data = /* @__PURE__ */ new Map();
+	}
+	put(key, val, options) {
+		options?.signal?.throwIfAborted();
+		let buf;
+		if (val instanceof Uint8Array) buf = [val];
+		else {
+			const result = all(val);
+			if (isPromise(result)) return result.then((val) => {
+				return this._put(key, val, options);
+			});
+			else buf = result;
+		}
+		return this._put(key, buf, options);
+	}
+	_put(key, val, options) {
+		options?.signal?.throwIfAborted();
+		this.data.set(base32.encode(key.multihash.bytes), val);
+		return key;
+	}
+	*get(key, options) {
+		options?.signal?.throwIfAborted();
+		const buf = this.data.get(base32.encode(key.multihash.bytes));
+		if (buf == null) throw new NotFoundError$2();
+		yield* buf;
+	}
+	has(key, options) {
+		options?.signal?.throwIfAborted();
+		return this.data.has(base32.encode(key.multihash.bytes));
+	}
+	async delete(key, options) {
+		options?.signal?.throwIfAborted();
+		this.data.delete(base32.encode(key.multihash.bytes));
+	}
+	*getAll(options) {
+		options?.signal?.throwIfAborted();
+		for (const [key, value] of this.data.entries()) {
+			yield {
+				cid: CID.createV1(85, decode$7(base32.decode(key))),
+				bytes: (async function* () {
+					yield* value;
+				})()
+			};
+			options?.signal?.throwIfAborted();
+		}
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/blockstore-core@6.1.3/node_modules/blockstore-core/dist/src/black-hole.js
+var BlackHoleBlockstore = class extends BaseBlockstore {
+	put(key, value, options) {
+		options?.signal?.throwIfAborted();
+		return key;
+	}
+	get(key, options) {
+		options?.signal?.throwIfAborted();
+		throw new NotFoundError$2();
+	}
+	has(key, options) {
+		options?.signal?.throwIfAborted();
+		return false;
+	}
+	async delete(cid, options) {
+		options?.signal?.throwIfAborted();
+	}
+	async *getAll(options) {
+		options?.signal?.throwIfAborted();
+	}
+};
+logger("blockstore:core:tiered");
 //#endregion
 //#region node_modules/.pnpm/datastore-core@11.0.4/node_modules/datastore-core/dist/src/shard.js
 const SHARDING_FN = "SHARDING";
@@ -43948,7 +44446,7 @@ var MemoryDatastore = class extends BaseDatastore {
 	get(key, options) {
 		options?.signal?.throwIfAborted();
 		const result = this.data.get(key.toString());
-		if (result == null) throw new NotFoundError$3();
+		if (result == null) throw new NotFoundError$2();
 		return result;
 	}
 	has(key, options) {
@@ -44012,10 +44510,10 @@ var Envelope;
 			if (opts.lengthDelimited !== false) w.ldelim();
 		}, (reader, length, opts = {}) => {
 			const obj = {
-				publicKey: alloc$1(0),
-				payloadType: alloc$1(0),
-				payload: alloc$1(0),
-				signature: alloc$1(0)
+				publicKey: alloc$3(0),
+				payloadType: alloc$3(0),
+				payload: alloc$3(0),
+				signature: alloc$3(0)
 			};
 			const end = length == null ? reader.len : reader.pos + length;
 			while (reader.pos < end) {
@@ -44189,7 +44687,7 @@ var RecordEnvelope = class RecordEnvelope {
 * Helper function that prepares a Uint8Array to sign or verify a signature
 */
 const formatSignaturePayload = (domain, payloadType, payload) => {
-	const domainUint8Array = fromString(domain);
+	const domainUint8Array = fromString$3(domain);
 	return new Uint8ArrayList(encode$5(domainUint8Array.byteLength), domainUint8Array, encode$5(payloadType.length), payloadType, encode$5(payload.length), payload);
 };
 //#endregion
@@ -44211,7 +44709,7 @@ var PeerRecord$1;
 				}
 				if (opts.lengthDelimited !== false) w.ldelim();
 			}, (reader, length, opts = {}) => {
-				const obj = { multiaddr: alloc$1(0) };
+				const obj = { multiaddr: alloc$3(0) };
 				const end = length == null ? reader.len : reader.pos + length;
 				while (reader.pos < end) {
 					const tag = reader.uint32();
@@ -44276,7 +44774,7 @@ var PeerRecord$1;
 			if (opts.lengthDelimited !== false) w.ldelim();
 		}, (reader, length, opts = {}) => {
 			const obj = {
-				peerId: alloc$1(0),
+				peerId: alloc$3(0),
 				seq: 0n,
 				addresses: []
 			};
@@ -44371,7 +44869,7 @@ var PeerRecord = class PeerRecord {
 	*/
 	static createFromProtobuf = (buf) => {
 		const peerRecord = PeerRecord$1.decode(buf);
-		const peerId = peerIdFromMultihash(decode$9(peerRecord.peerId));
+		const peerId = peerIdFromMultihash(decode$17(peerRecord.peerId));
 		const multiaddrs = (peerRecord.addresses ?? []).map((a) => multiaddr(a.multiaddr));
 		const seqNumber = peerRecord.seq;
 		return new PeerRecord({
@@ -44437,7 +44935,7 @@ var Peer;
 			}, (reader, length, opts = {}) => {
 				const obj = {
 					key: "",
-					value: alloc$1(0)
+					value: alloc$3(0)
 				};
 				const end = length == null ? reader.len : reader.pos + length;
 				while (reader.pos < end) {
@@ -44742,7 +45240,7 @@ var Address;
 			}
 			if (opts.lengthDelimited !== false) w.ldelim();
 		}, (reader, length, opts = {}) => {
-			const obj = { multiaddr: alloc$1(0) };
+			const obj = { multiaddr: alloc$3(0) };
 			const end = length == null ? reader.len : reader.pos + length;
 			while (reader.pos < end) {
 				const tag = reader.uint32();
@@ -45107,7 +45605,7 @@ function mapTag(key, tag) {
 //#region node_modules/.pnpm/@libp2p+peer-store@12.0.21/node_modules/@libp2p/peer-store/dist/src/store.js
 function keyToPeerId(key) {
 	const base32Str = key.toString().split("/")[2];
-	return peerIdFromCID(CID.parse(base32Str, base32));
+	return peerIdFromCID(CID$1.parse(base32Str, base32$1));
 }
 function decodePeer(key, value, maxAddressAge) {
 	return bytesToPeer(keyToPeerId(key), value, maxAddressAge);
@@ -45210,7 +45708,7 @@ var PersistentStore = class {
 		const peer = Peer.decode(buf);
 		if (this.#peerIsExpired(peerId, peer)) {
 			await this.datastore.delete(key, options);
-			throw new NotFoundError$2();
+			throw new NotFoundError$3();
 		}
 		return pbToPeer(peerId, peer, this.peerId.equals(peerId) ? Infinity : this.maxAddressAge);
 	}
@@ -45258,7 +45756,7 @@ var PersistentStore = class {
 			const peerPB = Peer.decode(buf);
 			if (this.#peerIsExpired(peerId, peerPB)) {
 				await this.datastore.delete(key, options);
-				throw new NotFoundError$2();
+				throw new NotFoundError$3();
 			}
 			return {
 				peerPB,
@@ -47067,7 +47565,7 @@ var DialQueue = class {
 					try {
 						await this.components.peerStore.merge(conn.remotePeer, {
 							multiaddrs: [conn.remoteAddr],
-							metadata: { [LAST_DIAL_SUCCESS_KEY]: fromString(Date.now().toString()) }
+							metadata: { [LAST_DIAL_SUCCESS_KEY]: fromString$3(Date.now().toString()) }
 						});
 					} catch (err) {
 						this.log.error("could not update last dial failure key for %p - %e", peerId, err);
@@ -47077,7 +47575,7 @@ var DialQueue = class {
 					this.log.error("dial failed to %a - %e", address.multiaddr, err);
 					failedMultiaddrs.add(address.multiaddr.toString());
 					if (peerId != null) try {
-						await this.components.peerStore.merge(peerId, { metadata: { [LAST_DIAL_FAILURE_KEY]: fromString(Date.now().toString()) } });
+						await this.components.peerStore.merge(peerId, { metadata: { [LAST_DIAL_FAILURE_KEY]: fromString$3(Date.now().toString()) } });
 					} catch (err) {
 						this.log.error("could not update last dial failure key for %p - %e", peerId, err);
 					}
@@ -48155,13 +48653,13 @@ var CompoundContentRouting = class {
 		this.put = components.metrics?.traceFunction("libp2p.contentRouting.put", this.put.bind(this), {
 			optionsIndex: 2,
 			getAttributesFromArgs: ([key]) => {
-				return { key: toString$1(key, "base36") };
+				return { key: toString$3(key, "base36") };
 			}
 		}) ?? this.put;
 		this.get = components.metrics?.traceFunction("libp2p.contentRouting.get", this.get.bind(this), {
 			optionsIndex: 1,
 			getAttributesFromArgs: ([key]) => {
-				return { key: toString$1(key, "base36") };
+				return { key: toString$3(key, "base36") };
 			}
 		}) ?? this.get;
 	}
@@ -48416,7 +48914,7 @@ var DefaultPeerRouting = class {
 			getAttributesFromArgs: ([key], attrs) => {
 				return {
 					...attrs,
-					key: toString$1(key, "base36")
+					key: toString$3(key, "base36")
 				};
 			},
 			getAttributesFromYieldedValue: (value, attrs) => {
@@ -48447,7 +48945,7 @@ var DefaultPeerRouting = class {
 			if (peer.multiaddrs.length > 0) await this.peerStore.merge(peer.id, { multiaddrs: peer.multiaddrs }, options);
 			return peer;
 		}
-		throw new NotFoundError$2();
+		throw new NotFoundError$3();
 	}
 	/**
 	* Attempt to find the closest peers on the network to the given key
@@ -48969,14 +49467,14 @@ const PROTOCOL_ID = "/multistream/1.0.0";
 const MAX_PROTOCOL_LENGTH = 1024;
 //#endregion
 //#region node_modules/.pnpm/@libp2p+multistream-select@7.0.21/node_modules/@libp2p/multistream-select/dist/src/multistream.js
-const NewLine = fromString("\n");
+const NewLine = fromString$3("\n");
 /**
 * Read a length-prefixed string from the passed stream, stripping the final newline character
 */
 async function readString(reader, options) {
 	const arr = (await reader.read(options)).subarray();
 	if (arr.byteLength === 0 || arr[arr.length - 1] !== NewLine[0]) throw new InvalidMessageError("Missing newline");
-	return toString$1(arr).trimEnd();
+	return toString$3(arr).trimEnd();
 }
 //#endregion
 //#region node_modules/.pnpm/@libp2p+multistream-select@7.0.21/node_modules/@libp2p/multistream-select/dist/src/select.js
@@ -49036,8 +49534,8 @@ async function select(stream, protocols, options = {}) {
 		let response;
 		if (i === 0) {
 			log.trace("write [\"%s\", \"%s\"]", PROTOCOL_ID, protocol);
-			const p1 = fromString(`${PROTOCOL_ID}\n`);
-			const p2 = fromString(`${protocol}\n`);
+			const p1 = fromString$3(`${PROTOCOL_ID}\n`);
+			const p2 = fromString$3(`${protocol}\n`);
 			await lp.writeV([p1, p2], options);
 			log.trace("reading multistream-select header");
 			response = await readString(lp, options);
@@ -49048,7 +49546,7 @@ async function select(stream, protocols, options = {}) {
 			}
 		} else {
 			log.trace("write \"%s\"", protocol);
-			await lp.write(fromString(`${protocol}\n`), options);
+			await lp.write(fromString$3(`${protocol}\n`), options);
 		}
 		log.trace("reading protocol response");
 		response = await readString(lp, options);
@@ -49123,26 +49621,26 @@ async function handle(stream, protocols, options = {}) {
 		log.trace("read \"%s\"", protocol);
 		if (protocol === "/multistream/1.0.0") {
 			log.trace("respond with \"%s\" for \"%s\"", PROTOCOL_ID, protocol);
-			await lp.write(fromString(`${PROTOCOL_ID}\n`), options);
+			await lp.write(fromString$3(`${PROTOCOL_ID}\n`), options);
 			log.trace("responded with \"%s\" for \"%s\"", PROTOCOL_ID, protocol);
 			continue;
 		}
 		if (protocols.includes(protocol)) {
 			log.trace("respond with \"%s\" for \"%s\"", protocol, protocol);
-			await lp.write(fromString(`${protocol}\n`), options);
+			await lp.write(fromString$3(`${protocol}\n`), options);
 			log.trace("responded with \"%s\" for \"%s\"", protocol, protocol);
 			lp.unwrap();
 			return protocol;
 		}
 		if (protocol === "ls") {
-			const protos = new Uint8ArrayList(...protocols.map((p) => encode.single(fromString(`${p}\n`))), fromString("\n"));
+			const protos = new Uint8ArrayList(...protocols.map((p) => encode.single(fromString$3(`${p}\n`))), fromString$3("\n"));
 			log.trace("respond with \"%s\" for %s", protocols, protocol);
 			await lp.write(protos, options);
 			log.trace("responded with \"%s\" for %s", protocols, protocol);
 			continue;
 		}
 		log.trace("respond with \"na\" for \"%s\"", protocol);
-		await lp.write(fromString("na\n"), options);
+		await lp.write(fromString$3("na\n"), options);
 		log("responded with \"na\" for \"%s\"", protocol);
 	}
 }
@@ -49829,7 +50327,7 @@ var Libp2p = class extends TypedEventEmitter {
 		} catch (err) {
 			if (err.name !== "NotFoundError") throw err;
 		}
-		const peerKey = concat$1([fromString("/pk/"), peer.toMultihash().bytes]);
+		const peerKey = concat$1([fromString$3("/pk/"), peer.toMultihash().bytes]);
 		const publicKey = publicKeyFromProtobuf(await this.contentRouting.get(peerKey, options));
 		await this.peerStore.patch(peer, { publicKey }, options);
 		return publicKey;
@@ -50075,7 +50573,7 @@ function create(opts) {
 	*/
 	async function encrypt(data, password) {
 		const salt = crypto$1.randomBytes(saltLength);
-		if (typeof password === "string") password = fromString(password);
+		if (typeof password === "string") password = fromString$3(password);
 		const key = crypto$1.pbkdf2Sync(password, salt, iterations, keyLength, digest);
 		return concat$1([salt, encryptWithKey(Uint8Array.from(data), key)]);
 	}
@@ -50106,7 +50604,7 @@ function create(opts) {
 	async function decrypt(data, password) {
 		const salt = data.subarray(0, saltLength);
 		const ciphertextAndNonce = data.subarray(saltLength);
-		if (typeof password === "string") password = fromString(password);
+		if (typeof password === "string") password = fromString$3(password);
 		return decryptWithKey(ciphertextAndNonce, crypto$1.pbkdf2Sync(password, salt, iterations, keyLength, digest));
 	}
 	return {
@@ -53238,7 +53736,7 @@ async function exportToPem(privateKey, password) {
 	const finalWrapperBuf = new import_build.Sequence({ value: [encryptionAlgorithm, new import_build.OctetString({ valueHex: encrypted })] }).toBER();
 	return [
 		"-----BEGIN ENCRYPTED PRIVATE KEY-----",
-		...toString$1(new Uint8Array(finalWrapperBuf, 0, finalWrapperBuf.byteLength), "base64pad").split(/(.{64})/).filter(Boolean),
+		...toString$3(new Uint8Array(finalWrapperBuf, 0, finalWrapperBuf.byteLength), "base64pad").split(/(.{64})/).filter(Boolean),
 		"-----END ENCRYPTED PRIVATE KEY-----"
 	].join("\n");
 }
@@ -53269,7 +53767,7 @@ async function importFromPem(pem, password) {
 	const crypto = webcrypto_default.get();
 	let plaintext;
 	if (pem.includes("-----BEGIN ENCRYPTED PRIVATE KEY-----")) {
-		const key = fromString(pem.replace("-----BEGIN ENCRYPTED PRIVATE KEY-----", "").replace("-----END ENCRYPTED PRIVATE KEY-----", "").replace(/\n/g, "").trim(), "base64pad");
+		const key = fromString$3(pem.replace("-----BEGIN ENCRYPTED PRIVATE KEY-----", "").replace("-----END ENCRYPTED PRIVATE KEY-----", "").replace(/\n/g, "").trim(), "base64pad");
 		const { result } = import_build.fromBER(key);
 		const { iv, salt, iterations, keySize, cipherText } = findEncryptedPEMData(result);
 		const encryptionKey = await pbkdf2Async(sha512, password, salt, {
@@ -53284,7 +53782,7 @@ async function importFromPem(pem, password) {
 		const { result: decryptedResult } = import_build.fromBER(decrypted);
 		plaintext = findPEMData(decryptedResult);
 	} else if (pem.includes("-----BEGIN PRIVATE KEY-----")) {
-		const key = fromString(pem.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").replace(/\n/g, "").trim(), "base64pad");
+		const key = fromString$3(pem.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").replace(/\n/g, "").trim(), "base64pad");
 		const { result } = import_build.fromBER(key);
 		plaintext = findPEMData(result);
 	} else throw new InvalidParametersError$4("Could not parse private key from PEM data");
@@ -53363,8 +53861,8 @@ function DsInfoName(name) {
 }
 async function keyId(key) {
 	const pb = privateKeyToProtobuf(key);
-	const hash = await sha256$1.digest(pb);
-	return base58btc.encode(hash.bytes).substring(1);
+	const hash = await sha256$2.digest(pb);
+	return base58btc$1.encode(hash.bytes).substring(1);
 }
 /**
 * Manages the life cycle of a key. Keys are encrypted at rest using PKCS #8.
@@ -53410,7 +53908,7 @@ var Keychain = class {
 	static generateOptions() {
 		const options = Object.assign({}, this.options);
 		const saltLength = Math.ceil(NIST.minSaltLength / 3) * 3;
-		if (options.dek != null) options.dek.salt = toString$1(randomBytes(saltLength), "base64");
+		if (options.dek != null) options.dek.salt = toString$3(randomBytes(saltLength), "base64");
 		return options;
 	}
 	/**
@@ -53430,18 +53928,18 @@ var Keychain = class {
 		const datastoreName = DsInfoName(name);
 		try {
 			const res = await this.components.datastore.get(datastoreName);
-			return JSON.parse(toString$1(res));
+			return JSON.parse(toString$3(res));
 		} catch (err) {
 			await randomDelay();
 			this.log.error("could not read key from datastore - %e", err);
-			throw new NotFoundError$2(`Key '${name}' does not exist.`);
+			throw new NotFoundError$3(`Key '${name}' does not exist.`);
 		}
 	}
 	async findKeyById(id) {
 		try {
 			const query = { prefix: infoPrefix };
 			for await (const value of this.components.datastore.query(query)) {
-				const key = JSON.parse(toString$1(value.value));
+				const key = JSON.parse(toString$3(value.value));
 				if (key.id === id) return key;
 			}
 			throw new InvalidParametersError$4(`Key with id '${id}' does not exist.`);
@@ -53481,8 +53979,8 @@ var Keychain = class {
 			id: kid
 		};
 		const batch = this.components.datastore.batch();
-		batch.put(datastoreName, fromString(pem));
-		batch.put(DsInfoName(name), fromString(JSON.stringify(keyInfo)));
+		batch.put(datastoreName, fromString$3(pem));
+		batch.put(DsInfoName(name), fromString$3(JSON.stringify(keyInfo)));
 		await batch.commit();
 		return keyInfo;
 	}
@@ -53493,7 +53991,7 @@ var Keychain = class {
 		}
 		const datastoreName = DsName(name);
 		try {
-			const pem = toString$1(await this.components.datastore.get(datastoreName));
+			const pem = toString$3(await this.components.datastore.get(datastoreName));
 			const cached = privates.get(this);
 			if (cached == null) throw new InvalidParametersError$4("dek missing");
 			const dek = cached.dek;
@@ -53524,7 +54022,7 @@ var Keychain = class {
 	async listKeys() {
 		const query = { prefix: infoPrefix };
 		const info = [];
-		for await (const value of this.components.datastore.query(query)) info.push(JSON.parse(toString$1(value.value)));
+		for await (const value of this.components.datastore.query(query)) info.push(JSON.parse(toString$3(value.value)));
 		return info;
 	}
 	/**
@@ -53554,11 +54052,11 @@ var Keychain = class {
 		try {
 			const pem = await this.components.datastore.get(oldDatastoreName);
 			const res = await this.components.datastore.get(oldInfoName);
-			const keyInfo = JSON.parse(toString$1(res));
+			const keyInfo = JSON.parse(toString$3(res));
 			keyInfo.name = newName;
 			const batch = this.components.datastore.batch();
 			batch.put(newDatastoreName, pem);
-			batch.put(newInfoName, fromString(JSON.stringify(keyInfo)));
+			batch.put(newInfoName, fromString$3(JSON.stringify(keyInfo)));
 			batch.delete(oldDatastoreName);
 			batch.delete(oldInfoName);
 			await batch.commit();
@@ -53593,15 +54091,15 @@ var Keychain = class {
 		privates.set(this, { dek: newDek });
 		const keys = await this.listKeys();
 		for (const key of keys) {
-			const privateKey = await importPrivateKey(toString$1(await this.components.datastore.get(DsName(key.name))), oldDek);
+			const privateKey = await importPrivateKey(toString$3(await this.components.datastore.get(DsName(key.name))), oldDek);
 			const keyAsPEM = await exportPrivateKey(privateKey, newDek.toString(), privateKey.type === "RSA" ? "pkcs-8" : "libp2p-key");
 			const batch = this.components.datastore.batch();
 			const keyInfo = {
 				name: key.name,
 				id: key.id
 			};
-			batch.put(DsName(key.name), fromString(keyAsPEM));
-			batch.put(DsInfoName(key.name), fromString(JSON.stringify(keyInfo)));
+			batch.put(DsName(key.name), fromString$3(keyAsPEM));
+			batch.put(DsInfoName(key.name), fromString$3(JSON.stringify(keyInfo)));
 			await batch.commit();
 		}
 		this.log("keychain reconstructed");
@@ -53973,7 +54471,7 @@ var IpnsEntry;
 //#endregion
 //#region node_modules/.pnpm/ipns@10.1.6/node_modules/ipns/dist/src/utils.js
 const log$11 = logger("ipns:utils");
-const IPNS_PREFIX$1 = fromString$2("/ipns/");
+const IPNS_PREFIX$1 = fromString("/ipns/");
 const IDENTITY_CODEC = 0;
 const SHA2_256_CODEC = 18;
 /**
@@ -53994,14 +54492,14 @@ function extractPublicKeyFromIPNSRecord(record) {
 * Utility for creating the record data for being signed
 */
 function ipnsRecordDataForV2Sig(data) {
-	return concat([fromString$2("ipns-signature:"), data]);
+	return concat([fromString("ipns-signature:"), data]);
 }
 function marshalIPNSRecord(obj) {
 	if ("signatureV1" in obj) return IpnsEntry.encode({
-		value: fromString$2(obj.value),
+		value: fromString(obj.value),
 		signatureV1: obj.signatureV1,
 		validityType: obj.validityType,
-		validity: fromString$2(obj.validity),
+		validity: fromString(obj.validity),
 		sequence: obj.sequence,
 		ttl: obj.ttl,
 		pubKey: obj.pubKey,
@@ -54021,7 +54519,7 @@ function unmarshalIPNSRecord(buf) {
 	if (message.signatureV2 == null || message.data == null) throw new SignatureVerificationError("Missing data or signatureV2");
 	const data = parseCborData(message.data);
 	const value = normalizeByteValue(data.Value);
-	const validity = toString$2(data.Validity);
+	const validity = toString$1(data.Validity);
 	if (message.value != null && message.signatureV1 != null) {
 		validateCborDataMatchesPbData(message);
 		return {
@@ -54051,12 +54549,12 @@ function multihashToIPNSRoutingKey(digest) {
 	return concat([IPNS_PREFIX$1, digest.bytes]);
 }
 function multihashFromIPNSRoutingKey(key) {
-	const digest = decode$17(key.slice(IPNS_PREFIX$1.length));
+	const digest = decode$7(key.slice(IPNS_PREFIX$1.length));
 	if (!isCodec(digest, IDENTITY_CODEC) && !isCodec(digest, SHA2_256_CODEC)) throw new InvalidMultihashError("Multihash in IPNS key was not identity or sha2-256");
 	return digest;
 }
 function parseCborData(buf) {
-	const data = decode$12(buf);
+	const data = decode$15(buf);
 	if (data.ValidityType === 0) data.ValidityType = IpnsEntry.ValidityType.EOL;
 	else throw new UnsupportedValidityError("The validity type is unsupported");
 	if (Number.isInteger(data.Sequence)) data.Sequence = BigInt(data.Sequence);
@@ -54064,13 +54562,13 @@ function parseCborData(buf) {
 	return data;
 }
 function normalizeByteValue(value) {
-	const string = toString$2(value).trim();
+	const string = toString$1(value).trim();
 	if (string.startsWith("/")) return string;
 	try {
-		return `/ipfs/${CID$1.decode(value).toV1().toString()}`;
+		return `/ipfs/${CID.decode(value).toV1().toString()}`;
 	} catch {}
 	try {
-		return `/ipfs/${CID$1.parse(string).toV1().toString()}`;
+		return `/ipfs/${CID.parse(string).toV1().toString()}`;
 	} catch {}
 	throw new InvalidValueError("Value must be a valid content path starting with /");
 }
@@ -55494,7 +55992,7 @@ function first(source) {
 }
 //#endregion
 //#region node_modules/.pnpm/@helia+delegated-routing-v1-http-api-client@6.0.1/node_modules/@helia/delegated-routing-v1-http-api-client/dist/src/routings.js
-const IPNS_PREFIX = fromString$2("/ipns/");
+const IPNS_PREFIX = fromString("/ipns/");
 function isIPNSKey(key) {
 	return equals(key.subarray(0, IPNS_PREFIX.byteLength), IPNS_PREFIX);
 }
@@ -55516,7 +56014,7 @@ var DelegatedRoutingV1HttpApiClientContentRouting = class {
 				};
 			});
 		} catch (err) {
-			if (err instanceof NotFoundError$2) return;
+			if (err instanceof NotFoundError$3) return;
 			throw err;
 		}
 	}
@@ -55525,18 +56023,18 @@ var DelegatedRoutingV1HttpApiClientContentRouting = class {
 	async put(key, value, options) {
 		if (!isIPNSKey(key)) return;
 		const digest = multihashFromIPNSRoutingKey(key);
-		const cid = CID$1.createV1(114, digest);
+		const cid = CID.createV1(114, digest);
 		const record = unmarshalIPNSRecord(value);
 		await this.client.putIPNS(cid, record, options);
 	}
 	async get(key, options) {
-		if (!isIPNSKey(key)) throw new NotFoundError$2("Not found");
+		if (!isIPNSKey(key)) throw new NotFoundError$3("Not found");
 		const digest = multihashFromIPNSRoutingKey(key);
-		const cid = CID$1.createV1(114, digest);
+		const cid = CID.createV1(114, digest);
 		try {
 			return marshalIPNSRecord(await this.client.getIPNS(cid, options));
 		} catch (err) {
-			if (err.name === "BadResponseError") throw new NotFoundError$2("Not found");
+			if (err.name === "BadResponseError") throw new NotFoundError$3("Not found");
 			throw err;
 		}
 	}
@@ -55558,17 +56056,17 @@ var DelegatedRoutingV1HttpApiClientPeerRouting = class {
 			id: peer.ID,
 			multiaddrs: peer.Addrs ?? []
 		};
-		throw new NotFoundError$2("Not found");
+		throw new NotFoundError$3("Not found");
 	}
 	async *getClosestPeers(key, options = {}) {
 		let cidOrPeer;
 		try {
-			cidOrPeer = CID$1.decode(key);
+			cidOrPeer = CID.decode(key);
 		} catch {
 			try {
-				cidOrPeer = peerIdFromMultihash(decode$17(key));
+				cidOrPeer = peerIdFromMultihash(decode$7(key));
 			} catch {
-				cidOrPeer = CID$1.createV1(85, identity$2.digest(key));
+				cidOrPeer = CID.createV1(85, identity.digest(key));
 			}
 		}
 		for await (const peer of this.client.getClosestPeers(cidOrPeer, options)) yield {
@@ -55752,7 +56250,7 @@ var DelegatedRoutingV1HttpApiClient = class {
 	async *getClosestPeers(key, options = {}) {
 		let target;
 		if (isPeerId(key)) target = key.toCID().toString();
-		else if (CID$1.asCID(key) === key || key instanceof CID$1) target = key.toV1().toString();
+		else if (CID.asCID(key) === key || key instanceof CID) target = key.toV1().toString();
 		else throw new InvalidParametersError$4("Key must be CID or PeerId");
 		this.log("getClosestPeers starts: %s", target);
 		const timeoutSignal = AbortSignal.timeout(this.timeout);
@@ -55822,11 +56320,11 @@ var DelegatedRoutingV1HttpApiClient = class {
 			};
 			const res = await this.#makeRequest(resource, getOptions);
 			this.log("getIPNS GET %s %d", resource, res.status);
-			if (res.status === 404) throw new NotFoundError$2("No matching records found");
+			if (res.status === 404) throw new NotFoundError$3("No matching records found");
 			if (res.status === 422) throw new InvalidRequestError("Request does not conform to schema or semantic constraints");
 			if (!res.ok) throw new BadResponseError(`Unexpected status code: ${res.status}`);
 			const contentType = res.headers.get("Content-Type");
-			if (contentType == null || !contentType.includes("application/vnd.ipfs.ipns-record")) throw new NotFoundError$2("No matching records found");
+			if (contentType == null || !contentType.includes("application/vnd.ipfs.ipns-record")) throw new NotFoundError$3("No matching records found");
 			if (res.body == null) throw new BadResponseError("GET ipns response had no body");
 			const buf = await res.arrayBuffer();
 			const body = new Uint8Array(buf, 0, buf.byteLength);
@@ -56375,8 +56873,8 @@ const fixedSize = (options = {}) => {
 //#region node_modules/.pnpm/ipfs-unixfs-importer@16.1.5/node_modules/ipfs-unixfs-importer/dist/src/utils/persist.js
 const persist$1 = async (buffer, blockstore, options) => {
 	if (options.codec == null) options.codec = src_exports;
-	const multihash = await sha256$2.digest(buffer);
-	const cid = CID$1.create(options.cidVersion ?? 1, options.codec.code, multihash);
+	const multihash = await sha256$1.digest(buffer);
+	const cid = CID.create(options.cidVersion ?? 1, options.codec.code, multihash);
 	await blockstore.put(cid, buffer, options);
 	return cid;
 };
@@ -56655,7 +57153,7 @@ const defaultChunkValidator = () => {
 	return async function* validateChunks(source) {
 		for await (const content of source) {
 			if (content.length === void 0) throw new InvalidContentError("Content was invalid");
-			if (typeof content === "string" || content instanceof String) yield fromString$2(content.toString());
+			if (typeof content === "string" || content instanceof String) yield fromString(content.toString());
 			else if (Array.isArray(content)) yield Uint8Array.from(content);
 			else if (content instanceof Uint8Array) yield content;
 			else throw new InvalidContentError("Content was invalid");
@@ -57501,17 +57999,17 @@ function fromNumberTo32BitBuf(number) {
 	}
 	return new Uint8Array(bytes);
 }
-from({
+from$2({
 	name: "murmur3-32",
 	code: 35,
 	encode: (input) => fromNumberTo32BitBuf(murmurHash3_x86_32(input))
 });
-const murmur3128 = from({
+const murmur3128 = from$2({
 	name: "murmur3-128",
 	code: 34,
 	encode: (input) => murmurHash3_x64_128(input)
 });
-from({
+from$2({
 	name: "murmur3-x64-64",
 	code: 34,
 	encode: (input) => murmurHash3_x64_128(input).subarray(0, 8)
@@ -57773,7 +58271,7 @@ var Bucket = class Bucket {
 		if (child != null && child.key === key) return child;
 	}
 	async _findPlace(key) {
-		const hashValue = this._options.hash(typeof key === "string" ? fromString(key) : key);
+		const hashValue = this._options.hash(typeof key === "string" ? fromString$3(key) : key);
 		const index = await hashValue.take(this._options.bits);
 		const child = this._children.get(index);
 		if (child instanceof Bucket) return child._findPlace(hashValue);
@@ -58729,7 +59227,7 @@ var InvalidParametersError = class InvalidParametersError extends Error {
 //#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/is-cid.js
 function isCID(obj) {
 	if (obj == null) return false;
-	return CID$1.asCID(obj) === obj;
+	return CID.asCID(obj) === obj;
 }
 //#endregion
 //#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/utils/resolve-object-path.js
@@ -58904,7 +59402,7 @@ async function* identityResolver$1(root, path, blockstore, options) {
 //#endregion
 //#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/walk-path/json.js
 async function* jsonResolver$1(root, path, blockstore, options) {
-	const result = resolveObjectPath(decode$13(await toBuffer(blockstore.get(root, options))), path);
+	const result = resolveObjectPath(decode$11(await toBuffer(blockstore.get(root, options))), path);
 	yield {
 		cid: root,
 		name: result.path,
@@ -58925,7 +59423,7 @@ const resolvers$1 = {
 	[113]: dagCborResolver$1,
 	[81]: dagCborResolver$1,
 	[297]: dagJsonResolver$1,
-	[identity$2.code]: identityResolver$1,
+	[identity.code]: identityResolver$1,
 	[512]: jsonResolver$1
 };
 /**
@@ -58950,7 +59448,7 @@ async function* walkPath(path, blockstore, options = {}) {
 	if (path.startsWith("/ipfs/")) path = path.substring(6);
 	while (path.endsWith("/")) path = path.substring(0, path.length - 1);
 	let [root, ...rest] = path.split(/(?<!\\)\//g).filter(Boolean);
-	let cid = CID$1.parse(root);
+	let cid = CID.parse(root);
 	let roots = [cid];
 	let location = `${cid}`;
 	yield {
@@ -59055,7 +59553,7 @@ function rawContent(node, event) {
 //#endregion
 //#region node_modules/.pnpm/ipfs-unixfs-exporter@15.0.4/node_modules/ipfs-unixfs-exporter/dist/src/exporters/identity.js
 async function identityResolver(cid, name, path, blockstore, options) {
-	const block = decode$17(cid.multihash.bytes);
+	const block = decode$7(cid.multihash.bytes);
 	return {
 		type: "identity",
 		cid,
@@ -59075,7 +59573,7 @@ async function jsonResolver(cid, name, path, blockstore, options) {
 		cid,
 		name,
 		path,
-		object: decode$13(block),
+		object: decode$11(block),
 		node: block
 	};
 }
@@ -59312,7 +59810,7 @@ const resolvers = {
 	[113]: dagCborResolver,
 	[81]: dagCborResolver,
 	[297]: dagJsonResolver,
-	[identity$2.code]: identityResolver,
+	[identity.code]: identityResolver,
 	[512]: jsonResolver
 };
 /**
@@ -59348,7 +59846,7 @@ async function exporter(path, blockstore, options = {}) {
 		cid = entry.cid;
 		name = entry.name;
 		path = entry.path;
-	} else if (CID$1.asCID(path) === path || path instanceof CID$1) {
+	} else if (CID.asCID(path) === path || path instanceof CID) {
 		cid = path;
 		name = path = cid.toString();
 	} else throw new InvalidParametersError("Path must be string or CID");
@@ -59540,8 +60038,8 @@ async function hamtHashFn(buf) {
 //#region node_modules/.pnpm/@helia+unixfs@7.2.1/node_modules/@helia/unixfs/dist/src/commands/utils/persist.js
 const persist = async (buffer, blockstore, options) => {
 	if (options.codec == null) options.codec = src_exports;
-	const multihash = await sha256$2.digest(buffer);
-	const cid = CID$1.create(options.cidVersion ?? 1, options.codec.code, multihash);
+	const multihash = await sha256$1.digest(buffer);
+	const cid = CID.create(options.cidVersion ?? 1, options.codec.code, multihash);
 	await blockstore.put(cid, buffer, {
 		...options,
 		signal: options.signal
@@ -59619,7 +60117,7 @@ const updateShardedDirectory = async (path, blockstore, options) => {
 	};
 };
 const recreateShardedDirectory = async (cid, fileName, blockstore, options) => {
-	const hash = wrapHash(hamtHashFn)(fromString$2(fileName));
+	const hash = wrapHash(hamtHashFn)(fromString(fileName));
 	const path = [];
 	const hashBits = options.shardFanoutBits ?? 8;
 	while (true) {
@@ -59784,9 +60282,9 @@ const addToDirectory = async (parent, child, blockstore, options) => {
 		Links: parentLinks
 	});
 	const buf = encode$1(parent.node);
-	const hash = await sha256$2.digest(buf);
+	const hash = await sha256$1.digest(buf);
 	options?.signal?.throwIfAborted();
-	const cid = CID$1.create(parent.cid.version, 112, hash);
+	const cid = CID.create(parent.cid.version, 112, hash);
 	await blockstore.put(cid, buf, options);
 	return {
 		node: parent.node,
@@ -59820,7 +60318,7 @@ const addToShardedDirectory = async (parent, child, blockstore, options) => {
 			const index = finalSegment.node.Links.findIndex((l) => l.Name?.startsWith(prefix));
 			const sibling = finalSegment.node.Links.splice(index, 1)[0];
 			const siblingName = (sibling.Name ?? "").substring(prefixLength);
-			const siblingHash = wrapHash(hamtHashFn)(fromString$2(siblingName));
+			const siblingHash = wrapHash(hamtHashFn)(fromString(siblingName));
 			const hashBits = options.shardFanoutBits ?? 8;
 			for (let i = 0; i < path.length; i++) {
 				await siblingHash.take(hashBits);
@@ -60009,8 +60507,8 @@ async function chmod(cid, mode, blockstore, options = {}) {
 		Data: metadata.marshal(),
 		Links: links
 	});
-	const hash = await sha256$2.digest(updatedBlock);
-	const updatedCid = CID$1.create(resolved.cid.version, 112, hash);
+	const hash = await sha256$1.digest(updatedBlock);
+	const updatedCid = CID.create(resolved.cid.version, 112, hash);
 	await blockstore.put(updatedCid, updatedBlock);
 	return updatePathCids(updatedCid, resolved, blockstore, options);
 }
@@ -60052,8 +60550,8 @@ async function mkdir(parentCid, dirname, blockstore, options = {}) {
 		}).marshal(),
 		Links: []
 	});
-	const hash = await sha256$2.digest(buf);
-	const emptyDirCid = CID$1.create(options.cidVersion ?? 1, 112, hash);
+	const hash = await sha256$1.digest(buf);
+	const emptyDirCid = CID.create(options.cidVersion ?? 1, 112, hash);
 	await blockstore.put(emptyDirCid, buf);
 	const [directory, pblink] = await Promise.all([cidToDirectory(parentCid, blockstore, options), cidToPBLink(emptyDirCid, dirname, blockstore, options)]);
 	log$4("adding empty dir called %s to %c", dirname, parentCid);
@@ -60361,8 +60859,8 @@ async function touch(cid, blockstore, options = {}) {
 		Data: metadata.marshal(),
 		Links: links
 	});
-	const hash = await sha256$2.digest(updatedBlock);
-	const updatedCid = CID$1.create(resolved.cid.version, 112, hash);
+	const hash = await sha256$1.digest(updatedBlock);
+	const updatedCid = CID.create(resolved.cid.version, 112, hash);
 	await blockstore.put(updatedCid, updatedBlock);
 	return updatePathCids(updatedCid, resolved, blockstore, options);
 }
@@ -60505,7 +61003,7 @@ function unixfs(helia) {
 	return new UnixFS(helia);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/car.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/car.js
 init_stream();
 let helia = null;
 let blockstore = null;
@@ -60621,7 +61119,7 @@ async function destroyCarPreprocessor() {
 	await cleanupHelia();
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/errors/index.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/errors/index.js
 var PinnerError = class extends Error {
 	constructor(code, message, retryable, cause) {
 		super(message);
@@ -60690,7 +61188,7 @@ var NotFoundError = class extends PinError {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/types/upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/types/upload.js
 /**
 * Symbol used to brand UploadResult for type checking
 */
@@ -60703,11 +61201,11 @@ function isUploadResult(value) {
 	return typeof value === "object" && value !== null && UploadResultSymbol in value && value[UploadResultSymbol] === true;
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/constants.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/constants.js
 const UPLOAD_SOURCE_XHR = "xhr-upload";
 const UPLOAD_SOURCE_TUS = "tus-upload";
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/normalize.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/normalize.js
 function normalizeUploadInput(input, options) {
 	if (input instanceof File) return {
 		data: input,
@@ -63623,13 +64121,15 @@ var Uppy = class Uppy {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/base-upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/base-upload.js
 init_env();
 init_stream();
 var BaseUploadHandler = class {
 	config;
-	constructor(config) {
+	auth;
+	constructor(config, auth) {
 		this.config = config;
+		this.auth = auth;
 	}
 	async upload(input, options) {
 		const normalized = normalizeUploadInput(input, options);
@@ -65728,14 +66228,14 @@ var XHRUpload = class extends BasePlugin {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/xhr-upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/xhr-upload.js
 var XHRUploadHandler = class extends BaseUploadHandler {
 	configurePlugin(uppy) {
 		uppy.use(XHRUpload, {
 			endpoint: `${this.config.endpoint}/api/upload`,
 			fieldName: "file",
 			formData: true,
-			headers: { Authorization: `Bearer ${this.config.jwt}` },
+			headers: this.auth.getAuthHeaders(),
 			timeout: this.config.timeout,
 			retries: this.config.retries
 		});
@@ -75559,15 +76059,15 @@ var Tus = class extends BasePlugin {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/tus-upload.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/tus-upload.js
 var TUSUploadHandler = class extends BaseUploadHandler {
-	constructor(config) {
-		super(config);
+	constructor(config, auth) {
+		super(config, auth);
 	}
 	configurePlugin(uppy) {
 		uppy.use(Tus, {
 			endpoint: `${this.config.endpoint}/api/upload/tus`,
-			headers: { Authorization: `Bearer ${this.config.jwt}` },
+			headers: this.auth.getAuthHeaders(),
 			chunkSize: 10 * 1024 * 1024,
 			retryDelays: [
 				0,
@@ -75589,7 +76089,7 @@ var TUSUploadHandler = class extends BaseUploadHandler {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.5_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_45cd61f74cb26cd85178b729daa75c7f/node_modules/@lumeweb/portal-sdk/dist/esm/types.js
+//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.6_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_3f480e0a9aa7c754162293b23d8e562b/node_modules/@lumeweb/portal-sdk/dist/esm/types.js
 /**
 * Standard error type for account-related operations
 */
@@ -75693,7 +76193,7 @@ function handleUnknownError(e) {
 	return new AccountError(String(e), 500);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.5_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_45cd61f74cb26cd85178b729daa75c7f/node_modules/@lumeweb/portal-sdk/dist/esm/http-utils.js
+//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.6_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_3f480e0a9aa7c754162293b23d8e562b/node_modules/@lumeweb/portal-sdk/dist/esm/http-utils.js
 /**
 * Creates a promise that resolves after a specified delay
 * @param ms Delay in milliseconds
@@ -76083,7 +76583,7 @@ function serializePagination(pagination) {
 	return params;
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.5_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_45cd61f74cb26cd85178b729daa75c7f/node_modules/@lumeweb/portal-sdk/dist/esm/query-utils.js
+//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.6_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_3f480e0a9aa7c754162293b23d8e562b/node_modules/@lumeweb/portal-sdk/dist/esm/query-utils.js
 /**
 * Builds URL query parameters for operations API
 *
@@ -76122,7 +76622,7 @@ function buildOperationsQueryParams(params) {
 	return searchParams;
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.5_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_45cd61f74cb26cd85178b729daa75c7f/node_modules/@lumeweb/portal-sdk/dist/esm/account.js
+//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.6_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_3f480e0a9aa7c754162293b23d8e562b/node_modules/@lumeweb/portal-sdk/dist/esm/account.js
 /**
 * Operation status constants
 */
@@ -76473,7 +76973,7 @@ var AccountApi = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.5_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_45cd61f74cb26cd85178b729daa75c7f/node_modules/@lumeweb/portal-sdk/dist/esm/sdk.js
+//#region node_modules/.pnpm/@lumeweb+portal-sdk@0.1.6_@tanstack+react-query@5.100.14_react@19.2.6__@types+react-dom_3f480e0a9aa7c754162293b23d8e562b/node_modules/@lumeweb/portal-sdk/dist/esm/sdk.js
 var Sdk = class {
 	accountApi;
 	constructor(apiUrl) {
@@ -76488,25 +76988,39 @@ var Sdk = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/manager.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/manager.js
 init_stream();
+/**
+* Handles file uploads via XHR or TUS protocol based on file size.
+*/
 var UploadManager = class {
 	config;
+	auth;
 	xhrHandler;
 	tusHandler;
 	portalSdk;
 	uploadLimit = TUS_SIZE_THRESHOLD;
 	limitFetched = false;
-	constructor(config) {
+	/**
+	* Create a new UploadManager.
+	* @param config SDK configuration
+	* @param auth AuthManager for authentication
+	*/
+	constructor(config, auth) {
 		this.config = config;
-		this.xhrHandler = new XHRUploadHandler(config);
-		this.tusHandler = new TUSUploadHandler(config);
+		this.auth = auth;
+		this.xhrHandler = new XHRUploadHandler(config, auth);
+		this.tusHandler = new TUSUploadHandler(config, auth);
 		this.portalSdk = new Sdk(config.endpoint || "https://ipfs.pinner.xyz");
+		this.portalSdk.setAuthToken(auth.getAuthToken());
 		configureCar({
 			datastoreName: config.datastoreName,
 			datastore: config.datastore
 		});
 	}
+	/**
+	* Fetch the upload size limit from the API. Falls back to 100 MB on failure.
+	*/
 	async fetchUploadLimit() {
 		if (this.limitFetched) return this.uploadLimit;
 		try {
@@ -76518,13 +77032,26 @@ var UploadManager = class {
 		this.limitFetched = true;
 		return this.uploadLimit;
 	}
+	/**
+	* Get the cached upload size limit (in bytes). Call fetchUploadLimit() first.
+	*/
 	getUploadLimit() {
 		return this.uploadLimit;
 	}
+	/**
+	* Upload a file or stream to IPFS.
+	* @param input File, stream, or upload object
+	* @param options Upload configuration
+	*/
 	async upload(input, options) {
 		this.#validateInput(input, options);
 		return this.#uploadInput(input, options);
 	}
+	/**
+	* Upload a CAR file or stream directly without preprocessing.
+	* @param input CAR file or stream
+	* @param options Upload configuration
+	*/
 	async uploadCar(input, options) {
 		this.#validateInput(input, options);
 		return this.#uploadCarFile(input, options);
@@ -76620,7 +77147,7 @@ var UploadManager = class {
 		const uploadId = uploadResult.id;
 		if (!uploadId) throw new Error("No upload ID available to poll for upload result");
 		const fetchUrl = `${this.config.endpoint || "https://ipfs.pinner.xyz"}/api/upload/result/${encodeURIComponent(uploadId)}`;
-		const headers = { Authorization: `Bearer ${this.config.jwt}` };
+		const headers = this.auth.getAuthHeaders();
 		const result = await poll(async () => {
 			const response = await fetch(fetchUrl, { headers });
 			if (response.status === 404) return {
@@ -76653,6 +77180,11 @@ var UploadManager = class {
 			if (options?.size !== void 0 && options.size === 0) throw new EmptyFileError("Cannot upload empty stream");
 		}
 	}
+	/**
+	* Upload an array of files as an IPFS directory.
+	* @param files Files to upload
+	* @param options Upload configuration
+	*/
 	async uploadDirectory(files, options) {
 		const carResult = await preprocessToCar(files, {
 			onProgress: options?.onProgress ? (p) => options.onProgress({
@@ -76762,23 +77294,26 @@ var UploadManager = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/api/ipns.js
-var IpnsClient = class {
-	config;
-	constructor(config) {
-		if (!config.jwt) throw new ConfigurationError("JWT token is required");
-		this.config = config;
-	}
-	getEndpoint() {
-		return this.config.endpoint ?? "https://ipfs.pinner.xyz";
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/api/client.js
+/**
+* Shared base class for API clients that use ky with Bearer auth.
+*
+* Replaces the duplicated request() + error handling in IpnsClient and WebsitesClient.
+* Auth headers come from AuthManager — one source of truth.
+*/
+var ApiClient = class {
+	auth;
+	endpoint;
+	constructor(auth, endpoint) {
+		this.auth = auth;
+		this.endpoint = endpoint;
 	}
 	async request(path, options) {
-		if (!this.config.jwt) throw new ConfigurationError("JWT token is required");
 		try {
 			const response = await ky(path, {
-				prefix: this.getEndpoint(),
+				prefix: this.endpoint,
 				headers: {
-					Authorization: `Bearer ${this.config.jwt}`,
+					...this.auth.getAuthHeaders(),
 					"Content-Type": "application/json"
 				},
 				...options
@@ -76788,25 +77323,58 @@ var IpnsClient = class {
 			if (!text) return;
 			return JSON.parse(text);
 		} catch (error) {
-			if (error instanceof HTTPError) {
-				const status = error.response.status;
-				const body = await error.response.json().catch(() => ({}));
-				if (status === 401) throw new AuthenticationError(body.error || "Authentication failed");
-				if (status === 403) throw new AuthenticationError(body.error || "Access forbidden");
-				if (status === 404) throw new NotFoundError(body.error || "Resource not found");
-				if (status === 400) throw new ValidationError(body.error || "Invalid request");
-				throw new NetworkError$2(body.error || `HTTP error: ${status}`, status);
-			}
-			if (error instanceof Error) throw new NetworkError$2(error.message);
-			throw new NetworkError$2("Unknown error occurred");
+			throw await this.mapError(error);
 		}
 	}
+	async mapError(error) {
+		if (error instanceof HTTPError) {
+			const status = error.response.status;
+			const body = await error.response.json().catch(() => ({}));
+			const message = body.error || body.message;
+			if (status === 401 || status === 403) return new AuthenticationError(message || "Authentication failed");
+			if (status === 404) return new NotFoundError(message || "Resource not found");
+			if (status === 400) return new ValidationError(message || "Invalid request");
+			if (status === 410) return new ValidationError(message || "Target is broken or gone");
+			return new NetworkError$2(message || `HTTP error: ${status}`);
+		}
+		if (error instanceof Error) return new NetworkError$2(error.message);
+		return new NetworkError$2("Unknown error occurred");
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/api/ipns.js
+/**
+* Client for managing IPNS keys and publishing content to IPNS names.
+*/
+var IpnsClient = class extends ApiClient {
+	/**
+	* Create a new IpnsClient.
+	* @param config SDK configuration
+	* @param auth AuthManager for authentication
+	*/
+	constructor(config, auth) {
+		super(auth, config.endpoint ?? "https://ipfs.pinner.xyz");
+	}
+	/**
+	* List all IPNS keys.
+	* @param options Request options
+	*/
 	async listKeys(options) {
 		return this.request("api/ipns/keys", { signal: options?.signal });
 	}
+	/**
+	* Get a specific IPNS key by ID.
+	* @param id Key ID
+	* @param options Request options
+	*/
 	async getKey(id, options) {
 		return this.request(`api/ipns/keys/${id}`, { signal: options?.signal });
 	}
+	/**
+	* Create a new IPNS key.
+	* @param request Key creation parameters
+	* @param options Request options
+	*/
 	async createKey(request, options) {
 		return this.request("api/ipns/keys", {
 			method: "POST",
@@ -76814,12 +77382,22 @@ var IpnsClient = class {
 			signal: options?.signal
 		});
 	}
+	/**
+	* Delete an IPNS key by ID.
+	* @param id Key ID to delete
+	* @param options Request options
+	*/
 	async deleteKey(id, options) {
 		await this.request(`api/ipns/keys/${id}`, {
 			method: "DELETE",
 			signal: options?.signal
 		});
 	}
+	/**
+	* Publish content to an IPNS name.
+	* @param request Publishing parameters
+	* @param options Request options
+	*/
 	async publish(request, options) {
 		return this.request("api/ipns/publish", {
 			method: "POST",
@@ -76827,12 +77405,22 @@ var IpnsClient = class {
 			signal: options?.signal
 		});
 	}
+	/**
+	* Republish (refresh) an existing IPNS record.
+	* @param id Key ID to republish
+	* @param options Request options
+	*/
 	async republish(id, options) {
 		return this.request(`api/ipns/keys/${id}/republish`, {
 			method: "POST",
 			signal: options?.signal
 		});
 	}
+	/**
+	* Resolve an IPNS name to its content.
+	* @param name IPNS name to resolve
+	* @param options Request options
+	*/
 	async resolve(name, options) {
 		return this.request(`api/ipns/resolve/${name}`, { signal: options?.signal });
 	}
@@ -76852,7 +77440,7 @@ let createNanoEvents = () => ({
 	}
 });
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/api/websites.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/api/websites.js
 const SSLStatus = {
 	PENDING: "pending",
 	VALIDATING: "validating",
@@ -76868,48 +77456,30 @@ Object.values({
 	DNS_MISMATCH: "dns_mismatch",
 	TOKEN_MISSING: "token_missing"
 });
-var WebsitesClient = class {
-	config;
-	constructor(config) {
-		if (!config.jwt) throw new ConfigurationError("JWT token is required");
-		this.config = config;
+/**
+* Client for managing websites hosted on IPFS with custom domains and SSL.
+*/
+var WebsitesClient = class extends ApiClient {
+	/**
+	* Create a new WebsitesClient.
+	* @param config SDK configuration
+	* @param auth AuthManager for authentication
+	*/
+	constructor(config, auth) {
+		super(auth, config.endpoint ?? "https://ipfs.pinner.xyz");
 	}
-	getEndpoint() {
-		return this.config.endpoint ?? "https://ipfs.pinner.xyz";
-	}
-	async request(path, options) {
-		if (!this.config.jwt) throw new ConfigurationError("JWT token is required");
-		try {
-			const response = await ky(path, {
-				prefix: this.getEndpoint(),
-				headers: {
-					Authorization: `Bearer ${this.config.jwt}`,
-					"Content-Type": "application/json"
-				},
-				...options
-			});
-			if (response.status === 204) return;
-			const text = await response.text();
-			if (!text) return;
-			return JSON.parse(text);
-		} catch (error) {
-			if (error instanceof HTTPError) {
-				const status = error.response.status;
-				const body = await error.response.json().catch(() => ({}));
-				if (status === 401) throw new AuthenticationError(body.error || "Authentication failed");
-				if (status === 403) throw new AuthenticationError(body.error || "Access forbidden");
-				if (status === 404) throw new NotFoundError(body.error || "Resource not found");
-				if (status === 400) throw new ValidationError(body.error || "Invalid request");
-				if (status === 410) throw new ValidationError(body.error || "Target is broken or gone");
-				throw new NetworkError$2(body.error || `HTTP error: ${status}`);
-			}
-			if (error instanceof Error) throw new NetworkError$2(error.message);
-			throw new NetworkError$2("Unknown error occurred");
-		}
-	}
+	/**
+	* List all websites.
+	* @param options Request options
+	*/
 	async listWebsites(options) {
 		return this.request("api/websites", { signal: options?.signal });
 	}
+	/**
+	* Create a new website.
+	* @param request Website creation parameters
+	* @param options Request options
+	*/
 	async createWebsite(request, options) {
 		return this.request("api/websites", {
 			method: "POST",
@@ -76917,9 +77487,20 @@ var WebsitesClient = class {
 			signal: options?.signal
 		});
 	}
+	/**
+	* Get website details by ID.
+	* @param id Website ID
+	* @param options Request options
+	*/
 	async getWebsite(id, options) {
 		return this.request(`api/websites/${id}`, { signal: options?.signal });
 	}
+	/**
+	* Update a website's configuration.
+	* @param id Website ID
+	* @param request Update parameters
+	* @param options Request options
+	*/
 	async updateWebsite(id, request, options) {
 		return this.request(`api/websites/${id}`, {
 			method: "PUT",
@@ -76927,24 +77508,48 @@ var WebsitesClient = class {
 			signal: options?.signal
 		});
 	}
+	/**
+	* Delete a website by ID.
+	* @param id Website ID
+	* @param options Request options
+	*/
 	async deleteWebsite(id, options) {
 		await this.request(`api/websites/${id}`, {
 			method: "DELETE",
 			signal: options?.signal
 		});
 	}
+	/**
+	* Validate a website's DNS and SSL configuration.
+	* @param id Website ID
+	* @param options Request options
+	*/
 	async validateWebsite(id, options) {
 		return this.request(`api/websites/${id}/validate`, {
 			method: "POST",
 			signal: options?.signal
 		});
 	}
+	/**
+	* Check the SSL certificate status for a domain.
+	* @param domain Domain name
+	* @param options Request options
+	*/
 	async getSSLStatus(domain, options) {
 		return this.request(`api/websites/${encodeURIComponent(domain)}/ssl-status`, { signal: options?.signal });
 	}
+	/**
+	* Get the global website configuration.
+	* @param options Request options
+	*/
 	async getWebsiteConfig(options) {
 		return this.request("api/websites/config", { signal: options?.signal });
 	}
+	/**
+	* Watch SSL status until provisioned, failed, or timed out.
+	* @param domain Domain name
+	* @param options Watch interval and timeout
+	*/
 	watchSSL(domain, options) {
 		return new SSLWatcherImpl(this, domain, options);
 	}
@@ -77020,7 +77625,7 @@ var SSLWatcherImpl = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/error.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/error.js
 /**
 * Error wrapper for encoder operations.
 */
@@ -77035,7 +77640,7 @@ var EncoderError = class extends Error {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/json.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/json.js
 /**
 * JSON encoder - converts JSON objects to File objects.
 */
@@ -77065,7 +77670,7 @@ async function jsonToFile(data, options) {
 	return new JsonEncoder().encode(data, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/base64.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/base64.js
 /**
 * Base64 encoder - converts base64 strings to File objects.
 */
@@ -77097,7 +77702,7 @@ async function base64ToFile(base64String, options) {
 	return new Base64Encoder().encode(base64String, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/url.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/url.js
 /**
 * URL encoder - fetches content from URLs and converts to File objects.
 */
@@ -77127,7 +77732,7 @@ async function urlToFile(urlString, options) {
 	return new UrlEncoder().encode(urlString, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/field-formatter.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/field-formatter.js
 /**
 * Escape special regex characters in a string.
 */
@@ -77199,7 +77804,7 @@ var FieldFormatter = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/row-formatter.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/row-formatter.js
 /**
 * Handles formatting of CSV rows including headers and column extraction.
 *
@@ -77353,7 +77958,7 @@ var RowFormatter = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/csv-formatter.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/csv/csv-formatter.js
 /**
 * Simple CSV formatter without streaming support.
 * Converts arrays of objects or arrays to CSV strings.
@@ -77429,7 +78034,7 @@ function createCsvFormatter(options) {
 	return new CsvFormatter(options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/csv.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/csv.js
 /**
 * CSV encoder - converts CSV strings, arrays of objects, or arrays of arrays to File objects.
 * Uses a simplified CSV formatter without streaming support.
@@ -77466,7 +78071,7 @@ async function csvToFile(data, options) {
 	return new CsvEncoder().encode(data, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/encoder/text.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/encoder/text.js
 /**
 * Text encoder - converts text strings to File objects.
 */
@@ -77495,7 +78100,7 @@ async function textToFile(data, options) {
 	return new TextEncoder$1().encode(data, options);
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/utils/validation.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/utils/validation.js
 var import_ipaddr = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	(function(root) {
 		"use strict";
@@ -78507,7 +79112,7 @@ function validateUrl(urlString) {
 	}
 }
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/upload/builder.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/upload/builder.js
 /**
 * Base upload builder with common name/keyvalues functionality.
 */
@@ -79158,22 +79763,22 @@ var Configuration = class extends Configuration$1 {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/pin/client.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/pin/client.js
 var PinClient = class {
 	client = null;
 	config;
-	constructor(config) {
+	auth;
+	constructor(config, auth) {
 		this.config = config;
+		this.auth = auth;
 	}
 	getClient() {
 		if (this.client) return this.client;
-		if (!this.config.jwt) throw new ConfigurationError("JWT token is required");
-		const configuration = new Configuration({
+		this.client = new PinsApi(new Configuration({
 			endpointUrl: this.config.endpoint,
-			accessToken: this.config.jwt,
+			accessToken: this.auth.getAccessToken(),
 			fetchApi: this.config.fetch ?? fetch
-		});
-		this.client = new PinsApi(configuration);
+		}));
 		return this.client;
 	}
 	async *add(cid, options) {
@@ -79249,18 +79854,49 @@ var PinClient = class {
 	}
 };
 //#endregion
-//#region node_modules/.pnpm/@lumeweb+pinner@0.1.13_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_d47c3753805ebf6246fba0b57fdaf7db/node_modules/@lumeweb/pinner/dist/esm/pinner.js
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/auth/manager.js
+/**
+* Default AuthManager implementation that holds a JWT token.
+*
+* Mirrors the Go SDK's approach: token is set once at construction time
+* and used for all subsequent requests. If token exchange (API key → login JWT)
+* is needed in the future, it goes here — one place, not scattered across clients.
+*/
+var JwtAuthManager = class {
+	token;
+	constructor(jwt) {
+		if (!jwt) throw new ConfigurationError("JWT token is required");
+		this.token = jwt;
+	}
+	getAuthToken() {
+		return this.token;
+	}
+	getAuthHeaders() {
+		return { Authorization: `Bearer ${this.token}` };
+	}
+	getAccessToken() {
+		return this.token;
+	}
+};
+//#endregion
+//#region node_modules/.pnpm/@lumeweb+pinner@0.1.14_@azure+storage-blob@12.31.0_@tanstack+react-query@5.100.14_react_6e2fc03fc19e1396eef1a511a1dd2783/node_modules/@lumeweb/pinner/dist/esm/pinner.js
 var Pinner = class {
 	uploadManager;
 	_pins;
 	_ipns;
 	_websites;
 	_upload;
+	auth;
+	/**
+	* Create a new Pinner SDK instance.
+	* @param config SDK configuration object
+	*/
 	constructor(config) {
-		this.uploadManager = new UploadManager(config);
-		this._pins = new PinClient(config);
-		this._ipns = new IpnsClient(config);
-		this._websites = new WebsitesClient(config);
+		this.auth = new JwtAuthManager(config.jwt);
+		this.uploadManager = new UploadManager(config, this.auth);
+		this._pins = new PinClient(config, this.auth);
+		this._ipns = new IpnsClient(config, this.auth);
+		this._websites = new WebsitesClient(config, this.auth);
 	}
 	/**
 	* Access the remote pins interface.
@@ -79302,6 +79938,8 @@ var Pinner = class {
 	/**
 	* Upload a file and wait for completion.
 	* Convenience method for simple use cases where controls aren't needed.
+	* @param file The file to upload
+	* @param options Upload configuration
 	*/
 	async uploadAndWait(file, options) {
 		return (await this.upload(file, options)).result;
@@ -79317,6 +79955,8 @@ var Pinner = class {
 	}
 	/**
 	* Upload a directory to IPFS.
+	* @param files Array of files to upload as a directory
+	* @param options Upload configuration
 	*/
 	async uploadDirectory(files, options) {
 		return this.uploadManager.uploadDirectory(files, options);
@@ -79324,12 +79964,16 @@ var Pinner = class {
 	/**
 	* Upload a CAR file without preprocessing.
 	* This is useful for passthrough of pre-generated CAR files.
+	* @param file CAR file or stream to upload
+	* @param options Upload configuration
 	*/
 	async uploadCar(file, options) {
 		return this.uploadManager.uploadCar(file, options);
 	}
 	/**
 	* Pin existing content by CID.
+	* @param cid CID of content to pin (string or CID object)
+	* @param options Remote add options
 	*/
 	async pinByHash(cid, options) {
 		const cidObj = typeof cid === "string" ? CID$1.parse(cid) : cid;
@@ -79337,6 +79981,7 @@ var Pinner = class {
 	}
 	/**
 	* List pinned content.
+	* @param options List filtering options
 	*/
 	async listPins(options) {
 		const pins = [];
@@ -79345,6 +79990,7 @@ var Pinner = class {
 	}
 	/**
 	* Get pin status.
+	* @param cid CID of the pinned content to check
 	*/
 	async getPinStatus(cid) {
 		const cidObj = typeof cid === "string" ? CID$1.parse(cid) : cid;
@@ -79352,6 +79998,7 @@ var Pinner = class {
 	}
 	/**
 	* Check if content is pinned.
+	* @param cid CID to check
 	*/
 	async isPinned(cid) {
 		const cidObj = typeof cid === "string" ? CID$1.parse(cid) : cid;
@@ -79359,6 +80006,8 @@ var Pinner = class {
 	}
 	/**
 	* Update pin metadata.
+	* @param cid CID of the pin
+	* @param metadata Key-value metadata to set
 	*/
 	async setPinMetadata(cid, metadata) {
 		const cidObj = typeof cid === "string" ? CID$1.parse(cid) : cid;
@@ -79366,6 +80015,8 @@ var Pinner = class {
 	}
 	/**
 	* Remove a pin. The block may be deleted when garbage collection is run.
+	* @param cid CID to unpin
+	* @param options Abort options
 	*/
 	async unpin(cid, options) {
 		const cidObj = typeof cid === "string" ? CID$1.parse(cid) : cid;
@@ -79374,6 +80025,8 @@ var Pinner = class {
 	}
 	/**
 	* Remove a pin by request ID. The block may be deleted when garbage collection is run.
+	* @param requestId The request ID to remove
+	* @param options Abort options
 	*/
 	async unpinByRequestId(requestId, options) {
 		return this.pins.rmByRequestId(requestId, options);
