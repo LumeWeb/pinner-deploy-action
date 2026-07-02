@@ -33,10 +33,10 @@
     "@faker-js/faker": "^10.5.0",
     "@github/local-action": "^7.0.1",
     "@types/node": "^26.1.0",
-    "@voidzero-dev/vite-plus-core": "^0.2.1",
+    "@voidzero-dev/vite-plus-core": "^0.2.2",
     "msw": "^2.4.0",
     "typescript": "^6.0.3",
-    "vite-plus": "^0.2.1",
+    "vite-plus": "^0.2.2",
     "vitest": "^4.1.9"
   },
   "overrides": {
