@@ -1,3 +1,10 @@
+## 0.1.16 (2026-07-04)
+
+### Fixes
+
+- inline createRequire package.json calls in bundle
+- resolve package.json from module location, not fixed node_modules path
+
 ## 0.1.15 (2026-07-04)
 
 ### Features
