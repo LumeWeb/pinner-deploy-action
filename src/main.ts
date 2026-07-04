@@ -18,6 +18,8 @@ export async function run(): Promise<void> {
     const ipnsKey = core.getInput('ipns-key')
     const domain = core.getInput('domain')
     const removePrev = core.getInput('remove-previous') === 'true'
+    const timeoutInput = core.getInput('timeout')
+    const timeoutMs = timeoutInput ? parseInt(timeoutInput, 10) * 1000 : undefined
 
     if (!inputPath && !cid) {
       throw new Error('Either "path" or "cid" input must be provided')
@@ -34,7 +36,7 @@ export async function run(): Promise<void> {
     let resultCid: string
     if (inputPath) {
       core.info(`Uploading path: ${inputPath}`)
-      resultCid = await uploadPath(pinner, inputPath)
+      resultCid = await uploadPath(pinner, inputPath, timeoutMs)
     } else {
       core.info(`Pinning CID: ${cid}`)
       resultCid = await pinByCid(pinner, cid!)

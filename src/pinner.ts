@@ -13,6 +13,7 @@ export interface DeployOptions {
   ipnsKey?: string
   domain?: string
   removePrevious: boolean
+  timeout?: number
 }
 
 export interface DeployResult {
@@ -28,7 +29,8 @@ export function initClient(apiKey: string, endpoint: string): Pinner {
 
 export async function uploadPath(
   pinner: Pinner,
-  inputPath: string
+  inputPath: string,
+  timeoutMs?: number
 ): Promise<string> {
   const stat = fs.statSync(inputPath)
 
@@ -50,7 +52,7 @@ export async function uploadPath(
       name: path.basename(inputPath)
     })
     const result: UploadResult = await operation.result
-    const settled = await pinner.waitForOperation(result)
+    const settled = await pinner.waitForOperation(result, { timeout: timeoutMs })
     if (!settled.cid) {
       throw new Error('Upload completed but CID is not available')
     }
