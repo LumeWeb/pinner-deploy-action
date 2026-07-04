@@ -1,3 +1,13 @@
+## 0.1.15 (2026-07-04)
+
+### Features
+
+- add timeout input for pin operation polling
+
+### Fixes
+
+- validate timeout input to prevent NaN reaching waitForOperation
+
 ## 0.1.14 (2026-06-22)
 
 ### Fixes
