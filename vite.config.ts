@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite-plus'
 import { fileURLToPath } from 'node:url'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const require = createRequire(import.meta.url)
 
 export default defineConfig({
   resolve: {
@@ -166,6 +168,32 @@ export default defineConfig({
     },
     outputOptions: {
       codeSplitting: false
-    }
+    },
+    plugins: {
+      name: 'inline-create-require-package-json',
+      renderChunk(code) {
+        // Bundled modules use createRequire(import.meta.url)("../../package.json")
+        // to read their own package.json at runtime. After bundling, the relative
+        // path resolves against the output file, not the original module, so it
+        // breaks when the action runs with only dist/ shipped.
+        // Replace createRequire(...)(...package.json") with the resolved JSON.
+        const regex =
+          /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
+        return {
+          code: code.replace(regex, (_match, pkgPath) => {
+            try {
+              const resolved = require.resolve(pkgPath, {
+                paths: [path.resolve(__dirname, 'node_modules')],
+              })
+              const pkg = require(resolved)
+              return JSON.stringify(pkg)
+            } catch {
+              return _match
+            }
+          }),
+          map: null,
+        }
+      },
+    },
   }
 })
