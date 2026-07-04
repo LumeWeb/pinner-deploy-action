@@ -171,28 +171,29 @@ export default defineConfig({
     },
     plugins: {
       name: 'inline-create-require-package-json',
-      renderChunk(code) {
+      transform(code, id) {
         // Bundled modules use createRequire(import.meta.url)("../../package.json")
         // to read their own package.json at runtime. After bundling, the relative
         // path resolves against the output file, not the original module, so it
         // breaks when the action runs with only dist/ shipped.
-        // Replace createRequire(...)(...package.json") with the resolved JSON.
+        // Replace createRequire(...)(...package.json") with the resolved JSON,
+        // resolving the relative path from the module's own location (id).
         const regex =
           /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
-        return {
-          code: code.replace(regex, (_match, pkgPath) => {
-            try {
-              const resolved = require.resolve(pkgPath, {
-                paths: [path.resolve(__dirname, 'node_modules')],
-              })
-              const pkg = require(resolved)
-              return JSON.stringify(pkg)
-            } catch {
-              return _match
-            }
-          }),
-          map: null,
-        }
+        if (!regex.test(code)) return null
+        regex.lastIndex = 0
+        const replaced = code.replace(regex, (_match, pkgPath) => {
+          try {
+            const resolved = require.resolve(pkgPath, {
+              paths: [path.dirname(id)],
+            })
+            const pkg = require(resolved)
+            return JSON.stringify(pkg)
+          } catch {
+            return _match
+          }
+        })
+        return { code: replaced, map: null }
       },
     },
   }
