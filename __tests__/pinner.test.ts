@@ -169,7 +169,40 @@ describe('pinner wrapper', () => {
       const cid = await uploadPath(mockPinner as any, '/path/to/dir')
       expect(cid).toBe('QmDirCID')
       expect(mockPinner.waitForOperation).toHaveBeenCalledWith(
-        expect.objectContaining({ cid: 'QmDirCID', operationId: 'op-2' })
+        expect.objectContaining({ cid: 'QmDirCID', operationId: 'op-2' }),
+        { timeout: undefined }
+      )
+    })
+
+    it('should pass timeout to waitForOperation when provided', async () => {
+      mockStatSync.mockReturnValue({
+        isFile: () => false,
+        isDirectory: () => true
+      })
+      mockReaddirSync.mockReturnValue([
+        { name: 'index.html', isFile: () => true, isDirectory: () => false }
+      ])
+      mockReadFileSync.mockReturnValue(Buffer.from('<html>test</html>'))
+
+      mockPinner.uploadDirectory.mockReturnValue({
+        result: Promise.resolve({
+          cid: 'QmDirCID',
+          name: 'dir',
+          size: 2048,
+          operationId: 'op-2'
+        })
+      })
+      mockPinner.waitForOperation.mockResolvedValue({
+        cid: 'QmDirCID',
+        name: 'dir',
+        size: 2048,
+        operationId: 'op-2'
+      })
+
+      await uploadPath(mockPinner as any, '/path/to/dir', 600000)
+      expect(mockPinner.waitForOperation).toHaveBeenCalledWith(
+        expect.objectContaining({ cid: 'QmDirCID', operationId: 'op-2' }),
+        { timeout: 600000 }
       )
     })
 

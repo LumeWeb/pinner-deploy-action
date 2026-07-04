@@ -26,6 +26,10 @@ inputs:
       "domain".'
     required: false
     default: 'false'
+  timeout:
+    description: 'Maximum time in seconds to wait for a pin operation to complete'
+    required: false
+    default: '300'
 outputs:
   cid:
     description: 'CID of the uploaded/pinned content'
