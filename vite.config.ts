@@ -170,46 +170,61 @@ export default defineConfig({
       codeSplitting: false
     },
     plugins: {
-      name: 'inline-create-require-package-json',
+      name: 'inline-create-require-native',
       renderChunk(code) {
-        // Bundled modules use createRequire(import.meta.url)("../../package.json")
-        // to read their own package.json at runtime. After bundling, the relative
-        // path resolves against the output file, not the original module, so it
-        // breaks when the action runs with only dist/ shipped.
-        // Replace createRequire(...)(...package.json") with the resolved JSON.
-        const regex =
-          /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
-        if (!regex.test(code)) return null
-        regex.lastIndex = 0
+        // Bundled modules use createRequire(import.meta.url)("...") to load
+        // files relative to their own location at runtime. After bundling,
+        // these paths resolve against the output file and break when only
+        // dist/ is shipped (GitHub Actions runner).
         let changed = false
-        const replaced = code.replace(regex, (match, pkgPath) => {
-          try {
-            // Search node_modules for a package.json at the relative path.
-            // The original path like "../../package.json" was relative to
-            // the module's location inside node_modules, so we try resolving
-            // from each potential package root.
-            const candidates = [
-              pkgPath,
-              pkgPath.replace(/^\.\.\//, ''),
-              pkgPath.replace(/^\.\.\/\.\.\//, ''),
-            ]
-            for (const candidate of candidates) {
-              try {
-                const resolved = require.resolve(candidate, {
-                  paths: [path.resolve(__dirname, 'node_modules')],
-                })
-                const pkg = require(resolved)
-                changed = true
-                return JSON.stringify(pkg)
-              } catch {}
+
+        // 1. Inline package.json references (e.g. "../../package.json")
+        const jsonRegex =
+          /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
+        if (jsonRegex.test(code)) {
+          jsonRegex.lastIndex = 0
+          code = code.replace(jsonRegex, (match, pkgPath) => {
+            try {
+              const candidates = [
+                pkgPath,
+                pkgPath.replace(/^\.\.\//, ''),
+                pkgPath.replace(/^\.\.\/\.\.\//, ''),
+              ]
+              for (const candidate of candidates) {
+                try {
+                  const resolved = require.resolve(candidate, {
+                    paths: [path.resolve(__dirname, 'node_modules')],
+                  })
+                  const pkg = require(resolved)
+                  changed = true
+                  return JSON.stringify(pkg)
+                } catch {}
+              }
+              return match
+            } catch {
+              return match
             }
-            return match
-          } catch {
-            return match
-          }
-        })
+          })
+        }
+
+        // 2. Stub native addon references (e.g. "../../build/Release/foo.node")
+        //    These are native binaries that can't be bundled. Replace with a
+        //    deep recursive Proxy stub that allows property access (so
+        //    top-level destructuring doesn't crash) but throws on invocation.
+        const nodeRegex =
+          /createRequire\([^)]*\)\(\s*["'`]([^"'`]*\.node)["'`]\s*\)/g
+        const stubExpr =
+          '(()=>{const s=new Proxy(function(){},{get:(_,p)=>s,apply:()=>{throw new Error("native addon not available in bundled mode")}});return s})()'
+        if (nodeRegex.test(code)) {
+          nodeRegex.lastIndex = 0
+          code = code.replace(nodeRegex, (match) => {
+            changed = true
+            return stubExpr
+          })
+        }
+
         if (!changed) return null
-        return { code: replaced, map: null }
+        return { code, map: null }
       },
     },
   }
