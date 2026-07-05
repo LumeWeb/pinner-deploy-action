@@ -1,7 +1,7 @@
 {
   "name": "pinner-deploy-action",
   "description": "GitHub Action to deploy content to IPFS via Pinner",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "author": "Lume Web",
   "type": "module",
   "private": true,

@@ -1,3 +1,9 @@
+## 0.1.18 (2026-07-05)
+
+### Fixes
+
+- stub native addon (.node) requires to prevent crash on import
+
 ## 0.1.17 (2026-07-05)
 
 ### Fixes
