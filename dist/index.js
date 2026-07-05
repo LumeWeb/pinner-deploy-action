@@ -266021,7 +266021,48 @@ function sendSsdpMessage(ssdp, status, headers, remote) {
 }
 //#endregion
 //#region node_modules/.pnpm/@achingbrain+ssdp@4.2.4/node_modules/@achingbrain/ssdp/dist/src/ssdp.js
-const { name: name$1, version: version$5 } = createRequire(import.meta.url)("../../package.json");
+const { name: name$1, version: version$5 } = {
+	"name": "pinner-deploy-action",
+	"description": "GitHub Action to deploy content to IPFS via Pinner",
+	"version": "0.1.16",
+	"author": "Lume Web",
+	"type": "module",
+	"private": true,
+	"packageManager": "pnpm@10.33.2",
+	"keywords": [
+		"actions",
+		"ipfs",
+		"pinner"
+	],
+	"exports": { ".": "./dist/index.js" },
+	"engines": { "node": ">=24.0.0" },
+	"scripts": {
+		"bundle": "vp fmt && vp pack",
+		"local-action": "npx @github/local-action . src/main.ts .env",
+		"package": "npx rimraf ./dist && vp pack",
+		"test": "vp test",
+		"all": "vp fmt && vp lint && vp test && vp pack"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@actions/core": "^3.0.0",
+		"@lumeweb/pinner": "^0.1.19"
+	},
+	"devDependencies": {
+		"@faker-js/faker": "^10.5.0",
+		"@github/local-action": "^7.0.1",
+		"@types/node": "^26.1.0",
+		"@voidzero-dev/vite-plus-core": "^0.2.2",
+		"msw": "^2.4.0",
+		"typescript": "^6.0.3",
+		"vite-plus": "^0.2.2",
+		"vitest": "^4.1.9"
+	},
+	"overrides": {
+		"vite": "npm:@voidzero-dev/vite-plus-core@latest",
+		"vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+	}
+};
 const DEFAULT_SSDP_SIGNATURE = `node.js/${process.version.substring(1)} UPnP/1.1 ${name$1}/${version$5}`;
 var SSDP = class extends EventEmitter {
 	udn;
