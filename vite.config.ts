@@ -171,28 +171,44 @@ export default defineConfig({
     },
     plugins: {
       name: 'inline-create-require-package-json',
-      transform(code, id) {
+      renderChunk(code) {
         // Bundled modules use createRequire(import.meta.url)("../../package.json")
         // to read their own package.json at runtime. After bundling, the relative
         // path resolves against the output file, not the original module, so it
         // breaks when the action runs with only dist/ shipped.
-        // Replace createRequire(...)(...package.json") with the resolved JSON,
-        // resolving the relative path from the module's own location (id).
+        // Replace createRequire(...)(...package.json") with the resolved JSON.
         const regex =
           /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
         if (!regex.test(code)) return null
         regex.lastIndex = 0
-        const replaced = code.replace(regex, (_match, pkgPath) => {
+        let changed = false
+        const replaced = code.replace(regex, (match, pkgPath) => {
           try {
-            const resolved = require.resolve(pkgPath, {
-              paths: [path.dirname(id)],
-            })
-            const pkg = require(resolved)
-            return JSON.stringify(pkg)
+            // Search node_modules for a package.json at the relative path.
+            // The original path like "../../package.json" was relative to
+            // the module's location inside node_modules, so we try resolving
+            // from each potential package root.
+            const candidates = [
+              pkgPath,
+              pkgPath.replace(/^\.\.\//, ''),
+              pkgPath.replace(/^\.\.\/\.\.\//, ''),
+            ]
+            for (const candidate of candidates) {
+              try {
+                const resolved = require.resolve(candidate, {
+                  paths: [path.resolve(__dirname, 'node_modules')],
+                })
+                const pkg = require(resolved)
+                changed = true
+                return JSON.stringify(pkg)
+              } catch {}
+            }
+            return match
           } catch {
-            return _match
+            return match
           }
         })
+        if (!changed) return null
         return { code: replaced, map: null }
       },
     },
