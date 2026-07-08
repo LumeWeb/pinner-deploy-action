@@ -1,3 +1,10 @@
+## 0.1.22 (2026-07-08)
+
+### Fixes
+
+- stub native .node addons in post-build script
+- add construct trap to Proxy stub and fix regex prefix
+
 ## 0.1.21 (2026-07-08)
 
 ### Fixes
