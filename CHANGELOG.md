@@ -1,3 +1,10 @@
+## 0.1.19 (2026-07-08)
+
+### Fixes
+
+- disable treeshake to produce non-empty dist/index.js
+- use rm -rf instead of npx rimraf in check-dist workflow
+
 ## 0.1.18 (2026-07-05)
 
 ### Fixes
