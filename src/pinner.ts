@@ -52,7 +52,9 @@ export async function uploadPath(
       name: path.basename(inputPath)
     })
     const result: UploadResult = await operation.result
-    const settled = await pinner.waitForOperation(result, { timeout: timeoutMs })
+    const settled = await pinner.waitForOperation(result, {
+      timeout: timeoutMs
+    })
     if (!settled.cid) {
       throw new Error('Upload completed but CID is not available')
     }

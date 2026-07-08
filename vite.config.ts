@@ -189,12 +189,12 @@ export default defineConfig({
               const candidates = [
                 pkgPath,
                 pkgPath.replace(/^\.\.\//, ''),
-                pkgPath.replace(/^\.\.\/\.\.\//, ''),
+                pkgPath.replace(/^\.\.\/\.\.\//, '')
               ]
               for (const candidate of candidates) {
                 try {
                   const resolved = require.resolve(candidate, {
-                    paths: [path.resolve(__dirname, 'node_modules')],
+                    paths: [path.resolve(__dirname, 'node_modules')]
                   })
                   const pkg = require(resolved)
                   changed = true
@@ -226,7 +226,7 @@ export default defineConfig({
 
         if (!changed) return null
         return { code, map: null }
-      },
-    },
+      }
+    }
   }
 })

@@ -16,7 +16,8 @@
 ### Fixes
 
 - use renderChunk instead of transform for createRequire inlining
-- Fix createRequire package.json inlining by using renderChunk instead of transform hook
+- Fix createRequire package.json inlining by using renderChunk instead of
+  transform hook
 
 ## 0.1.16 (2026-07-04)
 

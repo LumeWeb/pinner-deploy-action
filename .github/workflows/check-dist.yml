@@ -49,7 +49,7 @@ jobs:
 
       - name: Build dist/ Directory
         id: build
-        run: vp pack
+        run: vp pack && node scripts/inline-pkg-json.mjs
 
       # This will fail the workflow if the `dist/` directory is different than
       # expected.
