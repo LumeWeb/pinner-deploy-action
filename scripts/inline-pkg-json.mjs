@@ -53,7 +53,7 @@ function resolveFromRegion(regionPath, relPath) {
 const replacements = []
 
 // --- 1. Inline package.json requires ---
-const jsonRe = /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
+const jsonRe = /(?:\w+\.)?createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
 let match
 let pkgCount = 0
 
@@ -95,9 +95,9 @@ while ((match = jsonRe.exec(code)) !== null) {
 }
 
 // --- 2. Stub native addon (.node) requires ---
-const nodeRe = /createRequire\([^)]*\)\(\s*["'`]([^"'`]*\.node)["'`]\s*\)/g
+const nodeRe = /(?:\w+\.)?createRequire\([^)]*\)\(\s*["'`]([^"'`]*\.node)["'`]\s*\)/g
 const stubExpr =
-  '(()=>{const s=new Proxy(function(){},{get:(_,p)=>s,apply:()=>{throw new Error("native addon not available in bundled mode")}});return s})()'
+  '(()=>{const s=new Proxy(function(){},{get:(_,p)=>s,apply:()=>{throw new Error("native addon not available in bundled mode")},construct:()=>{throw new Error("native addon not available in bundled mode")}});return s})()'
 let nodeCount = 0
 
 while ((match = nodeRe.exec(code)) !== null) {

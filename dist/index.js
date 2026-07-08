@@ -269833,7 +269833,7 @@ _iceTransport = /* @__PURE__ */ new WeakMap();
 //#region node_modules/.pnpm/node-datachannel@0.32.3/node_modules/node-datachannel/dist/esm/lib/node-datachannel.mjs
 const __filename$1 = cjsUrl.fileURLToPath(import.meta.url);
 cjsPath.dirname(__filename$1);
-const nodeDataChannel = cjsModule.(()=>{const s=new Proxy(function(){},{get:(_,p)=>s,apply:()=>{throw new Error("native addon not available in bundled mode")}});return s})();
+const nodeDataChannel = (()=>{const s=new Proxy(function(){},{get:(_,p)=>s,apply:()=>{throw new Error("native addon not available in bundled mode")},construct:()=>{throw new Error("native addon not available in bundled mode")}});return s})();
 stream.Duplex;
 nodeDataChannel.WebSocket;
 nodeDataChannel.Audio;
