@@ -1,3 +1,9 @@
+## 0.1.20 (2026-07-08)
+
+### Fixes
+
+- inline package.json requires via post-build script
+
 ## 0.1.19 (2026-07-08)
 
 ### Fixes
