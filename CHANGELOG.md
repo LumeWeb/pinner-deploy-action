@@ -1,3 +1,9 @@
+## 0.1.21 (2026-07-08)
+
+### Fixes
+
+- run post-build inline script in release workflow
+
 ## 0.1.20 (2026-07-08)
 
 ### Fixes
