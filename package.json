@@ -18,11 +18,11 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "bundle": "vp fmt && vp pack",
+    "bundle": "vp fmt && vp pack && node scripts/inline-pkg-json.mjs",
     "local-action": "npx @github/local-action . src/main.ts .env",
-    "package": "npx rimraf ./dist && vp pack",
+    "package": "rm -rf ./dist && vp pack && node scripts/inline-pkg-json.mjs",
     "test": "vp test",
-    "all": "vp fmt && vp lint && vp test && vp pack"
+    "all": "vp fmt && vp lint && vp test && vp pack && node scripts/inline-pkg-json.mjs"
   },
   "license": "MIT",
   "dependencies": {

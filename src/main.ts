@@ -20,7 +20,9 @@ export async function run(): Promise<void> {
     const removePrev = core.getInput('remove-previous') === 'true'
     const timeoutInput = core.getInput('timeout')
     const parsedTimeout = timeoutInput ? parseInt(timeoutInput, 10) : NaN
-    const timeoutMs = !Number.isNaN(parsedTimeout) ? parsedTimeout * 1000 : undefined
+    const timeoutMs = !Number.isNaN(parsedTimeout)
+      ? parsedTimeout * 1000
+      : undefined
 
     if (!inputPath && !cid) {
       throw new Error('Either "path" or "cid" input must be provided')
