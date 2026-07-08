@@ -1,6 +1,12 @@
 /**
- * Post-build: inline createRequire("...package.json") calls that break
- * when only dist/ is shipped (GitHub Actions runner).
+ * Post-build: inline createRequire("...package.json") and stub
+ * createRequire("...*.node") calls that break when only dist/ is
+ * shipped (GitHub Actions runner).
+ *
+ * - package.json requires are replaced with the inlined JSON object
+ * - .node native addon requires are replaced with a deep Proxy stub
+ *   that allows property access (so top-level destructuring doesn't
+ *   crash) but throws on actual invocation
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
@@ -20,9 +26,6 @@ while ((rm = regionRe.exec(code)) !== null) {
   regions.push({ path: rm[1], index: rm.index })
 }
 
-// Find the nearest #region before a given offset, and also the next one.
-// The createRequire call might belong to the module whose #region comes
-// AFTER it (top-level side effects placed before the region annotation).
 function findNearestRegions(offset) {
   let prev = null
   let next = null
@@ -33,7 +36,6 @@ function findNearestRegions(offset) {
   return { prev, next }
 }
 
-// Resolve relPath from a region module path, walking up directories
 function resolveFromRegion(regionPath, relPath) {
   let dir = dirname(regionPath)
   for (let i = 0; i < 10; i++) {
@@ -48,25 +50,25 @@ function resolveFromRegion(regionPath, relPath) {
   return null
 }
 
-const re = /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
-
-let match
-let replaced = 0
 const replacements = []
 
-while ((match = re.exec(code)) !== null) {
+// --- 1. Inline package.json requires ---
+const jsonRe = /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
+let match
+let pkgCount = 0
+
+while ((match = jsonRe.exec(code)) !== null) {
   const fullMatch = match[0]
   const pkgPath = match[1]
   const offset = match.index
 
   const { prev, next } = findNearestRegions(offset)
-
-  // Try the nearest preceding region, then the next region, then all others
   const candidates = [
     prev,
     next,
     ...regions.filter((r) => r !== prev && r !== next)
   ]
+
   let pkg = null
   let sourceRegion = null
 
@@ -80,46 +82,51 @@ while ((match = re.exec(code)) !== null) {
   }
 
   if (pkg) {
-    const inlined = JSON.stringify(pkg)
     replacements.push({
       offset,
       length: fullMatch.length,
-      replacement: inlined,
-      pkgPath,
-      name: pkg.name,
-      version: pkg.version,
-      sourceRegion
+      replacement: JSON.stringify(pkg),
+      label: `${pkg.name}@${pkg.version} (${pkgPath})`
     })
-    replaced++
+    pkgCount++
   } else {
     console.warn('[inline-pkg-json] Could not resolve ' + pkgPath)
   }
 }
 
+// --- 2. Stub native addon (.node) requires ---
+const nodeRe = /createRequire\([^)]*\)\(\s*["'`]([^"'`]*\.node)["'`]\s*\)/g
+const stubExpr =
+  '(()=>{const s=new Proxy(function(){},{get:(_,p)=>s,apply:()=>{throw new Error("native addon not available in bundled mode")}});return s})()'
+let nodeCount = 0
+
+while ((match = nodeRe.exec(code)) !== null) {
+  const fullMatch = match[0]
+  const nodePath = match[1]
+  replacements.push({
+    offset: match.index,
+    length: fullMatch.length,
+    replacement: stubExpr,
+    label: `stub ${nodePath}`
+  })
+  nodeCount++
+}
+
 if (replacements.length === 0) {
-  console.log('[inline-pkg-json] No package.json requires found to inline')
+  console.log('[inline-pkg-json] No requires found to inline/stub')
   process.exit(0)
 }
 
 replacements.sort((a, b) => b.offset - a.offset)
 for (const r of replacements) {
-  code =
-    code.slice(0, r.offset) + r.replacement + code.slice(r.offset + r.length)
+  code = code.slice(0, r.offset) + r.replacement + code.slice(r.offset + r.length)
 }
 
 writeFileSync(distPath, code)
 
 for (const r of replacements) {
-  console.log(
-    '[inline-pkg-json] Inlined ' +
-      r.name +
-      '@' +
-      r.version +
-      ' (' +
-      r.pkgPath +
-      ')'
-  )
+  console.log('[inline-pkg-json] ' + r.label)
 }
 console.log(
-  '[inline-pkg-json] Done: ' + replaced + ' package.json require(s) inlined'
+  `[inline-pkg-json] Done: ${pkgCount} package.json + ${nodeCount} .node require(s) processed`
 )
