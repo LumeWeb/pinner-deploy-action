@@ -159,6 +159,7 @@ export default defineConfig({
   pack: {
     entry: 'src/index.ts',
     format: 'esm',
+    treeshake: false,
     sourcemap: true,
     dts: false,
     fixedExtension: false,

@@ -13,9 +13,11 @@ on:
   pull_request:
     branches:
       - main
+      - develop
   push:
     branches:
       - main
+      - develop
 
 permissions:
   contents: read
@@ -39,7 +41,7 @@ jobs:
 
       - name: Remove dist/ Directory
         id: remove-dist
-        run: npx rimraf ./dist
+        run: rm -rf ./dist
 
       - name: Install Dependencies
         id: install
