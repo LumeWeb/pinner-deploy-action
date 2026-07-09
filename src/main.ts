@@ -34,7 +34,7 @@ export async function run(): Promise<void> {
       )
     }
 
-    const pinner = initClient(apiKey, endpoint)
+    const pinner = await initClient(apiKey, endpoint)
 
     let resultCid: string
     if (inputPath) {
