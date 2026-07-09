@@ -1,10 +1,8 @@
 import { defineConfig } from 'vite-plus'
 import { fileURLToPath } from 'node:url'
-import { createRequire } from 'node:module'
 import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const require = createRequire(import.meta.url)
 
 export default defineConfig({
   resolve: {
@@ -167,66 +165,22 @@ export default defineConfig({
       alwaysBundle: /.*/,
       onlyBundle: false
     },
+    inputOptions: {
+      resolve: {
+        alias: {
+          '@achingbrain/ssdp': path.resolve(__dirname, 'src/stub.ts'),
+          '@achingbrain/nat-port-mapper': path.resolve(
+            __dirname,
+            'src/stub.ts'
+          ),
+          '@libp2p/webrtc': path.resolve(__dirname, 'src/stub.ts'),
+          '@libp2p/upnp-nat': path.resolve(__dirname, 'src/stub.ts'),
+          'node-datachannel': path.resolve(__dirname, 'src/stub.ts')
+        }
+      }
+    },
     outputOptions: {
       codeSplitting: false
-    },
-    plugins: {
-      name: 'inline-create-require-native',
-      renderChunk(code) {
-        // Bundled modules use createRequire(import.meta.url)("...") to load
-        // files relative to their own location at runtime. After bundling,
-        // these paths resolve against the output file and break when only
-        // dist/ is shipped (GitHub Actions runner).
-        let changed = false
-
-        // 1. Inline package.json references (e.g. "../../package.json")
-        const jsonRegex =
-          /createRequire\([^)]*\)\(\s*["'`]([^"'`]*package\.json)["'`]\s*\)/g
-        if (jsonRegex.test(code)) {
-          jsonRegex.lastIndex = 0
-          code = code.replace(jsonRegex, (match, pkgPath) => {
-            try {
-              const candidates = [
-                pkgPath,
-                pkgPath.replace(/^\.\.\//, ''),
-                pkgPath.replace(/^\.\.\/\.\.\//, '')
-              ]
-              for (const candidate of candidates) {
-                try {
-                  const resolved = require.resolve(candidate, {
-                    paths: [path.resolve(__dirname, 'node_modules')]
-                  })
-                  const pkg = require(resolved)
-                  changed = true
-                  return JSON.stringify(pkg)
-                } catch {}
-              }
-              return match
-            } catch {
-              return match
-            }
-          })
-        }
-
-        // 2. Stub native addon references (e.g. "../../build/Release/foo.node")
-        //    These are native binaries that can't be bundled. Replace with a
-        //    deep recursive Proxy stub that allows property access (so
-        //    top-level destructuring doesn't crash) but throws on invocation.
-        const nodeRegex =
-          /createRequire\([^)]*\)\(\s*["'`]([^"'`]*\.node)["'`]\s*\)/g
-        const stubExpr =
-          '(()=>{const s=new Proxy(function(){},{get:(_,p)=>s,apply:()=>{throw new Error("native addon not available in bundled mode")}});return s})()'
-        if (nodeRegex.test(code)) {
-          nodeRegex.lastIndex = 0
-          code = code.replace(nodeRegex, (match) => {
-            changed = true
-            return stubExpr
-          })
-        }
-
-        if (!changed) return null
-        return { code, map: null }
-      }
     }
   }
 })

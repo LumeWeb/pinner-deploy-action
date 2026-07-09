@@ -3,6 +3,13 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { Pinner } from '@lumeweb/pinner'
 import type { UploadResult } from '@lumeweb/pinner'
+import { createLibp2p } from 'libp2p'
+import { tcp } from '@libp2p/tcp'
+import { noise } from '@chainsafe/libp2p-noise'
+import { yamux } from '@chainsafe/libp2p-yamux'
+import { identify } from '@libp2p/identify'
+import { ping } from '@libp2p/ping'
+import type { Libp2p } from '@libp2p/interface'
 import * as core from '@actions/core'
 
 export interface DeployOptions {
@@ -23,8 +30,24 @@ export interface DeployResult {
   websiteId?: string
 }
 
-export function initClient(apiKey: string, endpoint: string): Pinner {
-  return new Pinner({ jwt: apiKey, endpoint })
+async function createMinimalLibp2p(): Promise<Libp2p> {
+  return createLibp2p({
+    transports: [tcp()],
+    connectionEncrypters: [noise()],
+    streamMuxers: [yamux()],
+    services: {
+      identify: identify(),
+      ping: ping()
+    }
+  })
+}
+
+export async function initClient(
+  apiKey: string,
+  endpoint: string
+): Promise<Pinner> {
+  const libp2p = await createMinimalLibp2p()
+  return new Pinner({ jwt: apiKey, endpoint, libp2p })
 }
 
 export async function uploadPath(
