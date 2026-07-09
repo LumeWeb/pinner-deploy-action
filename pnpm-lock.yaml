@@ -21,8 +21,8 @@ importers:
         specifier: ^4.1.9
         version: 4.1.9
       '@libp2p/interface':
-        specifier: ^3.2.4
-        version: 3.2.4
+        specifier: ^3.2.5
+        version: 3.2.5
       '@libp2p/peer-id-factory':
         specifier: ^4.2.4
         version: 4.2.4
@@ -62,7 +62,7 @@ importers:
         version: 26.1.0
       '@voidzero-dev/vite-plus-core':
         specifier: ^0.2.2
-        version: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+        version: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       msw:
         specifier: ^2.4.0
         version: 2.14.6(@types/node@26.1.0)(typescript@6.0.3)
@@ -74,10 +74,10 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: ^0.2.2
-        version: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
       vitest:
         specifier: ^4.1.9
-        version: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))
 
 packages:
 
@@ -657,9 +657,6 @@ packages:
 
   '@libp2p/interface@1.7.0':
     resolution: {integrity: sha512-/zFyaIaIGW0aihhsH7/93vQdpWInUzFocxF11RO/029Y6h0SVjs24HHbils+DqaFDTqN+L7oNlBx2rM2MnmTjA==}
-
-  '@libp2p/interface@3.2.4':
-    resolution: {integrity: sha512-o/ZMbsplniVQhz0AW1CinZcfZPEfr7ttu4w7aivrFAs6xDpnJYmN3FTeEgTt93EHs+AEOcIT76V3KMFDZmIEcQ==}
 
   '@libp2p/interface@3.2.5':
     resolution: {integrity: sha512-RdTchTdakBBc4ShKKsvoME/bJYsrCoVDpdYQVdd4TQ30TCb8QwWKGClqAtw7gfLNuaUKm41xz06kASW6AZpbDA==}
@@ -1571,6 +1568,9 @@ packages:
   '@types/node@26.1.0':
     resolution: {integrity: sha512-O0A1G3xPGy4w7AgQdAQYUlQ+BKk2Oovw8eRpofyp5KdBZULnbe+WqaOVNrm705SHphCiG4XHsACrSmPu1f+Kgw==}
 
+  '@types/node@26.1.1':
+    resolution: {integrity: sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==}
+
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
     peerDependencies:
@@ -1921,8 +1921,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.10.41:
-    resolution: {integrity: sha512-WwS7MHhqGHHlaVsqRZnhvCEMS0owDX+SxRlve7JkuH7My1Ara3ZriTmCQupPfYjxMZ8I/tgxtJYr2t7taHaH4A==}
+  baseline-browser-mapping@2.10.42:
+    resolution: {integrity: sha512-c/jurFrDLyui7o1J86yLkRu4LMsTYcBohveus7/I2Hzdn9KIP2bdJPTue/lR1KH46enoPbD77GKeSYNdyPoD3Q==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1966,8 +1966,8 @@ packages:
   browser-readablestream-to-it@2.0.12:
     resolution: {integrity: sha512-VDAcuM39JVtxZ7auqE2p0zHYk1fq+pac0cWLOQJ48MIChTZ1RjCR2PYCdL3kIisst7oGZCxYrJhfHlbNYIa0Tg==}
 
-  browserslist@4.28.4:
-    resolution: {integrity: sha512-MTc8i/x9jBQd1iMw2CFGS+rwMa07eYjLR0CCTLDACl9xhxy+nIs3KeML/biicXtk9JrZ6dnnTatmc7ErPXIxqw==}
+  browserslist@4.28.5:
+    resolution: {integrity: sha512-Cu2E6QejHWzuDMTkuwgpABFgDfZrXLQq5V13YOACZx4mFAG4IwGTbTfHPMr4WtxlHoXSM8FIuRwYYCz5XiabaQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -2003,8 +2003,8 @@ packages:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
 
-  caniuse-lite@1.0.30001800:
-    resolution: {integrity: sha512-MMHtuAz9Ys840zAY5F4k6fV5GaivZ9sPk+nz0mY+GYVzRBnYkN0mpqkSR92oWRQ19yQWo4HvBV/FnC16AJX8MA==}
+  caniuse-lite@1.0.30001803:
+    resolution: {integrity: sha512-g/uHREV2ZpK9qMalCsWaxmA6ol+DX8GYhuf3T40RKoP+oL7vhRJh8LNt73PCjpnR6l14FzfPrB5Yux4PKm2meg==}
 
   cborg@5.1.6:
     resolution: {integrity: sha512-apu/mOSODJ98JXBz3cbiv/gAFX4oaCZQQ53+8b4IPjc1wylYxd8eJis87QP7ic4AOE4O02j02jjfUgVZUJIIvA==}
@@ -2236,8 +2236,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  electron-to-chromium@1.5.385:
-    resolution: {integrity: sha512-78sa/M08MNAYHQfjoWMvOlKQqZ0ElhSm/L5HNUc96VZ3b+KvDVnngFm8sYQy0XrhTRgAhggHr5abA7yTvRdo4Q==}
+  electron-to-chromium@1.5.389:
+    resolution: {integrity: sha512-cEto7aeOqBfU1D+c5py5pE+ooscKE75JifxLBdFUZsqAxRS6y7kebtxAZvICszSl05gPjYHDTjY+lXpyGvpJbg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -3192,8 +3192,8 @@ packages:
   node-mock-http@1.0.4:
     resolution: {integrity: sha512-8DY+kFsDkNXy1sJglUfuODx1/opAGJGyrTuFqEoN90oRc2Vk0ZbD4K2qmKXBBEhZQzdKHIVfEJpDU8Ak2NJEvQ==}
 
-  node-releases@2.0.50:
-    resolution: {integrity: sha512-J6l92tKHX6w8Jy5nO1Vuc01NoIiRGi/d6qBKVxh+IQ8Cr3b6HbVNfKiF8ZpFKufTwpwxMmce2W3iQZ861ZRyTg==}
+  node-releases@2.0.51:
+    resolution: {integrity: sha512-wRNIrw4DmVLKQlbgOMdkMx27Wrpzes2hh5Jtbi2bjPd+4wJstWIqP5A+lscnqbm0xxmT5Bpg8Lec5ItEBwx6BQ==}
     engines: {node: '>=18'}
 
   normalize-path@3.0.0:
@@ -3274,8 +3274,8 @@ packages:
     resolution: {integrity: sha512-/lkPs5W1aC3cp6vqZefpdosOn65J571sWodyfOQiF0+tmDCpU+H8Atwpu0vQROCVUlZuToDN5eyTLsMLLc54mg==}
     engines: {node: '>=20'}
 
-  p-queue@9.3.0:
-    resolution: {integrity: sha512-7NED7xhQ74Ngp4JP/2e0VZHp7vSWfJfqeiR92jPgxsz6m0Se4P03YoTKa9dDXyZ3r6P616gUXttrB6nnHYKang==}
+  p-queue@9.3.1:
+    resolution: {integrity: sha512-POWdiIPmsUPGwb4FeQ4OBg46aqmcInSWe45CKDsGHiOBiVQM9chqfQTuqhuTzcg2Vz9faTI65at0KkVyVEiCHw==}
     engines: {node: '>=20'}
 
   p-retry@6.2.1:
@@ -3761,8 +3761,8 @@ packages:
   teex@1.0.1:
     resolution: {integrity: sha512-eYE6iEI62Ni1H8oIa7KlDU6uQBtqr4Eajni3wX7rpfXD8ysFx8z0+dri+KWEPWpBsxXfxu58x/0jvTVT1ekOSg==}
 
-  terser@5.48.0:
-    resolution: {integrity: sha512-J/9An6vs9Us6wKRriSFXBWdRZapREHqFzdNUKk0pmu804EMR6dr6winwo7e5JDxN4xahxQsuysyYFwlwj4XN/Q==}
+  terser@5.49.0:
+    resolution: {integrity: sha512-SNiDnXyHSrxVcIOtVbULzcTmniUiwcV7Nwdyj1twVubeTmbjoa8p69KKDpfkdoOavuM4/GRm1+ykI8qqnavHoA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -4532,7 +4532,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.29.7
       '@babel/helper-validator-option': 7.29.7
-      browserslist: 4.28.4
+      browserslist: 4.28.5
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -4617,7 +4617,7 @@ snapshots:
       '@chainsafe/as-chacha20poly1305': 0.1.0
       '@chainsafe/as-sha256': 1.2.4
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.11
       '@libp2p/utils': 7.2.3
       '@noble/ciphers': 2.2.0
@@ -4630,7 +4630,7 @@ snapshots:
 
   '@chainsafe/libp2p-yamux@8.0.1':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/utils': 7.2.3
       race-signal: 2.0.0
       uint8arraylist: 2.4.9
@@ -4779,7 +4779,7 @@ snapshots:
       '@helia/interface': 7.0.3
       '@helia/libp2p': 1.0.5(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.15)(react@19.2.6))
       '@helia/utils': 3.0.3
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/logger': 6.2.9
       '@libp2p/peer-collections': 7.0.22
       '@libp2p/peer-id': 6.0.11
@@ -4813,7 +4813,7 @@ snapshots:
       '@helia/utils': 3.0.3
       '@ipld/car': 5.4.6
       '@ipld/dag-pb': 4.1.7
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/utils': 7.2.3
       any-signal: 4.2.0
       interface-blockstore: 7.0.1
@@ -4830,7 +4830,7 @@ snapshots:
     dependencies:
       '@helia/delegated-routing-v1-http-api-client': 9.0.0
       '@helia/interface': 7.0.3
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       it-first: 3.0.11
       it-map: 3.1.6
       multiformats: 14.0.4
@@ -4838,7 +4838,7 @@ snapshots:
 
   '@helia/delegated-routing-v1-http-api-client@9.0.0':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.11
       '@libp2p/utils': 7.2.3
       '@multiformats/multiaddr': 13.0.3
@@ -4868,7 +4868,7 @@ snapshots:
     dependencies:
       '@ipshipyard/crypto': 1.1.0
       '@ipshipyard/keychain': 1.0.2
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@multiformats/dns': 1.0.15
       '@multiformats/multiaddr': 13.0.3
       abort-error: 1.0.2
@@ -4894,7 +4894,7 @@ snapshots:
       '@libp2p/dcutr': 3.0.22
       '@libp2p/http': 2.0.4
       '@libp2p/identify': 4.1.9
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/kad-dht': 16.3.3
       '@libp2p/keychain': 6.1.3
       '@libp2p/mdns': 12.0.25
@@ -4939,7 +4939,7 @@ snapshots:
     dependencies:
       '@helia/interface': 7.0.3
       '@ipld/dag-pb': 4.1.7
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/logger': 6.2.9
       '@libp2p/utils': 7.2.3
       '@multiformats/murmur3': 2.2.5
@@ -4964,7 +4964,7 @@ snapshots:
   '@helia/utils@3.0.3':
     dependencies:
       '@helia/interface': 7.0.3
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/utils': 7.2.3
       '@multiformats/multiaddr': 13.0.3
       it-filter: 3.1.6
@@ -5046,7 +5046,7 @@ snapshots:
       '@chainsafe/is-ip': 2.1.0
       '@libp2p/crypto': 5.1.20
       '@libp2p/http': 2.0.4
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/keychain': 6.1.3
       '@libp2p/utils': 7.2.3
@@ -5083,7 +5083,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 26.1.0
+      '@types/node': 26.1.1
       '@types/yargs': 17.0.35
       chalk: 4.1.2
 
@@ -5115,7 +5115,7 @@ snapshots:
 
   '@libp2p/autonat@3.0.22':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/peer-collections': 7.0.22
       '@libp2p/peer-id': 6.0.11
@@ -5129,7 +5129,7 @@ snapshots:
 
   '@libp2p/bootstrap@12.0.25':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/peer-id': 6.0.11
       '@multiformats/multiaddr': 13.0.3
@@ -5139,7 +5139,7 @@ snapshots:
   '@libp2p/circuit-relay-v2@4.2.7':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/peer-collections': 7.0.22
       '@libp2p/peer-id': 6.0.11
@@ -5160,7 +5160,7 @@ snapshots:
   '@libp2p/config@1.1.33':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/keychain': 6.1.3
       '@libp2p/logger': 6.2.9
       interface-datastore: 10.0.1
@@ -5178,10 +5178,10 @@ snapshots:
 
   '@libp2p/crypto@5.1.20':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@noble/curves': 2.2.0
       '@noble/hashes': 2.2.0
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       protons-runtime: 7.0.0
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
@@ -5191,14 +5191,14 @@ snapshots:
       '@libp2p/interface': 3.2.5
       '@noble/curves': 2.2.0
       '@noble/hashes': 2.2.0
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       protons-runtime: 7.0.0
       uint8arraylist: 3.0.2
       uint8arrays: 6.1.1
 
   '@libp2p/dcutr@3.0.22':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/utils': 7.2.3
       '@multiformats/multiaddr': 13.0.3
@@ -5211,13 +5211,13 @@ snapshots:
     dependencies:
       '@achingbrain/http-parser-js': 0.5.9
       '@libp2p/http-utils': 2.0.5
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       uint8arrays: 5.1.1
 
   '@libp2p/http-peer-id-auth@2.0.2':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.11
       uint8-varint: 2.0.5
       uint8arrays: 5.1.1
@@ -5225,7 +5225,7 @@ snapshots:
   '@libp2p/http-utils@2.0.5':
     dependencies:
       '@achingbrain/http-parser-js': 0.5.9
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.11
       '@libp2p/utils': 7.2.3
       '@multiformats/multiaddr': 13.0.3
@@ -5242,7 +5242,7 @@ snapshots:
     dependencies:
       '@achingbrain/http-parser-js': 0.5.9
       '@libp2p/http-utils': 2.0.5
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/utils': 7.2.3
       '@multiformats/multiaddr': 13.0.3
@@ -5257,7 +5257,7 @@ snapshots:
       '@libp2p/http-peer-id-auth': 2.0.2
       '@libp2p/http-utils': 2.0.5
       '@libp2p/http-websocket': 2.0.3
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@multiformats/multiaddr': 13.0.3
       cookie: 1.1.1
@@ -5282,7 +5282,7 @@ snapshots:
 
   '@libp2p/interface-internal@3.1.7':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-collections': 7.0.22
       '@multiformats/multiaddr': 13.0.3
       progress-events: 1.1.0
@@ -5303,28 +5303,19 @@ snapshots:
       progress-events: 1.1.0
       uint8arraylist: 2.4.9
 
-  '@libp2p/interface@3.2.4':
-    dependencies:
-      '@multiformats/dns': 1.0.15
-      '@multiformats/multiaddr': 13.0.3
-      main-event: 1.0.4
-      multiformats: 14.0.3
-      progress-events: 1.1.0
-      uint8arraylist: 3.0.2
-
   '@libp2p/interface@3.2.5':
     dependencies:
       '@multiformats/dns': 1.0.15
       '@multiformats/multiaddr': 13.0.3
       main-event: 1.0.4
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       progress-events: 1.1.0
       uint8arraylist: 3.0.2
 
   '@libp2p/kad-dht@16.3.3':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/peer-collections': 7.0.22
       '@libp2p/peer-id': 6.0.11
@@ -5358,7 +5349,7 @@ snapshots:
   '@libp2p/keychain@6.1.3':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@noble/hashes': 2.2.0
       asn1js: 3.0.10
       interface-datastore: 10.0.1
@@ -5382,20 +5373,20 @@ snapshots:
       '@libp2p/interface': 3.2.5
       '@multiformats/multiaddr': 13.0.3
       interface-datastore: 10.0.1
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       weald: 1.1.3
 
   '@libp2p/logger@6.2.9':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@multiformats/multiaddr': 13.0.3
       interface-datastore: 10.0.1
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       weald: 1.1.3
 
   '@libp2p/mdns@12.0.25':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/interface-internal': 3.1.7
       '@libp2p/peer-id': 6.0.11
       '@libp2p/utils': 7.2.3
@@ -5407,7 +5398,7 @@ snapshots:
 
   '@libp2p/mplex@12.0.25':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/utils': 7.2.3
       it-pushable: 3.2.4
       uint8-varint: 3.0.0
@@ -5424,7 +5415,7 @@ snapshots:
 
   '@libp2p/peer-collections@7.0.22':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.11
       '@libp2p/utils': 7.2.3
       multiformats: 14.0.4
@@ -5454,21 +5445,21 @@ snapshots:
   '@libp2p/peer-id@6.0.11':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
-      multiformats: 14.0.3
+      '@libp2p/interface': 3.2.5
+      multiformats: 14.0.4
       uint8arrays: 6.1.1
 
   '@libp2p/peer-id@6.0.12':
     dependencies:
       '@libp2p/crypto': 5.1.21
       '@libp2p/interface': 3.2.5
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       uint8arrays: 6.1.1
 
   '@libp2p/peer-record@9.0.12':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.11
       '@multiformats/multiaddr': 13.0.3
       multiformats: 14.0.4
@@ -5483,7 +5474,7 @@ snapshots:
       '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.12
       '@multiformats/multiaddr': 13.0.3
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       protons-runtime: 7.0.0
       uint8-varint: 3.0.0
       uint8arraylist: 3.0.2
@@ -5535,7 +5526,7 @@ snapshots:
   '@libp2p/tls@3.1.4':
     dependencies:
       '@libp2p/crypto': 5.1.20
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/peer-id': 6.0.11
       '@libp2p/utils': 7.2.3
       '@peculiar/asn1-schema': 2.8.0
@@ -5566,7 +5557,7 @@ snapshots:
     dependencies:
       '@chainsafe/is-ip': 2.1.0
       '@chainsafe/netmask': 2.0.0
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/logger': 6.2.9
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
@@ -5657,7 +5648,7 @@ snapshots:
 
   '@libp2p/websockets@10.1.15':
     dependencies:
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/utils': 7.2.3
       '@multiformats/multiaddr': 13.0.3
       '@multiformats/multiaddr-matcher': 3.0.2
@@ -5683,7 +5674,7 @@ snapshots:
       '@ipld/car': 5.4.6
       '@ipld/dag-cbor': 10.0.1
       '@ipld/dag-json': 11.0.0
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@lumeweb/portal-sdk': 0.1.9(@tanstack/react-query@5.101.2(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/query-builder': 0.1.2(@tanstack/react-query@5.101.2(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@lumeweb/uppy-post-upload': 0.1.3(@uppy/core@5.2.0)
@@ -5776,9 +5767,9 @@ snapshots:
   '@multiformats/dns@1.0.15':
     dependencies:
       '@dnsquery/dns-packet': 6.1.1
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       hashlru: 2.3.0
-      p-queue: 9.3.0
+      p-queue: 9.3.1
       progress-events: 1.1.0
       uint8arrays: 6.1.1
 
@@ -5803,7 +5794,7 @@ snapshots:
   '@multiformats/multiaddr@13.0.3':
     dependencies:
       '@chainsafe/is-ip': 2.1.0
-      multiformats: 14.0.3
+      multiformats: 14.0.4
       uint8-varint: 3.0.0
       uint8arrays: 6.1.1
 
@@ -6524,6 +6515,10 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
+  '@types/node@26.1.1':
+    dependencies:
+      undici-types: 8.3.0
+
   '@types/react-dom@19.2.3(@types/react@19.2.15)':
     dependencies:
       '@types/react': 19.2.15
@@ -6593,28 +6588,28 @@ snapshots:
       lodash: 4.18.1
       preact: 10.29.3
 
-  '@vitest/browser-preview@4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
+  '@vitest/browser-preview@4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
     dependencies:
       '@testing-library/dom': 10.4.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
-      '@vitest/browser': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
-      vitest: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@vitest/browser': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+      vitest: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))
     transitivePeerDependencies:
       - bufferutil
       - msw
       - utf-8-validate
       - vite
 
-  '@vitest/browser@4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
+  '@vitest/browser@4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
     dependencies:
       '@blazediff/core': 1.9.1
-      '@vitest/mocker': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))
       '@vitest/utils': 4.1.9
       magic-string: 0.30.21
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))
       ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
@@ -6631,14 +6626,14 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
       msw: 2.14.6(@types/node@26.1.0)(typescript@6.0.3)
-      vite: 8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
+      vite: 8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.9':
     dependencies:
@@ -6664,7 +6659,7 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
-  '@voidzero-dev/vite-plus-core@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
+  '@voidzero-dev/vite-plus-core@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
       '@oxc-project/runtime': 0.138.0
       '@oxc-project/types': 0.138.0
@@ -6674,7 +6669,7 @@ snapshots:
       '@types/node': 26.1.0
       esbuild: 0.28.0
       fsevents: 2.3.3
-      terser: 5.48.0
+      terser: 5.49.0
       tsx: 4.22.4
       typescript: 6.0.3
       yaml: 2.9.0
@@ -6851,7 +6846,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.10.41: {}
+  baseline-browser-mapping@2.10.42: {}
 
   before-after-hook@2.2.3: {}
 
@@ -6919,13 +6914,13 @@ snapshots:
 
   browser-readablestream-to-it@2.0.12: {}
 
-  browserslist@4.28.4:
+  browserslist@4.28.5:
     dependencies:
-      baseline-browser-mapping: 2.10.41
-      caniuse-lite: 1.0.30001800
-      electron-to-chromium: 1.5.385
-      node-releases: 2.0.50
-      update-browserslist-db: 1.2.3(browserslist@4.28.4)
+      baseline-browser-mapping: 2.10.42
+      caniuse-lite: 1.0.30001803
+      electron-to-chromium: 1.5.389
+      node-releases: 2.0.51
+      update-browserslist-db: 1.2.3(browserslist@4.28.5)
 
   bser@2.1.1:
     dependencies:
@@ -6959,7 +6954,7 @@ snapshots:
 
   camelcase@6.3.0: {}
 
-  caniuse-lite@1.0.30001800: {}
+  caniuse-lite@1.0.30001803: {}
 
   cborg@5.1.6: {}
 
@@ -6984,7 +6979,7 @@ snapshots:
 
   chrome-launcher@0.15.2:
     dependencies:
-      '@types/node': 26.1.0
+      '@types/node': 26.1.1
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -6993,7 +6988,7 @@ snapshots:
 
   chromium-edge-launcher@0.3.0:
     dependencies:
-      '@types/node': 26.1.0
+      '@types/node': 26.1.1
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -7177,7 +7172,7 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  electron-to-chromium@1.5.385: {}
+  electron-to-chromium@1.5.389: {}
 
   emoji-regex@8.0.0: {}
 
@@ -7471,7 +7466,7 @@ snapshots:
       '@ipld/dag-pb': 4.1.7
       '@ipshipyard/crypto': 1.1.0
       '@ipshipyard/keychain': 1.0.2
-      '@libp2p/interface': 3.2.4
+      '@libp2p/interface': 3.2.5
       '@libp2p/utils': 7.2.3
       '@multiformats/dns': 1.0.15
       '@multiformats/multiaddr': 13.0.3
@@ -7594,7 +7589,7 @@ snapshots:
       it-pushable: 3.2.4
       it-to-buffer: 5.0.0
       multiformats: 14.0.4
-      p-queue: 9.3.0
+      p-queue: 9.3.1
       progress-events: 1.1.0
 
   ipfs-unixfs-importer@17.0.1:
@@ -7801,7 +7796,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 26.1.0
+      '@types/node': 26.1.1
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -7818,7 +7813,7 @@ snapshots:
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 26.1.0
+      '@types/node': 26.1.1
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -8062,7 +8057,7 @@ snapshots:
   metro-minify-terser@0.84.4:
     dependencies:
       flow-enums-runtime: 0.0.6
-      terser: 5.48.0
+      terser: 5.49.0
 
   metro-resolver@0.84.4:
     dependencies:
@@ -8312,7 +8307,7 @@ snapshots:
 
   node-mock-http@1.0.4: {}
 
-  node-releases@2.0.50: {}
+  node-releases@2.0.51: {}
 
   normalize-path@3.0.0: {}
 
@@ -8351,7 +8346,7 @@ snapshots:
 
   outvariant@1.4.3: {}
 
-  oxfmt@0.57.0(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
+  oxfmt@0.57.0(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
     dependencies:
       tinypool: 2.1.0
     optionalDependencies:
@@ -8374,7 +8369,7 @@ snapshots:
       '@oxfmt/binding-win32-arm64-msvc': 0.57.0
       '@oxfmt/binding-win32-ia32-msvc': 0.57.0
       '@oxfmt/binding-win32-x64-msvc': 0.57.0
-      vite-plus: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+      vite-plus: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
 
   oxlint-tsgolint@0.24.0:
     optionalDependencies:
@@ -8385,7 +8380,7 @@ snapshots:
       '@oxlint-tsgolint/win32-arm64': 0.24.0
       '@oxlint-tsgolint/win32-x64': 0.24.0
 
-  oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
+  oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.72.0
       '@oxlint/binding-android-arm64': 1.72.0
@@ -8407,7 +8402,7 @@ snapshots:
       '@oxlint/binding-win32-ia32-msvc': 1.72.0
       '@oxlint/binding-win32-x64-msvc': 1.72.0
       oxlint-tsgolint: 0.24.0
-      vite-plus: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+      vite-plus: 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
 
   p-defer@4.0.1: {}
 
@@ -8415,7 +8410,7 @@ snapshots:
     dependencies:
       p-timeout: 7.0.1
 
-  p-queue@9.3.0:
+  p-queue@9.3.1:
     dependencies:
       eventemitter3: 5.0.4
       p-timeout: 7.0.1
@@ -8979,7 +8974,7 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
-  terser@5.48.0:
+  terser@5.49.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
       acorn: 8.17.0
@@ -9117,7 +9112,7 @@ snapshots:
 
   uint8arrays@6.1.1:
     dependencies:
-      multiformats: 14.0.3
+      multiformats: 14.0.4
 
   uncrypto@0.1.3: {}
 
@@ -9160,9 +9155,9 @@ snapshots:
       binary: 0.3.0
       mkdirp: 0.5.6
 
-  update-browserslist-db@1.2.3(browserslist@4.28.4):
+  update-browserslist-db@1.2.3(browserslist@4.28.5):
     dependencies:
-      browserslist: 4.28.4
+      browserslist: 4.28.5
       escalade: 3.2.0
       picocolors: 1.1.1
 
@@ -9181,24 +9176,24 @@ snapshots:
 
   varint@6.0.0: {}
 
-  vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0):
+  vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0):
     dependencies:
       '@oxc-project/types': 0.138.0
       '@oxlint/plugins': 1.68.0
-      '@vitest/browser': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
-      '@vitest/browser-preview': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser-preview': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
       '@vitest/expect': 4.1.9
-      '@vitest/mocker': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.9
       '@vitest/runner': 4.1.9
       '@vitest/snapshot': 4.1.9
       '@vitest/spy': 4.1.9
       '@vitest/utils': 4.1.9
-      '@voidzero-dev/vite-plus-core': 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
-      oxfmt: 0.57.0(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
-      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.48.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
+      '@voidzero-dev/vite-plus-core': 0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      oxfmt: 0.57.0(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
+      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.2(@types/node@26.1.0)(esbuild@0.28.0)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(terser@5.49.0)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
       oxlint-tsgolint: 0.24.0
-      vitest: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))
     optionalDependencies:
       '@voidzero-dev/vite-plus-darwin-arm64': 0.2.2
       '@voidzero-dev/vite-plus-darwin-x64': 0.2.2
@@ -9239,7 +9234,7 @@ snapshots:
       - vite
       - yaml
 
-  vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0):
+  vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.5
@@ -9250,14 +9245,14 @@ snapshots:
       '@types/node': 26.1.0
       esbuild: 0.28.0
       fsevents: 2.3.3
-      terser: 5.48.0
+      terser: 5.49.0
       tsx: 4.22.4
       yaml: 2.9.0
 
-  vitest@4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)):
+  vitest@4.1.9(@types/node@26.1.0)(@vitest/browser-preview@4.1.9)(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.9
-      '@vitest/mocker': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.9
       '@vitest/runner': 4.1.9
       '@vitest/snapshot': 4.1.9
@@ -9274,11 +9269,11 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
+      vite: 8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 26.1.0
-      '@vitest/browser-preview': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser-preview': 4.1.9(msw@2.14.6(@types/node@26.1.0)(typescript@6.0.3))(vite@8.0.16(@types/node@26.1.0)(esbuild@0.28.0)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
     transitivePeerDependencies:
       - msw
 
