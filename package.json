@@ -44,13 +44,13 @@
     "@github/local-action": "^7.0.1",
     "@libp2p/upnp-nat": "^4.0.23",
     "@libp2p/webrtc": "^6.0.26",
-    "@types/node": "^26.1.0",
-    "@voidzero-dev/vite-plus-core": "^0.2.2",
-    "msw": "^2.4.0",
+    "@types/node": "^26.1.1",
+    "@voidzero-dev/vite-plus-core": "^0.2.4",
+    "msw": "^2.15.0",
     "node-datachannel": "^0.32.3",
     "typescript": "^6.0.3",
-    "vite-plus": "^0.2.2",
-    "vitest": "^4.1.9"
+    "vite-plus": "^0.2.4",
+    "vitest": "^4.1.10"
   },
   "overrides": {
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
