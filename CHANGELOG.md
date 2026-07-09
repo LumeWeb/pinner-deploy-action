@@ -1,3 +1,9 @@
+## 0.1.23 (2026-07-09)
+
+### Fixes
+
+- inject pre-created libp2p instance, remove post-build hacks
+
 ## 0.1.22 (2026-07-08)
 
 ### Fixes
