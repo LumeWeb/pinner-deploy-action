@@ -40,17 +40,17 @@
   "devDependencies": {
     "@achingbrain/nat-port-mapper": "^4.0.5",
     "@achingbrain/ssdp": "^4.2.4",
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@github/local-action": "^7.0.1",
-    "@libp2p/upnp-nat": "^4.0.23",
-    "@libp2p/webrtc": "^6.0.26",
-    "@types/node": "^26.1.0",
-    "@voidzero-dev/vite-plus-core": "^0.2.2",
-    "msw": "^2.4.0",
-    "node-datachannel": "^0.32.3",
+    "@libp2p/upnp-nat": "^4.0.26",
+    "@libp2p/webrtc": "^6.0.29",
+    "@types/node": "^26.2.0",
+    "@voidzero-dev/vite-plus-core": "^0.2.9",
+    "msw": "^2.15.0",
+    "node-datachannel": "^0.33.1",
     "typescript": "^6.0.3",
-    "vite-plus": "^0.2.2",
-    "vitest": "^4.1.9"
+    "vite-plus": "^0.2.9",
+    "vitest": "^4.1.10"
   },
   "overrides": {
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
